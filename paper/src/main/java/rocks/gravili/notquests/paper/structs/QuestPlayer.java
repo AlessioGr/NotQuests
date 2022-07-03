@@ -44,6 +44,7 @@ import rocks.gravili.notquests.paper.events.notquests.QuestFinishAcceptEvent;
 import rocks.gravili.notquests.paper.events.notquests.QuestPointsChangeEvent;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
+import rocks.gravili.notquests.paper.structs.conditions.Condition.ConditionResult;
 import rocks.gravili.notquests.paper.structs.objectives.ConditionObjective;
 import rocks.gravili.notquests.paper.structs.objectives.NumberVariableObjective;
 import rocks.gravili.notquests.paper.structs.objectives.OtherQuestObjective;
@@ -415,9 +416,9 @@ public class QuestPlayer {
                 }
 
                 for (final Condition condition : quest.getQuest().getRequirements()) {
-                    final String check = condition.check(this);
-                    if (!check.isBlank()) {
-                        requirementsStillNeeded.append("\n").append(check);
+                    final ConditionResult check = condition.check(this);
+                    if (!check.fulfilled()) {
+                        requirementsStillNeeded.append("\n").append(check.message());
 
                     }
                 }
@@ -970,7 +971,7 @@ public class QuestPlayer {
                     if (condition == null) {
                         continue;
                     }
-                    if (!condition.check(this).isBlank()) {
+                    if (!condition.check(this).fulfilled()) {
                         continue;
                     }
 

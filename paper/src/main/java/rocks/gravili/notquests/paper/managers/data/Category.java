@@ -21,9 +21,11 @@ package rocks.gravili.notquests.paper.managers.data;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.PredefinedProgressOrder;
+import rocks.gravili.notquests.paper.structs.Quest;
 
 public class Category {
   private final NotQuests main;
@@ -281,6 +283,25 @@ public class Category {
     }
   }
 
+  public final PredefinedProgressOrder getPredefinedProgressOrder() {
+    return predefinedProgressOrder;
+  }
+
+  public void setPredefinedProgressOrder(final PredefinedProgressOrder predefinedProgressOrder, final boolean save) {
+    this.predefinedProgressOrder = predefinedProgressOrder;
+    if (save) {
+      if(predefinedProgressOrder != null) {
+        predefinedProgressOrder.saveToConfiguration(getCategoryConfig(),  "predefinedProgressOrder");
+      }else{
+        getQuestsConfig()
+            .set(
+                "predefinedProgressOrder",
+                null);
+      }
+      saveCategoryConfig();
+    }
+  }
+
   public final String getDisplayName() {
     return displayName;
   }
@@ -303,6 +324,14 @@ public class Category {
 
   public void loadDataFromCategoryConfig() {
     this.displayName = getCategoryConfig().getString("displayName", "");
+    this.predefinedProgressOrder = PredefinedProgressOrder.fromConfiguration(getCategoryConfig(), "predefinedProgressOrder");
+
+  }
+
+  public final ArrayList<Quest> getQuests(){
+    return main.getQuestManager().getAllQuests().stream()
+        .filter(quest -> quest.getCategory() == this)
+        .collect(Collectors.toCollection(ArrayList::new));
   }
 
   @Override

@@ -27,6 +27,7 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
+import rocks.gravili.notquests.paper.structs.conditions.Condition.ConditionResult;
 
 public class ConversationPlayer {
   private final NotQuests main;
@@ -182,15 +183,15 @@ public class ConversationPlayer {
             nextLines.add(conversationLineToCheck);
           } else { // Check conditions
             for (final Condition condition : conversationLineToCheck.getConditions()) {
-              final String result = condition.check(getQuestPlayer());
-              if (!result.isBlank()) {
+              final ConditionResult result = condition.check(getQuestPlayer());
+              if (!result.fulfilled()) {
                 questPlayer.sendDebugMessage(
                     "Skipping player conversation line <highlight>"
                         + conversationLineToCheck.getFullIdentifier()
                         + "</highlight> because the following condition is not met: <highlight2>"
                         + condition.getConditionIdentifier()
                         + "</highlight2>. Condition result: <highlight2>"
-                        + result);
+                        + result.message());
                 continue conversationLineLoop;
               }
             }
@@ -208,15 +209,15 @@ public class ConversationPlayer {
               return nextLines;
             } else { // Check conditions
               for (final Condition condition : conversationLineToCheck.getConditions()) {
-                final String result = condition.check(getQuestPlayer());
-                if (!result.isBlank()) {
+                final ConditionResult result = condition.check(getQuestPlayer());
+                if (!result.fulfilled()) {
                   questPlayer.sendDebugMessage(
                       "Skipping conversation line <highlight>"
                           + conversationLineToCheck.getFullIdentifier()
                           + "</highlight> because the following condition is not met: <highlight2>"
                           + condition.getConditionIdentifier()
                           + "</highlight2>. Condition result: <highlight2>"
-                          + result);
+                          + result.message());
                   continue conversationLineLoop;
                 }
               }

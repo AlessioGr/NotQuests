@@ -30,6 +30,7 @@ import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.managers.integrations.citizens.QuestGiverNPCTrait;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
+import rocks.gravili.notquests.paper.structs.conditions.Condition.ConditionResult;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 
@@ -486,6 +487,12 @@ public class Quest {
 
   public final ArrayList<Condition> getRequirements() {
     return conditions;
+  }
+  public final ConditionResult checkRequirements(final QuestPlayer questPlayer){
+    for (final Condition condition : getRequirements()) {
+      return condition.check(questPlayer);
+    }
+    return new ConditionResult(true, "");
   }
 
   public void clearRequirements() {

@@ -225,7 +225,7 @@ public class ActionAction extends Action {
 
           if (!isIgnoreConditions() && isOnlyCountForRandomIfConditionsFulfilled()) {
             for (Condition condition : actionToExecute.getConditions()) {
-              if (!condition.check(questPlayer).isBlank()) {
+              if (!condition.check(questPlayer).fulfilled()) {
                 amountOfActionsToExecute++;
                 continue;
               }

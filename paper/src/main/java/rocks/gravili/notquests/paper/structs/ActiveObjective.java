@@ -25,6 +25,7 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.NotQuestColors;
 import rocks.gravili.notquests.paper.events.notquests.ObjectiveUnlockEvent;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
+import rocks.gravili.notquests.paper.structs.conditions.Condition.ConditionResult;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 import rocks.gravili.notquests.paper.structs.objectives.OtherQuestObjective;
 
@@ -145,7 +146,8 @@ public class ActiveObjective {
                 }
             }else if(predefinedProgressOrder.getCustomOrder() != null && !predefinedProgressOrder.getCustomOrder().isEmpty()){
 
-                for(final int objectiveIDToCheck : predefinedProgressOrder.getCustomOrder()){
+                for(final String objectiveIDToCheckString : predefinedProgressOrder.getCustomOrder()){
+                    final int objectiveIDToCheck = Integer.parseInt(objectiveIDToCheckString);
                     if(objectiveIDToCheck == objectiveID){
                         break;
                     }
@@ -159,10 +161,10 @@ public class ActiveObjective {
         }
 
         for (final Condition condition : objective.getUnlockConditions()){
-            String check = condition.check(getQuestPlayer());
-            getQuestPlayer().sendDebugMessage("Condition status for " + objective.getFinalName() + ": " + check);
+            ConditionResult check = condition.check(getQuestPlayer());
+            getQuestPlayer().sendDebugMessage("Condition status for " + objective.getFinalName() + ": " + check.message());
 
-            if(!check.isBlank()) {
+            if(!check.fulfilled()) {
                 getQuestPlayer().sendDebugMessage("Following objective unlock condition is still unfinished (there may be more than what's listed here): " + condition.getConditionDescription(getQuestPlayer()));
                 setUnlocked(false, notifyPlayer, triggerAcceptQuestTrigger);
                 return;
@@ -182,10 +184,10 @@ public class ActiveObjective {
             if(checkForProgressDecrease && condition.isObjectiveConditionSpecific_allowProgressDecreaseIfNotFulfilled()) {
                 continue;
             }
-            String check = condition.check(getQuestPlayer());
-            getQuestPlayer().sendDebugMessage("Condition status for " + objective.getFinalName() + " and condition " + condition.getConditionType() + ": " + check);
+            ConditionResult check = condition.check(getQuestPlayer());
+            getQuestPlayer().sendDebugMessage("Condition status for " + objective.getFinalName() + " and condition " + condition.getConditionType() + ": " + check.message());
 
-            if(!check.isBlank()) {
+            if(!check.fulfilled()) {
                 getQuestPlayer().sendDebugMessage("Following objective progress condition is still unfinished (there may be more than what's listed here): " + condition.getConditionDescription(getQuestPlayer()));
                 return false;
             }
@@ -199,10 +201,10 @@ public class ActiveObjective {
         getQuestPlayer().sendDebugMessage("Checking if objective can be completed...");
 
         for (final Condition condition : objective.getCompleteConditions()){
-            String check = condition.check(getQuestPlayer());
-            getQuestPlayer().sendDebugMessage("Condition status for " + objective.getFinalName() + ": " + check);
+            ConditionResult check = condition.check(getQuestPlayer());
+            getQuestPlayer().sendDebugMessage("Condition status for " + objective.getFinalName() + ": " + check.message());
 
-            if(!check.isBlank()) {
+            if(!check.fulfilled()) {
                 getQuestPlayer().sendDebugMessage("Following objective complete condition is still unfinished (there may be more than what's listed here): " + condition.getConditionDescription(getQuestPlayer()));
                 return false;
             }

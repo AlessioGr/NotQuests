@@ -209,7 +209,7 @@ public abstract class Variable<T> {
                                 activeObjectiveVariableName = stringCondition.getVariableName();
                             }
                             if(activeObjectiveVariableName.equalsIgnoreCase(getVariableType())){
-                                if (!condition.check(questPlayer).isBlank()) {
+                                if (!condition.check(questPlayer).fulfilled()) {
                                     continue;
                                 }
 

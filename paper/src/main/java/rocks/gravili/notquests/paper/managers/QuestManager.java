@@ -1658,7 +1658,7 @@ public class QuestManager {
 
             if(main.getConfiguration().isQuestVisibilityEvaluationConditions()){
                 for (final Condition condition : quest.getRequirements()) {
-                    if (!condition.check(questPlayer).isBlank()) {
+                    if (!condition.check(questPlayer).fulfilled()) {
                         continue questLoop;
                     }
                 }

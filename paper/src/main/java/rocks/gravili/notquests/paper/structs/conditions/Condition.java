@@ -132,25 +132,26 @@ public abstract class Condition {
    */
   protected abstract String checkInternally(final QuestPlayer questPlayer);
 
-  public String check(final QuestPlayer questPlayer) {
+  public ConditionResult check(final QuestPlayer questPlayer) {
     final String result = checkInternally(questPlayer);
 
     if (!isNegated()) {
       if (result.isBlank()) {
-        return "";
+        return new ConditionResult(true, "");
       } else {
         if (description.isBlank()) {
-          return result;
+          return new ConditionResult(false, result);
+
         } else {
-          return "<YELLOW>" + description;
+          return new ConditionResult(false, "<YELLOW>" + description);
         }
       }
     } else {
       if (result.isBlank()) {
-        return "<YELLOW>You cannot fulfill this condition: <unimportant>"
-            + getConditionDescription(questPlayer);
+        return new ConditionResult(false, "<YELLOW>You cannot fulfill this condition: <unimportant>"
+            + getConditionDescription(questPlayer));
       } else {
-        return "";
+        return new ConditionResult(true, "");
       }
     }
   }
@@ -225,5 +226,9 @@ public abstract class Condition {
   public void setObjectiveConditionSpecific_allowProgressDecreaseIfNotFulfilled(
       final boolean objectiveConditionSpecific_allowProgressDecreaseIfNotFulfilled) {
     this.objectiveConditionSpecific_allowProgressDecreaseIfNotFulfilled = objectiveConditionSpecific_allowProgressDecreaseIfNotFulfilled;
+  }
+
+  public record ConditionResult(boolean fulfilled, String message) {
+
   }
 }

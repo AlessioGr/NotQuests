@@ -30,6 +30,7 @@ import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
@@ -563,16 +564,7 @@ public class AdminEditCommands {
             final Quest quest = context.get("quest");
             context.getSender().sendMessage(Component.empty());
 
-            final String predefinedProgressOrderString = quest.getPredefinedProgressOrder() != null ? (quest.getPredefinedProgressOrder().isFirstToLast()
-                ? "First to last"
-                : (
-                    quest.getPredefinedProgressOrder().isLastToFirst()
-                        ? "Last to first" : (
-                          (quest.getPredefinedProgressOrder().getCustomOrder() != null && !quest.getPredefinedProgressOrder().getCustomOrder().isEmpty())
-                            ? "Custom: " + quest.getPredefinedProgressOrder().getCustomOrder().toString()
-                            : "None (weird)"
-                        )
-                    ))
+            final String predefinedProgressOrderString = quest.getPredefinedProgressOrder() != null ? (quest.getPredefinedProgressOrder().getReadableString())
                 : "None"
                 ;
 
@@ -642,10 +634,8 @@ public class AdminEditCommands {
             final Quest quest = context.get("quest");
             final String[] order = context.get("order");
             final String orderString = String.join(" ", order);
-            final ArrayList<Integer> orderParsed = new ArrayList<>();
-            for(final String orderCharacter : order) {
-              orderParsed.add(Integer.parseInt(orderCharacter));
-            }
+            final ArrayList<String> orderParsed = new ArrayList<>();
+            Collections.addAll(orderParsed, order);
 
             quest.setPredefinedProgressOrder(PredefinedProgressOrder.custom(orderParsed), true);
             context.getSender().sendMessage(Component.empty());

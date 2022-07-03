@@ -56,7 +56,7 @@ public class ActiveQuest {
 
   private final QuestPlayer questPlayer;
 
-  public ActiveQuest(NotQuests main, Quest quest, QuestPlayer questPlayer) {
+  public ActiveQuest(final NotQuests main, final Quest quest, final QuestPlayer questPlayer) {
     this.main = main;
     this.quest = quest;
     this.questPlayer = questPlayer;

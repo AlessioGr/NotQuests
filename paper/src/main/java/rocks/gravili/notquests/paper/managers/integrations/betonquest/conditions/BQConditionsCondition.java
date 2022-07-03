@@ -65,7 +65,7 @@ public class BQConditionsCondition
 
       return condition
           .check(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))
-          .isBlank();
+          .fulfilled();
     } else {
       throw new QuestRuntimeException("Condition was not found.");
     }

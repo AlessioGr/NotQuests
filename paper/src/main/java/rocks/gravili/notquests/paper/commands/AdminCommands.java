@@ -30,6 +30,7 @@ import cloud.commandframework.bukkit.parsers.selector.SinglePlayerSelectorArgume
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import net.kyori.adventure.text.Component;
@@ -55,10 +56,12 @@ import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.CompletedQuest;
+import rocks.gravili.notquests.paper.structs.PredefinedProgressOrder;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
+import rocks.gravili.notquests.paper.structs.conditions.Condition.ConditionResult;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 import rocks.gravili.notquests.paper.structs.objectives.TriggerCommandObjective;
 
@@ -790,6 +793,98 @@ public class AdminCommands {
     }
 
     public void handleCategoryEditCommands(final Command.Builder<CommandSender> editCategoryBuilder){
+      final Command.Builder<CommandSender> predefinedProgressOrderBuilder = editCategoryBuilder.literal("predefinedProgressOrder");
+
+      manager.command(predefinedProgressOrderBuilder.literal("show")
+          .meta(CommandMeta.DESCRIPTION, "Shows the current predefined order in which the quests inside this category need to be progressed for your quest.")
+          .handler((context) -> {
+            final Category category = context.get("category");
+            context.getSender().sendMessage(Component.empty());
+
+            final String predefinedProgressOrderString = category.getPredefinedProgressOrder() != null ? (category.getPredefinedProgressOrder().getReadableString())
+                : "None"
+                ;
+
+            context.getSender().sendMessage(main.parse(
+                "<success>Current predefined progress order of category <highlight>" + category.getCategoryFullName()
+                    + "</highlight>: <highlight2>" + predefinedProgressOrderString
+            ));
+          }));
+
+      manager.command(predefinedProgressOrderBuilder.literal("set")
+          .literal("none")
+          .meta(CommandMeta.DESCRIPTION, "Sets a predefined order in which the quests inside this category need to be progressed for your quest.")
+          .handler((context) -> {
+            final Category category = context.get("category");
+            category.setPredefinedProgressOrder(null, true);
+            context.getSender().sendMessage(Component.empty());
+            context.getSender().sendMessage(main.parse(
+                "<success>Predefined progress order of category <highlight>" + category.getCategoryFullName()
+                    + "</highlight> have been removed!"
+            ));
+          }));
+
+      manager.command(predefinedProgressOrderBuilder.literal("set")
+          .literal("firstToLast")
+          .meta(CommandMeta.DESCRIPTION, "Sets a predefined order in which the quests inside this category need to be progressed for your quest.")
+          .handler((context) -> {
+            final Category category = context.get("category");
+            category.setPredefinedProgressOrder(PredefinedProgressOrder.firstToLast(), true);
+            context.getSender().sendMessage(Component.empty());
+            context.getSender().sendMessage(main.parse(
+                "<success>Predefined progress order of category <highlight>" + category.getCategoryFullName()
+                    + "</highlight> have been set to first to last!"
+            ));
+          }));
+
+      manager.command(predefinedProgressOrderBuilder.literal("set")
+          .literal("lastToFirst")
+          .meta(CommandMeta.DESCRIPTION, "Sets a predefined order in which the quests inside this category need to be progressed for your quest.")
+          .handler((context) -> {
+            final Category category = context.get("category");
+            category.setPredefinedProgressOrder(PredefinedProgressOrder.lastToFirst(), true);
+            context.getSender().sendMessage(Component.empty());
+            context.getSender().sendMessage(main.parse(
+                "<success>Predefined progress order of category <highlight>" + category.getCategoryFullName()
+                    + "</highlight> have been set to last to first!"
+            ));
+          }));
+
+      manager.command(predefinedProgressOrderBuilder.literal("set")
+          .literal("custom")
+          .argument(StringArrayArgument.of("order",
+              (context, lastString) -> {
+                final List<String> allArgs = context.getRawInput();
+                main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "<Enter custom order (numbers of objective IDs separated by space)>", "");
+                ArrayList<String> completions = new ArrayList<>();
+                final Category category = context.get("category");
+
+                for(final Quest quest : category.getQuests()){
+                  completions.add(quest.getQuestName()+"");
+                }
+
+                return completions;
+              }
+          ), ArgumentDescription.of("Custom order. Example: 2 1 3 4 5 6 7 9 8"))
+          .meta(CommandMeta.DESCRIPTION, "Sets a predefined order in which the quests need to be progressed in this category.")
+          .handler((context) -> {
+            final Category category = context.get("category");
+            final String[] order = context.get("order");
+            final String orderString = String.join(" ", order);
+            final ArrayList<String> orderParsed = new ArrayList<>();
+            Collections.addAll(orderParsed, order);
+
+            category.setPredefinedProgressOrder(PredefinedProgressOrder.custom(orderParsed), true);
+            context.getSender().sendMessage(Component.empty());
+            context.getSender().sendMessage(main.parse(
+                "<success>Predefined progress order of category <highlight>" + category.getCategoryFullName()
+                    + "</highlight> have been set to custom with this order: " + orderString
+            ));
+          }));
+
+
+
+
         manager.command(editCategoryBuilder.literal("displayName")
                 .literal("show")
                 .meta(CommandMeta.DESCRIPTION, "Shows current Category display name.")
@@ -1479,11 +1574,9 @@ public class AdminCommands {
 
 
                     QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
-                    String result = condition.check(questPlayer);
-                    if (result.isBlank()) {
-                        result = "<success>Condition fulfilled!";
-                    }
-                    context.getSender().sendMessage(main.parse("<success>Condition with the name <highlight>" + condition.getConditionName() + "</highlight> has been checked! Result:</success>\n" + result));
+                    ConditionResult result = condition.check(questPlayer);
+                    final String resultMessage = result.fulfilled() ? result.message() : "<success>Condition fulfilled!";
+                    context.getSender().sendMessage(main.parse("<success>Condition with the name <highlight>" + condition.getConditionName() + "</highlight> has been checked! Result:</success>\n" + resultMessage));
                 }));
 
         manager.command(conditionsBuilder

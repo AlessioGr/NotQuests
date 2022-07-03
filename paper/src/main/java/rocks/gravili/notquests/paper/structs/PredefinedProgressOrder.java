@@ -8,8 +8,8 @@ import org.jetbrains.annotations.Nullable;
 public class PredefinedProgressOrder {
   private final boolean firstToLast;
   private final boolean lastToFirst;
-  private final List<Integer> custom;
-  private PredefinedProgressOrder(final boolean firstToLast, final boolean lastToFirst, final List<Integer> custom) {
+  private final List<String> custom;
+  private PredefinedProgressOrder(final boolean firstToLast, final boolean lastToFirst, final List<String> custom) {
     this.firstToLast = firstToLast;
     this.lastToFirst = lastToFirst;
     this.custom = custom;
@@ -23,7 +23,7 @@ public class PredefinedProgressOrder {
     return lastToFirst;
   }
 
-  public final @Nullable List<Integer> getCustomOrder() {
+  public final @Nullable List<String> getCustomOrder() {
     return custom;
   }
 
@@ -34,7 +34,7 @@ public class PredefinedProgressOrder {
     return new PredefinedProgressOrder(false, true, null);
   }
 
-  public static PredefinedProgressOrder custom(final ArrayList<Integer> customOrder) {
+  public static PredefinedProgressOrder custom(final ArrayList<String> customOrder) {
     return new PredefinedProgressOrder(false, false, customOrder);
   }
 
@@ -44,7 +44,7 @@ public class PredefinedProgressOrder {
     } else if(fileConfiguration.contains(initialPath + ".lastToFirst")) {
       return new PredefinedProgressOrder(false, fileConfiguration.getBoolean(initialPath + ".lastToFirst"), null);
     } else if(fileConfiguration.contains(initialPath + ".custom")) {
-      return new PredefinedProgressOrder(false, false, fileConfiguration.getIntegerList(initialPath + ".custom"));
+      return new PredefinedProgressOrder(false, false, fileConfiguration.getStringList(initialPath + ".custom"));
     } else {
       return null;
     }
@@ -58,5 +58,19 @@ public class PredefinedProgressOrder {
     } else if(custom != null && custom.size() > 0) {
       fileConfiguration.set(initialPath + ".custom", custom);
     }
+  }
+
+  public final String getReadableString() {
+    return isFirstToLast()
+        ? "First to last"
+        : (
+            isLastToFirst()
+                ? "Last to first" : (
+                (getCustomOrder() != null && !getCustomOrder().isEmpty())
+                    ? "Custom: " + getCustomOrder().toString()
+                    : "None (2)"
+            )
+        )
+        ;
   }
 }

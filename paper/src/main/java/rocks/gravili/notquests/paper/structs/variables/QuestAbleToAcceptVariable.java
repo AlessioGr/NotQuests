@@ -28,6 +28,7 @@ import rocks.gravili.notquests.paper.structs.CompletedQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
+import rocks.gravili.notquests.paper.structs.conditions.Condition.ConditionResult;
 
 /**
  * This variable is true if the player is able to take the Quest. That means, they fulfill all Quest
@@ -94,8 +95,8 @@ public class QuestAbleToAcceptVariable extends Variable<Boolean> {
     }
 
     for (final Condition condition : quest.getRequirements()) {
-      final String check = condition.check(questPlayer);
-      if (!check.isBlank()) {
+      final ConditionResult check = condition.check(questPlayer);
+      if (!check.fulfilled()) {
         return false;
       }
     }

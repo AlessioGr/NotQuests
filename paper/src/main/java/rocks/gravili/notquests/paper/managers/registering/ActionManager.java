@@ -56,6 +56,7 @@ import rocks.gravili.notquests.paper.structs.actions.TriggerCommandAction;
 import rocks.gravili.notquests.paper.structs.actions.hooks.betonquest.BetonQuestFireEventAction;
 import rocks.gravili.notquests.paper.structs.actions.hooks.betonquest.BetonQuestFireInlineEventAction;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
+import rocks.gravili.notquests.paper.structs.conditions.Condition.ConditionResult;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
 public class ActionManager {
@@ -321,10 +322,10 @@ public class ActionManager {
 
     final StringBuilder unfulfilledConditions = new StringBuilder();
     for (final Condition condition : action.getConditions()) {
-      final String check = condition.check(questPlayer);
-      main.getLogManager().debug("   Condition Check Result: " + check);
-      if (!check.isBlank()) {
-        unfulfilledConditions.append("\n").append(check);
+      final ConditionResult check = condition.check(questPlayer);
+      main.getLogManager().debug("   Condition Check Result: " + check.message());
+      if (!check.fulfilled()) {
+        unfulfilledConditions.append("\n").append(check.message());
       }
     }
 

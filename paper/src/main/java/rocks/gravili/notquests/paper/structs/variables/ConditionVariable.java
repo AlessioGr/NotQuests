@@ -99,7 +99,7 @@ public class ConditionVariable extends Variable<Boolean> {
             return main.getConditionsYMLManager()
                     .getCondition(conditionIdentifier)
                     .check(questPlayerToEvaluate)
-                    .isBlank()
+                    .fulfilled()
                 ? 1
                 : 0;
           });

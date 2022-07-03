@@ -71,7 +71,7 @@ public class ConditionCondition extends Condition {
       return "<warn>Error: ConditionCondition cannot be checked because the condition was not found. Report this to the server owner.";
     }
 
-    return condition.check(questPlayer);
+    return condition.check(questPlayer).message();
   }
 
   @Override
