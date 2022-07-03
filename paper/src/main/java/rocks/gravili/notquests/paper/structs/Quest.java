@@ -60,6 +60,8 @@ public class Quest {
   private ItemStack takeItem = new ItemStack(Material.BOOK);
   private Category category;
 
+  private PredefinedProgressOrder predefinedProgressOrder;
+
   public Quest(NotQuests main, String questName) {
     this.main = main;
     this.questName = questName;
@@ -83,6 +85,29 @@ public class Quest {
     triggers = new ArrayList<>();
     this.category = category;
   }
+
+  public final PredefinedProgressOrder getPredefinedProgressOrder() {
+    return predefinedProgressOrder;
+  }
+
+  public void setPredefinedProgressOrder(final PredefinedProgressOrder predefinedProgressOrder, final boolean save) {
+    this.predefinedProgressOrder = predefinedProgressOrder;
+    if (save) {
+      if(predefinedProgressOrder != null) {
+        predefinedProgressOrder.saveToConfiguration(category.getQuestsConfig(),  "quests."
+            + questName
+            + ".predefinedProgressOrder");
+      }else{
+        category
+            .getQuestsConfig()
+            .set(
+                "quests." + questName + ".predefinedProgressOrder",
+                null);
+      }
+      category.saveQuestsConfig();
+    }
+  }
+
 
   public final Category getCategory() {
     return category;
@@ -261,9 +286,9 @@ public class Quest {
     }
   }
 
-  public void addReward(Action action, final boolean save) {
+  public void addReward(final Action action, final boolean save) {
     boolean dupeID = false;
-    for (Action action1 : rewards) {
+    for (final Action action1 : rewards) {
       if (action.getActionID() == action1.getActionID()) {
         dupeID = true;
         break;

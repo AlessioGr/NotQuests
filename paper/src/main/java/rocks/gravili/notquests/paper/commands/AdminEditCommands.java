@@ -53,9 +53,9 @@ import rocks.gravili.notquests.paper.commands.arguments.CategorySelector;
 import rocks.gravili.notquests.paper.commands.arguments.DurationArgument;
 import rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionArgument;
 import rocks.gravili.notquests.paper.commands.arguments.MiniMessageSelector;
-import rocks.gravili.notquests.paper.commands.arguments.MiniMessageStringSelector;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
 import rocks.gravili.notquests.paper.managers.data.Category;
+import rocks.gravili.notquests.paper.structs.PredefinedProgressOrder;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
@@ -555,6 +555,102 @@ public class AdminEditCommands {
 
     public void handleObjectives(final Command.Builder<CommandSender> builder) {
         //Add is handled individually by each objective
+      final Command.Builder<CommandSender> predefinedProgressOrderBuilder = editBuilder.literal("predefinedProgressOrder");
+
+      manager.command(predefinedProgressOrderBuilder.literal("show")
+          .meta(CommandMeta.DESCRIPTION, "Shows the current predefined order in which the objectives need to be progressed for your quest.")
+          .handler((context) -> {
+            final Quest quest = context.get("quest");
+            context.getSender().sendMessage(Component.empty());
+
+            final String predefinedProgressOrderString = quest.getPredefinedProgressOrder().isFirstToLast()
+                ? "First to last"
+                : (
+                    quest.getPredefinedProgressOrder().isLastToFirst()
+                        ? "Last to first" : (
+                          (quest.getPredefinedProgressOrder().getCustomOrder() != null && !quest.getPredefinedProgressOrder().getCustomOrder().isEmpty())
+                            ? "Custom: " + quest.getPredefinedProgressOrder().getCustomOrder().toString()
+                            : "None"
+                        )
+                    )
+                ;
+
+            context.getSender().sendMessage(main.parse(
+                "<success>Current predefined progress order of Quest <highlight>" + quest.getQuestName()
+                    + "</highlight>: <highlight2>" + predefinedProgressOrderString
+            ));
+          }));
+
+      manager.command(predefinedProgressOrderBuilder.literal("set")
+              .literal("none")
+          .meta(CommandMeta.DESCRIPTION, "Sets a predefined order in which the objectives need to be progressed for your quest.")
+          .handler((context) -> {
+            final Quest quest = context.get("quest");
+            quest.setPredefinedProgressOrder(null, true);
+            context.getSender().sendMessage(Component.empty());
+            context.getSender().sendMessage(main.parse(
+                "<success>Predefined progress order of Quest <highlight>" + quest.getQuestName()
+                    + "</highlight> have been removed!"
+            ));
+          }));
+
+      manager.command(predefinedProgressOrderBuilder.literal("set")
+          .literal("firstToLast")
+          .meta(CommandMeta.DESCRIPTION, "Sets a predefined order in which the objectives need to be progressed for your quest.")
+          .handler((context) -> {
+            final Quest quest = context.get("quest");
+            quest.setPredefinedProgressOrder(PredefinedProgressOrder.firstToLast(), true);
+            context.getSender().sendMessage(Component.empty());
+            context.getSender().sendMessage(main.parse(
+                "<success>Predefined progress order of Quest <highlight>" + quest.getQuestName()
+                    + "</highlight> have been set to first to last!"
+            ));
+          }));
+
+      manager.command(predefinedProgressOrderBuilder.literal("set")
+          .literal("lastToFirst")
+          .meta(CommandMeta.DESCRIPTION, "Sets a predefined order in which the objectives need to be progressed for your quest.")
+          .handler((context) -> {
+            final Quest quest = context.get("quest");
+            quest.setPredefinedProgressOrder(PredefinedProgressOrder.lastToFirst(), true);
+            context.getSender().sendMessage(Component.empty());
+            context.getSender().sendMessage(main.parse(
+                "<success>Predefined progress order of Quest <highlight>" + quest.getQuestName()
+                    + "</highlight> have been set to last to first!"
+            ));
+          }));
+
+      manager.command(predefinedProgressOrderBuilder.literal("set")
+          .literal("custom")
+          .argument(StringArrayArgument.of("order",
+              (context, lastString) -> {
+                final List<String> allArgs = context.getRawInput();
+                main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "<Enter custom order (numbers of objective IDs separated by space)>", "");
+                ArrayList<String> completions = new ArrayList<>();
+                String rawInput = context.getRawInputJoined();
+                for(int i=1; i<=9; i++) {
+                  completions.add(""+i);
+                }
+                return completions;
+              }
+          ), ArgumentDescription.of("Custom order. Example: 2 1 3 4 5 6 7 9 8"))
+          .meta(CommandMeta.DESCRIPTION, "Sets a predefined order in which the objectives need to be progressed for your quest.")
+          .handler((context) -> {
+            final Quest quest = context.get("quest");
+            final String[] order = context.get("order");
+            final String orderString = String.join(" ", order);
+            final ArrayList<Integer> orderParsed = new ArrayList<>();
+            for(final String orderCharacter : order) {
+              orderParsed.add(Integer.parseInt(orderCharacter));
+            }
+
+            quest.setPredefinedProgressOrder(PredefinedProgressOrder.custom(orderParsed), true);
+            context.getSender().sendMessage(Component.empty());
+            context.getSender().sendMessage(main.parse(
+                "<success>Predefined progress order of Quest <highlight>" + quest.getQuestName()
+                    + "</highlight> have been set to custom with this order: " + orderString
+            ));
+          }));
 
         manager.command(builder.literal("clear")
                 .meta(CommandMeta.DESCRIPTION, "Removes all objectives from a Quest.")

@@ -44,6 +44,7 @@ import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.CompletedQuest;
+import rocks.gravili.notquests.paper.structs.PredefinedProgressOrder;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.actions.Action;
@@ -182,6 +183,9 @@ public class QuestManager {
                     quest.setMaxAccepts(category.getQuestsConfig().getInt("quests." + questName + ".maxAccepts", -1));
                     quest.setTakeEnabled(category.getQuestsConfig().getBoolean("quests." + questName + ".takeEnabled", true));
                     quest.setAcceptCooldown(category.getQuestsConfig().getLong("quests." + questName + ".acceptCooldown", -1));
+
+                    quest.setPredefinedProgressOrder(PredefinedProgressOrder.fromConfiguration(category.getQuestsConfig(), "quests." + questName + "predefinedProgressOrder"), false);
+
 
                     quest.setQuestDescription(
                             category.getQuestsConfig().getString("quests." + questName + ".description", "")
