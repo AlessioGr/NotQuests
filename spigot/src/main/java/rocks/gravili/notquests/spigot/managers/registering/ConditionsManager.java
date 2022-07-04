@@ -78,6 +78,8 @@ public class ConditionsManager {
         registerCondition("TownyTownResidentCount", TownyTownResidentCountCondition.class);
         registerCondition("TownyTownPlotCount", TownyTownPlotCountCondition.class);
 
+        //NeoSurvival
+        this.registerCondition("Skill", SkillCondition.class);
     }
 
 

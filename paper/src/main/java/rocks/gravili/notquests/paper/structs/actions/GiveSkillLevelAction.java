@@ -54,7 +54,7 @@ public class GiveSkillLevelAction extends Action {
                                         .withPlaceholders()
                                         .build(),
                                 ArgumentDescription.of("Message to broadcast"))
-                        .argument(StringArgument.<CommandSender>newBuilder("Skill to level up").withSuggestionsProvider((context, lastString) -> {
+                        .argument(StringArgument.<CommandSender>newBuilder("skillName").withSuggestionsProvider((context, lastString) -> {
                             ArrayList<String> completions = new ArrayList<>(Arrays.asList(Api.getStatTable()));
                             final List<String> allArgs = context.getRawInput();
                             main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Skill name]", "");
