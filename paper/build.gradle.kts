@@ -165,7 +165,7 @@ dependencies {
     compileOnly(files("libs/UClans-API.jar"))
     compileOnly(files("libs/ProjectKorra-1.9.3.jar"))
     //compileOnly(files("libs/UltimateJobs-0.2.0-SNAPSHOT.jar"))
-
+    compileOnly(files("libs/NeoSurvival-1.0-SNAPSHOT.jar"))
 
     compileOnly("org.betonquest:betonquest:2.0.0-SNAPSHOT")
 

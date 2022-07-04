@@ -22,6 +22,7 @@ package rocks.gravili.notquests.paper.events;
 import static rocks.gravili.notquests.paper.commands.NotQuestColors.debugHighlightGradient;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
+import com.neostorm.neostorm.SkillEvent;
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import java.util.HashMap;
 import java.util.Locale;
@@ -70,21 +71,7 @@ import rocks.gravili.notquests.paper.conversation.ConversationPlayer;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
-import rocks.gravili.notquests.paper.structs.objectives.BreakBlocksObjective;
-import rocks.gravili.notquests.paper.structs.objectives.BreedObjective;
-import rocks.gravili.notquests.paper.structs.objectives.CollectItemsObjective;
-import rocks.gravili.notquests.paper.structs.objectives.ConsumeItemsObjective;
-import rocks.gravili.notquests.paper.structs.objectives.CraftItemsObjective;
-import rocks.gravili.notquests.paper.structs.objectives.FishItemsObjective;
-import rocks.gravili.notquests.paper.structs.objectives.InteractObjective;
-import rocks.gravili.notquests.paper.structs.objectives.JumpObjective;
-import rocks.gravili.notquests.paper.structs.objectives.KillMobsObjective;
-import rocks.gravili.notquests.paper.structs.objectives.OpenBuriedTreasureObjective;
-import rocks.gravili.notquests.paper.structs.objectives.PlaceBlocksObjective;
-import rocks.gravili.notquests.paper.structs.objectives.ReachLocationObjective;
-import rocks.gravili.notquests.paper.structs.objectives.RunCommandObjective;
-import rocks.gravili.notquests.paper.structs.objectives.SmeltObjective;
-import rocks.gravili.notquests.paper.structs.objectives.SneakObjective;
+import rocks.gravili.notquests.paper.structs.objectives.*;
 import rocks.gravili.notquests.paper.structs.triggers.ActiveTrigger;
 import rocks.gravili.notquests.paper.structs.triggers.types.WorldEnterTrigger;
 import rocks.gravili.notquests.paper.structs.triggers.types.WorldLeaveTrigger;
@@ -386,8 +373,53 @@ public class QuestEvents implements Listener {
         }
 
     }
-
-
+//TODO create classes
+    @EventHandler
+    private void onSkillEvent(final SkillEvent event) {
+        final Player player = event.getPlayer();
+        if (player != null) {
+            final QuestPlayer questPlayer = this.main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            if (questPlayer != null && questPlayer.getActiveQuests().size() > 0) {
+                for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+                    for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
+                        final Objective objective = activeObjective.getObjective();
+                        if (objective instanceof final SkillMasteryObjective skillMasteryObjective) {
+                            if (activeObjective.isUnlocked()) {
+                                final String skill = event.getSkill();
+                                if (skillMasteryObjective.getSkillToMaster().equalsIgnoreCase("any") || skillMasteryObjective.getSkillToMaster().equalsIgnoreCase(skill)) {
+                                    activeObjective.addProgress(event.getMastery());
+                                }
+                            }
+                        }
+                        final Objective objective2 = activeObjective.getObjective();
+                        if (objective2 instanceof final SkillLevelObjective skillLevelObjective) {
+                            if (activeObjective.isUnlocked()) {
+                                final String skill = event.getSkill();
+                                final int levelUpAmount = event.getLevelUpAmount();
+                                if (levelUpAmount > 0 && (skillLevelObjective.getSkillToLevelUp().equalsIgnoreCase("any") || skillLevelObjective.getSkillToLevelUp().equalsIgnoreCase(skill))) {
+                                    activeObjective.addProgress(levelUpAmount);
+                                }
+                            }
+                        }
+                        final Objective objective3 = activeObjective.getObjective();
+                        if (objective3 instanceof final ReachSkillLevelObjective reachSkillLevelObjective) {
+                            if (!activeObjective.isUnlocked()) {
+                                continue;
+                            }
+                            final String skill = event.getSkill();
+                            final int levelUpAmount = event.getLevelUpAmount();
+                            if (levelUpAmount <= 0 || (!reachSkillLevelObjective.getSkillToLevelUp().equalsIgnoreCase("any") && !reachSkillLevelObjective.getSkillToLevelUp().equalsIgnoreCase(skill))) {
+                                continue;
+                            }
+                            activeObjective.addProgress(levelUpAmount);
+                        }
+                    }
+                    activeQuest.removeCompletedObjectives(true);
+                }
+                questPlayer.removeCompletedQuests();
+            }
+        }
+    }
 
     public final int getInventorySpaceLeftForItem(final Inventory inventory, final ItemStack item) {
         int remaining = 0;
