@@ -24,6 +24,7 @@ import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
@@ -50,6 +51,8 @@ public class Quest {
   private final ArrayList<Action> rewards;
   private final ArrayList<Objective> objectives;
   private final ArrayList<Condition> conditions; // Requirements to accept the quest
+
+  private ArrayList<Condition> conditionsWithSpecialConditions;
   private final ArrayList<Trigger> triggers; // Triggers for the quest
   private final ArrayList<NPC> attachedNPCsWithQuestShowing;
   private final ArrayList<NPC> attachedNPCsWithoutQuestShowing;
@@ -69,6 +72,7 @@ public class Quest {
     rewards = new ArrayList<>();
     objectives = new ArrayList<>();
     conditions = new ArrayList<>();
+    conditionsWithSpecialConditions = new ArrayList<>();
     attachedNPCsWithQuestShowing = new ArrayList<>();
     attachedNPCsWithoutQuestShowing = new ArrayList<>();
     triggers = new ArrayList<>();
@@ -81,6 +85,7 @@ public class Quest {
     rewards = new ArrayList<>();
     objectives = new ArrayList<>();
     conditions = new ArrayList<>();
+    conditionsWithSpecialConditions = new ArrayList<>();
     attachedNPCsWithQuestShowing = new ArrayList<>();
     attachedNPCsWithoutQuestShowing = new ArrayList<>();
     triggers = new ArrayList<>();
@@ -146,7 +151,7 @@ public class Quest {
   }
 
   public final Condition getRequirementFromID(final int id) {
-    for (final Condition condition : getRequirements()) {
+    for (final Condition condition : conditions) {
       if (condition.getConditionID() == id) {
         return condition;
       }
@@ -237,6 +242,7 @@ public class Quest {
     }
     if (!dupeID) {
       conditions.add(condition);
+      updateConditionsWithSpecial();
       if (save) {
         category
             .getQuestsConfig()
@@ -486,19 +492,14 @@ public class Quest {
   }
 
   public final ArrayList<Condition> getRequirements() {
-    return conditions;
-  }
-  public final ConditionResult checkRequirements(final QuestPlayer questPlayer){
-    for (final Condition condition : getRequirements()) {
-      return condition.check(questPlayer);
-    }
-    return new ConditionResult(true, "");
+    return conditionsWithSpecialConditions;
   }
 
   public void clearRequirements() {
     conditions.clear();
     category.getQuestsConfig().set("quests." + questName + ".requirements", null);
     category.saveQuestsConfig();
+    updateConditionsWithSpecial();
   }
 
   public void clearNPCs() {
@@ -648,6 +649,7 @@ public class Quest {
         .set("quests." + questName + ".requirements." + requirement.getConditionID(), null);
     category.saveQuestsConfig();
     conditions.remove(requirement);
+    updateConditionsWithSpecial();
   }
 
   public String removeTrigger(final Trigger trigger) {
@@ -709,7 +711,7 @@ public class Quest {
         return i;
       }
     }
-    return getRequirements().size() + 1;
+    return conditions.size() + 1;
   }
 
   public final int getFreeTriggerID() {
@@ -719,5 +721,74 @@ public class Quest {
       }
     }
     return getTriggers().size() + 1;
+  }
+
+  public void updateConditionsWithSpecial(){
+    conditionsWithSpecialConditions = new ArrayList<>(conditions);
+    final PredefinedProgressOrder predefinedProgressOrder = category.getPredefinedProgressOrder();
+    if(predefinedProgressOrder != null){
+      int ourIndex = category.getQuests().indexOf(this);
+
+      conditionsWithSpecialConditions.add(new Condition(main) {
+        @Override
+        protected String checkInternally(QuestPlayer questPlayer) {
+          if(predefinedProgressOrder.isFirstToLast()){
+            int counter = 0;
+            for(final Quest otherQuest : category.getQuests()){
+              if(counter < ourIndex){
+                if(!questPlayer.hasCompletedQuest(otherQuest)){
+                  return "Quest " + otherQuest.getQuestFinalName() + " needs to be completed first";
+                }
+              }
+              counter++;
+            }
+          }else if(predefinedProgressOrder.isLastToFirst()){
+            int counter = 0;
+            for(final Quest otherQuest : category.getQuests()){
+              if(counter > ourIndex){
+                if(!questPlayer.hasCompletedQuest(otherQuest)){
+                  return "Quest " + otherQuest.getQuestFinalName() + " needs to be completed first";
+                }
+              }
+              counter++;
+            }
+          }else if(predefinedProgressOrder.getCustomOrder() != null && !predefinedProgressOrder.getCustomOrder().isEmpty()){
+
+            for(final String questNameToCheck : predefinedProgressOrder.getCustomOrder()){
+              if(questNameToCheck.equalsIgnoreCase(questName)){
+                break;
+              }
+              if(!questPlayer.hasCompletedQuest(questNameToCheck)){
+                return "Quest " + questNameToCheck + " needs to be completed first";
+              }
+            }
+          }
+          return "";
+        }
+
+        @Override
+        protected String getConditionDescriptionInternally(QuestPlayer questPlayer,
+            Object... objects) {
+          return null;
+        }
+
+        @Override
+        public void save(FileConfiguration configuration, String initialPath) {
+
+        }
+
+        @Override
+        public void load(FileConfiguration configuration, String initialPath) {
+
+        }
+
+        @Override
+        public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+
+        }
+      });
+
+    }
+
   }
 }

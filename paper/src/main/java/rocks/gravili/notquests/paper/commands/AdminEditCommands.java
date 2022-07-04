@@ -1176,7 +1176,7 @@ public class AdminEditCommands {
                     final Quest quest = context.get("quest");
 
                     context.getSender().sendMessage(main.parse("<highlight>Requirements for Quest <highlight2>" + quest.getQuestName() + "</highlight2>:"));
-                    for (Condition condition : quest.getRequirements()) {
+                    for (final Condition condition : quest.getRequirements()) {
                         context.getSender().sendMessage(main.parse("<highlight>" + condition.getConditionID() + ".</highlight> <main>" + condition.getConditionType()));
                         if(context.getSender() instanceof Player player){
                             context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))));

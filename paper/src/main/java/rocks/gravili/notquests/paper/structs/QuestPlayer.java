@@ -877,6 +877,15 @@ public class QuestPlayer {
         return false;
     }
 
+    public final boolean hasCompletedQuest(final String questName) {
+        for (final CompletedQuest completedQuest : completedQuests) {
+            if (completedQuest.getQuestName().equalsIgnoreCase(questName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public final Player getPlayer(){
         if(player != null){
