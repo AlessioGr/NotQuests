@@ -41,6 +41,8 @@ import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.ConversationSelector;
 import rocks.gravili.notquests.paper.conversation.Conversation;
+import rocks.gravili.notquests.paper.managers.npc.CitizensNPC;
+import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
@@ -338,7 +340,7 @@ public class CitizensManager {
                   final Conversation foundConversation = context.get("conversation");
                   final int npcID = context.get("NPC");
 
-                  foundConversation.addNPC(npcID);
+                  foundConversation.addNPC( main.getNPCManager().getOrCreateNQNpc("Citizens", npcID));
 
                   context
                       .getSender()
@@ -499,4 +501,6 @@ public class CitizensManager {
                   }
                 }));
   }
+
+
 }

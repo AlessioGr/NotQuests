@@ -30,6 +30,8 @@ import org.jetbrains.annotations.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.managers.integrations.citizens.QuestGiverNPCTrait;
+import rocks.gravili.notquests.paper.managers.npc.CitizensNPC;
+import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 
 public class Conversation {
   final ArrayList<Speaker> speakers;
@@ -38,7 +40,7 @@ public class Conversation {
   private final File configFile;
   private final String identifier;
   private final ArrayList<ConversationLine> start;
-  private CopyOnWriteArrayList<Integer> npcIDs; // -1: no NPC
+  private final CopyOnWriteArrayList<NQNPC> npcs; // -1: no NPC
   private Category category;
 
   public Conversation(
@@ -46,16 +48,16 @@ public class Conversation {
       final File configFile,
       final YamlConfiguration config,
       final String identifier,
-      @Nullable final ArrayList<Integer> npcIDsToAdd,
+      @Nullable final ArrayList<NQNPC> npcsToAdd,
       final Category category) {
     this.main = main;
     this.configFile = configFile;
     this.config = config;
     this.identifier = identifier;
-    npcIDs = new CopyOnWriteArrayList<>();
-    if (npcIDsToAdd != null) {
-      for (int npcID : npcIDsToAdd) {
-        addNPC(npcID);
+    npcs = new CopyOnWriteArrayList<>();
+    if (npcsToAdd != null) {
+      for (final NQNPC nqnpc : npcsToAdd) {
+        addNPC(nqnpc);
       }
     }
     start = new ArrayList<>();
@@ -154,58 +156,26 @@ public class Conversation {
   }
 
   public void bindToAllCitizensNPCs() {
-    for (int npcID : npcIDs) {
-      bindToCitizensNPC(npcID);
+    for (NQNPC nqnpc : npcs) {
+      bindToCitizensNPC(nqnpc);
     }
   }
 
-  public void bindToCitizensNPC(int npcID) {
-    if (npcID < 0) {
+  public void bindToCitizensNPC(NQNPC nqnpc) {
+    if (nqnpc == null) {
       return;
     }
-    if (!main.getIntegrationsManager().isCitizensEnabled()) {
-      main.getLogManager()
-          .warn(
-              "The binding to NPC in Conversation <highlight>"
-                  + identifier
-                  + "</highlight> has been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
-      return;
-    }
-
-    final NPC npc = CitizensAPI.getNPCRegistry().getById(npcID);
-    if (npc != null) {
-      boolean hasTrait = false;
-      for (Trait trait : npc.getTraits()) {
-        if (trait.getName().contains("questgiver")) {
-          hasTrait = true;
-          break;
-        }
-      }
-      if (!npc.hasTrait(QuestGiverNPCTrait.class) && !hasTrait) {
-        main.getLogManager()
-            .info(
-                "Trying to add Conversation <highlight>"
-                    + identifier
-                    + "</highlight> to NPC with ID <highlight>"
-                    + npc.getId()
-                    + "</highlight>...");
-
-        npc.addTrait(QuestGiverNPCTrait.class);
-      }
-    }
+    nqnpc.bindToConversation(this);
   }
 
   public final String getIdentifier() {
     return identifier;
   }
 
-  public final CopyOnWriteArrayList<Integer> getNPCIDs() {
-    return npcIDs;
+  public final CopyOnWriteArrayList<NQNPC> getNPCs() {
+    return npcs;
   }
 
-  public final boolean hasCitizensNPC() {
-    return npcIDs.size() > 0 && npcIDs.get(0) != -1;
-  }
 
   public void addStarterConversationLine(final ConversationLine conversationLine) {
     start.add(conversationLine);
@@ -215,14 +185,15 @@ public class Conversation {
     return start;
   }
 
-  public void addNPC(int npcID) {
-    this.npcIDs.add(npcID);
-    bindToCitizensNPC(npcID);
+  public void addNPC(final NQNPC nqnpc) {
+    this.npcs.add(nqnpc);
+    bindToCitizensNPC(nqnpc);
 
     if (configFile == null || config == null) {
       return;
     }
-    config.set("npcIDs", npcIDs);
+    nqnpc.saveToConfig(config, "npcs." + npcs.size());
+
     try {
       config.save(configFile);
     } catch (IOException e) {

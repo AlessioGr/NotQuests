@@ -28,6 +28,7 @@ import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.events.notquests.ObjectiveCompleteEvent;
 import rocks.gravili.notquests.paper.events.notquests.QuestFailEvent;
+import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 import rocks.gravili.notquests.paper.structs.objectives.hooks.citizens.EscortNPCObjective;
@@ -106,19 +107,19 @@ public class ActiveQuest {
 
   // For Citizens NPCs
   public void notifyActiveObjectiveCompleted(
-      final ActiveObjective activeObjective, final boolean silent, final int NPCID) {
-    notifyActiveObjectiveCompleted(activeObjective, silent, NPCID, null);
+      final ActiveObjective activeObjective, final boolean silent, final NQNPC nqNPC) {
+    notifyActiveObjectiveCompleted(activeObjective, silent, nqNPC, null);
   }
   // For Armor Stands
   public void notifyActiveObjectiveCompleted(
       final ActiveObjective activeObjective, final boolean silent, final UUID armorStandUUID) {
-    notifyActiveObjectiveCompleted(activeObjective, silent, -1, armorStandUUID);
+    notifyActiveObjectiveCompleted(activeObjective, silent, null, armorStandUUID);
   }
 
   public void notifyActiveObjectiveCompleted(
       final ActiveObjective activeObjective,
       final boolean silent,
-      final int NPCID,
+      final NQNPC nqnpc,
       final UUID armorStandUUID) {
     if (!main.getDataManager().isCurrentlyLoading() && !questPlayer.isCurrentlyLoading()) {
       ObjectiveCompleteEvent objectiveCompleteEvent =

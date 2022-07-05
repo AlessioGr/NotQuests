@@ -26,6 +26,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
+import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -48,7 +49,7 @@ public abstract class Objective {
   private String objectiveDescription = "";
 
   private String taskDescription = "";
-  private int completionNPCID = -1;
+  private NQNPC completionNPC = null;
   private UUID completionArmorStandUUID = null;
 
   private boolean showLocation = false;
@@ -100,27 +101,23 @@ public abstract class Objective {
     }
   }
 
-  public final int getCompletionNPCID() {
-    return completionNPCID;
+  public final NQNPC getCompletionNPC() {
+    return completionNPC;
   }
 
   public final UUID getCompletionArmorStandUUID() {
     return completionArmorStandUUID;
   }
 
-  public final void setCompletionNPCID(final int completionNPCID, final boolean save) {
-    this.completionNPCID = completionNPCID;
+  public final void setCompletionNPC(final NQNPC completionNPC, final boolean save) {
+    this.completionNPC = completionNPC;
     if (save) {
-      quest
-          .getCategory()
-          .getQuestsConfig()
-          .set(
-              "quests."
-                  + quest.getQuestName()
-                  + ".objectives."
-                  + getObjectiveID()
-                  + ".completionNPCID",
-              completionNPCID);
+      completionNPC.saveToConfig(quest.getCategory()
+          .getQuestsConfig(), "quests."
+          + quest.getQuestName()
+          + ".objectives."
+          + getObjectiveID()
+          + ".completionNPCID");
       quest.getCategory().saveQuestsConfig();
     }
   }

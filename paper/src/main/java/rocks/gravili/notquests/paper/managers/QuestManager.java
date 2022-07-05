@@ -41,6 +41,8 @@ import org.bukkit.persistence.PersistentDataType;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
+import rocks.gravili.notquests.paper.managers.npc.CitizensNPC;
+import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.CompletedQuest;
@@ -261,7 +263,7 @@ public class QuestManager {
                             final String objectiveDisplayName = category.getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".displayName", "");
                             final String objectiveDescription = category.getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".description", "");
                             final String objectiveTaskDescription = category.getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".taskDescription", "");
-                            final int completionNPCID = category.getQuestsConfig().getInt("quests." + quest.getQuestName() + ".objectives." + objectiveNumber + ".completionNPCID", -1);
+                            final NQNPC completionNPC = NQNPC.fromConfig(main, category.getQuestsConfig(), "quests." + quest.getQuestName() + ".objectives." + objectiveNumber + ".completionNPC");
                             final String completionArmorStandUUIDString = category.getQuestsConfig().getString("quests." + quest.getQuestName() + ".objectives." + objectiveNumber + ".completionArmorStandUUID", null);
                             if (completionArmorStandUUIDString != null) {
                                 final UUID completionArmorStandUUID = UUID.fromString(completionArmorStandUUIDString);
@@ -273,7 +275,7 @@ public class QuestManager {
                             objective.setDisplayName(objectiveDisplayName.replace("\\n", "\n"), false);
 
 
-                            objective.setCompletionNPCID(completionNPCID, false);
+                            objective.setCompletionNPC(completionNPC, false);
                             quest.addObjective(objective, false);
 
                         }
@@ -1313,7 +1315,8 @@ public class QuestManager {
             allNPCsFound += 1;
 
             //No quests attached to NPC => check if it has the trait
-            if (getAllQuestsAttachedToNPC(npc).size() == 0 && (main.getConversationManager().getConversationForNPCID(npc.getId()) == null)) {
+            final NQNPC
+            if (getAllQuestsAttachedToNPC(npc).size() == 0 && (main.getConversationManager().getConversationForNPC(npc == null)) {
                 for (final Trait trait : npc.getTraits()) {
                     if (trait.getName().contains("questgiver")) {
                         traitsToRemove.add(trait);
@@ -1396,18 +1399,12 @@ public class QuestManager {
 
         toReturn += objective.getTaskDescription(questPlayer, activeObjective);
 
-        if (objective.getCompletionNPCID() != -1) {
-            if (main.getIntegrationsManager().isCitizensEnabled()) {
-                final NPC npc = CitizensAPI.getNPCRegistry().getById(objective.getCompletionNPCID());
-                if (npc != null) {
-                    final String mmNpcName = main.getMiniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(npc.getName().replace("§","&")));
-
-                    toReturn += "\n    <GRAY>To complete: Talk to <highlight>" + mmNpcName;
-                } else {
-                    toReturn += "\n    <GRAY>To complete: Talk to NPC with ID <highlight>" + objective.getCompletionNPCID() + " <RED>[Currently not available]";
-                }
-            } else {
-                toReturn += "    <RED>Error: Citizens plugin not installed. Contact an admin.";
+        if (objective.getCompletionNPC() != null) {
+            final String npcName = objective.getCompletionNPC().getName();
+            if(npcName != null){
+                toReturn += "\n    <GRAY>To complete: Talk to <highlight>" + npcName;
+            }else{
+                toReturn += "\n    <GRAY>To complete: Talk to NPC with ID <highlight>" + objective.getCompletionNPC().getID() + " <RED>[Currently not available]";
             }
         }
         if (objective.getCompletionArmorStandUUID() != null) {
