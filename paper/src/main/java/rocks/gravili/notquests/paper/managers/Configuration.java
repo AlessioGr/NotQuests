@@ -90,6 +90,8 @@ public class Configuration {
   private int citizensNPCQuestGiverIndicatorParticleSpawnInterval = 10;
   private int citizensNPCQuestGiverIndicatorParticleCount = 1;
   private Particle citizensNPCQuestGiverIndicatorParticleType = Particle.VILLAGER_ANGRY;
+  private String citizensNPCQuestGiverIndicatorText = "";
+  private int citizensNPCQuestGiverIndicatorTextInterval = 100;
   private boolean citizensNPCQuestGiverIndicatorParticleEnabled = true;
   private double citizensNPCQuestGiverIndicatorParticleDisableIfTPSBelow = -1;
   private int armorStandQuestGiverIndicatorParticleSpawnInterval = 10;
@@ -524,9 +526,24 @@ public class Configuration {
     return citizensNPCQuestGiverIndicatorParticleType;
   }
 
+  public String getCitizensNPCQuestGiverIndicatorText() {
+    return citizensNPCQuestGiverIndicatorText;
+  }
+
   public void setCitizensNPCQuestGiverIndicatorParticleType(
       Particle citizensNPCQuestGiverIndicatorParticleType) {
     this.citizensNPCQuestGiverIndicatorParticleType = citizensNPCQuestGiverIndicatorParticleType;
+  }
+  public void setCitizensNPCQuestGiverIndicatorText(
+          String citizensNPCQuestGiverIndicatorIndicatorText) {
+    this.citizensNPCQuestGiverIndicatorText = citizensNPCQuestGiverIndicatorIndicatorText;
+  }
+  public void setCitizensNPCQuestGiverIndicatorTextInterval(
+          int citizensNPCQuestGiverIndicatorIndicatorTextInterval) {
+    this.citizensNPCQuestGiverIndicatorTextInterval = citizensNPCQuestGiverIndicatorIndicatorTextInterval;
+  }
+  public int getCitizensNPCQuestGiverIndicatorTextInterval() {
+    return citizensNPCQuestGiverIndicatorTextInterval;
   }
 
   public boolean isCitizensNPCQuestGiverIndicatorParticleEnabled() {
