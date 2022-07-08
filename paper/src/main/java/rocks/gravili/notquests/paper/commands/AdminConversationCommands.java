@@ -241,7 +241,7 @@ public class AdminConversationCommands {
                         .sendMessage(
                             main.parse(
                                 "<unimportant>--- Attached to NPC:</unimportant> <main>"
-                                    + conversation.getNPCIDs().toString()));
+                                    + conversation.getNPCs().toString())); //TODO: Fix this
 
                     context
                         .getSender()

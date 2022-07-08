@@ -20,14 +20,11 @@ package rocks.gravili.notquests.paper.managers;
 
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
-import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.npc.NPC;
-import net.citizensnpcs.api.trait.Trait;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
@@ -41,7 +38,6 @@ import org.bukkit.persistence.PersistentDataType;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
-import rocks.gravili.notquests.paper.managers.npc.CitizensNPC;
 import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
@@ -758,7 +754,11 @@ public class QuestManager {
 
     public final ArrayList<Quest> getAllQuestsAttachedToNPC(final NQNPC npc) {
         final ArrayList<Quest> questsAttached = new ArrayList<>();
-        for (Quest quest : quests) {
+        for (final Quest quest : quests) {
+            main.getLogManager().debug("getAttachedNPCsWithQuestShowing size: " + quest.getAttachedNPCsWithoutQuestShowing().size());
+            main.getLogManager().debug("getAttachedNPCsWithQuestShowing: " + quest.getAttachedNPCsWithoutQuestShowing());
+            main.getLogManager().debug("npc: " + npc);
+
             if (quest.getAttachedNPCsWithQuestShowing().contains(npc) || quest.getAttachedNPCsWithoutQuestShowing().contains(npc)) {
                 questsAttached.add(quest);
             }
@@ -769,7 +769,7 @@ public class QuestManager {
 
     public final ArrayList<Quest> getQuestsAttachedToNPCWithShowing(final NQNPC npc) {
         final ArrayList<Quest> questsAttached = new ArrayList<>();
-        for (Quest quest : quests) {
+        for (final Quest quest : quests) {
             if (quest.getAttachedNPCsWithQuestShowing().contains(npc)) {
                 questsAttached.add(quest);
             }
@@ -779,7 +779,7 @@ public class QuestManager {
     }
 
 
-    public final ArrayList<Quest> getQuestsAttachedToNPCWithoutShowing(final NPC npc) {
+    public final ArrayList<Quest> getQuestsAttachedToNPCWithoutShowing(final NQNPC npc) {
         final ArrayList<Quest> questsattached = new ArrayList<>();
         for (Quest quest : quests) {
             if (quest.getAttachedNPCsWithoutQuestShowing().contains(npc)) {
@@ -790,18 +790,18 @@ public class QuestManager {
         return questsattached;
     }
 
-    public final ArrayList<NPC> getAllNPCsAttachedToQuest(final Quest quest) {
-        final ArrayList<NPC> npcsAttached = new ArrayList<>();
+    public final CopyOnWriteArrayList<NQNPC> getAllNPCsAttachedToQuest(final Quest quest) {
+        final CopyOnWriteArrayList<NQNPC> npcsAttached = new CopyOnWriteArrayList<>();
         npcsAttached.addAll(quest.getAttachedNPCsWithQuestShowing());
         npcsAttached.addAll(quest.getAttachedNPCsWithoutQuestShowing());
         return npcsAttached;
     }
 
-    public final ArrayList<NPC> getNPCsAttachedToQuestWithShowing(final Quest quest) {
+    public final CopyOnWriteArrayList<NQNPC> getNPCsAttachedToQuestWithShowing(final Quest quest) {
         return quest.getAttachedNPCsWithQuestShowing();
     }
 
-    public final ArrayList<NPC> getNPCsAttachedToQuestWithoutShowing(final Quest quest) {
+    public final CopyOnWriteArrayList<NQNPC> getNPCsAttachedToQuestWithoutShowing(final Quest quest) {
         return quest.getAttachedNPCsWithoutQuestShowing();
     }
 
@@ -918,13 +918,19 @@ public class QuestManager {
     }
 
 
-    public void sendQuestsPreviewOfQuestShownNPCs(NPC npc, QuestPlayer questPlayer) {
+    public void sendQuestsPreviewOfQuestShownNPCs(final NQNPC npc, final QuestPlayer questPlayer) {
         questPlayer.sendDebugMessage("Sending quests preview...");
+
+        if(npc == null){
+            questPlayer.sendDebugMessage("NPC is null");
+            return;
+        }
 
         final ArrayList<Quest> questsAttachedToNPC = getQuestsAttachedToNPCWithShowing(npc);
 
         //No quests attached or all quests are set to not showing (more likely). THen nothing should show. That should make it work with Interactions plugin and takeEnabled = false.
-        if (questsAttachedToNPC.size() == 0) {
+        if (questsAttachedToNPC.isEmpty()) {
+            questPlayer.sendDebugMessage("No quests attached to NPC " + npc.getID() + " and name " + npc.getName());
             return;
         }
 
@@ -1010,7 +1016,7 @@ public class QuestManager {
             ));
             int counter = 1;
 
-            for (Quest quest : questsAttachedToNPC) {
+            for (final Quest quest : questsAttachedToNPC) {
 
                 Component acceptComponent = main.parse("<GREEN>**[CHOOSE]")
                         .clickEvent(ClickEvent.runCommand("/nquests preview " + quest.getQuestName()))
@@ -1387,18 +1393,16 @@ public class QuestManager {
         }
 
 
-        //Then Citizens
-        if (main.getIntegrationsManager().isCitizensEnabled()) {
-            for (NPC npc : getAllNPCsAttachedToQuest(quest)) {
-                if (npc == null || npc.getEntity() == null) {
-                    main.getLogManager().warn("A quest has an invalid npc attached to it, which should be removed. Report it to an admin. Quest name: <highlight>" + quest.getQuestName() + "</highlight>");
-                    continue;
-                }
-                final Location npcLocation = npc.getEntity().getLocation();
-                if (npcLocation.getWorld() != null && npcLocation.getWorld().equals(player.getWorld())) {
-                    if (npcLocation.distance(player.getLocation()) < closenessCheckDistance) {
-                        return true;
-                    }
+        //TODO: Only applicable for Citizens or not?
+        for (NQNPC npc : getAllNPCsAttachedToQuest(quest)) {
+            if (npc == null || npc.getEntity() == null) {
+                main.getLogManager().warn("A quest has an invalid npc attached to it, which should be removed. Report it to an admin. Quest name: <highlight>" + quest.getQuestName() + "</highlight>");
+                continue;
+            }
+            final Location npcLocation = npc.getEntity().getLocation();
+            if (npcLocation.getWorld() != null && npcLocation.getWorld().equals(player.getWorld())) {
+                if (npcLocation.distance(player.getLocation()) < closenessCheckDistance) {
+                    return true;
                 }
             }
         }

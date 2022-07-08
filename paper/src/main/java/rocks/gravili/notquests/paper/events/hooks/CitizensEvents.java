@@ -35,6 +35,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.conversation.Conversation;
+import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -105,6 +106,8 @@ public class CitizensEvents implements Listener {
     @EventHandler
     private void onNPCClickEvent(NPCRightClickEvent event) { //Disconnect objectives
         final NPC npc = event.getNPC();
+        final NQNPC nqnpc = main.getNPCManager().getOrCreateNQNpc("Citizens", npc.getId());
+
         final Player player = event.getClicker();
         final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
 
@@ -115,6 +118,7 @@ public class CitizensEvents implements Listener {
                 for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                     for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                         if (activeObjective.isUnlocked()) {
+
                             if (activeObjective.getObjective() instanceof final DeliverItemsObjective deliverItemsObjective) {
                                 if (deliverItemsObjective.getRecipientNPCID() == npc.getId()) {
                                     for (final ItemStack itemStack : player.getInventory().getContents()) {
@@ -135,7 +139,7 @@ public class CitizensEvents implements Listener {
 
                                             if (progressLeft < itemStack.getAmount()) { //We can finish it with this itemStack
                                                 itemStack.setAmount((itemStack.getAmount() - (int) progressLeft));
-                                                activeObjective.addProgress(progressLeft, npc.getId());
+                                                activeObjective.addProgress(progressLeft, nqnpc);
 
 
 
@@ -145,7 +149,7 @@ public class CitizensEvents implements Listener {
                                                 break;
                                             } else {
                                                 player.getInventory().removeItem(itemStack);
-                                                activeObjective.addProgress(itemStack.getAmount(), npc.getId());
+                                                activeObjective.addProgress(itemStack.getAmount(), nqnpc);
                                                 player.sendMessage(main.parse(
                                                         "<GREEN>You have delivered <highlight>" + itemStack.getAmount() + "</highlight> items to <highlight>" + mmNpcName
                                                 ));
@@ -157,7 +161,7 @@ public class CitizensEvents implements Listener {
                                 }
                             } else if (activeObjective.getObjective() instanceof final TalkToNPCObjective talkToNPCObjective) {
                                 if (talkToNPCObjective.getNPCtoTalkID() != -1 && talkToNPCObjective.getNPCtoTalkID() == npc.getId()) {
-                                    activeObjective.addProgress(1, npc.getId());
+                                    activeObjective.addProgress(1, nqnpc);
                                     final String mmNpcName = main.getMiniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(npc.getName().replace("§","&")));
 
                                     player.sendMessage(main.parse(
@@ -170,7 +174,7 @@ public class CitizensEvents implements Listener {
                                     final NPC npcToEscort = CitizensAPI.getNPCRegistry().getById(escortNPCObjective.getNpcToEscortID());
                                     if (npcToEscort != null) {
                                         if (npcToEscort.isSpawned() && (npcToEscort.getEntity().getLocation().distance(player.getLocation()) < 6)) {
-                                            activeObjective.addProgress(1, npc.getId());
+                                            activeObjective.addProgress(1, nqnpc);
                                             final String mmNpcName = main.getMiniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(npcToEscort.getName()));
 
                                             player.sendMessage(main.parse(
@@ -199,8 +203,8 @@ public class CitizensEvents implements Listener {
                                 }
                             }
                             //Eventually trigger CompletionNPC Objective Completion if the objective is not set to complete automatically (so, if getCompletionNPCID() is not -1)
-                            if (activeObjective.getObjective().getCompletionNPCID() != -1) {
-                                activeObjective.addProgress(0, npc.getId());
+                            if (activeObjective.getObjective().getCompletionNPC() != null) {
+                                activeObjective.addProgress(0, nqnpc);
                             }
                         }
 
@@ -218,10 +222,10 @@ public class CitizensEvents implements Listener {
             }
 
             //Quest Preview
-            main.getQuestManager().sendQuestsPreviewOfQuestShownNPCs(npc, questPlayer);
+            main.getQuestManager().sendQuestsPreviewOfQuestShownNPCs(nqnpc, questPlayer);
 
             //Conversations
-            final Conversation foundConversation = main.getConversationManager().getConversationForNPCID(npc.getId());
+            final Conversation foundConversation = main.getConversationManager().getConversationForNPC(nqnpc);
             if (foundConversation != null) {
                 main.getConversationManager().playConversation(questPlayer, foundConversation);
             }

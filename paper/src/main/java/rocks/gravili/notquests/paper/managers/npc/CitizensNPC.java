@@ -1,8 +1,13 @@
 package rocks.gravili.notquests.paper.managers.npc;
 
+import java.util.ArrayList;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.conversation.Conversation;
 import rocks.gravili.notquests.paper.managers.integrations.citizens.QuestGiverNPCTrait;
@@ -11,29 +16,35 @@ public class CitizensNPC extends NQNPC {
   private NPC cachedNPC;
   private final int npcID;
 
-  public CitizensNPC(final NotQuests main, final int npcID){
+  public CitizensNPC(final NotQuests main, final int npcID) {
     super(main, "Citizens");
     this.npcID = npcID;
-    this.cachedNPC = CitizensAPI.getNPCRegistry()
-        .getById(npcID);
+    this.cachedNPC = CitizensAPI.getNPCRegistry().getById(npcID);
   }
 
-  private boolean updateCachedNPC(){
-    if(cachedNPC == null) {
-      cachedNPC = CitizensAPI.getNPCRegistry()
-          .getById(npcID);
+  private boolean updateCachedNPC() {
+    if (cachedNPC == null) {
+      cachedNPC = CitizensAPI.getNPCRegistry().getById(npcID);
     }
     return cachedNPC != null;
   }
 
+  @Nullable
+  @Override
   public String getName() {
-    if(!updateCachedNPC()) {
+    if (!updateCachedNPC()) {
       return null;
     }
-      return cachedNPC.getName();
+    return main.getMiniMessage()
+        .serialize(
+            LegacyComponentSerializer.legacyAmpersand()
+                .deserialize(cachedNPC.getName().replace("§", "&")));
   }
+
+  @NotNull
+  @Override
   public int getID() {
-    if(!updateCachedNPC()) {
+    if (!updateCachedNPC()) {
       return npcID;
     }
     return cachedNPC.getId();
@@ -41,7 +52,7 @@ public class CitizensNPC extends NQNPC {
 
   @Override
   public void bindToConversation(Conversation conversation) {
-    if(!updateCachedNPC()) {
+    if (!updateCachedNPC()) {
       return;
     }
 
@@ -67,15 +78,28 @@ public class CitizensNPC extends NQNPC {
 
   @Override
   public void removeQuestGiverNPCTrait() {
-    if(!updateCachedNPC()) {
+    if (!updateCachedNPC()) {
       return;
     }
-    cachedNPC.removeTrait(QuestGiverNPCTrait.class);
+
+    final ArrayList<Trait> npcTraitsToRemove = new ArrayList<>();
+    for (final Trait trait : cachedNPC.getTraits()) {
+      if (trait.getName().equalsIgnoreCase("nquestgiver")) {
+        npcTraitsToRemove.add(trait);
+      }
+    }
+    for (final Trait trait : npcTraitsToRemove) {
+      cachedNPC.removeTrait(trait.getClass());
+    }
+    npcTraitsToRemove.clear();
+
+    // cachedNPC.removeTrait(QuestGiverNPCTrait.class); //This is not enough to ensure compatibility
+    // with ServerUtils
   }
 
   @Override
   public void addQuestGiverNPCTrait() {
-    if(!updateCachedNPC()) {
+    if (!updateCachedNPC()) {
       return;
     }
     boolean hasTrait = false;
@@ -90,5 +114,13 @@ public class CitizensNPC extends NQNPC {
       // npc.getTraits().toString());
       cachedNPC.addTrait(QuestGiverNPCTrait.class);
     }
+  }
+
+  @Override
+  public final Entity getEntity() {
+    if (!updateCachedNPC()) {
+      return null;
+    }
+    return cachedNPC.getEntity();
   }
 }

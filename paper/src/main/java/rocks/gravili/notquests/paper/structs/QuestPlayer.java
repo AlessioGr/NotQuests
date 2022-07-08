@@ -42,6 +42,7 @@ import rocks.gravili.notquests.paper.commands.NotQuestColors;
 import rocks.gravili.notquests.paper.events.notquests.QuestCompletedEvent;
 import rocks.gravili.notquests.paper.events.notquests.QuestFinishAcceptEvent;
 import rocks.gravili.notquests.paper.events.notquests.QuestPointsChangeEvent;
+import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 import rocks.gravili.notquests.paper.structs.conditions.Condition.ConditionResult;
@@ -677,7 +678,7 @@ public class QuestPlayer {
             for (final ActiveObjective objective : activeQuest2.getActiveObjectives()) {
                 if (objective.getObjective() instanceof final OtherQuestObjective otherQuestObjective) {
                     if (otherQuestObjective.getOtherQuest().equals(activeQuest.getQuest())) {
-                        objective.addProgress(1, -1);
+                        objective.addProgress(1, (NQNPC)null);
                     }
                 }
             }

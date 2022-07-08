@@ -1,12 +1,13 @@
 package rocks.gravili.notquests.paper.managers.npc;
 
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.conversation.Conversation;
 
-public abstract class NQNPC {
+public abstract class NQNPC { //TODO: Even though I'm trying to pool NPC names, a custom .equals() method might be a good idea
   protected final NotQuests main;
   private final String npcType;
   public NQNPC(final NotQuests main, final String npcType){
@@ -30,11 +31,12 @@ public abstract class NQNPC {
     final String type = fileConfiguration.getString(partialPath + ".type");
     final int id = fileConfiguration.getInt(partialPath + ".id");
     final String name = fileConfiguration.getString(partialPath + ".name");
+    main.getLogManager().debug("Creating NQNPC from Config with type: " + type + " and id: " + id + " and name: " + name);
     if(type == null){
       return null;
     }
     if(type.equals("Citizens")){
-      return new CitizensNPC(main, id);
+      return main.getNPCManager().getOrCreateNQNpc("Citizens", id);
     }
     return null;
   }
@@ -45,5 +47,7 @@ public abstract class NQNPC {
   public abstract void removeQuestGiverNPCTrait();
 
   public abstract void addQuestGiverNPCTrait();
+
+  public abstract Entity getEntity();
 
 }

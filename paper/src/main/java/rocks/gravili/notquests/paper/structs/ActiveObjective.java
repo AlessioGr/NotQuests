@@ -313,7 +313,7 @@ public class ActiveObjective {
 
     //For Citizens NPCs
     public final boolean isCompleted(final NQNPC nqnpc) {
-        if (getObjective().getCompletionNPCID() == -1 || getObjective().getCompletionNPCID() == nqnpc.getID()) {
+        if (getObjective().getCompletionNPC() == null || getObjective().getCompletionNPC().equals(nqnpc)) {
             return canComplete() && currentProgress >= getProgressNeeded();
         } else {
             return false;

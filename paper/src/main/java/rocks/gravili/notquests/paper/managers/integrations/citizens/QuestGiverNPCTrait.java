@@ -28,6 +28,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
@@ -47,14 +48,14 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
  */
 public class QuestGiverNPCTrait extends Trait {
 
-  NotQuests notQuests;
+  final NotQuests main;
 
   private int particleTimer = 0;
   private int nameTagTimer = 0;
 
   public QuestGiverNPCTrait() {
     super("nquestgiver");
-    this.notQuests = NotQuests.getInstance();
+    this.main = NotQuests.getInstance();
   }
 
   // Here you should load up any values you have previously saved (optional).
@@ -106,28 +107,28 @@ public class QuestGiverNPCTrait extends Trait {
   @Override
   public void run() {
 
-    if(notQuests.getIntegrationsManager().getCitizensManager().getTraitRun() != null) {
-      notQuests.getIntegrationsManager().getCitizensManager().getTraitRun().accept(this);
+    if(main.getIntegrationsManager().getCitizensManager().getTraitRun() != null) {
+      main.getIntegrationsManager().getCitizensManager().getTraitRun().accept(this);
     }
 
     // Disable if Server TPS is too low
     final double minimumTPS =
-        notQuests
+        main
             .getDataManager()
             .getConfiguration()
             .getCitizensNPCQuestGiverIndicatorParticleDisableIfTPSBelow();
     if (minimumTPS >= 0) {
-      if (notQuests.getPerformanceManager().getTPS() < minimumTPS) {
+      if (main.getPerformanceManager().getTPS() < minimumTPS) {
         return;
       }
     }
 
-    final String npcHoloText = notQuests.getDataManager()
+    final String npcHoloText = main.getDataManager()
             .getConfiguration()
             .getCitizensNPCQuestGiverIndicatorText();
     if (npcHoloText.length() > 0 && npc.isSpawned()){
       final Entity npcEntity = getNPC().getEntity();
-      if (nameTagTimer >= notQuests.getDataManager()
+      if (npcEntity != null && nameTagTimer >= main.getDataManager()
               .getConfiguration()
               .getCitizensNPCQuestGiverIndicatorTextInterval() ) {
         nameTagTimer = 0;
@@ -145,12 +146,13 @@ public class QuestGiverNPCTrait extends Trait {
             npcHolo.customName(Component.text(npcHoloText));
             for (final Entity e : npcEntity.getNearbyEntities(16, 16, 16)) {
               if (e instanceof final Player player) {
-                QuestPlayer qp = notQuests.getQuestPlayerManager().getQuestPlayer(e.getUniqueId());
-                ArrayList<Quest> questsArrayList = notQuests.getQuestManager().getAllQuestsAttachedToNPC(getNPC());
-                notQuests.getPacketManager().getModernPacketInjector().sendHolo(
+                QuestPlayer qp = main.getQuestPlayerManager().getQuestPlayer(e.getUniqueId());
+                ArrayList<Quest> questsArrayList = main.getQuestManager().getAllQuestsAttachedToNPC(
+                    main.getNPCManager().getOrCreateNQNpc("Citizens", getNPC().getId()));
+                main.getPacketManager().getModernPacketInjector().sendHolo(
                         player,
                         npcHolo,
-                        notQuests
+                        main
                                 .getQuestManager()
                                 .getQuestsFromListWithVisibilityEvaluations(qp, questsArrayList).size() != 0);
 
@@ -161,13 +163,15 @@ public class QuestGiverNPCTrait extends Trait {
       }
       nameTagTimer +=1;
     }
-    if (notQuests
+
+
+    if (main
             .getDataManager()
             .getConfiguration()
             .isCitizensNPCQuestGiverIndicatorParticleEnabled()
         && npc.isSpawned()) {
       if (particleTimer
-          >= notQuests
+          >= main
               .getDataManager()
               .getConfiguration()
               .getCitizensNPCQuestGiverIndicatorParticleSpawnInterval()) {
@@ -178,14 +182,14 @@ public class QuestGiverNPCTrait extends Trait {
         npcEntity
             .getWorld()
             .spawnParticle(
-                notQuests
+                main
                     .getDataManager()
                     .getConfiguration()
                     .getCitizensNPCQuestGiverIndicatorParticleType(),
                 location.getX() - 0.25 + (Math.random() / 2),
                 location.getY() + 1.75 + (Math.random() / 2),
                 location.getZ() - 0.25 + (Math.random() / 2),
-                notQuests
+                main
                     .getDataManager()
                     .getConfiguration()
                     .getCitizensNPCQuestGiverIndicatorParticleCount());
@@ -205,7 +209,7 @@ public class QuestGiverNPCTrait extends Trait {
    */
   @Override
   public void onAttach() {
-    notQuests
+    main
         .getLogManager()
         .info(
             "NPC with the ID <highlight>"
@@ -237,8 +241,14 @@ public class QuestGiverNPCTrait extends Trait {
   @Override
   public void onRemove() {
     // REMOVEEEE FROM QUEST
-    getNPC().getEntity().getPassengers().forEach(Entity::remove);
-    notQuests
+    if(getNPC() == null) {
+      main.getLogManager().warn("NPC removal not completed, as the NPC is null.");
+      return;
+    }
+    if(getNPC().getEntity() != null){
+      getNPC().getEntity().getPassengers().forEach(Entity::remove);
+    }
+    main
         .getLogManager()
         .info(
             "NPC with the ID <highlight>"
@@ -246,8 +256,9 @@ public class QuestGiverNPCTrait extends Trait {
                 + " </highlight>and name <highlight>"
                 + npc.getName().replace("&", "").replace("§", "")
                 + " </highlight>has been removed!");
-    for (Quest quest : notQuests.getQuestManager().getAllQuestsAttachedToNPC(getNPC())) {
-      quest.removeNPC(getNPC());
+    final NQNPC nqnpc = main.getNPCManager().getOrCreateNQNpc("Citizens", getNPC().getId());
+    for (Quest quest : main.getQuestManager().getAllQuestsAttachedToNPC(nqnpc)) {
+      quest.removeNPC(nqnpc);
     }
   }
 }

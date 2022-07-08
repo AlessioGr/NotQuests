@@ -399,9 +399,10 @@ public class CitizensManager {
 
                   final NPC npc = CitizensAPI.getNPCRegistry().getById(npcID);
                   if (npc != null) {
-                    if (!quest.getAttachedNPCsWithQuestShowing().contains(npc)
-                        && !quest.getAttachedNPCsWithoutQuestShowing().contains(npc)) {
-                      quest.bindToNPC(npc, showInNPC);
+                    final NQNPC nqnpc = main.getNPCManager().getOrCreateNQNpc("Citizens", npcID);
+                    if (!quest.getAttachedNPCsWithQuestShowing().contains(nqnpc)
+                        && !quest.getAttachedNPCsWithoutQuestShowing().contains(nqnpc)) {
+                      quest.bindToNPC(nqnpc, showInNPC);
                       context
                           .getSender()
                           .sendMessage(
@@ -469,7 +470,7 @@ public class CitizensManager {
                                   + quest.getQuestName()
                                   + "</highlight2> with Quest showing:"));
                   int counter = 1;
-                  for (final NPC npc : quest.getAttachedNPCsWithQuestShowing()) {
+                  for (final NQNPC nqNPC : quest.getAttachedNPCsWithQuestShowing()) {
                     context
                         .getSender()
                         .sendMessage(
@@ -477,7 +478,7 @@ public class CitizensManager {
                                 "<highlight>"
                                     + counter
                                     + ".</highlight> <main>ID:</main> <highlight2>"
-                                    + npc.getId()));
+                                    + nqNPC.getID()));
                     counter++;
                   }
                   counter = 1;
@@ -488,7 +489,7 @@ public class CitizensManager {
                               "<highlight>NPCs bound to quest <highlight2>"
                                   + quest.getQuestName()
                                   + "</highlight2> without Quest showing:"));
-                  for (NPC npc : quest.getAttachedNPCsWithoutQuestShowing()) {
+                  for (NQNPC nqNPC : quest.getAttachedNPCsWithoutQuestShowing()) {
                     context
                         .getSender()
                         .sendMessage(
@@ -496,7 +497,7 @@ public class CitizensManager {
                                 "<highlight>"
                                     + counter
                                     + ".</highlight> <main>ID:</main> <highlight2>"
-                                    + npc.getId()));
+                                    + nqNPC.getID()));
                     counter++;
                   }
                 }));

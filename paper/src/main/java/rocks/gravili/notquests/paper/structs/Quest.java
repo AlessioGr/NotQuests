@@ -20,13 +20,13 @@ package rocks.gravili.notquests.paper.structs;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
-import rocks.gravili.notquests.paper.managers.integrations.citizens.QuestGiverNPCTrait;
 import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
@@ -52,8 +52,8 @@ public class Quest {
 
   private ArrayList<Condition> conditionsWithSpecialConditions;
   private final ArrayList<Trigger> triggers; // Triggers for the quest
-  private final ArrayList<NQNPC> attachedNPCsWithQuestShowing;
-  private final ArrayList<NQNPC> attachedNPCsWithoutQuestShowing;
+  private final CopyOnWriteArrayList<NQNPC> attachedNPCsWithQuestShowing;
+  private final CopyOnWriteArrayList<NQNPC> attachedNPCsWithoutQuestShowing;
   private int maxAccepts = -1; // -1 or smaller => unlimited accepts
   private long acceptCooldown = -1; // Cooldown in minute. -1 or smaller => no cooldown.
   private boolean takeEnabled = true;
@@ -71,8 +71,8 @@ public class Quest {
     objectives = new ArrayList<>();
     conditions = new ArrayList<>();
     conditionsWithSpecialConditions = new ArrayList<>();
-    attachedNPCsWithQuestShowing = new ArrayList<>();
-    attachedNPCsWithoutQuestShowing = new ArrayList<>();
+    attachedNPCsWithQuestShowing = new CopyOnWriteArrayList<>();
+    attachedNPCsWithoutQuestShowing = new CopyOnWriteArrayList<>();
     triggers = new ArrayList<>();
     category = main.getDataManager().getDefaultCategory();
   }
@@ -84,8 +84,8 @@ public class Quest {
     objectives = new ArrayList<>();
     conditions = new ArrayList<>();
     conditionsWithSpecialConditions = new ArrayList<>();
-    attachedNPCsWithQuestShowing = new ArrayList<>();
-    attachedNPCsWithoutQuestShowing = new ArrayList<>();
+    attachedNPCsWithQuestShowing = new CopyOnWriteArrayList<>();
+    attachedNPCsWithoutQuestShowing = new CopyOnWriteArrayList<>();
     triggers = new ArrayList<>();
     this.category = category;
   }
@@ -526,20 +526,18 @@ public class Quest {
 
     npc.addQuestGiverNPCTrait();
 
-    category
-        .getQuestsConfig()
-        .set("quests." + questName + ".npcs." + npc.getID() + ".npcID", npc.getID());
+    npc.saveToConfig(category.getQuestsConfig(), "quests." + questName + ".npcs." + npc.getID() + ".npcData");
     category
         .getQuestsConfig()
         .set("quests." + questName + ".npcs." + npc.getID() + ".questShowing", showQuest);
     category.saveQuestsConfig();
   }
 
-  public final ArrayList<NQNPC> getAttachedNPCsWithQuestShowing() {
+  public final CopyOnWriteArrayList<NQNPC> getAttachedNPCsWithQuestShowing() {
     return attachedNPCsWithQuestShowing;
   }
 
-  public final ArrayList<NQNPC> getAttachedNPCsWithoutQuestShowing() {
+  public final CopyOnWriteArrayList<NQNPC> getAttachedNPCsWithoutQuestShowing() {
     return attachedNPCsWithoutQuestShowing;
   }
 
@@ -550,29 +548,22 @@ public class Quest {
 
       final ArrayList<NQNPC> arrayList = new ArrayList<>(attachedNPCsWithQuestShowing);
       arrayList.addAll(attachedNPCsWithoutQuestShowing);
-      final ArrayList<Trait> npcTraitsToRemove = new ArrayList<>();
-      for (final NPC attachedNPC : arrayList) {
+
+
+
+      for (final NQNPC attachedNPC : arrayList) {
         // System.out.println("§e-1");
         if (attachedNPC.equals(npc)) {
           // System.out.println("§e0");
           if (main.getQuestManager().getAllQuestsAttachedToNPC(npc).size() == 1) {
             // npc.removeTrait(QuestGiverNPCTrait.class);
             // System.out.println("§e1");
-            for (final Trait trait : npc.getTraits()) {
-              if (trait.getName().equalsIgnoreCase("nquestgiver")) {
-                npcTraitsToRemove.add(trait);
-              }
-            }
+             npc.removeQuestGiverNPCTrait();
           }
         }
-        for (final Trait trait : npcTraitsToRemove) {
-          npc.removeTrait(trait.getClass());
-          // System.out.println("§e2");
-        }
-        npcTraitsToRemove.clear();
       }
 
-      category.getQuestsConfig().set("quests." + questName + ".npcs." + npc.getId(), null);
+      category.getQuestsConfig().set("quests." + questName + ".npcs." + npc.getID(), null);
       category.saveQuestsConfig();
 
       attachedNPCsWithQuestShowing.remove(npc);
