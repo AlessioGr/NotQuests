@@ -1678,13 +1678,13 @@ public class DataManager {
                 if (!isAlreadyLoadedQuests()) {
                     loadCategories();
                 }
-                main.getQuestManager().loadNPCData();
+                main.getNPCManager().loadNPCData();
             });
         } else {
             if (!isAlreadyLoadedQuests()) {
                 loadCategories();
             }
-            main.getQuestManager().loadNPCData();
+            main.getNPCManager().loadNPCData();
         }
 
     }

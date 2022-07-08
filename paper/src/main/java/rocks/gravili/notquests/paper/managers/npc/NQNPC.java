@@ -41,4 +41,9 @@ public abstract class NQNPC {
 
   //DO NOT PERSIST? Or do persist? idk. Adds trait for citizens npc
   public abstract void bindToConversation(final Conversation conversation);
+
+  public abstract void removeQuestGiverNPCTrait();
+
+  public abstract void addQuestGiverNPCTrait();
+
 }

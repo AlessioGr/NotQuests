@@ -6,7 +6,9 @@ import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.Quest;
 
 public class NPCManager {
@@ -32,7 +34,7 @@ public class NPCManager {
     return null;
   }
 
-  public void cleanupBuggedNPCs() { //TODO: NPC
+  public void cleanupBuggedNPCs() { //TODO: Currently only works with Citizens :(
     if (!main.getIntegrationsManager().isCitizensEnabled()) {
       main.getLogManager().warn("Checking for bugged NPCs has been cancelled, because Citizens is not installed on your server. The Citizens plugin is needed for NPC stuff to work.");
 
@@ -47,15 +49,14 @@ public class NPCManager {
     for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
       allNPCsFound += 1;
 
+      final NQNPC nqnpc = getOrCreateNQNpc("Citizens", npc.getId());
       //No quests attached to NPC => check if it has the trait
-      final NQNPC
-      if (getAllQuestsAttachedToNPC(npc).size() == 0 && (main.getConversationManager().getConversationForNPC(npc == null)) {
+      if (main.getQuestManager().getAllQuestsAttachedToNPC(npc).size() == 0 && (main.getConversationManager().getConversationForNPC(nqnpc) == null)) {
         for (final Trait trait : npc.getTraits()) {
           if (trait.getName().contains("questgiver")) {
             traitsToRemove.add(trait);
           }
         }
-
 
         if (!Bukkit.isPrimaryThread()) {
           Bukkit.getScheduler().runTask(main.getMain(), () -> {
@@ -81,7 +82,7 @@ public class NPCManager {
       } else {
         //TODO: Remove debug shit or improve performance
         final ArrayList<String> attachedQuestNames = new ArrayList<>();
-        for (final Quest attachedQuest : getAllQuestsAttachedToNPC(npc)) {
+        for (final Quest attachedQuest : main.getQuestManager().getAllQuestsAttachedToNPC(npc)) {
           attachedQuestNames.add(attachedQuest.getQuestName());
         }
         main.getLogManager().info("  NPC with the ID: <highlight>" + npc.getId() + "</highlight> is not bugged, because it has the following quests attached: <highlight>" + attachedQuestNames + "</highlight>");
@@ -99,5 +100,92 @@ public class NPCManager {
     }
   }
 
+  public void loadNPCData() {
+    if (main.getDataManager().isAlreadyLoadedQuests()) {
+      for (final Category category : main.getDataManager().getCategories()) {
+        loadNPCData(category);
+      }
+    } else {
+      main.getLogManager().info("Tried to load NPC data before quest data was loaded. NotQuests is scheduling another load...");
+
+      Bukkit.getScheduler().runTaskLaterAsynchronously(main.getMain(), () -> {
+        if (!main.getDataManager().isAlreadyLoadedNPCs()) {
+          main.getLogManager().info("Trying to load NPC quest data again...");
+          main.getDataManager().loadNPCData();
+        }
+      }, 60);
+    }
+
+  }
+
+  public void loadNPCData(final Category category) {
+    main.getLogManager().info("Loading NPC data...");
+
+    if (!main.getIntegrationsManager().isCitizensEnabled()) {
+      main.getLogManager().warn("NPC data loading has been cancelled, because Citizens is not installed. Install the Citizens plugin if you want NPC stuff to work.");
+      return;
+    }
+
+    if(category.getQuestsConfig() == null){
+      main.getLogManager().warn("Skipped loading NPC data because the entire quests configuration of the category <highlight>" + category.getCategoryFullName() + "</highlight> was null. This should never happen.");
+      return;
+    }
+
+    try {
+      final ConfigurationSection questsConfigurationSetting = category.getQuestsConfig().getConfigurationSection("quests");
+      if (questsConfigurationSetting != null) {
+        if (!Bukkit.isPrimaryThread()) {
+          Bukkit.getScheduler().runTask(main.getMain(), () -> {
+            loadNPCDataInternal(category, questsConfigurationSetting);
+          });
+        } else {
+          loadNPCDataInternal(category, questsConfigurationSetting);
+        }
+      } else {
+        main.getLogManager().info("Skipped loading NPC data because the 'quests' configuration section of the quests configuration for the category <highlight>" + category.getCategoryFullName() + "</highlight> was null.");
+      }
+      main.getLogManager().info("NPC data loaded!");
+      main.getDataManager().setAlreadyLoadedNPCs(true);
+    } catch (Exception ex) {
+      main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an exception while loading quests NPC data.", ex);
+      return;
+    }
+  }
+
+  private void loadNPCDataInternal(final Category category, final ConfigurationSection questsConfigurationSetting) {
+    for (final String questName : questsConfigurationSetting.getKeys(false)) {
+      final Quest quest = main.getQuestManager().getQuest(questName);
+      if (quest != null) {
+        //NPC
+        final ConfigurationSection npcsConfigurationSection = category.getQuestsConfig().getConfigurationSection("quests." + questName + ".npcs");
+        if (npcsConfigurationSection != null) {
+          for (final String npcNumber : npcsConfigurationSection.getKeys(false)) {
+
+            if (category.getQuestsConfig() != null) {
+              final NPC npc = CitizensAPI.getNPCRegistry().getById(category.getQuestsConfig().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID"));
+              if (npc != null) {
+                final boolean questShowing = category.getQuestsConfig().getBoolean("quests." + questName + ".npcs." + npc.getId() + ".questShowing", true);
+                // call the callback with the result
+                final String mmNpcName = main.getMiniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(npc.getName().replace("§","&")));
+
+                main.getLogManager().info("Attaching Quest with the name <highlight>" + quest.getQuestName() + "</highlight> to NPC with the ID <highlight>" + npc.getId() + " </highlight>and name <highlight>" + mmNpcName);
+                quest.removeNPC(npc);
+                quest.bindToNPC(npc, questShowing);
+              } else {
+                main.getLogManager().warn("Error attaching npc with ID <highlight>" + category.getQuestsConfig().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID")
+                    + "</highlight> to quest <highlight>" + quest.getQuestName() + "</highlight> - NPC not found.");
+              }
+            } else {
+              main.getLogManager().warn("Error: quests data is null");
+            }
+          }
+        }
+      } else {
+        main.getLogManager().warn("Error: Quest not found while trying to load NPC");
+      }
+    }
+    main.getLogManager().info("Requesting cleaning of bugged NPCs in loadNPCData()...");
+    main.getNPCManager().cleanupBuggedNPCs();
+  }
 
 }

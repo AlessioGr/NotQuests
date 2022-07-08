@@ -64,4 +64,31 @@ public class CitizensNPC extends NQNPC {
       cachedNPC.addTrait(QuestGiverNPCTrait.class);
     }
   }
+
+  @Override
+  public void removeQuestGiverNPCTrait() {
+    if(!updateCachedNPC()) {
+      return;
+    }
+    cachedNPC.removeTrait(QuestGiverNPCTrait.class);
+  }
+
+  @Override
+  public void addQuestGiverNPCTrait() {
+    if(!updateCachedNPC()) {
+      return;
+    }
+    boolean hasTrait = false;
+    for (Trait trait : cachedNPC.getTraits()) {
+      if (trait.getName().contains("questgiver")) {
+        hasTrait = true;
+        break;
+      }
+    }
+    if (!cachedNPC.hasTrait(QuestGiverNPCTrait.class) && !hasTrait) {
+      // System.out.println("§2NPC doesnt have trait. giving him trait... Cur traits: " +
+      // npc.getTraits().toString());
+      cachedNPC.addTrait(QuestGiverNPCTrait.class);
+    }
+  }
 }

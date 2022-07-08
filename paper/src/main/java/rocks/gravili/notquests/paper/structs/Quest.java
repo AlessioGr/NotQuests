@@ -20,8 +20,6 @@ package rocks.gravili.notquests.paper.structs;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.citizensnpcs.api.npc.NPC;
-import net.citizensnpcs.api.trait.Trait;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -29,9 +27,9 @@ import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.managers.integrations.citizens.QuestGiverNPCTrait;
+import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
-import rocks.gravili.notquests.paper.structs.conditions.Condition.ConditionResult;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 
@@ -54,8 +52,8 @@ public class Quest {
 
   private ArrayList<Condition> conditionsWithSpecialConditions;
   private final ArrayList<Trigger> triggers; // Triggers for the quest
-  private final ArrayList<NPC> attachedNPCsWithQuestShowing;
-  private final ArrayList<NPC> attachedNPCsWithoutQuestShowing;
+  private final ArrayList<NQNPC> attachedNPCsWithQuestShowing;
+  private final ArrayList<NQNPC> attachedNPCsWithoutQuestShowing;
   private int maxAccepts = -1; // -1 or smaller => unlimited accepts
   private long acceptCooldown = -1; // Cooldown in minute. -1 or smaller => no cooldown.
   private boolean takeEnabled = true;
@@ -503,19 +501,11 @@ public class Quest {
   }
 
   public void clearNPCs() {
-    if (!main.getIntegrationsManager().isCitizensEnabled()) {
-      main.getLogManager()
-          .severe(
-              "The removal of all NPCs from Quest <highlight>"
-                  + questName
-                  + "</highlight> has been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
-      return;
-    }
-    final ArrayList<NPC> arrayList = new ArrayList<>(attachedNPCsWithQuestShowing);
+    final ArrayList<NQNPC> arrayList = new ArrayList<>(attachedNPCsWithQuestShowing);
     arrayList.addAll(attachedNPCsWithoutQuestShowing);
-    for (NPC npc : arrayList) {
+    for (final NQNPC npc : arrayList) {
       if (main.getQuestManager().getAllQuestsAttachedToNPC(npc).size() == 1) {
-        npc.removeTrait(QuestGiverNPCTrait.class);
+        npc.removeQuestGiverNPCTrait();
       }
     }
     attachedNPCsWithQuestShowing.clear();
@@ -524,15 +514,7 @@ public class Quest {
     category.saveQuestsConfig();
   }
 
-  public void bindToNPC(NPC npc, boolean showQuest) {
-    if (!main.getIntegrationsManager().isCitizensEnabled()) {
-      main.getLogManager()
-          .severe(
-              "The binding to NPC in Quest <highlight>"
-                  + questName
-                  + "</highlight> has been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
-      return;
-    }
+  public void bindToNPC(final NQNPC npc, final boolean showQuest) {
     if (!attachedNPCsWithQuestShowing.contains(npc)
         && !attachedNPCsWithoutQuestShowing.contains(npc)) {
       if (showQuest) {
@@ -542,50 +524,31 @@ public class Quest {
       }
     }
 
-    boolean hasTrait = false;
-    for (Trait trait : npc.getTraits()) {
-      if (trait.getName().contains("questgiver")) {
-        hasTrait = true;
-        break;
-      }
-    }
-    if (!npc.hasTrait(QuestGiverNPCTrait.class) && !hasTrait) {
-      // System.out.println("§2NPC doesnt have trait. giving him trait... Cur traits: " +
-      // npc.getTraits().toString());
-      npc.addTrait(QuestGiverNPCTrait.class);
-    }
+    npc.addQuestGiverNPCTrait();
 
     category
         .getQuestsConfig()
-        .set("quests." + questName + ".npcs." + npc.getId() + ".npcID", npc.getId());
+        .set("quests." + questName + ".npcs." + npc.getID() + ".npcID", npc.getID());
     category
         .getQuestsConfig()
-        .set("quests." + questName + ".npcs." + npc.getId() + ".questShowing", showQuest);
+        .set("quests." + questName + ".npcs." + npc.getID() + ".questShowing", showQuest);
     category.saveQuestsConfig();
   }
 
-  public final ArrayList<NPC> getAttachedNPCsWithQuestShowing() {
+  public final ArrayList<NQNPC> getAttachedNPCsWithQuestShowing() {
     return attachedNPCsWithQuestShowing;
   }
 
-  public final ArrayList<NPC> getAttachedNPCsWithoutQuestShowing() {
+  public final ArrayList<NQNPC> getAttachedNPCsWithoutQuestShowing() {
     return attachedNPCsWithoutQuestShowing;
   }
 
-  public void removeNPC(final NPC npc) {
-    if (!main.getIntegrationsManager().isCitizensEnabled()) {
-      main.getLogManager()
-          .severe(
-              "The NPC removal in Quest <highlight>"
-                  + questName
-                  + "</highlight> has been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
-      return;
-    }
+  public void removeNPC(final NQNPC npc) {
     // System.out.println("§e-2");
     if (attachedNPCsWithoutQuestShowing.contains(npc)
         || attachedNPCsWithQuestShowing.contains(npc)) {
 
-      final ArrayList<NPC> arrayList = new ArrayList<>(attachedNPCsWithQuestShowing);
+      final ArrayList<NQNPC> arrayList = new ArrayList<>(attachedNPCsWithQuestShowing);
       arrayList.addAll(attachedNPCsWithoutQuestShowing);
       final ArrayList<Trait> npcTraitsToRemove = new ArrayList<>();
       for (final NPC attachedNPC : arrayList) {
