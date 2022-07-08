@@ -212,8 +212,7 @@ public class QuestPlayerManager {
                   activeObjective.setProgressNeeded(progressNeeded);
                 }
                 activeObjective.setHasBeenCompleted(hasBeenCompleted);
-                if (activeObjective.getObjective().getCompletionNPCID()
-                    == -1) { // Complete automatically
+                if (activeObjective.getObjective().getCompletionNPC() == null) { // Complete automatically
                   if (activeObjective.getObjective().getCompletionArmorStandUUID()
                       != null) { // Only complete if player has talked to the completion Armor Stand
                     if (activeObjective.hasBeenCompleted()) {
@@ -232,7 +231,7 @@ public class QuestPlayerManager {
                 } else { // Only complete if player has talked to the completion NPC
                   if (activeObjective.hasBeenCompleted()) {
                     activeObjective.addProgress(
-                        currentProgress, activeObjective.getObjective().getCompletionNPCID(), true);
+                        currentProgress, activeObjective.getObjective().getCompletionNPC(), true);
 
                   } else {
                     activeObjective.addProgress(currentProgress, true);
@@ -587,8 +586,7 @@ public class QuestPlayerManager {
                     activeObjective.setProgressNeeded(progressNeeded);
                   }
                   activeObjective.setHasBeenCompleted(hasBeenCompleted);
-                  if (activeObjective.getObjective().getCompletionNPCID()
-                      == -1) { // Complete automatically
+                  if (activeObjective.getObjective().getCompletionNPC() == null) { // Complete automatically
                     if (activeObjective.getObjective().getCompletionArmorStandUUID()
                         != null) { // Only complete if player has talked to the completion Armor
                                    // Stand
@@ -609,7 +607,7 @@ public class QuestPlayerManager {
                     if (activeObjective.hasBeenCompleted()) {
                       activeObjective.addProgress(
                           currentProgress,
-                          activeObjective.getObjective().getCompletionNPCID(),
+                          activeObjective.getObjective().getCompletionNPC(),
                           true);
 
                     } else {
