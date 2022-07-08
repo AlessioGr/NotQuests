@@ -640,6 +640,14 @@ public class DataManager {
                 "visual.citizensnpc.quest-giver-indicator-particle.type",
                 "VILLAGER_ANGRY"
         )));
+        configuration.setCitizensNPCQuestGiverIndicatorText(getGeneralConfigString(
+                "visual.citizensnpc.quest-giver-indicator-above-name.text",
+                "","Leave empty for no text on NPC"
+        ));
+        configuration.setCitizensNPCQuestGiverIndicatorTextInterval(getGeneralConfigInt(
+                "visual.citizensnpc.quest-giver-indicator-above-name.text-interval",
+                100,"Leave empty for no text on NPC"
+        ));
 
         configuration.setCitizensNPCQuestGiverIndicatorParticleSpawnInterval(getGeneralConfigInt(
                 "visual.citizensnpc.quest-giver-indicator-particle.spawn-interval",

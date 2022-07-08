@@ -23,8 +23,7 @@ import it.unimi.dsi.fastutil.shorts.ShortSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.game.ClientboundBlockEventPacket;
-import net.minecraft.network.protocol.game.ClientboundSectionBlocksUpdatePacket;
+import net.minecraft.network.protocol.game.*;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
@@ -38,7 +37,9 @@ import org.bukkit.block.BlockState;
 import org.bukkit.craftbukkit.v1_19_R1.CraftChunk;
 import org.bukkit.craftbukkit.v1_19_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_19_R1.block.CraftBlockState;
+import org.bukkit.craftbukkit.v1_19_R1.entity.CraftArmorStand;
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 
@@ -238,4 +239,14 @@ public class PacketInjector {
           //  player.sendMessage("Arrived!");
         });
   }
+  public void sendHolo(Player player,ArmorStand armorStand,boolean show) {
+    Connection connection = getConnection(getServerPlayer(player).connection);
+    net.minecraft.world.entity.decoration.ArmorStand a=((CraftArmorStand)armorStand).getHandle();
+    a.setCustomNameVisible(show);
+
+    ClientboundSetEntityDataPacket dataPck=new ClientboundSetEntityDataPacket(a.getId(),a.getEntityData(),true);
+
+    connection.send(dataPck);
+  }
+
 }
