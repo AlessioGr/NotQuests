@@ -22,15 +22,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
-import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.npc.NPC;
-import net.citizensnpcs.api.trait.Trait;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
-import rocks.gravili.notquests.paper.managers.integrations.citizens.QuestGiverNPCTrait;
-import rocks.gravili.notquests.paper.managers.npc.CitizensNPC;
 import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 
 public class Conversation {

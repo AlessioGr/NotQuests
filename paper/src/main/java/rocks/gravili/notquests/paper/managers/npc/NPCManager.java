@@ -181,4 +181,21 @@ public class NPCManager {
     main.getNPCManager().cleanupBuggedNPCs();
   }
 
+  public final boolean foundAnyNPCs() {
+    /*boolean foundNPC = false;
+    try{
+      for (final NPC ignored : CitizensAPI.getNPCRegistry().sorted()) {
+        foundNPC = true;
+        break;
+      }
+      if (foundNPC && !isAlreadyLoadedNPCs()) {
+        loadNPCData();
+      }
+    }catch (Exception e){
+      if(main.getConfiguration().isDebug()){
+        e.printStackTrace();
+      }
+    }*/
+    return true;
+  }
 }
