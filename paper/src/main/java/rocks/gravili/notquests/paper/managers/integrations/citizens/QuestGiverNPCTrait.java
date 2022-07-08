@@ -20,11 +20,18 @@ package rocks.gravili.notquests.paper.managers.integrations.citizens;
 
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.util.DataKey;
+import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.Quest;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
+
+import java.util.ArrayList;
 
 /**
  * This handles the QuestGiver NPC Trait which is given directly to Citizens NPCs via their API. A
@@ -45,6 +52,7 @@ public class QuestGiverNPCTrait extends Trait {
   NotQuests notQuests;
 
   private int particleTimer = 0;
+  private int nameTagTimer = 0;
 
   public QuestGiverNPCTrait() {
     super("nquestgiver");
@@ -116,6 +124,45 @@ public class QuestGiverNPCTrait extends Trait {
       }
     }
 
+    String npcHoloText = notQuests.getDataManager()
+            .getConfiguration()
+            .getCitizensNPCQuestGiverIndicatorText();
+    if (npcHoloText.length() > 0&&npc.isSpawned()){
+      final Entity npcEntity = getNPC().getEntity();
+      if (nameTagTimer >= notQuests.getDataManager()
+              .getConfiguration()
+              .getCitizensNPCQuestGiverIndicatorTextInterval() ) {
+        nameTagTimer=0;
+        if (npcEntity.getPassengers().size() == 0) {
+          final ArmorStand npcHolo = npcEntity.getWorld().spawn(npcEntity.getLocation(), ArmorStand.class);
+          npcHolo.setVisible(false);
+          npcHolo.setSmall(true);
+          npcHolo.setCustomNameVisible(false);
+          npcHolo.customName(Component.text(npcHoloText));
+          npcEntity.addPassenger(npcHolo);
+          //notQuests.getQuestManager().getQuestsFromListWithVisibilityEvaluations()
+
+        } else {
+          if (npcEntity.getPassengers().get(0) instanceof ArmorStand npcHolo) {
+            npcHolo.customName(Component.text(npcHoloText));
+            for (Entity e : npcEntity.getNearbyEntities(16, 16, 16)) {
+              if (e instanceof Player) {
+                QuestPlayer qp = notQuests.getQuestPlayerManager().getQuestPlayer(e.getUniqueId());
+                ArrayList<Quest> questsArrayList = notQuests.getQuestManager().getAllQuestsAttachedToNPC(getNPC());
+                notQuests.getPacketManager().getModernPacketInjector().sendHolo(
+                        (Player) e,
+                        npcHolo,
+                        notQuests
+                                .getQuestManager()
+                                .getQuestsFromListWithVisibilityEvaluations(qp, questsArrayList).size() != 0);
+
+              }
+            }
+          }
+        }
+      }
+      nameTagTimer +=1;
+    }
     if (notQuests
             .getDataManager()
             .getConfiguration()
@@ -126,11 +173,10 @@ public class QuestGiverNPCTrait extends Trait {
               .getDataManager()
               .getConfiguration()
               .getCitizensNPCQuestGiverIndicatorParticleSpawnInterval()) {
-        particleTimer = 0;
 
         final Entity npcEntity = getNPC().getEntity();
         final Location location = npcEntity.getLocation();
-
+        particleTimer = 0;
         npcEntity
             .getWorld()
             .spawnParticle(
@@ -151,6 +197,7 @@ public class QuestGiverNPCTrait extends Trait {
 
       particleTimer += 1;
     }
+    nameTagTimer += 1;
   }
 
   /**
@@ -192,6 +239,7 @@ public class QuestGiverNPCTrait extends Trait {
   @Override
   public void onRemove() {
     // REMOVEEEE FROM QUEST
+    getNPC().getEntity().getPassengers().forEach(Entity::remove);
     notQuests
         .getLogManager()
         .info(
