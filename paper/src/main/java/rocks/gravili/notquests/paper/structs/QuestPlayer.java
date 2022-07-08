@@ -811,7 +811,7 @@ public class QuestPlayer {
         if(main.getDataManager().isDisabled()){
             return;
         }
-        if (questsToComplete.size() == 0) {
+        if (questsToComplete.isEmpty()) {
             return;
         }
 
@@ -1001,7 +1001,7 @@ public class QuestPlayer {
 
 
     public void onQuit(final Player player){
-        if (getActiveQuests().size() > 0) {
+        if (!getActiveQuests().isEmpty()) {
             for (final ActiveQuest activeQuest : getActiveQuests()) {
 
                 for (final ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {

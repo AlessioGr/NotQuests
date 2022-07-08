@@ -1980,7 +1980,7 @@ public class DataManager {
 
     }*/
     public void sendErrorsAndWarnings(final CommandSender commandSender) {
-        if (criticalErrors.size() == 0) {
+        if (criticalErrors.isEmpty()) {
             commandSender.sendMessage(main.parse(
                     "<warn>No critical errors found. Please check your console log for any errors during startup."
             ));
@@ -1994,7 +1994,7 @@ public class DataManager {
                 }
             }
         }
-        if (main.getLogManager().getErrorLogs().size() > 0) {
+        if (!main.getLogManager().getErrorLogs().isEmpty()) {
             int counter = 0;
 
             commandSender.sendMessage(main.parse(
@@ -2007,7 +2007,7 @@ public class DataManager {
             }
         }
 
-        if (main.getLogManager().getWarnLogs().size() > 0) {
+        if (!main.getLogManager().getWarnLogs().isEmpty()) {
             int counter = 0;
 
             commandSender.sendMessage(main.parse(

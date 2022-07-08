@@ -98,7 +98,7 @@ public class ActiveQuest {
   }
 
   public final boolean isCompleted() {
-    return activeObjectives.size() == 0;
+    return activeObjectives.isEmpty();
   }
 
   public final QuestPlayer getQuestPlayer() {
@@ -227,7 +227,7 @@ public class ActiveQuest {
     if (main.getDataManager().isDisabled()) {
       return;
     }
-    if (toRemove.size() == 0) {
+    if (toRemove.isEmpty()) {
       return;
     }
     questPlayer.sendDebugMessage("Executing removeCompletedObjectives");
@@ -241,7 +241,7 @@ public class ActiveQuest {
       activeObjectiveToCheckForIfUnlocked.updateUnlocked(notifyPlayer, true);
     }
 
-    if (activeObjectives.size() == 0) {
+    if (activeObjectives.isEmpty()) {
       questPlayer.notifyActiveQuestCompleted(this);
     }
   }

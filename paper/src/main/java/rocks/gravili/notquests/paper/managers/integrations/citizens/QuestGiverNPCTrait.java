@@ -18,10 +18,10 @@
 
 package rocks.gravili.notquests.paper.managers.integrations.citizens;
 
+import java.util.ArrayList;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.util.DataKey;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
@@ -30,8 +30,6 @@ import org.bukkit.event.EventHandler;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
-
-import java.util.ArrayList;
 
 /**
  * This handles the QuestGiver NPC Trait which is given directly to Citizens NPCs via their API. A
@@ -124,16 +122,16 @@ public class QuestGiverNPCTrait extends Trait {
       }
     }
 
-    String npcHoloText = notQuests.getDataManager()
+    final String npcHoloText = notQuests.getDataManager()
             .getConfiguration()
             .getCitizensNPCQuestGiverIndicatorText();
-    if (npcHoloText.length() > 0&&npc.isSpawned()){
+    if (npcHoloText.length() > 0 && npc.isSpawned()){
       final Entity npcEntity = getNPC().getEntity();
       if (nameTagTimer >= notQuests.getDataManager()
               .getConfiguration()
               .getCitizensNPCQuestGiverIndicatorTextInterval() ) {
-        nameTagTimer=0;
-        if (npcEntity.getPassengers().size() == 0) {
+        nameTagTimer = 0;
+        if (npcEntity.getPassengers().isEmpty()) {
           final ArmorStand npcHolo = npcEntity.getWorld().spawn(npcEntity.getLocation(), ArmorStand.class);
           npcHolo.setVisible(false);
           npcHolo.setSmall(true);
@@ -143,14 +141,14 @@ public class QuestGiverNPCTrait extends Trait {
           //notQuests.getQuestManager().getQuestsFromListWithVisibilityEvaluations()
 
         } else {
-          if (npcEntity.getPassengers().get(0) instanceof ArmorStand npcHolo) {
+          if (npcEntity.getPassengers().get(0) instanceof final ArmorStand npcHolo) {
             npcHolo.customName(Component.text(npcHoloText));
-            for (Entity e : npcEntity.getNearbyEntities(16, 16, 16)) {
-              if (e instanceof Player) {
+            for (final Entity e : npcEntity.getNearbyEntities(16, 16, 16)) {
+              if (e instanceof final Player player) {
                 QuestPlayer qp = notQuests.getQuestPlayerManager().getQuestPlayer(e.getUniqueId());
                 ArrayList<Quest> questsArrayList = notQuests.getQuestManager().getAllQuestsAttachedToNPC(getNPC());
                 notQuests.getPacketManager().getModernPacketInjector().sendHolo(
-                        (Player) e,
+                        player,
                         npcHolo,
                         notQuests
                                 .getQuestManager()
