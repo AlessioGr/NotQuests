@@ -18,6 +18,7 @@
 
 package rocks.gravili.notquests.paper.managers.integrations.citizens;
 
+import net.citizensnpcs.api.event.NPCTeleportEvent;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.util.DataKey;
 import net.kyori.adventure.text.Component;
@@ -27,11 +28,13 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This handles the QuestGiver NPC Trait which is given directly to Citizens NPCs via their API. A
@@ -134,13 +137,8 @@ public class QuestGiverNPCTrait extends Trait {
               .getCitizensNPCQuestGiverIndicatorTextInterval() ) {
         nameTagTimer=0;
         if (npcEntity.getPassengers().size() == 0) {
-          final ArmorStand npcHolo = npcEntity.getWorld().spawn(npcEntity.getLocation(), ArmorStand.class);
-          npcHolo.setVisible(false);
-          npcHolo.setSmall(true);
-          npcHolo.setCustomNameVisible(false);
-          npcHolo.customName(Component.text(npcHoloText));
-          npcEntity.addPassenger(npcHolo);
-          //notQuests.getQuestManager().getQuestsFromListWithVisibilityEvaluations()
+
+          createPassengerArmorstand(npcEntity,npcHoloText);
 
         } else {
           if (npcEntity.getPassengers().get(0) instanceof ArmorStand npcHolo) {
@@ -219,14 +217,28 @@ public class QuestGiverNPCTrait extends Trait {
 
   // Run code when the NPC is despawned. This is called before the entity actually despawns so
   // npc.getEntity() is still valid.
-  @Override
-  public void onDespawn() {}
+  //@Override
+  //public void onDespawn() {
+  //}
+
+  private void createPassengerArmorstand(Entity npcEntity,String npcHoloText){
+
+    final ArmorStand npcHolo = npcEntity.getWorld().spawn(npcEntity.getLocation(), ArmorStand.class);
+    npcHolo.setVisible(false);
+    npcHolo.setSmall(true);
+    npcHolo.setCustomNameVisible(false);
+    npcHolo.customName(Component.text(npcHoloText));
+    npcEntity.addPassenger(npcHolo);
+  }
 
   // Run code when the NPC is spawned. Note that npc.getEntity() will be null until this method is
   // called.
   // This is called AFTER onAttach and AFTER Load when the server is started.
-  @Override
-  public void onSpawn() {}
+  //@Override
+  //public void onSpawn() {
+  //}
+
+
 
   /**
    * Run code when the NPC is removed. This will also remove from the Quest object that the NPC is
@@ -250,6 +262,16 @@ public class QuestGiverNPCTrait extends Trait {
                 + " </highlight>has been removed!");
     for (Quest quest : notQuests.getQuestManager().getAllQuestsAttachedToNPC(getNPC())) {
       quest.removeNPC(getNPC());
+    }
+  }
+
+  public static class NPCTPListener implements Listener{
+    @EventHandler
+    public void onNPCTp(NPCTeleportEvent npcTp){
+      List<Entity> entityList=npcTp.getNPC().getEntity().getPassengers();
+      if(entityList.size()==0)return;
+      Bukkit.getScheduler().runTaskLater(NotQuests.getInstance().getMain(), ()->npcTp.getNPC().getEntity().addPassenger(entityList.get(0)),10);
+
     }
   }
 }
