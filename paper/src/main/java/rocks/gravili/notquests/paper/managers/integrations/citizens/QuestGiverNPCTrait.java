@@ -35,7 +35,6 @@ import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

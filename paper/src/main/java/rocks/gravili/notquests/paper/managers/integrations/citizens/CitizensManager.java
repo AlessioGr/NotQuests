@@ -41,7 +41,6 @@ import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.ConversationSelector;
 import rocks.gravili.notquests.paper.conversation.Conversation;
-import rocks.gravili.notquests.paper.managers.npc.CitizensNPC;
 import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
