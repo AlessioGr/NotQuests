@@ -268,13 +268,13 @@ public class QuestEvents implements Listener {
                         if (activeObjective.getObjective() instanceof final SmeltObjective smeltObjective) {
                             final InventoryType inventoryType = e.getInventory().getType();
 
-
-                            // questPlayer.sendDebugMessage("InventoryType: " + inventoryType.name());
-                            //questPlayer.sendDebugMessage("CurrentItem type: " + e.getCurrentItem().getType());
-                            //questPlayer.sendDebugMessage("View Type: " + e.getView().getType().name());
-
-
                             if(inventoryType != InventoryType.FURNACE && inventoryType != InventoryType.BLAST_FURNACE && inventoryType != InventoryType.SMOKER){
+                                continue;
+                            }
+
+                            if(e.getRawSlot() != 2){
+                                //Raw slot 2 is the slot where the smelted item will be put. Without this check, the player can just
+                                //put keep putting and taking the item from their inventory to get free progress while in the furnace GUI.
                                 continue;
                             }
 
