@@ -28,6 +28,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.conversation.ConversationEvents;
 import rocks.gravili.notquests.paper.conversation.ConversationManager;
 import rocks.gravili.notquests.paper.events.ArmorStandEvents;
@@ -139,7 +140,7 @@ public class NotQuests {
         return instance;
     }
 
-    public final Configuration getConfiguration() {
+    public final @NotNull Configuration getConfiguration() { //TODO: Make sure it's never null
         return dataManager != null ? dataManager.getConfiguration() : null;
     }
 
