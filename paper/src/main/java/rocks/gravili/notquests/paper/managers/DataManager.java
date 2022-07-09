@@ -32,8 +32,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.npc.NPC;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.apache.commons.lang.Validate;
@@ -1573,22 +1571,9 @@ public class DataManager {
             }
 
             //Citizens stuff if Citizens is enabled
-            if (main.getIntegrationsManager().isCitizensEnabled()) {
+            if (main.getNPCManager().foundAnyNPCs()) {
                 //IF an NPC exist, try to load NPC data.
-                boolean foundNPC = false;
-                try{
-                    for (final NPC ignored : CitizensAPI.getNPCRegistry().sorted()) {
-                        foundNPC = true;
-                        break;
-                    }
-                    if (foundNPC && !isAlreadyLoadedNPCs()) {
-                        loadNPCData();
-                    }
-                }catch (Exception e){
-                    if(main.getConfiguration().isDebug()){
-                        e.printStackTrace();
-                    }
-                }
+                loadNPCData();
 
             }
 
@@ -1678,13 +1663,13 @@ public class DataManager {
                 if (!isAlreadyLoadedQuests()) {
                     loadCategories();
                 }
-                main.getQuestManager().loadNPCData();
+                main.getNPCManager().loadNPCData();
             });
         } else {
             if (!isAlreadyLoadedQuests()) {
                 loadCategories();
             }
-            main.getQuestManager().loadNPCData();
+            main.getNPCManager().loadNPCData();
         }
 
     }
@@ -1980,7 +1965,7 @@ public class DataManager {
 
     }*/
     public void sendErrorsAndWarnings(final CommandSender commandSender) {
-        if (criticalErrors.size() == 0) {
+        if (criticalErrors.isEmpty()) {
             commandSender.sendMessage(main.parse(
                     "<warn>No critical errors found. Please check your console log for any errors during startup."
             ));
@@ -1994,7 +1979,7 @@ public class DataManager {
                 }
             }
         }
-        if (main.getLogManager().getErrorLogs().size() > 0) {
+        if (!main.getLogManager().getErrorLogs().isEmpty()) {
             int counter = 0;
 
             commandSender.sendMessage(main.parse(
@@ -2007,7 +1992,7 @@ public class DataManager {
             }
         }
 
-        if (main.getLogManager().getWarnLogs().size() > 0) {
+        if (!main.getLogManager().getWarnLogs().isEmpty()) {
             int counter = 0;
 
             commandSender.sendMessage(main.parse(

@@ -20,17 +20,16 @@ package rocks.gravili.notquests.paper.structs;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.citizensnpcs.api.npc.NPC;
-import net.citizensnpcs.api.trait.Trait;
+import java.util.concurrent.CopyOnWriteArrayList;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
-import rocks.gravili.notquests.paper.managers.integrations.citizens.QuestGiverNPCTrait;
+import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
-import rocks.gravili.notquests.paper.structs.conditions.Condition.ConditionResult;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 
@@ -50,9 +49,11 @@ public class Quest {
   private final ArrayList<Action> rewards;
   private final ArrayList<Objective> objectives;
   private final ArrayList<Condition> conditions; // Requirements to accept the quest
+
+  private ArrayList<Condition> conditionsWithSpecialConditions;
   private final ArrayList<Trigger> triggers; // Triggers for the quest
-  private final ArrayList<NPC> attachedNPCsWithQuestShowing;
-  private final ArrayList<NPC> attachedNPCsWithoutQuestShowing;
+  private final CopyOnWriteArrayList<NQNPC> attachedNPCsWithQuestShowing;
+  private final CopyOnWriteArrayList<NQNPC> attachedNPCsWithoutQuestShowing;
   private int maxAccepts = -1; // -1 or smaller => unlimited accepts
   private long acceptCooldown = -1; // Cooldown in minute. -1 or smaller => no cooldown.
   private boolean takeEnabled = true;
@@ -69,8 +70,9 @@ public class Quest {
     rewards = new ArrayList<>();
     objectives = new ArrayList<>();
     conditions = new ArrayList<>();
-    attachedNPCsWithQuestShowing = new ArrayList<>();
-    attachedNPCsWithoutQuestShowing = new ArrayList<>();
+    conditionsWithSpecialConditions = new ArrayList<>();
+    attachedNPCsWithQuestShowing = new CopyOnWriteArrayList<>();
+    attachedNPCsWithoutQuestShowing = new CopyOnWriteArrayList<>();
     triggers = new ArrayList<>();
     category = main.getDataManager().getDefaultCategory();
   }
@@ -81,8 +83,9 @@ public class Quest {
     rewards = new ArrayList<>();
     objectives = new ArrayList<>();
     conditions = new ArrayList<>();
-    attachedNPCsWithQuestShowing = new ArrayList<>();
-    attachedNPCsWithoutQuestShowing = new ArrayList<>();
+    conditionsWithSpecialConditions = new ArrayList<>();
+    attachedNPCsWithQuestShowing = new CopyOnWriteArrayList<>();
+    attachedNPCsWithoutQuestShowing = new CopyOnWriteArrayList<>();
     triggers = new ArrayList<>();
     this.category = category;
   }
@@ -146,7 +149,7 @@ public class Quest {
   }
 
   public final Condition getRequirementFromID(final int id) {
-    for (final Condition condition : getRequirements()) {
+    for (final Condition condition : conditions) {
       if (condition.getConditionID() == id) {
         return condition;
       }
@@ -237,6 +240,7 @@ public class Quest {
     }
     if (!dupeID) {
       conditions.add(condition);
+      updateConditionsWithSpecial();
       if (save) {
         category
             .getQuestsConfig()
@@ -486,35 +490,22 @@ public class Quest {
   }
 
   public final ArrayList<Condition> getRequirements() {
-    return conditions;
-  }
-  public final ConditionResult checkRequirements(final QuestPlayer questPlayer){
-    for (final Condition condition : getRequirements()) {
-      return condition.check(questPlayer);
-    }
-    return new ConditionResult(true, "");
+    return conditionsWithSpecialConditions;
   }
 
   public void clearRequirements() {
     conditions.clear();
     category.getQuestsConfig().set("quests." + questName + ".requirements", null);
     category.saveQuestsConfig();
+    updateConditionsWithSpecial();
   }
 
   public void clearNPCs() {
-    if (!main.getIntegrationsManager().isCitizensEnabled()) {
-      main.getLogManager()
-          .severe(
-              "The removal of all NPCs from Quest <highlight>"
-                  + questName
-                  + "</highlight> has been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
-      return;
-    }
-    final ArrayList<NPC> arrayList = new ArrayList<>(attachedNPCsWithQuestShowing);
+    final ArrayList<NQNPC> arrayList = new ArrayList<>(attachedNPCsWithQuestShowing);
     arrayList.addAll(attachedNPCsWithoutQuestShowing);
-    for (NPC npc : arrayList) {
+    for (final NQNPC npc : arrayList) {
       if (main.getQuestManager().getAllQuestsAttachedToNPC(npc).size() == 1) {
-        npc.removeTrait(QuestGiverNPCTrait.class);
+        npc.removeQuestGiverNPCTrait();
       }
     }
     attachedNPCsWithQuestShowing.clear();
@@ -523,15 +514,7 @@ public class Quest {
     category.saveQuestsConfig();
   }
 
-  public void bindToNPC(NPC npc, boolean showQuest) {
-    if (!main.getIntegrationsManager().isCitizensEnabled()) {
-      main.getLogManager()
-          .severe(
-              "The binding to NPC in Quest <highlight>"
-                  + questName
-                  + "</highlight> has been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
-      return;
-    }
+  public void bindToNPC(final NQNPC npc, final boolean showQuest) {
     if (!attachedNPCsWithQuestShowing.contains(npc)
         && !attachedNPCsWithoutQuestShowing.contains(npc)) {
       if (showQuest) {
@@ -541,74 +524,46 @@ public class Quest {
       }
     }
 
-    boolean hasTrait = false;
-    for (Trait trait : npc.getTraits()) {
-      if (trait.getName().contains("questgiver")) {
-        hasTrait = true;
-        break;
-      }
-    }
-    if (!npc.hasTrait(QuestGiverNPCTrait.class) && !hasTrait) {
-      // System.out.println("§2NPC doesnt have trait. giving him trait... Cur traits: " +
-      // npc.getTraits().toString());
-      npc.addTrait(QuestGiverNPCTrait.class);
-    }
+    npc.addQuestGiverNPCTrait();
 
+    npc.saveToConfig(category.getQuestsConfig(), "quests." + questName + ".npcs." + npc.getID() + ".npcData");
     category
         .getQuestsConfig()
-        .set("quests." + questName + ".npcs." + npc.getId() + ".npcID", npc.getId());
-    category
-        .getQuestsConfig()
-        .set("quests." + questName + ".npcs." + npc.getId() + ".questShowing", showQuest);
+        .set("quests." + questName + ".npcs." + npc.getID() + ".questShowing", showQuest);
     category.saveQuestsConfig();
   }
 
-  public final ArrayList<NPC> getAttachedNPCsWithQuestShowing() {
+  public final CopyOnWriteArrayList<NQNPC> getAttachedNPCsWithQuestShowing() {
     return attachedNPCsWithQuestShowing;
   }
 
-  public final ArrayList<NPC> getAttachedNPCsWithoutQuestShowing() {
+  public final CopyOnWriteArrayList<NQNPC> getAttachedNPCsWithoutQuestShowing() {
     return attachedNPCsWithoutQuestShowing;
   }
 
-  public void removeNPC(final NPC npc) {
-    if (!main.getIntegrationsManager().isCitizensEnabled()) {
-      main.getLogManager()
-          .severe(
-              "The NPC removal in Quest <highlight>"
-                  + questName
-                  + "</highlight> has been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
-      return;
-    }
+  public void removeNPC(final NQNPC npc) {
     // System.out.println("§e-2");
     if (attachedNPCsWithoutQuestShowing.contains(npc)
         || attachedNPCsWithQuestShowing.contains(npc)) {
 
-      final ArrayList<NPC> arrayList = new ArrayList<>(attachedNPCsWithQuestShowing);
+      final ArrayList<NQNPC> arrayList = new ArrayList<>(attachedNPCsWithQuestShowing);
       arrayList.addAll(attachedNPCsWithoutQuestShowing);
-      final ArrayList<Trait> npcTraitsToRemove = new ArrayList<>();
-      for (final NPC attachedNPC : arrayList) {
+
+
+
+      for (final NQNPC attachedNPC : arrayList) {
         // System.out.println("§e-1");
         if (attachedNPC.equals(npc)) {
           // System.out.println("§e0");
           if (main.getQuestManager().getAllQuestsAttachedToNPC(npc).size() == 1) {
             // npc.removeTrait(QuestGiverNPCTrait.class);
             // System.out.println("§e1");
-            for (final Trait trait : npc.getTraits()) {
-              if (trait.getName().equalsIgnoreCase("nquestgiver")) {
-                npcTraitsToRemove.add(trait);
-              }
-            }
+             npc.removeQuestGiverNPCTrait();
           }
         }
-        for (final Trait trait : npcTraitsToRemove) {
-          npc.removeTrait(trait.getClass());
-          // System.out.println("§e2");
-        }
-        npcTraitsToRemove.clear();
       }
 
-      category.getQuestsConfig().set("quests." + questName + ".npcs." + npc.getId(), null);
+      category.getQuestsConfig().set("quests." + questName + ".npcs." + npc.getID(), null);
       category.saveQuestsConfig();
 
       attachedNPCsWithQuestShowing.remove(npc);
@@ -648,6 +603,7 @@ public class Quest {
         .set("quests." + questName + ".requirements." + requirement.getConditionID(), null);
     category.saveQuestsConfig();
     conditions.remove(requirement);
+    updateConditionsWithSpecial();
   }
 
   public String removeTrigger(final Trigger trigger) {
@@ -709,7 +665,7 @@ public class Quest {
         return i;
       }
     }
-    return getRequirements().size() + 1;
+    return conditions.size() + 1;
   }
 
   public final int getFreeTriggerID() {
@@ -719,5 +675,74 @@ public class Quest {
       }
     }
     return getTriggers().size() + 1;
+  }
+
+  public void updateConditionsWithSpecial(){
+    conditionsWithSpecialConditions = new ArrayList<>(conditions);
+    final PredefinedProgressOrder predefinedProgressOrder = category.getPredefinedProgressOrder();
+    if(predefinedProgressOrder != null){
+      int ourIndex = category.getQuests().indexOf(this);
+
+      conditionsWithSpecialConditions.add(new Condition(main) {
+        @Override
+        protected String checkInternally(QuestPlayer questPlayer) {
+          if(predefinedProgressOrder.isFirstToLast()){
+            int counter = 0;
+            for(final Quest otherQuest : category.getQuests()){
+              if(counter < ourIndex){
+                if(!questPlayer.hasCompletedQuest(otherQuest)){
+                  return "Quest " + otherQuest.getQuestFinalName() + " needs to be completed first";
+                }
+              }
+              counter++;
+            }
+          }else if(predefinedProgressOrder.isLastToFirst()){
+            int counter = 0;
+            for(final Quest otherQuest : category.getQuests()){
+              if(counter > ourIndex){
+                if(!questPlayer.hasCompletedQuest(otherQuest)){
+                  return "Quest " + otherQuest.getQuestFinalName() + " needs to be completed first";
+                }
+              }
+              counter++;
+            }
+          }else if(predefinedProgressOrder.getCustomOrder() != null && !predefinedProgressOrder.getCustomOrder().isEmpty()){
+
+            for(final String questNameToCheck : predefinedProgressOrder.getCustomOrder()){
+              if(questNameToCheck.equalsIgnoreCase(questName)){
+                break;
+              }
+              if(!questPlayer.hasCompletedQuest(questNameToCheck)){
+                return "Quest " + questNameToCheck + " needs to be completed first";
+              }
+            }
+          }
+          return "";
+        }
+
+        @Override
+        protected String getConditionDescriptionInternally(QuestPlayer questPlayer,
+            Object... objects) {
+          return null;
+        }
+
+        @Override
+        public void save(FileConfiguration configuration, String initialPath) {
+
+        }
+
+        @Override
+        public void load(FileConfiguration configuration, String initialPath) {
+
+        }
+
+        @Override
+        public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+
+        }
+      });
+
+    }
+
   }
 }

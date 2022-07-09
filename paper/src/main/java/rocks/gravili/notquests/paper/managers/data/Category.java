@@ -289,6 +289,9 @@ public class Category {
 
   public void setPredefinedProgressOrder(final PredefinedProgressOrder predefinedProgressOrder, final boolean save) {
     this.predefinedProgressOrder = predefinedProgressOrder;
+    for(final Quest quest : getQuests()){
+      quest.updateConditionsWithSpecial();
+    }
     if (save) {
       if(predefinedProgressOrder != null) {
         predefinedProgressOrder.saveToConfiguration(getCategoryConfig(),  "predefinedProgressOrder");

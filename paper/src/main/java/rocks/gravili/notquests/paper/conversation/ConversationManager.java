@@ -37,6 +37,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
+import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.actions.BooleanAction;
@@ -84,9 +85,9 @@ public class ConversationManager {
     return category.getConversationsFolder();
   }
 
-  public Conversation getConversationForNPCID(final int npcID) {
+  public final Conversation getConversationForNPC(final NQNPC nqNPC) {
     for (final Conversation conversation : conversations) {
-      if (conversation.getNPCIDs().contains(npcID)) {
+      if (conversation.getNPCs().contains(nqNPC)) {
         return conversation;
       }
     }
@@ -235,7 +236,17 @@ public class ConversationManager {
 
         }
       }
-      final ArrayList<Integer> npcIDs = new ArrayList<>(config.getIntegerList("npcIDs"));
+      final ArrayList<NQNPC> npcs = new ArrayList<>();
+      final ConfigurationSection npcsConfigurationSection = config.getConfigurationSection("npcs");
+      if(npcsConfigurationSection != null){
+        for (final String npcIDString : npcsConfigurationSection.getKeys(false)) {
+          npcs.add(
+              NQNPC.fromConfig(main, config, "npcs." + npcIDString)
+          );
+        }
+      }
+
+      //config.getIntegerList("npcIDs"))
 
       final Conversation conversation =
           new Conversation(
@@ -243,7 +254,7 @@ public class ConversationManager {
               conversationFile,
               config,
               conversationFile.getName().replace(".yml", ""),
-              npcIDs,
+              npcs,
               category);
 
       // First add all speakers

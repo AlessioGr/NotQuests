@@ -27,6 +27,7 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
@@ -94,7 +95,7 @@ public class TriggerCommandAction extends Action {
                     if (activeObjective.isUnlocked()) {
                         if (activeObjective.getObjective() instanceof TriggerCommandObjective triggerCommandObjective) {
                             if (triggerCommandObjective.getTriggerName().equalsIgnoreCase(getTriggerCommand())) {
-                                activeObjective.addProgress(1, -1);
+                                activeObjective.addProgress(1, (NQNPC) null);
                             }
                         }
                     }

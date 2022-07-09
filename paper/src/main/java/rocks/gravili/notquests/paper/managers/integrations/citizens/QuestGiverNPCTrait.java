@@ -18,11 +18,11 @@
 
 package rocks.gravili.notquests.paper.managers.integrations.citizens;
 
+import java.util.ArrayList;
 import net.citizensnpcs.api.event.NPCTeleportEvent;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.util.DataKey;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
@@ -30,6 +30,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
@@ -52,14 +53,14 @@ import java.util.List;
  */
 public class QuestGiverNPCTrait extends Trait {
 
-  NotQuests notQuests;
+  final NotQuests main;
 
   private int particleTimer = 0;
   private int nameTagTimer = 0;
 
   public QuestGiverNPCTrait() {
     super("nquestgiver");
-    this.notQuests = NotQuests.getInstance();
+    this.main = NotQuests.getInstance();
   }
 
   // Here you should load up any values you have previously saved (optional).
@@ -111,46 +112,52 @@ public class QuestGiverNPCTrait extends Trait {
   @Override
   public void run() {
 
-    if(notQuests.getIntegrationsManager().getCitizensManager().getTraitRun() != null) {
-      notQuests.getIntegrationsManager().getCitizensManager().getTraitRun().accept(this);
+    if(main.getIntegrationsManager().getCitizensManager().getTraitRun() != null) {
+      main.getIntegrationsManager().getCitizensManager().getTraitRun().accept(this);
     }
 
     // Disable if Server TPS is too low
     final double minimumTPS =
-        notQuests
+        main
             .getDataManager()
             .getConfiguration()
             .getCitizensNPCQuestGiverIndicatorParticleDisableIfTPSBelow();
     if (minimumTPS >= 0) {
-      if (notQuests.getPerformanceManager().getTPS() < minimumTPS) {
+      if (main.getPerformanceManager().getTPS() < minimumTPS) {
         return;
       }
     }
 
-    String npcHoloText = notQuests.getDataManager()
+    final String npcHoloText = main.getDataManager()
             .getConfiguration()
             .getCitizensNPCQuestGiverIndicatorText();
-    if (npcHoloText.length() > 0&&npc.isSpawned()){
+    if (npcHoloText.length() > 0 && npc.isSpawned()){
       final Entity npcEntity = getNPC().getEntity();
-      if (nameTagTimer >= notQuests.getDataManager()
+      if (npcEntity != null && nameTagTimer >= main.getDataManager()
               .getConfiguration()
               .getCitizensNPCQuestGiverIndicatorTextInterval() ) {
-        nameTagTimer=0;
-        if (npcEntity.getPassengers().size() == 0) {
-
-          createPassengerArmorstand(npcEntity,npcHoloText);
+        nameTagTimer = 0;
+        if (npcEntity.getPassengers().isEmpty()) {
+          final ArmorStand npcHolo = npcEntity.getWorld().spawn(npcEntity.getLocation(), ArmorStand.class);
+          npcHolo.setVisible(false);
+          npcHolo.setSmall(true);
+          npcHolo.setCustomNameVisible(false);
+          npcHolo.customName(Component.text(npcHoloText));
+          npcEntity.addPassenger(npcHolo);
+          //notQuests.getQuestManager().getQuestsFromListWithVisibilityEvaluations()
 
         } else {
-          if (npcEntity.getPassengers().get(0) instanceof ArmorStand npcHolo) {
+          if (npcEntity.getPassengers().get(0) instanceof final ArmorStand npcHolo) {
             npcHolo.customName(Component.text(npcHoloText));
-            for (Entity e : npcEntity.getNearbyEntities(16, 16, 16)) {
-              if (e instanceof Player) {
-                QuestPlayer qp = notQuests.getQuestPlayerManager().getQuestPlayer(e.getUniqueId());
-                ArrayList<Quest> questsArrayList = notQuests.getQuestManager().getAllQuestsAttachedToNPC(getNPC());
-                notQuests.getPacketManager().getModernPacketInjector().sendHolo(
-                        (Player) e,
+            for (final Entity e : npcEntity.getNearbyEntities(16, 16, 16)) {
+              if (e instanceof final Player player) {
+                QuestPlayer qp = main.getQuestPlayerManager().getQuestPlayer(e.getUniqueId());
+                ArrayList<Quest> questsArrayList = main.getQuestManager().getAllQuestsAttachedToNPC(
+                    main.getNPCManager().getOrCreateNQNpc("Citizens", getNPC().getId()));
+                main.getPacketManager().getModernPacketInjector().sendHolo(
+                        player,
                         npcHolo,
-                        notQuests
+                        main
                                 .getQuestManager()
                                 .getQuestsFromListWithVisibilityEvaluations(qp, questsArrayList).size() != 0);
 
@@ -161,13 +168,15 @@ public class QuestGiverNPCTrait extends Trait {
       }
       nameTagTimer +=1;
     }
-    if (notQuests
+
+
+    if (main
             .getDataManager()
             .getConfiguration()
             .isCitizensNPCQuestGiverIndicatorParticleEnabled()
         && npc.isSpawned()) {
       if (particleTimer
-          >= notQuests
+          >= main
               .getDataManager()
               .getConfiguration()
               .getCitizensNPCQuestGiverIndicatorParticleSpawnInterval()) {
@@ -178,14 +187,14 @@ public class QuestGiverNPCTrait extends Trait {
         npcEntity
             .getWorld()
             .spawnParticle(
-                notQuests
+                main
                     .getDataManager()
                     .getConfiguration()
                     .getCitizensNPCQuestGiverIndicatorParticleType(),
                 location.getX() - 0.25 + (Math.random() / 2),
                 location.getY() + 1.75 + (Math.random() / 2),
                 location.getZ() - 0.25 + (Math.random() / 2),
-                notQuests
+                main
                     .getDataManager()
                     .getConfiguration()
                     .getCitizensNPCQuestGiverIndicatorParticleCount());
@@ -205,7 +214,7 @@ public class QuestGiverNPCTrait extends Trait {
    */
   @Override
   public void onAttach() {
-    notQuests
+    main
         .getLogManager()
         .info(
             "NPC with the ID <highlight>"
@@ -217,28 +226,14 @@ public class QuestGiverNPCTrait extends Trait {
 
   // Run code when the NPC is despawned. This is called before the entity actually despawns so
   // npc.getEntity() is still valid.
-  //@Override
-  //public void onDespawn() {
-  //}
-
-  private void createPassengerArmorstand(Entity npcEntity,String npcHoloText){
-
-    final ArmorStand npcHolo = npcEntity.getWorld().spawn(npcEntity.getLocation(), ArmorStand.class);
-    npcHolo.setVisible(false);
-    npcHolo.setSmall(true);
-    npcHolo.setCustomNameVisible(false);
-    npcHolo.customName(Component.text(npcHoloText));
-    npcEntity.addPassenger(npcHolo);
-  }
+  @Override
+  public void onDespawn() {}
 
   // Run code when the NPC is spawned. Note that npc.getEntity() will be null until this method is
   // called.
   // This is called AFTER onAttach and AFTER Load when the server is started.
-  //@Override
-  //public void onSpawn() {
-  //}
-
-
+  @Override
+  public void onSpawn() {}
 
   /**
    * Run code when the NPC is removed. This will also remove from the Quest object that the NPC is
@@ -251,8 +246,14 @@ public class QuestGiverNPCTrait extends Trait {
   @Override
   public void onRemove() {
     // REMOVEEEE FROM QUEST
-    getNPC().getEntity().getPassengers().forEach(Entity::remove);
-    notQuests
+    if(getNPC() == null) {
+      main.getLogManager().warn("NPC removal not completed, as the NPC is null.");
+      return;
+    }
+    if(getNPC().getEntity() != null){
+      getNPC().getEntity().getPassengers().forEach(Entity::remove);
+    }
+    main
         .getLogManager()
         .info(
             "NPC with the ID <highlight>"
@@ -260,8 +261,9 @@ public class QuestGiverNPCTrait extends Trait {
                 + " </highlight>and name <highlight>"
                 + npc.getName().replace("&", "").replace("§", "")
                 + " </highlight>has been removed!");
-    for (Quest quest : notQuests.getQuestManager().getAllQuestsAttachedToNPC(getNPC())) {
-      quest.removeNPC(getNPC());
+    final NQNPC nqnpc = main.getNPCManager().getOrCreateNQNpc("Citizens", getNPC().getId());
+    for (Quest quest : main.getQuestManager().getAllQuestsAttachedToNPC(nqnpc)) {
+      quest.removeNPC(nqnpc);
     }
   }
 

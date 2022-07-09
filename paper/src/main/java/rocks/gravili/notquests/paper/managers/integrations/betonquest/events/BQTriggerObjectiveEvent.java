@@ -25,6 +25,7 @@ import org.betonquest.betonquest.exceptions.QuestRuntimeException;
 import org.betonquest.betonquest.utils.PlayerConverter;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
@@ -86,7 +87,7 @@ public class BQTriggerObjectiveEvent extends QuestEvent {
                             if (activeObjective.isUnlocked()) {
                                 if (activeObjective.getObjective() instanceof final TriggerCommandObjective triggerCommandObjective) {
                                     if (triggerCommandObjective.getTriggerName().equalsIgnoreCase(triggerName)) {
-                                        activeObjective.addProgress(1, -1);
+                                        activeObjective.addProgress(1, (NQNPC) null);
 
                                     }
                                 }

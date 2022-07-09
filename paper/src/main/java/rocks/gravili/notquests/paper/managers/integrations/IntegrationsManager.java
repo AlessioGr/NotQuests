@@ -19,6 +19,7 @@
 package rocks.gravili.notquests.paper.managers.integrations;
 
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.jetbrains.annotations.Nullable;
@@ -40,11 +41,11 @@ import rocks.gravili.notquests.paper.placeholders.QuestPlaceholders;
 public class IntegrationsManager {
   private final NotQuests main;
 
-  private final ArrayList<Integration> integrations = new ArrayList<>();
+  private final CopyOnWriteArrayList<Integration> integrations = new CopyOnWriteArrayList<>();
 
-  private final ArrayList<Integration> integrationsNotEnabled = new ArrayList<>();
+  private final CopyOnWriteArrayList<Integration> integrationsNotEnabled = new CopyOnWriteArrayList<>();
 
-  private final ArrayList<EnabledIntegration> enabledIntegrations = new ArrayList<>();
+  private final CopyOnWriteArrayList<EnabledIntegration> enabledIntegrations = new CopyOnWriteArrayList<>();
   // Booleans
   private boolean vaultEnabled = false;
   private boolean citizensEnabled = false;
@@ -340,15 +341,15 @@ public class IntegrationsManager {
     integrationsNotEnabled.addAll(integrations);
   }
 
-  public final ArrayList<Integration> getIntegrations() {
+  public final CopyOnWriteArrayList<Integration> getIntegrations() {
     return integrations;
   }
 
-  public final ArrayList<Integration> getDisabledIntegrations() {
+  public final CopyOnWriteArrayList<Integration> getDisabledIntegrations() {
     return integrationsNotEnabled;
   }
 
-  public final ArrayList<EnabledIntegration> getEnabledIntegrations() {
+  public final CopyOnWriteArrayList<EnabledIntegration> getEnabledIntegrations() {
     return enabledIntegrations;
   }
 

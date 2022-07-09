@@ -750,7 +750,7 @@ public class AdminEditCommands {
 
                     context.getSender().sendMessage(main.parse(
                             "<main>The completionNPCID of the objective with the ID <highlight>" + objectiveID + "</highlight> is <highlight2>"
-                                    + objective.getCompletionNPCID() + "</highlight2>!"
+                                    + (objective.getCompletionNPC() != null ? objective.getCompletionNPC().getID() : "null" ) + "</highlight2>!"
                     ));
                     if (objective.getCompletionArmorStandUUID() != null) {
                         context.getSender().sendMessage(main.parse(
@@ -763,7 +763,7 @@ public class AdminEditCommands {
                         ));
                     }
                 }));
-        manager.command(builder.literal("completionNPC")
+        manager.command(builder.literal("completionNPC") //TODO: Generalize for NqNPCs
                 .literal("set")
                 .argument(StringArgument.<CommandSender>newBuilder("Completion NPC").withSuggestionsProvider(
                         (context, lastString) -> {
@@ -791,7 +791,7 @@ public class AdminEditCommands {
 
                     if (completionNPC.equalsIgnoreCase("-1")) {
 
-                        objective.setCompletionNPCID(-1, true);
+                        objective.setCompletionNPC(null, true);
                         objective.setCompletionArmorStandUUID(null, true);
                         context.getSender().sendMessage(main.parse(
                                 "<success>The completionNPC of the objective with the ID <highlight>" + objectiveID + "</highlight> has been removed!"
@@ -799,8 +799,10 @@ public class AdminEditCommands {
 
                     } else if (!completionNPC.equalsIgnoreCase("armorstand")) {
                         final int completionNPCID = Integer.parseInt(completionNPC);
+                        //TODO: Generalize too
 
-                        objective.setCompletionNPCID(completionNPCID, true);
+                      objective.setCompletionNPC(main.getNPCManager().getOrCreateNQNpc("Citizens", completionNPCID), true);
+
                         context.getSender().sendMessage(main.parse(
                                 "<success>The completionNPC of the objective with the ID <highlight>" + objectiveID
                                         + "</highlight> has been set to the NPC with the ID <highlight2>" + completionNPCID + "</highlight2>!"
@@ -1176,7 +1178,7 @@ public class AdminEditCommands {
                     final Quest quest = context.get("quest");
 
                     context.getSender().sendMessage(main.parse("<highlight>Requirements for Quest <highlight2>" + quest.getQuestName() + "</highlight2>:"));
-                    for (Condition condition : quest.getRequirements()) {
+                    for (final Condition condition : quest.getRequirements()) {
                         context.getSender().sendMessage(main.parse("<highlight>" + condition.getConditionID() + ".</highlight> <main>" + condition.getConditionType()));
                         if(context.getSender() instanceof Player player){
                             context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))));
