@@ -38,6 +38,7 @@ import rocks.gravili.notquests.paper.events.notquests.NotQuestsFullyLoadedEvent;
 import rocks.gravili.notquests.paper.managers.*;
 import rocks.gravili.notquests.paper.managers.integrations.IntegrationsManager;
 import rocks.gravili.notquests.paper.managers.items.ItemsManager;
+import rocks.gravili.notquests.paper.managers.npc.NPCManager;
 import rocks.gravili.notquests.paper.managers.packets.PacketManager;
 import rocks.gravili.notquests.paper.managers.registering.*;
 import rocks.gravili.notquests.paper.managers.tags.TagManager;
@@ -87,6 +88,9 @@ public class NotQuests {
     private ConditionsManager conditionsManager;
     private ActionManager actionManager;
     private TriggerManager triggerManager;
+
+    private NPCManager npcManager;
+
     private IntegrationsManager integrationsManager;
     private VariablesManager variablesManager;
 
@@ -111,8 +115,10 @@ public class NotQuests {
         logManager = new LogManager(this);
 
         backupManager = new BackupManager(this);
+        npcManager = new NPCManager(this);
 
         integrationsManager = new IntegrationsManager(this);
+
 
 
         //Create a new instance of the Data Manager which will be re-used everywhere
@@ -549,6 +555,10 @@ public class NotQuests {
 
     public final QuestEvents getQuestEvents() {
         return questEvents;
+    }
+
+    public final NPCManager getNPCManager() {
+        return npcManager;
     }
 
 }

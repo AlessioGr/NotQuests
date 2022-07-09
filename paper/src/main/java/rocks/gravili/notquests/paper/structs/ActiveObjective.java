@@ -24,6 +24,7 @@ import org.bukkit.Bukkit;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.NotQuestColors;
 import rocks.gravili.notquests.paper.events.notquests.ObjectiveUnlockEvent;
+import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 import rocks.gravili.notquests.paper.structs.conditions.Condition.ConditionResult;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
@@ -98,7 +99,7 @@ public class ActiveObjective {
                     if (otherQuestObjective.isCountPreviousCompletions()) {
                         for (CompletedQuest completedQuest : getQuestPlayer().getCompletedQuests()) {
                             if (completedQuest.getQuest().equals(otherQuestObjective.getOtherQuest())) {
-                                addProgress(1, -1);
+                                addProgress(1, (NQNPC) null);
                             }
                         }
                     }
@@ -108,7 +109,7 @@ public class ActiveObjective {
                 }
 
             }else{
-                objective.onObjectiveCompleteOrLock(this, main.getDataManager().isCurrentlyLoading() || getQuestPlayer().isCurrentlyLoading() , isCompleted(null));
+                objective.onObjectiveCompleteOrLock(this, main.getDataManager().isCurrentlyLoading() || getQuestPlayer().isCurrentlyLoading() , isCompleted((NQNPC) null));
             }
         }
 
@@ -235,28 +236,28 @@ public class ActiveObjective {
         }
     }
     public void addProgress(double progressToAdd) {
-        addProgress(progressToAdd, -1, null, false);
+        addProgress(progressToAdd, null, null, false);
     }
     public void addProgress(double progressToAdd, boolean silent) {
-        addProgress(progressToAdd, -1, null, silent);
+        addProgress(progressToAdd, null, null, silent);
     }
     //For Citizens NPCs
-    public void addProgress(double progressToAdd, final int NPCID) {
-        addProgress(progressToAdd, NPCID, null, false);
+    public void addProgress(double progressToAdd, final NQNPC nqnpc) {
+        addProgress(progressToAdd, nqnpc, null, false);
     }
-    public void addProgress(double progressToAdd, final int NPCID, final boolean silent) {
-        addProgress(progressToAdd, NPCID, null, silent);
+    public void addProgress(double progressToAdd, final NQNPC nqnpc, final boolean silent) {
+        addProgress(progressToAdd, nqnpc, null, silent);
 
     }
     //For Armor Stands
     public void addProgress(double progressToAdd, final UUID armorStandUUID) {
-        addProgress(progressToAdd, -1, armorStandUUID, false);
+        addProgress(progressToAdd, null, armorStandUUID, false);
     }
     public void addProgress(double progressToAdd, final UUID armorStandUUID, final boolean silent) {
-        addProgress(progressToAdd, -1, armorStandUUID, silent);
+        addProgress(progressToAdd, null, armorStandUUID, silent);
     }
 
-    public void addProgress(double progressToAdd, final int npcID, final UUID armorStandUUID, boolean silent) {
+    public void addProgress(double progressToAdd, final NQNPC nqnpc, final UUID armorStandUUID, boolean silent) {
         if(main.getDataManager().isDisabled() || !canProgress(false)){
             return;
         }
@@ -264,12 +265,12 @@ public class ActiveObjective {
         getQuestPlayer().setTrackingObjective(this);
 
 
-        if ( (npcID>-1 && isCompleted(npcID)) || isCompleted(armorStandUUID)) {
+        if ( (nqnpc != null && isCompleted(nqnpc)) || isCompleted(armorStandUUID)) {
             setHasBeenCompleted(true);
             if(armorStandUUID != null){
                 activeQuest.notifyActiveObjectiveCompleted(this, silent, armorStandUUID);
             }else{
-                activeQuest.notifyActiveObjectiveCompleted(this, silent, npcID);
+                activeQuest.notifyActiveObjectiveCompleted(this, silent, nqnpc);
             }
         }
         if(main.getConfiguration().isDebug()){
@@ -311,8 +312,8 @@ public class ActiveObjective {
     }
 
     //For Citizens NPCs
-    public final boolean isCompleted(final int NPCID) {
-        if (getObjective().getCompletionNPCID() == -1 || getObjective().getCompletionNPCID() == NPCID) {
+    public final boolean isCompleted(final NQNPC nqnpc) {
+        if (getObjective().getCompletionNPC() == null || getObjective().getCompletionNPC().equals(nqnpc)) {
             return canComplete() && currentProgress >= getProgressNeeded();
         } else {
             return false;

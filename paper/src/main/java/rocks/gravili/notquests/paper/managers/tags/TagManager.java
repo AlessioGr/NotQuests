@@ -90,7 +90,7 @@ public class TagManager {
 
 
     public void onJoin(final QuestPlayer questPlayer, final Player player) {
-        if (questPlayer.getTags().size() > 0) {
+        if (!questPlayer.getTags().isEmpty()) {
             main.getLogManager().info("Skip Loading tags for " + player.getName() + "! Size: " + questPlayer.getTags().size());
             return;
         }
@@ -134,7 +134,7 @@ public class TagManager {
 
 
         main.getLogManager().info("Loaded " + questPlayer.getTags().size() + " tags for " + player.getName() + ":");
-        if (questPlayer.getTags().size() > 0) {
+        if (!questPlayer.getTags().isEmpty()) {
             for (final String tagIdentifier : questPlayer.getTags().keySet()) {
                 main.getLogManager().info("   " + tagIdentifier + ": " + questPlayer.getTagValue(tagIdentifier) + " (" + questPlayer.getTagValue(tagIdentifier).getClass().getName() + ")");
             }
@@ -143,7 +143,7 @@ public class TagManager {
 
     public void onQuit(final QuestPlayer questPlayer, final Player player) {
 
-        if(questPlayer.getTags().size() == 0){
+        if(questPlayer.getTags().isEmpty()){
             return;
         }
         final String uuidString = player.getUniqueId().toString();

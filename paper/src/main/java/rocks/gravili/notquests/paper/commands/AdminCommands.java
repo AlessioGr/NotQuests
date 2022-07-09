@@ -53,6 +53,7 @@ import rocks.gravili.notquests.paper.commands.arguments.ConditionSelector;
 import rocks.gravili.notquests.paper.commands.arguments.MiniMessageSelector;
 import rocks.gravili.notquests.paper.commands.arguments.QuestSelector;
 import rocks.gravili.notquests.paper.managers.data.Category;
+import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.CompletedQuest;
@@ -442,9 +443,9 @@ public class AdminCommands {
                                 for (ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                                     for (ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                                         if (activeObjective.isUnlocked()) {
-                                            if (activeObjective.getObjective() instanceof TriggerCommandObjective triggerCommandObjective) {
+                                            if (activeObjective.getObjective() instanceof final TriggerCommandObjective triggerCommandObjective) {
                                                 if (triggerCommandObjective.getTriggerName().equalsIgnoreCase(triggerName)) {
-                                                    activeObjective.addProgress(1, -1);
+                                                    activeObjective.addProgress(1, (NQNPC)null);
 
                                                 }
                                             }
