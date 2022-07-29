@@ -70,6 +70,8 @@ public class CompleteQuestAction extends Action {
 
   @Override
   public void executeInternally(final QuestPlayer questPlayer, Object... objects) {
+    main.getLogManager().debug("Executing CompleteQuestAction");
+
     Quest foundQuest = main.getQuestManager().getQuest(getQuestToCompleteName());
     if (foundQuest == null) {
       main.getLogManager()
@@ -80,12 +82,20 @@ public class CompleteQuestAction extends Action {
     }
 
     if (questPlayer == null) {
+      main.getLogManager().warn("QuestPlayer is null during CompleteQuestAction...");
       return;
     }
 
     ActiveQuest foundActiveQuest = questPlayer.getActiveQuest(foundQuest);
 
-    if (foundActiveQuest == null || foundActiveQuest.isCompleted()) {
+    if (foundActiveQuest == null) {
+      main.getLogManager().debug("foundActiveQuest == null.");
+      return;
+    }
+    if(foundActiveQuest.isCompleted()){
+      main.getLogManager().debug("foundActiveQuest.isCompleted()");
+      questPlayer.sendDebugMessage("Quest is already completed. Removing from active quests...");
+      questPlayer.removeCompletedQuests();
       return;
     }
 

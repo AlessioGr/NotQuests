@@ -1576,7 +1576,7 @@ public class AdminCommands {
 
                     QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
                     ConditionResult result = condition.check(questPlayer);
-                    final String resultMessage = result.fulfilled() ? result.message() : "<success>Condition fulfilled!";
+                    final String resultMessage = result.fulfilled() ? "<success>Condition fulfilled!" : result.message() ;
                     context.getSender().sendMessage(main.parse("<success>Condition with the name <highlight>" + condition.getConditionName() + "</highlight> has been checked! Result:</success>\n" + resultMessage));
                 }));
 

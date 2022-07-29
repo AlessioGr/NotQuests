@@ -638,6 +638,7 @@ public class QuestPlayer {
 
 
     public void forceActiveQuestCompleted(final ActiveQuest activeQuest) {
+        sendDebugMessage("ForceActiveQuestCompleted...");
         QuestCompletedEvent questCompletedEvent = new QuestCompletedEvent(this, activeQuest, true);
         if (Bukkit.isPrimaryThread()) {
             Bukkit.getScheduler().runTaskAsynchronously(main.getMain(), () -> {
