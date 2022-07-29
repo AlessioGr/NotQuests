@@ -76,30 +76,30 @@ chat:
         prefix: '    <veryUnimportant>└─ <unimportant>'
         suffix: ''
       breakBlocks:
-        base: 'Break Blocks: <main>%BLOCKTOBREAK%'
+        base: '破壞方塊:<main>%BLOCKTOBREAK%'
       breed:
-        base: 'Breed Mobs: <main>%ENTITYTOBREED%'
+        base: '餵養生物: <main>%ENTITYTOBREED%'
       collectItems:
-        base: 'Collect Items: <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
+        base: '收集物品: <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
       consumeItems:
-        base: 'Consume Items: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
+        base: '消耗物品: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: 'Craft Items: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+        base: '製作物品: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: 'Deliver Items: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
+        base: '給予物品: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
         deliver-to-npc: '      <GRAY>將物品給予給 <WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>負責收取物品的NPC目前不在!'
         deliver-to-npc-citizens-not-found: '    <RED>錯誤: 服務器未安裝 Citizens. 請告知OP'
         deliver-to-armorstand: '    <GRAY>将物品給予 <WHITE>%ARMORSTANDNAME%'
         deliver-to-armorstand-not-available: '    <GRAY>負責收取物品的盔甲架目前不在!'
       escortNPC:
-        base: 'Escort <main>%NPCNAME%</main> to <main>%DESTINATIONNPCNAME%'
+        base: '護送 <main>%NPCNAME%</main> 到 <main>%DESTINATIONNPCNAME%'
       fishItems:
-        base: 'Fish Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
+        base: '釣到物品: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
       killMobs:
-        base: 'Kill mobs: <main>%MOBTOKILL%'
+        base: '擊殺生物: <main>%MOBTOKILL%'
       otherQuest:
-        base: 'Complete Quest: <main>%OTHERQUESTNAME%'
+        base: '完成任務: <main>%OTHERQUESTNAME%'
       placeBlocks:
         base: 'Place Blocks: <main>%BLOCKTOPLACE%'
       reachLocation:

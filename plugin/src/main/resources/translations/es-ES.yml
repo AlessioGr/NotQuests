@@ -43,15 +43,15 @@ chat:
   quest-not-active-error: '<error>Error: ¡<highlight>%QUESTNAME%</highlight> no es una misión activa!'
   force-add-active-quest-accepted: '<success>Se aceptó con éxito la misión (Forzada).'
   add-active-quest-player-object-not-found: '<warn>Error: El objeto del jugador no se encuentra. Por favor reporta esto al desarrollador del plugin.'
-  reached-max-accepts-limit: '<red>You have finished this quests too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
-  reached-max-active-quests-per-player-limit: '<red>You can not accept more than <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> Quests.'
+  reached-max-accepts-limit: '<red>Tu ya terminaste esta mision muchas veces. Tu solo puedes aceptar esta misión <highlight>%MAXACCEPTS%</highlight> veces, pero ya lo has terminado <highlight>%COMPLETEDAMOUNT%</highlight> veces.'
+  reached-max-active-quests-per-player-limit: '<red>No puede aceptar más de <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> Misiones.'
   quest-on-cooldown:
-    minute: '<red>This quest is on a cooldown! You have to wait another <highlight>1 minute</highlight> until you can take it again.'
-    minutes: '<red>This quest is on a cooldown! You have to wait another <highlight>%MINUTES% minutes</highlight> until you can take it again.'
-    hour: '<red>This quest is on a cooldown! You have to wait another <highlight>1 hour</highlight> until you can take it again.'
-    hours: '<red>This quest is on a cooldown! You have to wait another <highlight>%HOURS% hours</highlight> until you can take it again.'
-    day: '<red>This quest is on a cooldown! You have to wait another <highlight>1 day</highlight> until you can take it again.'
-    days: '<red>This quest is on a cooldown! You have to wait another <highlight>%DAYS% days</highlight> until you can take it again.'
+    minute: '<red>¡Esta misión esta esta con tiempo de espera! Tienes que esperar <highlight>1 minuto</highlight> antes de hacer otra vez la mision.'
+    minutes: '<red>¡Esta misión esta esta con tiempo de espera! Tienes que esperar <highlight>%MINUTES%</highlight> antes de hacer otra vez la mision.'
+    hour: '<red>¡Esta misión esta esta con tiempo de espera! Tienes que esperar <highlight>1 hora</highlight> antes de hacer otra vez la mision.'
+    hours: '<red>¡Esta misión esta esta con tiempo de espera! Tienes que esperar <highlight>%HOURS%</highlight> antes de hacer otra vez la mision.'
+    day: '<red>¡Esta misión esta esta con tiempo de espera! Tienes que esperar <highlight>1 día</highlight> antes de hacer otra vez la mision.'
+    days: '<red>¡Esta misión esta esta con tiempo de espera! Tienes que esperar <highlight>%DAYS%</highlight> antes de hacer otra vez la mision.'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>
@@ -76,67 +76,67 @@ chat:
         prefix: '    <veryUnimportant>└─ <unimportant>'
         suffix: ''
       breakBlocks:
-        base: 'Break Blocks: <main>%BLOCKTOBREAK%'
+        base: 'Romper bloques: <main>%BLOCKTOBREAK%'
       breed:
-        base: 'Breed Mobs: <main>%ENTITYTOBREED%'
+        base: 'Alimentar Mob: <main>%ENTITYTOBREED%'
       collectItems:
-        base: 'Collect Items: <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
+        base: 'Conseguir items: <main>%ITEMTOCOLLECTTYPE%%(%%ITEMTOCOLLECTNAME%%)%'
       consumeItems:
-        base: 'Consume Items: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
+        base: 'Consumir items: <main>%ITEMTOCONSUMETYPE%%(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: 'Craft Items: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+        base: 'Fabricar Items: <main>%ITEMTOCRAFTTYPE%%(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: 'Deliver Items: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
+        base: 'Entregar Items: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
         deliver-to-npc: '      <GRAY>Entregarlo a <WHITE>%NPCNAME%'
-        deliver-to-npc-not-available: '      <GRAY>The delivery NPC is currently not available!'
-        deliver-to-npc-citizens-not-found: '    <RED>Error: Citizens plugin not installed. Contact an admin.'
+        deliver-to-npc-not-available: '      <GRAY>¡El NPC al que tienes entregar no esta disponible!'
+        deliver-to-npc-citizens-not-found: '    <RED>Error: El plugin Citizens no esta instalado. Contacta a un administrador.'
         deliver-to-armorstand: '    <GRAY>Entregarlo a <WHITE>%ARMORSTANDNAME%'
         deliver-to-armorstand-not-available: '    <GRAY>El Soporte de Armadura no está disponible actualmente!'
       escortNPC:
-        base: 'Escort <main>%NPCNAME%</main> to <main>%DESTINATIONNPCNAME%'
+        base: 'Escolta al NPC <main>%NPCNAME%</main> hacia <main>%DESTINATIONNPCNAME%'
       fishItems:
-        base: 'Fish Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
+        base: 'Pescar Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
       killMobs:
-        base: 'Kill mobs: <main>%MOBTOKILL%'
+        base: 'Matar Mobs: <main>%MOBTOKILL%'
       otherQuest:
-        base: 'Complete Quest: <main>%OTHERQUESTNAME%'
+        base: 'Completar Misión: <main>%OTHERQUESTNAME%'
       placeBlocks:
-        base: 'Place Blocks: <main>%BLOCKTOPLACE%'
+        base: 'Poner Bloques: <main>%BLOCKTOPLACE%'
       reachLocation:
-        base: 'Reach Location: <main>%LOCATIONNAME%'
+        base: 'Ir hacia: <main>%LOCATIONNAME%'
       talkToNPC:
-        base: 'Talk to <main>%NAME%'
+        base: 'Hablar con <main>%NAME%'
       triggerCommand:
-        base: 'Goal: <main>%TRIGGERNAME%'
+        base: 'Meta: <main>%TRIGGERNAME%'
       killEliteMobs:
-        base: 'Kill Elite Mob: <main>%ELITEMOBNAME%'
-        any: 'Kill any Elite Mob!'
+        base: 'Matar Elite Mob: <main>%ELITEMOBNAME%'
+        any: '¡Matar cualquier Elite Mob!'
       runCommand:
-        base: 'Run command: <main>%COMMANDTORUN%'
+        base: 'Ejecutar el comando: <main>%COMMANDTORUN%'
       interact:
-        base: '%INTERACTTYPE% Location: <main>%COORDINATES% <main>in world %WORLDNAME%'
+        base: '%INTERACTTYPE% Ubicación: <main>%COORDINATES%<main> en el mundo %WORLDNAME%'
       jump:
-        base: 'Jump <main>%AMOUNTOFJUMPS%</main> times'
+        base: 'Saltar <main>%AMOUNTOFJUMPS%</main> veces'
       sneak:
-        base: 'Sneak <main>%AMOUNTOFSNEAKS%</main> times'
+        base: 'Agacharse <main>%AMOUNTOFSNEAKS%</main> veces'
       smelt:
-        base: 'Smelt Items: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+        base: 'Fundir Items: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       openBuriedTreasure:
-        base: 'Open buried treasures'
+        base: 'Abrir tesoro enterrado'
       townyReachResidentCount:
-        base: 'Reach resident amount: <main>%AMOUNT%'
+        base: 'Alcanzar la cantidad de residentes: <main>%AMOUNT%'
       townyNationReachTownCount:
-        base: 'Reach town amount with your nation: <main>%AMOUNT%'
+        base: 'Alcanzar la cantidad de ciudades con tu nacion: <main>%AMOUNT%'
       jobsRebornReachJobLevel:
-        base: 'Reach job level <main>%AMOUNT%</main> with job <main>%JOB%'
+        base: 'Llegar al nivel de trabajo <main>%AMOUNT%</main> con el trabajo <main>%JOB%'
       SlimefunResearch:
-        base: 'Spend on research'
+        base: 'Gastar en la investigación'
       ProjectKorraUseAbility:
-        base: 'Use Ability: <main>%ABILITY%'
+        base: 'Usar abilidad: <main>%ABILITY%'
       BetonQuestCompleteObjective:
-        base: 'Finish Objective: <main>%BETONQUESTOBJECTIVENAME%'
+        base: 'Terminar el Objetivo: <main>%BETONQUESTOBJECTIVENAME%'
       ultimateJobsReachJobLevel:
-        base: 'Reach job level <main>%AMOUNT%</main> with job <main>%JOBID%'
+        base: 'Llegar al nivel <main>%AMOUNT%</main> en el trabajo <main>%JOBID%'
   conditions:
     boolean:
       not-fulfilled: "<warn>Lo siguiente debe ser %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
@@ -162,12 +162,12 @@ titles:
 placeholders:
   questcooldownleftformatted:
     prefix: ''
-    minute: '1 minute'
-    minutes: '%MINUTES% minutes'
-    hour: '1 hour'
-    hours: '%HOURS% hours'
-    day: '1 day'
-    days: '%DAYS% days'
+    minute: '1 Minuto'
+    minutes: '%MINUTES% minutos'
+    hour: '1 hora'
+    hours: '%HOURS% horas'
+    day: '1 día'
+    days: '%DAYS% días'
     no-cooldown: ''
 gui:
   main:
