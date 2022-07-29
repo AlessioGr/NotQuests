@@ -262,7 +262,7 @@ public class QuestGiverNPCTrait extends Trait {
                 + npc.getName().replace("&", "").replace("§", "")
                 + " </highlight>has been removed!");
     final NQNPC nqnpc = main.getNPCManager().getOrCreateNQNpc("Citizens", getNPC().getId());
-    for (Quest quest : main.getQuestManager().getAllQuestsAttachedToNPC(nqnpc)) {
+    for (final Quest quest : main.getQuestManager().getAllQuestsAttachedToNPC(nqnpc)) {
       quest.removeNPC(nqnpc);
     }
   }
@@ -270,7 +270,10 @@ public class QuestGiverNPCTrait extends Trait {
   public static class NPCTPListener implements Listener{
     @EventHandler
     public void onNPCTp(NPCTeleportEvent npcTp){
-      List<Entity> entityList=npcTp.getNPC().getEntity().getPassengers();
+      if(npcTp.getNPC().getEntity() == null){
+        return;
+      }
+      final List<Entity> entityList=npcTp.getNPC().getEntity().getPassengers();
       if(entityList.size()==0)return;
       Bukkit.getScheduler().runTaskLater(NotQuests.getInstance().getMain(), ()->npcTp.getNPC().getEntity().addPassenger(entityList.get(0)),10);
 
