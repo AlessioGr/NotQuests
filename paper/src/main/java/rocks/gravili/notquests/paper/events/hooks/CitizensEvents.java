@@ -148,7 +148,8 @@ public class CitizensEvents implements Listener {
                                                 ));
                                                 break;
                                             } else {
-                                                player.getInventory().removeItem(itemStack);
+                                                questPlayer.sendDebugMessage("Calling player.getInventory().removeItemAnySlot with amount " + itemStack.getAmount() + "...");
+                                                player.getInventory().removeItemAnySlot(itemStack);
                                                 activeObjective.addProgress(itemStack.getAmount(), nqnpc);
                                                 player.sendMessage(main.parse(
                                                         "<GREEN>You have delivered <highlight>" + itemStack.getAmount() + "</highlight> items to <highlight>" + mmNpcName

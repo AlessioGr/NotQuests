@@ -490,7 +490,7 @@ public class ArmorStandEvents implements Listener {
                                                 ));
                                                 break;
                                             } else {
-                                                player.getInventory().removeItem(itemStack);
+                                                player.getInventory().removeItemAnySlot(itemStack);
                                                 activeObjective.addProgress(itemStack.getAmount(), armorStand.getUniqueId());
                                                 player.sendMessage(main.parse(
                                                         "<GREEN>You have delivered <highlight>" + itemStack.getAmount() + "</highlight> items to <highlight>" + main.getArmorStandManager().getArmorStandName(armorStand)
