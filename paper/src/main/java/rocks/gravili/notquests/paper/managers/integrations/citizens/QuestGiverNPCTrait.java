@@ -19,18 +19,23 @@
 package rocks.gravili.notquests.paper.managers.integrations.citizens;
 
 import java.util.ArrayList;
+import net.citizensnpcs.api.event.NPCTeleportEvent;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.util.DataKey;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
+
+import java.util.List;
 
 /**
  * This handles the QuestGiver NPC Trait which is given directly to Citizens NPCs via their API. A
@@ -259,6 +264,16 @@ public class QuestGiverNPCTrait extends Trait {
     final NQNPC nqnpc = main.getNPCManager().getOrCreateNQNpc("Citizens", getNPC().getId());
     for (Quest quest : main.getQuestManager().getAllQuestsAttachedToNPC(nqnpc)) {
       quest.removeNPC(nqnpc);
+    }
+  }
+
+  public static class NPCTPListener implements Listener{
+    @EventHandler
+    public void onNPCTp(NPCTeleportEvent npcTp){
+      List<Entity> entityList=npcTp.getNPC().getEntity().getPassengers();
+      if(entityList.size()==0)return;
+      Bukkit.getScheduler().runTaskLater(NotQuests.getInstance().getMain(), ()->npcTp.getNPC().getEntity().addPassenger(entityList.get(0)),10);
+
     }
   }
 }

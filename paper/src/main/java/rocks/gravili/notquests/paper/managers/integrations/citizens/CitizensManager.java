@@ -41,7 +41,6 @@ import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.ConversationSelector;
 import rocks.gravili.notquests.paper.conversation.Conversation;
-import rocks.gravili.notquests.paper.managers.npc.CitizensNPC;
 import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
@@ -84,6 +83,7 @@ public class CitizensManager {
         .registerTrait(
             net.citizensnpcs.api.trait.TraitInfo.create(QuestGiverNPCTrait.class)
                 .withName("nquestgiver"));
+    main.getMain().getServer().getPluginManager().registerEvents(new QuestGiverNPCTrait.NPCTPListener(),main.getMain());
     main.getLogManager().info("Citizens nquestgiver trait has been registered!");
     if (!main.getDataManager().isAlreadyLoadedNPCs()) {
       main.getDataManager().loadNPCData();
