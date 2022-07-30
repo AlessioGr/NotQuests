@@ -25,6 +25,8 @@ import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import java.util.HashMap;
 import java.util.Locale;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -101,46 +103,43 @@ public class QuestEvents implements Listener {
         this.main = main;
         beaconsToUpdate = new HashMap<>();
         if(main.getConfiguration().getBeamMode().equals("end_gateway")){
-            Bukkit.getScheduler().scheduleSyncRepeatingTask(main.getMain(), new Runnable() {
-                @Override
-                public void run() { //Main Loop
-                    if(main.getDataManager().isDisabled()){
+            Bukkit.getScheduler().scheduleSyncRepeatingTask(main.getMain(), () -> { //Main Loop
+                if(main.getDataManager().isDisabled()){
+                    return;
+                }
+                for(final Player player : Bukkit.getOnlinePlayers()) {
+                    QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                    if(questPlayer == null){
                         return;
                     }
-                    for(Player player : Bukkit.getOnlinePlayers()) {
-                        QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-                        if(questPlayer == null){
-                            return;
-                        }
 
-                        if(questPlayer.getBossBar() != null){
-                            questPlayer.increaseBossBarTimeByOneSecond();
-                        }
-
-                        beaconCounter++;
-                        if(beaconCounter >= 4){
-                            questPlayer.updateBeaconLocations(player);
-                            beaconCounter = 0;
-                        }
-
-                        conditionObjectiveCounter++;
-                        if(conditionObjectiveCounter >= 2){
-                            questPlayer.updateConditionObjectives(player);
-                            conditionObjectiveCounter = 0;
-                        }
-
-
-
-
+                    if(questPlayer.getBossBar() != null){
+                        questPlayer.increaseBossBarTimeByOneSecond();
                     }
 
+                    beaconCounter++;
+                    if(beaconCounter >= 4){
+                        questPlayer.updateBeaconLocations(player);
+                        beaconCounter = 0;
+                    }
+
+                    conditionObjectiveCounter++;
+                    if(conditionObjectiveCounter >= 2){
+                        questPlayer.updateConditionObjectives(player);
+                        conditionObjectiveCounter = 0;
+                    }
+
+
+
+
                 }
+
             }, 0L, 20L); //0 Tick initial delay, 20 Tick (1 Second) between repeats
         }else{
             Bukkit.getScheduler().scheduleSyncRepeatingTask(main.getMain(), new Runnable() {
                 @Override
                 public void run() {
-                    if(main.getDataManager().isDisabled()){
+                   /* if(main.getDataManager().isDisabled()){
                         return;
                     }
                     for(QuestPlayer questPlayer : beaconsToUpdate.keySet()) {
@@ -149,7 +148,7 @@ public class QuestEvents implements Listener {
 
 
 
-                    /*final Location newBeaconLocation = beaconsToUpdate.get(questPlayer).newLocation();
+                    final Location newBeaconLocation = beaconsToUpdate.get(questPlayer).newLocation();
                     //Add Beacon to new chunk
                     BlockState beaconBlockState = newBeaconLocation.getBlock().getState();
                     beaconBlockState.setType(Material.BEACON);
@@ -179,12 +178,12 @@ public class QuestEvents implements Listener {
                         questPlayer.updateBeaconLocations(player);
                         if(locationToRemove != null){
                             questPlayer.scheduleBeaconRemovalAt(locationToRemove, player);
-                        }*/
+                        }
 
 
                         //main.sendMessage(player, "<positive>Added new Beacon");
 
-                    }
+                    }*/
                     if(!main.getConfiguration().getBeamMode().equals("end_gateway")){
                         beaconsToUpdate.clear();
                     }
@@ -623,12 +622,12 @@ public class QuestEvents implements Listener {
                             e.setCancelled(true);
                         }
 
-                    } else if (activeObjective.getObjective() instanceof OpenBuriedTreasureObjective openBuriedTreasureObjective) {
+                    } else if (activeObjective.getObjective() instanceof OpenBuriedTreasureObjective) {
                         if (e.getAction() != Action.RIGHT_CLICK_BLOCK){
                             continue;
                         }
                         Block clickedBlock = e.getClickedBlock();
-                        if(clickedBlock.getState() instanceof Chest chest){
+                        if(clickedBlock.getState() instanceof final Chest chest){
 
                             if(chest.getLootTable() != null && chest.getLootTable().getKey().equals(LootTables.BURIED_TREASURE.getKey()) && !chest.hasPlayerLooted(player.getUniqueId())){
                                 activeObjective.addProgress(1);
@@ -834,6 +833,10 @@ public class QuestEvents implements Listener {
                 if (activeObjective.isUnlocked()) {
                     if (activeObjective.getObjective() instanceof final FishItemsObjective fishItemsObjective) {
 
+                        if(e.getCaught() == null){
+                            continue;
+                        }
+
                         final ItemStack fishedItem = ((org.bukkit.entity.Item)e.getCaught()).getItemStack();
 
                         final ItemStackSelection itemStackSelection = fishItemsObjective.getItemStackSelection();
@@ -931,6 +934,7 @@ public class QuestEvents implements Listener {
         //Death Triggers
         if (e.getEntity() instanceof final Player player) {
             final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+
             if (questPlayer != null && !questPlayer.getActiveQuests().isEmpty()) {
                 for (int i = 0; i < questPlayer.getActiveQuests().size(); i++) {
                     final ActiveQuest activeQuest = questPlayer.getActiveQuests().get(i);
@@ -944,10 +948,6 @@ public class QuestEvents implements Listener {
             }
 
             //Iterator<ActiveQuest> iter = questPlayer.getActiveQuests().iterator(); //Why was that needed?
-
-
-
-
         }
 
 
@@ -960,7 +960,7 @@ public class QuestEvents implements Listener {
             }
             for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                 for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                    if (activeObjective.getObjective() instanceof KillMobsObjective killMobsObjective) {
+                    if (activeObjective.getObjective() instanceof final KillMobsObjective killMobsObjective) {
                         if (activeObjective.isUnlocked()) {
                             if(main.getIntegrationsManager().isProjectKorraEnabled() && !killMobsObjective.getProjectKorraAbility().isBlank()){
                                 continue; //See ProjectKorraEvents.java onEntityKilled() for that.
@@ -971,13 +971,22 @@ public class QuestEvents implements Listener {
 
                                     //Extra Flags
                                     if (!killMobsObjective.getNameTagContainsAny().isBlank()) {
-                                        if (e.getEntity().getCustomName() == null || e.getEntity().getCustomName().isBlank()) {
+                                        final Component customName = e.getEntity().customName();
+                                        if (customName == null) {
                                             continue;
                                         }
+                                        final String customNamePlainStringLowercase = PlainTextComponentSerializer.plainText().serialize(customName).toLowerCase(
+                                            Locale.ROOT);
+                                        if(customNamePlainStringLowercase.isBlank()){
+                                            continue;
+                                        }
+
                                         boolean foundOneNotFitting = false;
                                         for (final String namePart : killMobsObjective.getNameTagContainsAny().toLowerCase(Locale.ROOT).split(" ")) {
-                                            if (!e.getEntity().getCustomName().toLowerCase(Locale.ROOT).contains(namePart)) {
+                                            if (!customNamePlainStringLowercase.contains(
+                                                namePart)) {
                                                 foundOneNotFitting = true;
+                                                break;
                                             }
                                         }
                                         if (foundOneNotFitting) {
@@ -985,7 +994,17 @@ public class QuestEvents implements Listener {
                                         }
                                     }
                                     if (!killMobsObjective.getNameTagEquals().isBlank()) {
-                                        if (e.getEntity().getCustomName() == null || e.getEntity().getCustomName().isBlank() || !e.getEntity().getCustomName().equalsIgnoreCase(killMobsObjective.getNameTagEquals())) {
+                                        final Component customName = e.getEntity().customName();
+                                        if (customName == null) {
+                                            continue;
+                                        }
+                                        final String customNamePlainStringLowercase = PlainTextComponentSerializer.plainText().serialize(customName).toLowerCase(
+                                            Locale.ROOT);
+                                        if(customNamePlainStringLowercase.isBlank()){
+                                            continue;
+                                        }
+
+                                        if (!customNamePlainStringLowercase.equalsIgnoreCase(killMobsObjective.getNameTagEquals())) {
                                             continue;
                                         }
                                     }
