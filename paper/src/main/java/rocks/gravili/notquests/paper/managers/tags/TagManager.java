@@ -131,6 +131,7 @@ public class TagManager {
         }
 
 
+        questPlayer.setFinishedLoadingTags(true);
 
 
         main.getLogManager().info("Loaded " + questPlayer.getTags().size() + " tags for " + player.getName() + ":");
@@ -142,7 +143,10 @@ public class TagManager {
     }
 
     public void onQuit(final QuestPlayer questPlayer, final Player player) {
-
+        if(!questPlayer.isFinishedLoadingTags()){
+            main.getLogManager().info("Saving of tags has been skipped, because tags didn't even finish loading yet.");
+            return;
+        }
         if(questPlayer.getTags().isEmpty()){
             return;
         }

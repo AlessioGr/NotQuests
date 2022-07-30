@@ -85,6 +85,11 @@ public class QuestPlayer {
 
 
 
+    private boolean finishedLoadingGeneralData = false;
+    private boolean finishedLoadingTags = false;
+
+
+
     public QuestPlayer(NotQuests main, UUID uuid) {
         this.main = main;
         this.uuid = uuid;
@@ -1036,5 +1041,21 @@ public class QuestPlayer {
 
     public void setCurrentlyLoading(final boolean currentlyLoading) {
         this.currentlyLoading = currentlyLoading;
+    }
+
+    public final boolean isFinishedLoadingGeneralData() {
+        return finishedLoadingGeneralData;
+    }
+
+    public final void setFinishedLoadingGeneralData(boolean finishedLoadingGeneralData) {
+        this.finishedLoadingGeneralData = finishedLoadingGeneralData;
+    }
+
+    public final boolean isFinishedLoadingTags() {
+        return finishedLoadingTags;
+    }
+
+    public final void setFinishedLoadingTags(boolean finishedLoadingTags) {
+        this.finishedLoadingTags = finishedLoadingTags;
     }
 }

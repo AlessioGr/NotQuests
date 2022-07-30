@@ -262,6 +262,7 @@ public class QuestPlayerManager {
       questPlayer.removeCompletedQuests();
 
       questPlayer.setCurrentlyLoading(false);
+      questPlayer.setFinishedLoadingGeneralData(true);
 
     } catch (Exception e) {
       main.getDataManager()
@@ -290,6 +291,10 @@ public class QuestPlayerManager {
 
     QuestPlayer questPlayer = getQuestPlayer(player.getUniqueId());
     if (questPlayer == null) {
+      return;
+    }
+    if(!questPlayer.isFinishedLoadingGeneralData()){
+      main.getLogManager().info("Saving of playerdata has been skipped, because playerdata didn't even finish loading yet.");
       return;
     }
 
