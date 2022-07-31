@@ -406,7 +406,7 @@ public class QuestPlayerManager {
       return;
     }
 
-    main.getLogManager().info("PlayerData saved");
+    main.getLogManager().info("PlayerData of player " + player.getName() + " was saved (" + questPoints + " QuestPoints)");
 
     questPlayer.onQuitAsync(player);
     if (!Bukkit.isPrimaryThread()) {
@@ -766,7 +766,7 @@ public class QuestPlayerManager {
       e.printStackTrace();
     }
 
-    main.getLogManager().info("PlayerData saved");
+    main.getLogManager().info("PlayerData of all players saved");
   }
 
   public final QuestPlayer getQuestPlayer(final UUID uuid) {

@@ -98,7 +98,7 @@ public class TagManager {
         final UUID uuid = player.getUniqueId();
 
         try (Connection connection = main.getDataManager().getConnection();
-             Statement statement = connection.createStatement();
+             Statement statement = connection.createStatement()
         ) {
             ResultSet result = statement.executeQuery("SELECT TagIdentifier, TagValue, TagType FROM Tags WHERE PlayerUUID LIKE '" + uuid.toString() + "';");
             while (result.next()) {
@@ -153,7 +153,7 @@ public class TagManager {
         final String uuidString = player.getUniqueId().toString();
 
         try (Connection connection = main.getDataManager().getConnection();
-             Statement statement = connection.createStatement();
+             Statement statement = connection.createStatement()
         ) {
 
 
