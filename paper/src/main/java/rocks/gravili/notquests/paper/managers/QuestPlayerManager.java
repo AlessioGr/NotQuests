@@ -284,6 +284,8 @@ public class QuestPlayerManager {
   }
 
   public void saveSinglePlayerData(final Player player) {
+    main.getLogManager().info("Saving PlayerData of player " + player.getName() + "...");
+
     if (!main.getConfiguration().savePlayerData) {
       main.getLogManager().info("Saving of playerdata has been skipped...");
       return;
