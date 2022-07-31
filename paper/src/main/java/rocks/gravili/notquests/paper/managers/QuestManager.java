@@ -92,12 +92,12 @@ public class QuestManager {
         }
     }
 
-    public final String createQuest(String questName) {
+    public final String createQuest(final String questName) {
         if (getQuest(questName) == null) {
             if(questName.contains("°")){
                 return ("<error>The symbol <highlight>°</highlight> cannot be used, because it's used for some important, plugin-internal stuff.");
             }
-            Quest newQuest = new Quest(main, questName);
+            final Quest newQuest = new Quest(main, questName);
             quests.add(newQuest);
             newQuest.getCategory().getQuestsConfig().set("quests." + questName, "");
             newQuest.getCategory().saveQuestsConfig();

@@ -64,7 +64,7 @@ public class Quest {
 
   private PredefinedProgressOrder predefinedProgressOrder;
 
-  public Quest(NotQuests main, String questName) {
+  public Quest(final NotQuests main, final String questName) {
     this.main = main;
     this.questName = questName;
     rewards = new ArrayList<>();
