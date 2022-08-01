@@ -149,7 +149,7 @@ repositories {
 
 dependencies {
     //implementation project(':common')
-    paperDevBundle("1.19-R0.1-SNAPSHOT")
+    paperDevBundle("1.19.1-R0.1-SNAPSHOT")
     //compileOnly("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT!!")
 
     implementation("org.bstats:bstats-bukkit:3.0.0")

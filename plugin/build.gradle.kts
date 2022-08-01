@@ -117,7 +117,7 @@ repositories {
 }
 
 dependencies {
-    paperDevBundle("1.19-R0.1-SNAPSHOT")
+    paperDevBundle("1.19.1-R0.1-SNAPSHOT")
 
     implementation(project(path= ":spigot", configuration= "shadow"))
     implementation(project(path= ":paper", configuration= "shadow"))
@@ -224,7 +224,7 @@ bukkit {
     name = "NotQuests"
     version = rootProject.version.toString()
     main = "rocks.gravili.notquests.Main"
-    apiVersion = "1.18"
+    apiVersion = "1.19"
     authors = listOf("NoeX")
     description = "Flexible, open, GUI Quest Plugin for Minecraft 1.19"
     website = "https://www.notquests.com"
