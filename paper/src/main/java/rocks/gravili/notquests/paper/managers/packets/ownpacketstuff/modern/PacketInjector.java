@@ -234,10 +234,9 @@ public class PacketInjector {
     // player.sendMessage("sent!");
     // connection.send(clientboundBlockEventPacket);
     connection.send(
-        clientboundBlockEventPacket,
-        (future) -> {
-          //  player.sendMessage("Arrived!");
-        });
+        clientboundBlockEventPacket
+        );
+
   }
   public void sendHolo(Player player,ArmorStand armorStand,boolean show) {
     Connection connection = getConnection(getServerPlayer(player).connection);
