@@ -25,6 +25,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
+import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 
@@ -232,6 +233,18 @@ public class ActionsYMLManager {
                         + ".description",
                     "");
 
+        final String hiddenStatusExpression =
+            action
+                .getCategory()
+                .getActionsConfig()
+                .getString(
+                    "actions."
+                        + action.getActionName()
+                        + ".conditions."
+                        + actionConditionNumber
+                        + ".hiddenStatusExpression",
+                    "");
+
         final Condition condition;
 
         try {
@@ -240,6 +253,8 @@ public class ActionsYMLManager {
           condition.setNegated(negated);
           condition.setDescription(description);
           condition.setCategory(action.getCategory());
+          condition.setHidden(new NumberExpression(main, hiddenStatusExpression.isBlank() ? "0" : hiddenStatusExpression));
+
           condition.load(
               action.getCategory().getActionsConfig(),
               "actions." + action.getActionName() + ".conditions." + actionConditionNumber);

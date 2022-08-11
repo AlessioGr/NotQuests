@@ -54,8 +54,10 @@ import rocks.gravili.notquests.paper.commands.arguments.CategorySelector;
 import rocks.gravili.notquests.paper.commands.arguments.DurationArgument;
 import rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionArgument;
 import rocks.gravili.notquests.paper.commands.arguments.MiniMessageSelector;
+import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
 import rocks.gravili.notquests.paper.managers.data.Category;
+import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.PredefinedProgressOrder;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.actions.Action;
@@ -1262,6 +1264,38 @@ public class AdminEditCommands {
                     ));
                 }));
 
+
+      manager.command(editQuestRequirementsBuilder.literal("hidden")
+          .literal("set")
+          .argument(
+              BooleanVariableValueArgument.newBuilder("hiddenStatusExpression", main, null),
+              ArgumentDescription.of("Expression"))
+          .meta(CommandMeta.DESCRIPTION, "Sets the new hidden status of the Quest requirement.")
+          .handler((context) -> {
+            final Quest quest = context.get("quest");
+            int conditionID = context.get("Requirement ID");
+            Condition condition = quest.getRequirementFromID(conditionID);
+            if(condition == null){
+              context.getSender().sendMessage(main.parse(
+                  "<error>Requirement with the ID <highlight>" + conditionID + "</highlight> was not found!"
+              ));
+              return;
+            }
+
+            final String hiddenStatusExpression = context.get("hiddenStatusExpression");
+            final NumberExpression hiddenExpression = new NumberExpression(main, hiddenStatusExpression);
+
+            condition.setHidden(hiddenExpression);
+
+            quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".requirements." + conditionID + ".hiddenStatusExpression", hiddenStatusExpression);
+            quest.getCategory().saveQuestsConfig();
+
+            context.getSender().sendMessage(main.parse("<success>Hidden status successfully added to condition with ID <highlight>" + conditionID + "</highlight> of quest <highlight2>"
+                + quest.getQuestName() + "</highlight2>! New hidden status: <highlight2>"
+                + condition.getHiddenExpression()
+            ));
+          }));
+
         manager.command(editQuestRequirementsBuilder.literal("description")
                 .literal("remove", "delete")
                 .meta(CommandMeta.DESCRIPTION, "Removes the description of the Quest requirement.")
@@ -1434,6 +1468,42 @@ public class AdminEditCommands {
           context.getSender().sendMessage(main.parse("<success>Description successfully added to condition with ID <highlight>" + conditionID + "</highlight> of objective with ID <highlight2>"
               + objectiveID + "</highlight2>! New description: <highlight2>"
               + condition.getDescription()
+          ));
+        }));
+
+    manager.command(editObjectiveConditionsBuilder.literal("hidden")
+        .literal("set")
+        .argument(
+            BooleanVariableValueArgument.newBuilder("hiddenStatusExpression", main, null),
+            ArgumentDescription.of("Expression"))
+        .meta(CommandMeta.DESCRIPTION, "Sets the new hidden status of the Objective unlock condition.")
+        .handler((context) -> {
+          final Quest quest = context.get("quest");
+          final int objectiveID = context.get("Objective ID");
+          final Objective objective = quest.getObjectiveFromID(objectiveID);
+          assert objective != null; //Shouldn't be null
+
+          int conditionID = context.get("Condition ID");
+          Condition condition = objective.getUnlockConditionFromID(conditionID);
+
+          if(condition == null){
+            context.getSender().sendMessage(main.parse(
+                "<error>Condition with the ID <highlight>" + conditionID + "</highlight> was not found!"
+            ));
+            return;
+          }
+
+          final String hiddenStatusExpression = context.get("hiddenStatusExpression");
+          final NumberExpression hiddenExpression = new NumberExpression(main, hiddenStatusExpression);
+
+          condition.setHidden(hiddenExpression);
+
+          quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + objectiveID + ".conditions." + conditionID + ".hiddenStatusExpression", hiddenStatusExpression);
+          quest.getCategory().saveQuestsConfig();
+
+          context.getSender().sendMessage(main.parse("<success>Hidden status successfully added to condition with ID <highlight>" + conditionID + "</highlight> of objective with ID <highlight2>"
+              + objectiveID + "</highlight2>! New hidden status: <highlight2>"
+              + condition.getHiddenExpression()
           ));
         }));
 
@@ -1621,6 +1691,42 @@ public class AdminEditCommands {
           ));
         }));
 
+    manager.command(editObjectiveConditionsBuilder.literal("hidden")
+        .literal("set")
+        .argument(
+            BooleanVariableValueArgument.newBuilder("hiddenStatusExpression", main, null),
+            ArgumentDescription.of("Expression"))
+        .meta(CommandMeta.DESCRIPTION, "Sets the new hidden status of the Objective progress condition.")
+        .handler((context) -> {
+          final Quest quest = context.get("quest");
+          final int objectiveID = context.get("Objective ID");
+          final Objective objective = quest.getObjectiveFromID(objectiveID);
+          assert objective != null; //Shouldn't be null
+
+          int conditionID = context.get("Condition ID");
+          Condition condition = objective.getProgressConditionFromID(conditionID);
+
+          if(condition == null){
+            context.getSender().sendMessage(main.parse(
+                "<error>Condition with the ID <highlight>" + conditionID + "</highlight> was not found!"
+            ));
+            return;
+          }
+
+          final String hiddenStatusExpression = context.get("hiddenStatusExpression");
+          final NumberExpression hiddenExpression = new NumberExpression(main, hiddenStatusExpression);
+
+          condition.setHidden(hiddenExpression);
+
+          quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + objectiveID + ".conditions." + conditionID + ".hiddenStatusExpression", hiddenStatusExpression);
+          quest.getCategory().saveQuestsConfig();
+
+          context.getSender().sendMessage(main.parse("<success>Hidden status successfully added to condition with ID <highlight>" + conditionID + "</highlight> of objective with ID <highlight2>"
+              + objectiveID + "</highlight2>! New hidden status: <highlight2>"
+              + condition.getHiddenExpression()
+          ));
+        }));
+
     manager.command(editObjectiveConditionsBuilder.literal("description")
         .literal("remove", "delete")
         .meta(CommandMeta.DESCRIPTION, "Removes the description of the objective progress condition.")
@@ -1802,6 +1908,42 @@ public class AdminEditCommands {
           context.getSender().sendMessage(main.parse("<success>Description successfully added to condition with ID <highlight>" + conditionID + "</highlight> of objective with ID <highlight2>"
               + objectiveID + "</highlight2>! New description: <highlight2>"
               + condition.getDescription()
+          ));
+        }));
+
+    manager.command(editObjectiveConditionsBuilder.literal("hidden")
+        .literal("set")
+        .argument(
+            BooleanVariableValueArgument.newBuilder("hiddenStatusExpression", main, null),
+            ArgumentDescription.of("Expression"))
+        .meta(CommandMeta.DESCRIPTION, "Sets the new hidden status of the Objective complete condition.")
+        .handler((context) -> {
+          final Quest quest = context.get("quest");
+          final int objectiveID = context.get("Objective ID");
+          final Objective objective = quest.getObjectiveFromID(objectiveID);
+          assert objective != null; //Shouldn't be null
+
+          int conditionID = context.get("Condition ID");
+          Condition condition = objective.getCompleteConditionFromID(conditionID);
+
+          if(condition == null){
+            context.getSender().sendMessage(main.parse(
+                "<error>Condition with the ID <highlight>" + conditionID + "</highlight> was not found!"
+            ));
+            return;
+          }
+
+          final String hiddenStatusExpression = context.get("hiddenStatusExpression");
+          final NumberExpression hiddenExpression = new NumberExpression(main, hiddenStatusExpression);
+
+          condition.setHidden(hiddenExpression);
+
+          quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + objectiveID + ".conditions." + conditionID + ".hiddenStatusExpression", hiddenStatusExpression);
+          quest.getCategory().saveQuestsConfig();
+
+          context.getSender().sendMessage(main.parse("<success>Hidden status successfully added to condition with ID <highlight>" + conditionID + "</highlight> of objective with ID <highlight2>"
+              + objectiveID + "</highlight2>! New hidden status: <highlight2>"
+              + condition.getHiddenExpression()
           ));
         }));
 

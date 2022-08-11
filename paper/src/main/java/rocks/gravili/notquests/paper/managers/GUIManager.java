@@ -478,7 +478,7 @@ public class GUIManager {
 
                       for (String loreString : loreStringList) {
                         if (loreString.contains("%QUESTREQUIREMENTS%")) {
-                          for (String requirementLine :
+                          for (final String requirementLine :
                               main.getQuestManager().getQuestRequirementsList(quest, questPlayer)) {
                             lore.add(
                                 main.parse(

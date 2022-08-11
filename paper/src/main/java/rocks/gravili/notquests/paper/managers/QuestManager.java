@@ -38,6 +38,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
+import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
@@ -310,6 +311,8 @@ public class QuestManager {
                             final boolean negated = category.getQuestsConfig().getBoolean("quests." + questName + ".requirements." + requirementNumber + ".negated", false);
                             final String description = category.getQuestsConfig().getString("quests." + questName + ".requirements." + requirementNumber + ".description", "");
 
+                            final String hiddenStatusExpression = category.getQuestsConfig().getString("quests." + questName + ".requirements." + requirementNumber + ".hiddenStatusExpression", "");
+
 
                             final Condition condition;
 
@@ -321,6 +324,8 @@ public class QuestManager {
                                 condition.setDescription(description);
                                 condition.setCategory(category);
                                 condition.setConditionID(requirementID);
+                                condition.setHidden(new NumberExpression(main, hiddenStatusExpression.isBlank() ? "0" : hiddenStatusExpression));
+
                                 condition.load(category.getQuestsConfig(), "quests." + questName + ".requirements." + requirementID);
                             } catch (Exception ex) {
                                 main.getDataManager().disablePluginAndSaving("Error parsing condition Type of Quest requirement with ID <highlight>" + requirementNumber + "</highlight>. Condition type: <highlight2>" + conditionTypeString, quest, category, ex);
@@ -491,6 +496,7 @@ public class QuestManager {
                                 final int progressNeeded = category.getQuestsConfig().getInt("quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditions." + objectiveConditionNumber + ".progressNeeded");
                                 final boolean negated = category.getQuestsConfig().getBoolean("quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditions." + objectiveConditionNumber + ".negated", false);
                                 final String description = category.getQuestsConfig().getString("quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditions." + objectiveConditionNumber + ".description", "");
+                                final String hiddenStatusExpression = category.getQuestsConfig().getString("quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditions." + objectiveConditionNumber + ".hiddenStatusExpression", "");
 
                                 final Condition condition;
 
@@ -503,6 +509,7 @@ public class QuestManager {
                                     condition.setDescription(description);
                                     condition.setCategory(category);
                                     condition.setConditionID(conditionID);
+                                    condition.setHidden(new NumberExpression(main, hiddenStatusExpression.isBlank() ? "0" : hiddenStatusExpression));
 
                                     condition.load(category.getQuestsConfig(), "quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditions." + objectiveConditionNumber);
                                 } catch (Exception ex) {
@@ -541,6 +548,7 @@ public class QuestManager {
                                 final boolean negated = category.getQuestsConfig().getBoolean("quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditionsProgress." + objectiveConditionNumber + ".negated", false);
                                 final String description = category.getQuestsConfig().getString("quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditionsProgress." + objectiveConditionNumber + ".description", "");
                                 final boolean allowProgressDecreaseIfNotFulfilled = category.getQuestsConfig().getBoolean("quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditionsProgress." + objectiveConditionNumber + ".allowProgressDecreaseIfNotFulfilled", false);
+                                final String hiddenStatusExpression = category.getQuestsConfig().getString("quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditionsProgress." + objectiveConditionNumber + ".hiddenStatusExpression", "");
 
                                 final Condition condition;
 
@@ -553,6 +561,7 @@ public class QuestManager {
                                     condition.setDescription(description);
                                     condition.setCategory(category);
                                     condition.setConditionID(conditionID);
+                                    condition.setHidden(new NumberExpression(main, hiddenStatusExpression.isBlank() ? "0" : hiddenStatusExpression));
 
                                     condition.setObjectiveConditionSpecific_allowProgressDecreaseIfNotFulfilled(allowProgressDecreaseIfNotFulfilled);
 
@@ -592,6 +601,7 @@ public class QuestManager {
                                 final int progressNeeded = category.getQuestsConfig().getInt("quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditionsComplete." + objectiveConditionNumber + ".progressNeeded");
                                 final boolean negated = category.getQuestsConfig().getBoolean("quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditionsComplete." + objectiveConditionNumber + ".negated", false);
                                 final String description = category.getQuestsConfig().getString("quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditionsComplete." + objectiveConditionNumber + ".description", "");
+                                final String hiddenStatusExpression = category.getQuestsConfig().getString("quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditionsComplete." + objectiveConditionNumber + ".hiddenStatusExpression", "");
 
                                 final Condition condition;
 
@@ -604,6 +614,7 @@ public class QuestManager {
                                     condition.setDescription(description);
                                     condition.setCategory(category);
                                     condition.setConditionID(conditionID);
+                                    condition.setHidden(new NumberExpression(main, hiddenStatusExpression.isBlank() ? "0" : hiddenStatusExpression));
 
                                     condition.load(category.getQuestsConfig(), "quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditionsComplete." + objectiveConditionNumber);
                                 } catch (Exception ex) {
@@ -1038,6 +1049,10 @@ public class QuestManager {
         StringBuilder requirements = new StringBuilder();
         int counter = 1;
         for (final Condition condition : quest.getRequirements()) {
+            if(condition.isHidden(questPlayer)){
+                continue;
+            }
+
             if (counter != 1) {
                 requirements.append("\n");
             }
@@ -1087,10 +1102,15 @@ public class QuestManager {
         return conditionType;
     }
 
+
+    //Not for admin
     public final ArrayList<String> getQuestRequirementsList(final Quest quest, final QuestPlayer questPlayer) {
         final ArrayList<String> requirements = new ArrayList<>();
         int counter = 1;
         for (final Condition condition : quest.getRequirements()) {
+            if(condition.isHidden(questPlayer)){
+                continue;
+            }
             requirements.add("<GREEN>" + counter + ". <YELLOW>" + getDisplayConditionType(condition));
             requirements.add(condition.getConditionDescription(questPlayer, quest));
 

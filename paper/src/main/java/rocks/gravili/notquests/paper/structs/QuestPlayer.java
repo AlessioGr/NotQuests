@@ -415,7 +415,8 @@ public class QuestPlayer {
             if (acceptTimeDifferenceMinutes >= quest.getQuest().getAcceptCooldown()) {
 
                 //Requirements
-                StringBuilder requirementsStillNeeded = new StringBuilder();
+                final StringBuilder requirementsStillNeeded = new StringBuilder();
+                boolean allRequirementsFulfilled = true;
 
                 if (getPlayer() == null) {
                     requirementsStillNeeded.append("\n").append(main.getLanguageManager().getString("chat.add-active-quest-player-object-not-found", (QuestPlayer) null, this, quest));
@@ -424,13 +425,15 @@ public class QuestPlayer {
                 for (final Condition condition : quest.getQuest().getRequirements()) {
                     final ConditionResult check = condition.check(this);
                     if (!check.fulfilled()) {
-                        requirementsStillNeeded.append("\n").append(check.message());
-
+                        if(!condition.isHidden(this)) {
+                            requirementsStillNeeded.append("\n").append(check.message());
+                        }
+                        allRequirementsFulfilled = false;
                     }
                 }
 
 
-                if (!requirementsStillNeeded.toString().isBlank()) {
+                if (!allRequirementsFulfilled) {
                     return main.getLanguageManager().getString("chat.quest-not-all-requirements-fulfilled", getPlayer()) + requirementsStillNeeded;
                 }
 

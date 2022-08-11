@@ -82,9 +82,9 @@ public class ConditionVariable extends Variable<Boolean> {
     return exp.evaluate() >= 0.98d;
   }
 
-  public String getExpressionAndGenerateEnv(String expressions) {
+  public final String getExpressionAndGenerateEnv(String expressions) {
     boolean foundOne = false;
-    for (String conditionIdentifier :
+    for (final String conditionIdentifier :
         main.getConditionsYMLManager().getConditionsAndIdentifiers().keySet()) {
       if (!expressions.contains(conditionIdentifier)) {
         continue;
@@ -95,14 +95,12 @@ public class ConditionVariable extends Variable<Boolean> {
       expressions = expressions.replace(conditionIdentifier, "var" + variableCounter);
       env.addLazyVariable(
           "var" + variableCounter,
-          () -> {
-            return main.getConditionsYMLManager()
-                    .getCondition(conditionIdentifier)
-                    .check(questPlayerToEvaluate)
-                    .fulfilled()
-                ? 1
-                : 0;
-          });
+          () -> main.getConditionsYMLManager()
+                  .getCondition(conditionIdentifier)
+                  .check(questPlayerToEvaluate)
+                  .fulfilled()
+              ? 1
+              : 0);
     }
     if (!foundOne) {
       return expressions;

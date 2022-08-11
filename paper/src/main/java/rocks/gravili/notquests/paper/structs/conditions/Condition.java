@@ -23,6 +23,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
+import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
@@ -38,6 +39,8 @@ public abstract class Condition {
 
   /** Custom Condition description */
   private String description = "";
+
+  private NumberExpression hidden;
 
   private int conditionID = -1;
 
@@ -132,7 +135,7 @@ public abstract class Condition {
    */
   protected abstract String checkInternally(final QuestPlayer questPlayer);
 
-  public ConditionResult check(final QuestPlayer questPlayer) {
+  public final ConditionResult check(final QuestPlayer questPlayer) {
     final String result = checkInternally(questPlayer);
 
     if (!isNegated()) {
@@ -226,6 +229,20 @@ public abstract class Condition {
   public void setObjectiveConditionSpecific_allowProgressDecreaseIfNotFulfilled(
       final boolean objectiveConditionSpecific_allowProgressDecreaseIfNotFulfilled) {
     this.objectiveConditionSpecific_allowProgressDecreaseIfNotFulfilled = objectiveConditionSpecific_allowProgressDecreaseIfNotFulfilled;
+  }
+
+
+  public final boolean isHidden(final QuestPlayer questPlayer) {
+    return hidden.calculateBooleanValue(questPlayer);
+  }
+  public final NumberExpression getHiddenExpression() {
+    if (hidden == null) {
+      hidden = new NumberExpression(main, "0");
+    }
+    return hidden;
+  }
+  public void setHidden(final NumberExpression hidden) {
+    this.hidden = hidden;
   }
 
   public record ConditionResult(boolean fulfilled, String message) {

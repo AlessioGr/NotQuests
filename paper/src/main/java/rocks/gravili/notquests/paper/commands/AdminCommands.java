@@ -52,7 +52,9 @@ import rocks.gravili.notquests.paper.commands.arguments.CategorySelector;
 import rocks.gravili.notquests.paper.commands.arguments.ConditionSelector;
 import rocks.gravili.notquests.paper.commands.arguments.MiniMessageSelector;
 import rocks.gravili.notquests.paper.commands.arguments.QuestSelector;
+import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
 import rocks.gravili.notquests.paper.managers.data.Category;
+import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
@@ -1656,6 +1658,30 @@ public class AdminCommands {
                     ));
                 }));
 
+      manager.command(conditionsEditBuilder.literal("hidden")
+          .literal("set")
+          .argument(
+              BooleanVariableValueArgument.newBuilder("hiddenStatusExpression", main, null),
+              ArgumentDescription.of("Expression"))
+          .meta(CommandMeta.DESCRIPTION, "Sets the new hidden status of the condition.")
+          .handler((context) -> {
+            final Condition condition = context.get("condition");
+
+            final String hiddenStatusExpression = context.get("hiddenStatusExpression");
+            final NumberExpression hiddenExpression = new NumberExpression(main, hiddenStatusExpression);
+
+
+            condition.setHidden(hiddenExpression);
+
+            condition.getCategory().getConditionsConfig().set("conditions." + condition.getConditionName() + ".hiddenStatusExpression", hiddenStatusExpression);
+            condition.getCategory().saveConditionsConfig();
+
+
+            context.getSender().sendMessage(main.parse("<success>Hidden status successfully added to condition  <highlight>" + condition.getConditionName() + "</highlight>! New hidden status: <highlight2>"
+                + condition.getHiddenExpression()
+            ));
+          }));
+
         manager.command(conditionsEditBuilder.literal("description")
                 .literal("remove", "delete")
                 .meta(CommandMeta.DESCRIPTION, "Removes the description of the condition.")
@@ -1780,7 +1806,7 @@ public class AdminCommands {
                     int counter = 1;
                     for (Condition condition : action.getConditions()) {
                         context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + condition.getConditionType()));
-                        if(context.getSender() instanceof Player player){
+                        if(context.getSender() instanceof final Player player){
                             context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))));
                         }else{
                             context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(null)));
@@ -1922,7 +1948,38 @@ public class AdminCommands {
                 }));
 
 
+      manager.command(editActionConditionsBuilder.literal("hidden")
+          .literal("set")
+          .argument(
+              BooleanVariableValueArgument.newBuilder("hiddenStatusExpression", main, null),
+              ArgumentDescription.of("Expression"))
+          .meta(CommandMeta.DESCRIPTION, "Sets the new hidden status of the Action condition.")
+          .handler((context) -> {
+            final Action action = context.get("action");
 
+            int conditionID = context.get("Condition ID");
+            Condition condition = action.getConditions().get(conditionID-1);
+
+            if(condition == null){
+              context.getSender().sendMessage(main.parse(
+                  "<error>Condition with the ID <highlight>" + conditionID + "</highlight> was not found!"
+              ));
+              return;
+            }
+
+            final String hiddenStatusExpression = context.get("hiddenStatusExpression");
+            final NumberExpression hiddenExpression = new NumberExpression(main, hiddenStatusExpression);
+
+            condition.setHidden(hiddenExpression);
+
+            action.getCategory().getActionsConfig().set("actions." + action.getActionName() + ".conditions." + (action.getConditions().indexOf(condition)+1) + ".hiddenStatusExpression", hiddenStatusExpression);
+            action.getCategory().saveActionsConfig();
+
+            context.getSender().sendMessage(main.parse("<success>Hidden status successfully added to condition with ID <highlight>" + conditionID + "</highlight> of action <highlight2>"
+                + action.getActionName() + "</highlight2>! New hidden status: <highlight2>"
+                + condition.getHiddenExpression()
+            ));
+          }));
 
 
 

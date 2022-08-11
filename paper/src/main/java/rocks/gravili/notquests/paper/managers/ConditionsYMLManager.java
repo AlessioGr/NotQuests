@@ -24,6 +24,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
+import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 
 public class ConditionsYMLManager {
@@ -107,6 +108,11 @@ public class ConditionsYMLManager {
                 .getConditionsConfig()
                 .getString("conditions." + conditionIdentifier + ".description", "");
 
+        final String hiddenStatusExpression =
+            category
+                .getConditionsConfig()
+                .getString("conditions." + conditionIdentifier + ".hiddenStatusExpression", "");
+
         try {
           condition = conditionType.getDeclaredConstructor(NotQuests.class).newInstance(main);
           condition.setConditionName(conditionIdentifier);
@@ -115,6 +121,7 @@ public class ConditionsYMLManager {
           condition.setDescription(description);
           condition.load(category.getConditionsConfig(), "conditions." + conditionIdentifier);
           condition.setCategory(category);
+          condition.setHidden(new NumberExpression(main, hiddenStatusExpression.isBlank() ? "0" : hiddenStatusExpression));
 
         } catch (final Exception ex) {
           main.getDataManager()
@@ -180,6 +187,11 @@ public class ConditionsYMLManager {
           .getCategory()
           .getConditionsConfig()
           .set("conditions." + conditionIdentifier + ".description", condition.getDescription());
+
+      condition
+          .getCategory()
+          .getConditionsConfig()
+          .set("conditions." + conditionIdentifier + ".hiddenStatusExpression", condition.getHiddenExpression());
 
       condition.save(
           condition.getCategory().getConditionsConfig(), "conditions." + conditionIdentifier);

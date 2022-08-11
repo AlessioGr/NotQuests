@@ -71,7 +71,7 @@ public class ConditionObjective extends Objective {
   public String getTaskDescriptionInternal(
       final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
     if (condition != null) {
-      return condition.getConditionDescription(questPlayer, getQuest());
+      return condition.isHidden(questPlayer) ? "Hidden" : condition.getConditionDescription(questPlayer, getQuest());
     } else {
       return "<YELLOW>Error: Condition not found.";
     }
