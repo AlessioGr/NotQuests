@@ -342,9 +342,10 @@ public class CommandManager {
 
   public void preSetupGeneralCommands() {
     // asynchronous completions
-    if (commandManager.queryCapability(CloudBukkitCapabilities.ASYNCHRONOUS_COMPLETION)) {
+    if (commandManager.hasCapability(CloudBukkitCapabilities.ASYNCHRONOUS_COMPLETION)) {
       commandManager.registerAsynchronousCompletions();
     }
+
 
     // brigadier
     try {

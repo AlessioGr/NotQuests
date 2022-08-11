@@ -149,7 +149,7 @@ repositories {
 
 dependencies {
     //implementation project(':common')
-    paperDevBundle("1.19.1-R0.1-SNAPSHOT")
+    paperDevBundle("1.19.2-R0.1-SNAPSHOT")
     //compileOnly("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT!!")
 
     implementation("org.bstats:bstats-bukkit:3.0.0")
@@ -190,10 +190,10 @@ dependencies {
     }*/
 
     //CloudCommands
-    implementation("cloud.commandframework:cloud-paper:1.7.0") {
+    implementation("cloud.commandframework:cloud-paper:1.8.0-SNAPSHOT") {
         exclude(group = "net.kyori", module = "adventure-api")
     }
-    implementation("cloud.commandframework:cloud-minecraft-extras:1.7.0") {
+    implementation("cloud.commandframework:cloud-minecraft-extras:1.8.0-SNAPSHOT") {
         exclude(group = "net.kyori", module = "adventure-api")
     }
     //Else it errors:
