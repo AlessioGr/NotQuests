@@ -248,4 +248,63 @@ public abstract class Condition {
   public record ConditionResult(boolean fulfilled, String message) {
 
   }
+
+  public static Condition loadConditionFromConfig(final NotQuests main, final String initialPath, final FileConfiguration fileConfiguration, final Category category)
+      throws Exception {
+    final String conditionTypeString =
+        fileConfiguration
+            .getString(
+                initialPath
+                    + ".conditionType",
+                "");
+
+    final Class<? extends Condition> conditionType =
+        main.getConditionsManager().getConditionClass(conditionTypeString);
+
+    if (conditionType == null) {
+      throw new Exception("Condition type " + conditionTypeString + " could not be parsed.");
+    }
+
+    final int progressNeeded =
+        fileConfiguration
+            .getInt(
+                initialPath
+                    + ".progressNeeded");
+    final boolean negated =
+        fileConfiguration
+            .getBoolean(
+                initialPath
+                    + ".negated",
+                false);
+    final String description =
+        fileConfiguration
+            .getString(
+                initialPath
+                    + ".description",
+                "");
+
+    final String hiddenStatusExpression =
+        fileConfiguration
+            .getString(
+                initialPath
+                    + ".hiddenStatusExpression",
+                "");
+
+    final Condition condition;
+
+    condition = conditionType.getDeclaredConstructor(NotQuests.class).newInstance(main);
+    condition.setProgressNeeded(progressNeeded);
+    condition.setNegated(negated);
+    condition.setDescription(description);
+    if(category != null) {
+      condition.setCategory(category);
+    }
+    condition.setHidden(new NumberExpression(main, hiddenStatusExpression.isBlank() ? "0" : hiddenStatusExpression));
+
+    condition.load(
+        fileConfiguration,
+        initialPath);
+
+    return condition;
+  }
 }

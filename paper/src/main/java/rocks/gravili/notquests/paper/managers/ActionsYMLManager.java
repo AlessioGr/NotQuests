@@ -174,100 +174,26 @@ public class ActionsYMLManager {
           return;
         }
 
-        final String conditionTypeString =
-            action
-                .getCategory()
-                .getActionsConfig()
-                .getString(
-                    "actions."
-                        + action.getActionName()
-                        + ".conditions."
-                        + actionConditionNumber
-                        + ".conditionType",
-                    "");
-
-        final Class<? extends Condition> conditionType =
-            main.getConditionsManager().getConditionClass(conditionTypeString);
-
-        if (conditionType == null) {
-          main.getDataManager()
-              .disablePluginAndSaving(
-                  "Error parsing conditionType Type of action with ID <highlight>"
-                      + action.getActionName()
-                      + "</highlight>. Condition type: <highlight2>"
-                      + conditionTypeString,
-                  action);
-          return;
-        }
-
-        final int progressNeeded =
-            action
-                .getCategory()
-                .getActionsConfig()
-                .getInt(
-                    "actions."
-                        + action.getActionName()
-                        + ".conditions."
-                        + actionConditionNumber
-                        + ".progressNeeded");
-        final boolean negated =
-            action
-                .getCategory()
-                .getActionsConfig()
-                .getBoolean(
-                    "actions."
-                        + action.getActionName()
-                        + ".conditions."
-                        + actionConditionNumber
-                        + ".negated",
-                    false);
-        final String description =
-            action
-                .getCategory()
-                .getActionsConfig()
-                .getString(
-                    "actions."
-                        + action.getActionName()
-                        + ".conditions."
-                        + actionConditionNumber
-                        + ".description",
-                    "");
-
-        final String hiddenStatusExpression =
-            action
-                .getCategory()
-                .getActionsConfig()
-                .getString(
-                    "actions."
-                        + action.getActionName()
-                        + ".conditions."
-                        + actionConditionNumber
-                        + ".hiddenStatusExpression",
-                    "");
-
         final Condition condition;
 
-        try {
-          condition = conditionType.getDeclaredConstructor(NotQuests.class).newInstance(main);
-          condition.setProgressNeeded(progressNeeded);
-          condition.setNegated(negated);
-          condition.setDescription(description);
-          condition.setCategory(action.getCategory());
-          condition.setHidden(new NumberExpression(main, hiddenStatusExpression.isBlank() ? "0" : hiddenStatusExpression));
-
-          condition.load(
+        try{
+          condition = Condition.loadConditionFromConfig(
+              main,
+              "actions."+ action.getActionName()+ ".conditions."+ actionConditionNumber,
               action.getCategory().getActionsConfig(),
-              "actions." + action.getActionName() + ".conditions." + actionConditionNumber);
-        } catch (final Exception ex) {
+              action.getCategory());
+        }catch (final Exception e){
           main.getDataManager()
               .disablePluginAndSaving(
-                  "Error parsing condition Type of condition with ID <highlight>"
-                      + actionConditionNumber
-                      + "</highlight>.",
+                  "Error parsing condition of action with ID <highlight>"
+                      + action.getActionName()
+                      + "</highlight>. Condition type: <highlight2>. Error: "
+                      + e.getMessage(),
                   action,
-                  ex);
+                  e);
           return;
         }
+
 
         action.addCondition(
             condition,

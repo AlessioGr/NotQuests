@@ -66,28 +66,10 @@ public class ConditionsYMLManager {
                   category);
           return;
         }
-        final String conditionTypeString =
-            conditionsConfigurationSection.getString(conditionIdentifier + ".conditionType", "");
-        final Class<? extends Condition> conditionType =
-            main.getConditionsManager().getConditionClass(conditionTypeString);
-
-        if (conditionType == null) {
-          main.getDataManager()
-              .disablePluginAndSaving(
-                  "Error parsing conditions.yml conditions Type of condition with name <highlight"
-                      + conditionIdentifier
-                      + "</highlight>. Condition type: <highlight2>"
-                      + conditionTypeString,
-                  category);
-          return;
-        }
-
         if (conditionIdentifier.isBlank()) {
           main.getLogManager()
               .warn(
-                  "Skipping loading the condition of type <highlight>"
-                      + conditionTypeString
-                      + "</highlight> of category <highlight2>"
+                  "Skipping loading the condition of category <highlight2>"
                       + category.getCategoryFullName()
                       + "</highlight2> because the condition identifier is empty.");
           continue;
@@ -95,41 +77,19 @@ public class ConditionsYMLManager {
 
         final Condition condition;
 
-        final int progressNeeded =
-            category
-                .getConditionsConfig()
-                .getInt("conditions." + conditionIdentifier + ".progressNeeded");
-        final boolean negated =
-            category
-                .getConditionsConfig()
-                .getBoolean("conditions." + conditionIdentifier + ".negated", false);
-        final String description =
-            category
-                .getConditionsConfig()
-                .getString("conditions." + conditionIdentifier + ".description", "");
-
-        final String hiddenStatusExpression =
-            category
-                .getConditionsConfig()
-                .getString("conditions." + conditionIdentifier + ".hiddenStatusExpression", "");
-
-        try {
-          condition = conditionType.getDeclaredConstructor(NotQuests.class).newInstance(main);
-          condition.setConditionName(conditionIdentifier);
-          condition.setProgressNeeded(progressNeeded);
-          condition.setNegated(negated);
-          condition.setDescription(description);
-          condition.load(category.getConditionsConfig(), "conditions." + conditionIdentifier);
-          condition.setCategory(category);
-          condition.setHidden(new NumberExpression(main, hiddenStatusExpression.isBlank() ? "0" : hiddenStatusExpression));
-
-        } catch (final Exception ex) {
+        try{
+          condition = Condition.loadConditionFromConfig(
+              main,
+              "conditions." + conditionIdentifier,
+              category.getConditionsConfig(),
+              category);
+        }catch (final Exception e){
           main.getDataManager()
               .disablePluginAndSaving(
-                  "Error parsing condition Type of conditions.yml condition with name <highlight>"
+                  "Error parsing condition of conditions.yml condition with name <highlight>"
                       + conditionIdentifier
-                      + "</highlight>.",
-                  ex,
+                      + "</highlight>. Error: " + e.getMessage(),
+                  e,
                   category);
           return;
         }

@@ -23,7 +23,7 @@ import rocks.gravili.notquests.paper.NotQuests;
 
 public class SlimefunManager {
   private final NotQuests main;
-  private Slimefun slimefun;
+  private final Slimefun slimefun;
 
   public SlimefunManager(final NotQuests main) {
     this.main = main;
