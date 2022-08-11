@@ -19,6 +19,7 @@
 package rocks.gravili.notquests.paper.structs.conditions;
 
 import java.util.ArrayList;
+import javax.annotation.Nullable;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -249,10 +250,10 @@ public abstract class Condition {
 
   }
 
-  public static Condition loadConditionFromConfig(final NotQuests main, final String initialPath, final FileConfiguration fileConfiguration, final Category category)
+  public static Condition loadConditionFromConfig(final NotQuests main, final String initialPath, final FileConfiguration config, final Category category, final @Nullable String conditionName, final int conditionID, final @Nullable Quest quest, final @Nullable Objective objective)
       throws Exception {
     final String conditionTypeString =
-        fileConfiguration
+        config
             .getString(
                 initialPath
                     + ".conditionType",
@@ -266,25 +267,25 @@ public abstract class Condition {
     }
 
     final int progressNeeded =
-        fileConfiguration
+        config
             .getInt(
                 initialPath
                     + ".progressNeeded");
     final boolean negated =
-        fileConfiguration
+        config
             .getBoolean(
                 initialPath
                     + ".negated",
                 false);
     final String description =
-        fileConfiguration
+        config
             .getString(
                 initialPath
                     + ".description",
                 "");
 
     final String hiddenStatusExpression =
-        fileConfiguration
+        config
             .getString(
                 initialPath
                     + ".hiddenStatusExpression",
@@ -296,13 +297,23 @@ public abstract class Condition {
     condition.setProgressNeeded(progressNeeded);
     condition.setNegated(negated);
     condition.setDescription(description);
+    condition.setConditionID(conditionID);
+    if(conditionName != null) {
+      condition.setConditionName(conditionName);
+    }
     if(category != null) {
       condition.setCategory(category);
+    }
+    if(quest != null){
+      condition.setQuest(quest);
+    }
+    if(objective != null){
+      condition.setObjective(objective);
     }
     condition.setHidden(new NumberExpression(main, hiddenStatusExpression.isBlank() ? "0" : hiddenStatusExpression));
 
     condition.load(
-        fileConfiguration,
+        config,
         initialPath);
 
     return condition;

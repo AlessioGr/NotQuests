@@ -19,6 +19,7 @@
 package rocks.gravili.notquests.paper.structs.actions;
 
 import java.util.ArrayList;
+import javax.annotation.Nullable;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -189,5 +190,45 @@ public abstract class Action {
         + ", actionID="
         + actionID
         + '}';
+  }
+
+  public static Action loadActionFromConfig(final NotQuests main, final String initialPath, final FileConfiguration config, final Category category, final @Nullable String actionName, final int actionID, final @Nullable Quest quest, final @Nullable Objective objective)
+      throws Exception {
+
+    final String actionTypeString =
+        config.getString(initialPath + ".actionType", "");
+
+    final Class<? extends Action> actionType =
+        main.getActionManager().getActionClass(actionTypeString);
+
+    if (actionType == null) {
+      throw new Exception("Action type " + actionTypeString + " could not be parsed.");
+    }
+
+    final Action action;
+
+
+    action = actionType.getDeclaredConstructor(NotQuests.class).newInstance(main);
+    action.setCategory(category);
+    action.setActionID(actionID);
+    if(actionName != null){
+      action.setActionName(actionName);
+    }
+    if(quest != null){
+      action.setQuest(quest);
+    }
+    if(objective != null){
+      action.setObjective(objective);
+    }
+
+    final String actionsDisplayName =
+        config.getString(initialPath + ".displayName", "");
+    if (!actionsDisplayName.isBlank()) {
+      action.setActionName(actionsDisplayName);
+    }
+
+    action.load(config, initialPath);
+
+    return action;
   }
 }

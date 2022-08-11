@@ -24,7 +24,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
-import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 
 public class ConditionsYMLManager {
@@ -82,7 +81,12 @@ public class ConditionsYMLManager {
               main,
               "conditions." + conditionIdentifier,
               category.getConditionsConfig(),
-              category);
+              category,
+              conditionIdentifier,
+              -1,
+              null,
+              null
+              );
         }catch (final Exception e){
           main.getDataManager()
               .disablePluginAndSaving(

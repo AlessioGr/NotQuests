@@ -303,7 +303,11 @@ public class QuestManager {
                                     main,
                                     "quests." + questName + ".requirements." + requirementNumber,
                                     category.getQuestsConfig(),
-                                    category);
+                                    category,
+                                    null,
+                                    requirementID,
+                                    quest,
+                                    null);
                             }catch (final Exception e){
                                 main.getDataManager().disablePluginAndSaving("Error parsing Quest condition with ID <highlight>" + requirementNumber + "</highlight>. Error: " + e.getMessage(), quest, category, e);
                                 return;
@@ -331,33 +335,25 @@ public class QuestManager {
                                 return;
                             }
 
-                            final String actionTypeString = category.getQuestsConfig().getString("quests." + questName + ".rewards." + rewardNumber + ".actionType", "");
+                            final Action action;
 
-                            final Class<? extends Action> actionType = main.getActionManager().getActionClass(actionTypeString);
-
-                            if (actionType == null) {
-                                main.getDataManager().disablePluginAndSaving("Error parsing action Type of reward with ID <highlight>" + rewardNumber + "</highlight>.", quest, category);
+                            try{
+                                action = Action.loadActionFromConfig(
+                                    main,
+                                    "quests." + questName + ".rewards." + rewardID,
+                                    category.getQuestsConfig(),
+                                    category,
+                                    null,
+                                    rewardID,
+                                    quest,
+                                    null);
+                            }catch (final Exception e){
+                                main.getDataManager().disablePluginAndSaving("Error parsing action with ID <highlight>" + rewardNumber + "</highlight>. Error: " + e.getMessage(), quest, category, e);
                                 return;
                             }
 
 
-                            final Action reward;
-
-                            try {
-                                reward = actionType.getDeclaredConstructor(NotQuests.class).newInstance(main);
-                                reward.setQuest(quest);
-                                reward.setCategory(category);
-                                reward.setActionID(rewardID);
-                                reward.load(category.getQuestsConfig(), "quests." + questName + ".rewards." + rewardID);
-
-                            } catch (Exception ex) {
-                                main.getDataManager().disablePluginAndSaving("Error parsing reward Type of reward with ID <highlight>" + rewardNumber + "</highlight>. Action type: " + actionTypeString, quest, category, ex);
-                                return;
-                            }
-
-                            final String rewardDisplayName = category.getQuestsConfig().getString("quests." + questName + ".rewards." + rewardNumber + ".displayName", "");
-                            reward.setActionName(rewardDisplayName);
-                            quest.addReward(reward, false);
+                            quest.addReward(action, false);
 
 
                         }
@@ -468,7 +464,11 @@ public class QuestManager {
                                         main,
                                         "quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditions." + objectiveConditionNumber,
                                         category.getQuestsConfig(),
-                                        category);
+                                        category,
+                                        null,
+                                        conditionID,
+                                        quest,
+                                        objective);
                                 }catch (final Exception e){
                                     main.getDataManager().disablePluginAndSaving("Error creating unlock condition with ID <highlight>" + objectiveConditionNumber + "</highlight>. Error: " + e.getMessage(), quest, objective, e);
                                     return;
@@ -500,7 +500,11 @@ public class QuestManager {
                                         main,
                                         "quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditionsProgress." + objectiveConditionNumber,
                                         category.getQuestsConfig(),
-                                        category);
+                                        category,
+                                        null,
+                                        conditionID,
+                                        quest,
+                                        objective);
                                 }catch (final Exception e){
                                     main.getDataManager().disablePluginAndSaving("Error creating progress condition with ID <highlight>" + objectiveConditionNumber + "</highlight>. Error: " + e.getMessage(), quest, objective, e);
                                     return;
@@ -532,7 +536,11 @@ public class QuestManager {
                                         main,
                                         "quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditionsComplete." + objectiveConditionNumber,
                                         category.getQuestsConfig(),
-                                        category);
+                                        category,
+                                        null,
+                                        conditionID,
+                                        quest,
+                                        objective);
                                 }catch (final Exception e){
                                     main.getDataManager().disablePluginAndSaving("Error creating complete condition with ID <highlight>" + objectiveConditionNumber + "</highlight>. Error: " + e.getMessage(), quest, objective, e);
                                     return;
@@ -560,30 +568,23 @@ public class QuestManager {
                                     return;
                                 }
 
-                                final String actionTypeString = category.getQuestsConfig().getString(initialObjectiveRewardsPath + objectiveRewardNumber + ".actionType", "");
-                                final Class<? extends Action> actionType = main.getActionManager().getActionClass(actionTypeString);
+                                final Action action;
 
-                                if (actionType == null) {
-                                    main.getDataManager().disablePluginAndSaving("Error parsing action Type of objective reward with ID <highlight>" + objectiveRewardNumber + "</highlight>. Action type: <highlight2>" + actionTypeString, quest, objective);
+                                try{
+                                    action = Action.loadActionFromConfig(
+                                        main,
+                                        initialObjectiveRewardsPath + rewardID,
+                                        category.getQuestsConfig(),
+                                        category,
+                                        null,
+                                        rewardID,
+                                        quest,
+                                        objective);
+                                }catch (final Exception e){
+                                    main.getDataManager().disablePluginAndSaving("Error parsing objective reward action with ID <highlight>" + objectiveRewardNumber + "</highlight>. Error: " + e.getMessage(), quest, objective, category, e);
                                     return;
                                 }
-
-                                final Action reward;
-                                try {
-                                    reward = actionType.getDeclaredConstructor(NotQuests.class).newInstance(main);
-                                    reward.setQuest(quest);
-                                    reward.load(category.getQuestsConfig(), initialObjectiveRewardsPath + rewardID);
-                                    reward.setCategory(category);
-                                    reward.setActionID(rewardID);
-
-                                } catch (Exception ex) {
-                                    main.getDataManager().disablePluginAndSaving("Error creating reward with ID <highlight>" + objectiveRewardNumber + "</highlight>. Action type: <highlight2>" + actionTypeString, quest, objective, ex);
-                                    return;
-                                }
-
-                                final String rewardDisplayName = category.getQuestsConfig().getString(initialObjectiveRewardsPath + rewardID + ".displayName", "");
-                                reward.setActionName(rewardDisplayName);
-                                objective.addReward(reward, false);
+                                objective.addReward(action, false);
 
                             }
                         }

@@ -25,7 +25,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
-import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 
@@ -80,29 +79,11 @@ public class ActionsYMLManager {
         }
         main.getLogManager().info("Loading action <highlight>" + actionIdentifier);
 
-        final String actionTypeString =
-            actionsConfigurationSection.getString(actionIdentifier + ".actionType", "");
-
-        final Class<? extends Action> actionType =
-            main.getActionManager().getActionClass(actionTypeString);
-
-        if (actionType == null) {
-          main.getDataManager()
-              .disablePluginAndSaving(
-                  "Error parsing actions.yml action Type of action with name <highlight"
-                      + actionIdentifier
-                      + "</highlight>. Action type: <highlight2>"
-                      + actionTypeString,
-                  category);
-          return;
-        }
 
         if (actionIdentifier.isBlank()) {
           main.getLogManager()
               .warn(
-                  "Skipping loading the action of type <highlight>"
-                      + actionTypeString
-                      + "</highlight> of category <highlight2>"
+                  "Skipping loading the action of category <highlight2>"
                       + category.getCategoryFullName()
                       + "</highlight2> because the action identifier is empty.");
           continue;
@@ -110,30 +91,29 @@ public class ActionsYMLManager {
 
         final Action action;
 
-        try {
-          action = actionType.getDeclaredConstructor(NotQuests.class).newInstance(main);
-          action.setCategory(category);
-          action.setActionName(actionIdentifier);
-          action.load(category.getActionsConfig(), "actions." + actionIdentifier);
-
-          loadActionConditions(action);
-
-        } catch (final Exception ex) {
+        try{
+          action = Action.loadActionFromConfig(
+              main,
+              "actions." + actionIdentifier,
+              category.getActionsConfig(),
+              category,
+              actionIdentifier,
+              -1,
+              null,
+              null);
+        }catch (final Exception e){
           main.getDataManager()
               .disablePluginAndSaving(
-                  "Error parsing action Type of actions.yml action with name <highlight>"
+                  "Error parsing action of actions.yml with name <highlight>"
                       + actionIdentifier
-                      + "</highlight>.",
-                  ex,
+                      + "</highlight>. Error: " + e.getMessage(),
+                  e,
                   category);
           return;
         }
 
-        final String actionsDisplayName =
-            actionsConfigurationSection.getString(actionIdentifier + ".displayName", "");
-        if (!actionsDisplayName.isBlank()) {
-          action.setActionName(actionsDisplayName);
-        }
+        loadActionConditions(action);
+
         actionsAndIdentifiers.put(actionIdentifier, action);
       }
     }
@@ -181,7 +161,11 @@ public class ActionsYMLManager {
               main,
               "actions."+ action.getActionName()+ ".conditions."+ actionConditionNumber,
               action.getCategory().getActionsConfig(),
-              action.getCategory());
+              action.getCategory(),
+              null,
+              conditionID,
+              null,
+              null);
         }catch (final Exception e){
           main.getDataManager()
               .disablePluginAndSaving(
