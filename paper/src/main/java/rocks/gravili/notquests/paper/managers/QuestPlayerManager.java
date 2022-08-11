@@ -823,9 +823,9 @@ public class QuestPlayerManager {
     }
   }
 
-  public String forceAcceptQuest(
-      UUID uuid, Quest quest) { // Ignores max amount limit, cooldown and requirements
-    QuestPlayer questPlayer = getOrCreateQuestPlayer(uuid);
+  public final String forceAcceptQuest(
+      final UUID uuid, final Quest quest) { // Ignores max amount limit, cooldown and requirements
+    final QuestPlayer questPlayer = getOrCreateQuestPlayer(uuid);
 
     return questPlayer.forceAddActiveQuest(new ActiveQuest(main, quest, questPlayer), true);
   }
