@@ -28,6 +28,8 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
@@ -775,11 +777,11 @@ public class QuestPlayerManager {
     return questPlayersAndUUIDs.get(uuid);
   }
 
-  public final QuestPlayer getOrCreateQuestPlayer(@NonNull final UUID uuid) {
-    QuestPlayer foundQuestPlayer = questPlayersAndUUIDs.get(uuid);
+  public final @NotNull QuestPlayer getOrCreateQuestPlayer(@NonNull final UUID uuid) {
+    QuestPlayer foundQuestPlayer = getQuestPlayer(uuid);
     if (foundQuestPlayer == null) {
-      createQuestPlayer(uuid);
-      foundQuestPlayer = questPlayersAndUUIDs.get(uuid);
+      foundQuestPlayer = new QuestPlayer(main, uuid);
+      questPlayersAndUUIDs.put(uuid, foundQuestPlayer);
     }
     return foundQuestPlayer;
   }
@@ -809,7 +811,7 @@ public class QuestPlayerManager {
     return questPlayer.addActiveQuest(newActiveQuest, triggerAcceptQuestTrigger, sendQuestInfo);
   }
 
-  public String createQuestPlayer(UUID uuid) {
+  public final String createQuestPlayer(final UUID uuid) {
     QuestPlayer questPlayer = getQuestPlayer(uuid);
     if (questPlayer == null) {
       questPlayer = new QuestPlayer(main, uuid);
