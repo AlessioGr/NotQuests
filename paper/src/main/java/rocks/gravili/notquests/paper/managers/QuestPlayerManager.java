@@ -777,7 +777,7 @@ public class QuestPlayerManager {
     return questPlayersAndUUIDs.get(uuid);
   }
 
-  public final @NotNull QuestPlayer getOrCreateQuestPlayer(@NonNull final UUID uuid) {
+  public final @NotNull QuestPlayer getOrCreateQuestPlayer(@NotNull final UUID uuid) {
     QuestPlayer foundQuestPlayer = getQuestPlayer(uuid);
     if (foundQuestPlayer == null) {
       foundQuestPlayer = new QuestPlayer(main, uuid);
