@@ -108,7 +108,7 @@ public class QuestEvents implements Listener {
                     return;
                 }
                 for(final Player player : Bukkit.getOnlinePlayers()) {
-                    QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                    final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
                     if(questPlayer == null){
                         return;
                     }
