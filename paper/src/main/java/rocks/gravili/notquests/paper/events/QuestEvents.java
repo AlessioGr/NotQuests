@@ -261,128 +261,122 @@ public class QuestEvents implements Listener {
             if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
                 return;
             }
-            for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                    if (activeObjective.isUnlocked()) {
-                        if (activeObjective.getObjective() instanceof final SmeltObjective smeltObjective) {
-                            final InventoryType inventoryType = e.getInventory().getType();
+            questPlayer.queueObjectiveCheck(activeObjective -> {
+                if (activeObjective.getObjective() instanceof final SmeltObjective smeltObjective) {
+                    final InventoryType inventoryType = e.getInventory().getType();
 
-                            if(inventoryType != InventoryType.FURNACE && inventoryType != InventoryType.BLAST_FURNACE && inventoryType != InventoryType.SMOKER){
-                                continue;
-                            }
-
-                            if(e.getRawSlot() != 2){
-                                //Raw slot 2 is the slot where the smelted item will be put. Without this check, the player can just
-                                //put keep putting and taking the item from their inventory to get free progress while in the furnace GUI.
-                                continue;
-                            }
-
-
-                            final ItemStack currentItem = e.getCurrentItem();
-                            if(main.getUtilManager().isItemEmpty(currentItem)){
-                                //questPlayer.sendDebugMessage("Invalid item for smelt objective (1)");
-                                continue;
-                            }
-
-                            final ItemStackSelection itemStackSelection = smeltObjective.getItemStackSelection();
-                            if(!itemStackSelection.checkIfIsIncluded(currentItem)){
-                                //questPlayer.sendDebugMessage("Invalid item for smelt objective (2). CurrentItem: " + currentItem.getType().name() + " ItemToSmelt: " + smeltObjective.getItemToSmelt().getType().name());
-                                continue;
-                            }
-
-                            questPlayer.sendDebugMessage("Valid item for smelt objective");
-
-
-                            int amount = currentItem.getAmount();
-                            final ItemStack cursor = e.getCursor();
-
-
-
-                            switch (e.getClick()) {
-                                case LEFT:
-                                    if (!main.getUtilManager().isItemEmpty(cursor)) {
-                                        questPlayer.sendDebugMessage("Inventory craft event: Cursor is not empty");
-
-                                        if (!cursor.isSimilar(currentItem)) {
-                                            amount = 0;
-                                        }
-                                        if (cursor.getAmount() + currentItem.getAmount() > cursor.getMaxStackSize()) {
-                                            amount = 0;
-                                        }
-                                    }
-                                    break;
-
-                                case RIGHT:
-                                    if (!main.getUtilManager().isItemEmpty(cursor)) {
-                                        questPlayer.sendDebugMessage("Inventory craft event: Cursor is not empty");
-
-                                        if (!cursor.isSimilar(currentItem)) {
-                                            amount = 0;
-                                        }
-                                        if (cursor.getAmount() + currentItem.getAmount() > cursor.getMaxStackSize()) {
-                                            amount = 0;
-                                        }
-                                    }
-                                    amount = (amount+1)/2;
-                                    break;
-                                case NUMBER_KEY:
-                                    //If the hotbar is full, the item will not be crafted but it will still trigger this event for some reason. That's
-                                    //why we manually have to set the amount to 0 here
-                                    if (player.getInventory().getItem(e.getHotbarButton()) != null) {
-                                        amount = 0;
-                                    }
-                                    break;
-
-                                case DROP:
-                                    if (!main.getUtilManager().isItemEmpty(cursor)) {
-                                        amount = 0;
-                                    }
-                                    amount = 1;
-                                    break;
-                                case CONTROL_DROP:
-                                    // If we are holding items, craft-via-drop fails (vanilla behavior)
-                                    // Cursor is either null or AIR
-                                    if (!main.getUtilManager().isItemEmpty(cursor)) {
-                                        amount = 0;
-                                    }
-
-                                    break;
-                                case SWAP_OFFHAND:
-                                    if(!main.getUtilManager().isItemEmpty(player.getInventory().getItemInOffHand())){
-                                        amount = 0;
-                                    }
-                                    break;
-                                case SHIFT_LEFT:
-                                case SHIFT_RIGHT:
-                                    if (amount == 0) {
-                                        break;
-                                    }
-
-                                    amount = Math.min(getInventorySpaceLeftForItem(player.getInventory(), currentItem ) ,amount);
-
-                                    break;
-                                default:
-                                    amount = 0;
-                            }
-
-
-                            questPlayer.sendDebugMessage("Amount: " + amount);
-
-                            if (amount == 0) {
-                                continue;
-                            }
-
-
-                            activeObjective.addProgress(amount);
-
-
-                        }
+                    if(inventoryType != InventoryType.FURNACE && inventoryType != InventoryType.BLAST_FURNACE && inventoryType != InventoryType.SMOKER){
+                        return;
                     }
 
+                    if(e.getRawSlot() != 2){
+                        //Raw slot 2 is the slot where the smelted item will be put. Without this check, the player can just
+                        //put keep putting and taking the item from their inventory to get free progress while in the furnace GUI.
+                        return;
+                    }
+
+
+                    final ItemStack currentItem = e.getCurrentItem();
+                    if(main.getUtilManager().isItemEmpty(currentItem)){
+                        //questPlayer.sendDebugMessage("Invalid item for smelt objective (1)");
+                        return;
+                    }
+
+                    final ItemStackSelection itemStackSelection = smeltObjective.getItemStackSelection();
+                    if(!itemStackSelection.checkIfIsIncluded(currentItem)){
+                        //questPlayer.sendDebugMessage("Invalid item for smelt objective (2). CurrentItem: " + currentItem.getType().name() + " ItemToSmelt: " + smeltObjective.getItemToSmelt().getType().name());
+                        return;
+                    }
+
+                    questPlayer.sendDebugMessage("Valid item for smelt objective");
+
+
+                    int amount = currentItem.getAmount();
+                    final ItemStack cursor = e.getCursor();
+
+
+
+                    switch (e.getClick()) {
+                        case LEFT:
+                            if (!main.getUtilManager().isItemEmpty(cursor)) {
+                                questPlayer.sendDebugMessage("Inventory craft event: Cursor is not empty");
+
+                                if (!cursor.isSimilar(currentItem)) {
+                                    amount = 0;
+                                }
+                                if (cursor.getAmount() + currentItem.getAmount() > cursor.getMaxStackSize()) {
+                                    amount = 0;
+                                }
+                            }
+                            break;
+
+                        case RIGHT:
+                            if (!main.getUtilManager().isItemEmpty(cursor)) {
+                                questPlayer.sendDebugMessage("Inventory craft event: Cursor is not empty");
+
+                                if (!cursor.isSimilar(currentItem)) {
+                                    amount = 0;
+                                }
+                                if (cursor.getAmount() + currentItem.getAmount() > cursor.getMaxStackSize()) {
+                                    amount = 0;
+                                }
+                            }
+                            amount = (amount+1)/2;
+                            break;
+                        case NUMBER_KEY:
+                            //If the hotbar is full, the item will not be crafted but it will still trigger this event for some reason. That's
+                            //why we manually have to set the amount to 0 here
+                            if (player.getInventory().getItem(e.getHotbarButton()) != null) {
+                                amount = 0;
+                            }
+                            break;
+
+                        case DROP:
+                            if (!main.getUtilManager().isItemEmpty(cursor)) {
+                                amount = 0;
+                            }
+                            amount = 1;
+                            break;
+                        case CONTROL_DROP:
+                            // If we are holding items, craft-via-drop fails (vanilla behavior)
+                            // Cursor is either null or AIR
+                            if (!main.getUtilManager().isItemEmpty(cursor)) {
+                                amount = 0;
+                            }
+
+                            break;
+                        case SWAP_OFFHAND:
+                            if(!main.getUtilManager().isItemEmpty(player.getInventory().getItemInOffHand())){
+                                amount = 0;
+                            }
+                            break;
+                        case SHIFT_LEFT:
+                        case SHIFT_RIGHT:
+                            if (amount == 0) {
+                                break;
+                            }
+
+                            amount = Math.min(getInventorySpaceLeftForItem(player.getInventory(), currentItem ) ,amount);
+
+                            break;
+                        default:
+                            amount = 0;
+                    }
+
+
+                    questPlayer.sendDebugMessage("Amount: " + amount);
+
+                    if (amount == 0) {
+                        return;
+                    }
+
+
+                    activeObjective.addProgress(amount);
+
+
                 }
-                activeQuest.removeCompletedObjectives(true);
-            }
-            questPlayer.removeCompletedQuests();
+            });
+            questPlayer.checkQueuedObjectives();
         }
 
     }
@@ -413,46 +407,38 @@ public class QuestEvents implements Listener {
             if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
                 return;
             }
-            for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                    if (activeObjective.isUnlocked()) {
-                        if (activeObjective.getObjective() instanceof final CraftItemsObjective craftItemsObjective) {
-                            final ItemStack result = e.getRecipe().getResult();
-                            final ItemStack cursor = e.getCursor();
+            questPlayer.queueObjectiveCheck(activeObjective -> {
+                if (activeObjective.getObjective() instanceof final CraftItemsObjective craftItemsObjective) {
+                    final ItemStack result = e.getRecipe().getResult();
+                    final ItemStack cursor = e.getCursor();
 
-                            final ItemStackSelection itemStackSelection = craftItemsObjective.getItemStackSelection();
+                    final ItemStackSelection itemStackSelection = craftItemsObjective.getItemStackSelection();
 
-                            //Check if the Material of the crafted item is equal to the Material needed in the CraftItemsObjective
-                            if (!itemStackSelection.checkIfIsIncluded(result)) {
-                                continue;
-                            }
-
-
-                            questPlayer.sendDebugMessage("Inventory craft event. Click type: " + debugHighlightGradient + e.getClick().name() + "</gradient>");
-
-
-                            //Now we gotta figure out the real amount of items which have been crafted, which is trickier than expected:
-
-
-                            int recipeAmount = getCraftAmount(result, cursor, e.getClick(), e.getWhoClicked(), e.getHotbarButton(), e.getInventory(), e.getView(), questPlayer);
-
-
-                            // No use continuing if we haven't actually crafted a thing
-                            if (recipeAmount == 0) {
-                                continue;
-                            }
-
-
-                            activeObjective.addProgress(recipeAmount);
-
-
-                        }
+                    //Check if the Material of the crafted item is equal to the Material needed in the CraftItemsObjective
+                    if (!itemStackSelection.checkIfIsIncluded(result)) {
+                        return;
                     }
 
+
+                    questPlayer.sendDebugMessage("Inventory craft event. Click type: " + debugHighlightGradient + e.getClick().name() + "</gradient>");
+
+
+                    //Now we gotta figure out the real amount of items which have been crafted, which is trickier than expected:
+
+
+                    int recipeAmount = getCraftAmount(result, cursor, e.getClick(), e.getWhoClicked(), e.getHotbarButton(), e.getInventory(), e.getView(), questPlayer);
+
+
+                    // No use continuing if we haven't actually crafted a thing
+                    if (recipeAmount == 0) {
+                        return;
+                    }
+
+
+                    activeObjective.addProgress(recipeAmount);
                 }
-                activeQuest.removeCompletedObjectives(true);
-            }
-            questPlayer.removeCompletedQuests();
+            });
+            questPlayer.checkQueuedObjectives();
         }
 
     }
@@ -564,18 +550,12 @@ public class QuestEvents implements Listener {
             return;
         }
 
-        for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-            for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                if (activeObjective.isUnlocked()) {
-                    if (activeObjective.getObjective() instanceof JumpObjective) {
-                        activeObjective.addProgress(1);
-                    }
-                }
-
+        questPlayer.queueObjectiveCheck(activeObjective -> {
+            if (activeObjective.getObjective() instanceof JumpObjective) {
+                activeObjective.addProgress(1);
             }
-            activeQuest.removeCompletedObjectives(true);
-        }
-        questPlayer.removeCompletedQuests();
+        });
+        questPlayer.checkQueuedObjectives();
     }
 
 
@@ -587,60 +567,56 @@ public class QuestEvents implements Listener {
             return;
         }
 
+        questPlayer.queueObjectiveCheck(activeObjective -> {
+            if (activeObjective.getObjective() instanceof final InteractObjective interactObjective) {
+                String materialName = "AIR";
+                if (e.getClickedBlock() != null) {
+                    materialName = e.getClickedBlock().getBlockData().getMaterial().name();
+                }
+                questPlayer.sendDebugMessage("Found InteractObjective Objective in PlayerInteractEvent. Clicked Block material: <highlight>" + materialName
+                    + "</highlight>. Action: <highlight2>" + e.getAction() + "</highlight2>."
+                );
 
-        for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-            for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                if (activeObjective.isUnlocked()) {
-                    if (activeObjective.getObjective() instanceof InteractObjective interactObjective) {
-                        String materialName = "AIR";
-                        if (e.getClickedBlock() != null) {
-                            materialName = e.getClickedBlock().getBlockData().getMaterial().name();
-                        }
-                        questPlayer.sendDebugMessage("Found InteractObjective Objective in PlayerInteractEvent. Clicked Block material: <highlight>" + materialName
-                                + "</highlight>. Action: <highlight2>" + e.getAction() + "</highlight2>."
-                        );
+                if (e.getAction() == Action.RIGHT_CLICK_BLOCK && !interactObjective.isRightClick()) {
+                    return;
+                }
+                if (e.getAction() == Action.LEFT_CLICK_BLOCK && !interactObjective.isLeftClick()) {
+                    return;
+                }
+                if (e.getClickedBlock() == null || e.getClickedBlock().getLocation().getWorld() == null || interactObjective.getLocationToInteract().getWorld() == null) {
+                    return;
+                }
 
-                        if (e.getAction() == Action.RIGHT_CLICK_BLOCK && !interactObjective.isRightClick()) {
-                            continue;
-                        }
-                        if (e.getAction() == Action.LEFT_CLICK_BLOCK && !interactObjective.isLeftClick()) {
-                            continue;
-                        }
-                        if (e.getClickedBlock() == null || e.getClickedBlock().getLocation().getWorld() == null || interactObjective.getLocationToInteract().getWorld() == null) {
-                            continue;
-                        }
+                if (!e.getClickedBlock().getLocation().getWorld().getName().equalsIgnoreCase(interactObjective.getLocationToInteract().getWorld().getName())) {
+                    return;
+                }
+                if (e.getClickedBlock().getLocation().distance(interactObjective.getLocationToInteract()) > interactObjective.getMaxDistance()) {
+                    return;
+                }
 
-                        if (!e.getClickedBlock().getLocation().getWorld().getName().equalsIgnoreCase(interactObjective.getLocationToInteract().getWorld().getName())) {
-                            continue;
-                        }
-                        if (e.getClickedBlock().getLocation().distance(interactObjective.getLocationToInteract()) > interactObjective.getMaxDistance()) {
-                            continue;
-                        }
-
-                        activeObjective.addProgress(1);
-                        if (interactObjective.isCancelInteraction()) {
-                            e.setCancelled(true);
-                        }
-
-                    } else if (activeObjective.getObjective() instanceof OpenBuriedTreasureObjective) {
-                        if (e.getAction() != Action.RIGHT_CLICK_BLOCK){
-                            continue;
-                        }
-                        Block clickedBlock = e.getClickedBlock();
-                        if(clickedBlock.getState() instanceof final Chest chest){
-
-                            if(chest.getLootTable() != null && chest.getLootTable().getKey().equals(LootTables.BURIED_TREASURE.getKey()) && !chest.hasPlayerLooted(player.getUniqueId())){
-                                activeObjective.addProgress(1);
-                            }
-
-                        }
-                    }
+                activeObjective.addProgress(1);
+                if (interactObjective.isCancelInteraction()) {
+                    e.setCancelled(true);
                 }
 
             }
-            activeQuest.removeCompletedObjectives(true);
-        }
-        questPlayer.removeCompletedQuests();
+        });
+        questPlayer.queueObjectiveCheck(activeObjective -> {
+            if (activeObjective.getObjective() instanceof OpenBuriedTreasureObjective) {
+                if (e.getAction() != Action.RIGHT_CLICK_BLOCK){
+                    return;
+                }
+                Block clickedBlock = e.getClickedBlock();
+                if(clickedBlock.getState() instanceof final Chest chest){
+
+                    if(chest.getLootTable() != null && chest.getLootTable().getKey().equals(LootTables.BURIED_TREASURE.getKey()) && !chest.hasPlayerLooted(player.getUniqueId())){
+                        activeObjective.addProgress(1);
+                    }
+
+                }
+            }
+        });
+        questPlayer.checkQueuedObjectives();
     }
 
 
@@ -652,35 +628,26 @@ public class QuestEvents implements Listener {
             return;
         }
 
-        for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-            for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                if (activeObjective.isUnlocked()) {
-                    if (activeObjective.getObjective() instanceof RunCommandObjective runCommandObjective) {
-                        questPlayer.sendDebugMessage("Found RunCommand Objective in PlayerCommandPreprocessEvent. Command: <highlight>" + e.getMessage()
-                                + "</highlight> Objective command to run: <highlight2>" + runCommandObjective.getCommandToRun() + "</highlight2>."
-                        );
+        questPlayer.queueObjectiveCheck(activeObjective -> {
+            if (activeObjective.getObjective() instanceof final RunCommandObjective runCommandObjective) {
+                questPlayer.sendDebugMessage("Found RunCommand Objective in PlayerCommandPreprocessEvent. Command: <highlight>" + e.getMessage()
+                    + "</highlight> Objective command to run: <highlight2>" + runCommandObjective.getCommandToRun() + "</highlight2>."
+                );
 
-                        if (runCommandObjective.isIgnoreCase() && !e.getMessage().equalsIgnoreCase(runCommandObjective.getCommandToRun())) {
-                            continue;
-                        }
-                        if (!runCommandObjective.isIgnoreCase() && !e.getMessage().equals(runCommandObjective.getCommandToRun())) {
-                            continue;
-                        }
-
-                        activeObjective.addProgress(1);
-                        if (runCommandObjective.isCancelCommand()) {
-                            e.setCancelled(true);
-                        }
-
-                    }
+                if (runCommandObjective.isIgnoreCase() && !e.getMessage().equalsIgnoreCase(runCommandObjective.getCommandToRun())) {
+                    return;
+                }
+                if (!runCommandObjective.isIgnoreCase() && !e.getMessage().equals(runCommandObjective.getCommandToRun())) {
+                    return;
                 }
 
+                activeObjective.addProgress(1);
+                if (runCommandObjective.isCancelCommand()) {
+                    e.setCancelled(true);
+                }
             }
-            activeQuest.removeCompletedObjectives(true);
-        }
-        questPlayer.removeCompletedQuests();
-
-
+        });
+        questPlayer.checkQueuedObjectives();
     }
 
 
@@ -722,21 +689,15 @@ public class QuestEvents implements Listener {
                     return;
                 }
 
-                for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                    for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                        if (activeObjective.isUnlocked()) {
-                            if (activeObjective.getObjective() instanceof BreedObjective breedObjective) {
-                                if(breedObjective.getEntityToBreedType().equalsIgnoreCase("any") ||  breedObjective.getEntityToBreedType().equalsIgnoreCase(e.getEntityType().toString())){
-                                    activeObjective.addProgress(1);
-                                }
-
-                            }
+                questPlayer.queueObjectiveCheck(activeObjective -> {
+                    if (activeObjective.getObjective() instanceof final BreedObjective breedObjective) {
+                        if(breedObjective.getEntityToBreedType().equalsIgnoreCase("any") ||  breedObjective.getEntityToBreedType().equalsIgnoreCase(e.getEntityType().toString())){
+                            activeObjective.addProgress(1);
                         }
 
                     }
-                    activeQuest.removeCompletedObjectives(true);
-                }
-                questPlayer.removeCompletedQuests();
+                });
+                questPlayer.checkQueuedObjectives();
 
             }
         }
@@ -751,31 +712,30 @@ public class QuestEvents implements Listener {
             if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
                 return;
             }
-            for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                    if (activeObjective.isUnlocked()) {
-                        if (activeObjective.getObjective() instanceof BreakBlocksObjective breakBlocksObjective) {
-                            final ItemStackSelection itemStackSelection = breakBlocksObjective.getItemStackSelection();
 
-                            if(itemStackSelection.checkIfIsIncluded(e.getBlock().getType())){
-                                activeObjective.addProgress(1);
-                            }
+            questPlayer.queueObjectiveCheck(activeObjective -> {
+                if (activeObjective.getObjective() instanceof final BreakBlocksObjective breakBlocksObjective) {
+                    final ItemStackSelection itemStackSelection = breakBlocksObjective.getItemStackSelection();
 
-                        } else if (activeObjective.getObjective() instanceof PlaceBlocksObjective placeBlocksObjective) { //Deduct if Block is Broken for PlaceBlocksObjective
-                            final ItemStackSelection itemStackSelection = placeBlocksObjective.getItemStackSelection();
-
-                            if(itemStackSelection.checkIfIsIncluded(e.getBlock().getType())){
-                                if (placeBlocksObjective.isDeductIfBlockBroken()) {
-                                    activeObjective.removeProgress(1, false);
-                                }
-                            }
-                        }
+                    if(itemStackSelection.checkIfIsIncluded(e.getBlock().getType())){
+                        activeObjective.addProgress(1);
                     }
 
                 }
-                activeQuest.removeCompletedObjectives(true);
-            }
-            questPlayer.removeCompletedQuests();
+            });
+            questPlayer.queueObjectiveCheck(activeObjective -> {
+                if (activeObjective.getObjective() instanceof final PlaceBlocksObjective placeBlocksObjective) { //Deduct if Block is Broken for PlaceBlocksObjective
+                    final ItemStackSelection itemStackSelection = placeBlocksObjective.getItemStackSelection();
+
+                    if(itemStackSelection.checkIfIsIncluded(e.getBlock().getType())){
+                        if (placeBlocksObjective.isDeductIfBlockBroken()) {
+                            activeObjective.removeProgress(1, false);
+                        }
+                    }
+                }
+            });
+            questPlayer.checkQueuedObjectives();
+
         }
 
     }
@@ -788,30 +748,30 @@ public class QuestEvents implements Listener {
             if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
                 return;
             }
-            for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                    if (activeObjective.isUnlocked()) {
-                        //This is for the BreakBlocksObjective. It should deduct the progress if the player placed the same block again (if willDeductIfBlockPlaced() is set to true)
-                        if (activeObjective.getObjective() instanceof final BreakBlocksObjective breakBlocksObjective) {
-                            final ItemStackSelection itemStackSelection = breakBlocksObjective.getItemStackSelection();
+            questPlayer.queueObjectiveCheck(activeObjective -> {
+                if (activeObjective.getObjective() instanceof final BreakBlocksObjective breakBlocksObjective) {
+                    final ItemStackSelection itemStackSelection = breakBlocksObjective.getItemStackSelection();
 
-                            if (itemStackSelection.checkIfIsIncluded(e.getBlock().getType())) {
-                                if (breakBlocksObjective.isDeductIfBlockPlaced()) {
-                                    activeObjective.removeProgress(1, false);
-                                }
-                            }
-                        } else if (activeObjective.getObjective() instanceof final PlaceBlocksObjective placeBlocksObjective) {
-                            final ItemStackSelection itemStackSelection = placeBlocksObjective.getItemStackSelection();
-
-                            if (itemStackSelection.checkIfIsIncluded(e.getBlock().getType())) {
-                                activeObjective.addProgress(1);
-                            }
+                    if (itemStackSelection.checkIfIsIncluded(e.getBlock().getType())) {
+                        if (breakBlocksObjective.isDeductIfBlockPlaced()) {
+                            activeObjective.removeProgress(1, false);
                         }
                     }
                 }
-                activeQuest.removeCompletedObjectives(true);
-            }
-            questPlayer.removeCompletedQuests();
+            });
+            questPlayer.queueObjectiveCheck(activeObjective -> {
+                if (activeObjective.getObjective() instanceof final PlaceBlocksObjective placeBlocksObjective) {
+                    final ItemStackSelection itemStackSelection = placeBlocksObjective.getItemStackSelection();
+
+                    if (itemStackSelection.checkIfIsIncluded(e.getBlock().getType())) {
+                        activeObjective.addProgress(1);
+                    }
+                }
+            });
+
+
+            questPlayer.checkQueuedObjectives();
+
         }
 
     }
@@ -828,33 +788,27 @@ public class QuestEvents implements Listener {
         if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
             return;
         }
-        for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-            for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                if (activeObjective.isUnlocked()) {
-                    if (activeObjective.getObjective() instanceof final FishItemsObjective fishItemsObjective) {
+        questPlayer.queueObjectiveCheck(activeObjective -> {
+            if (activeObjective.getObjective() instanceof final FishItemsObjective fishItemsObjective) {
 
-                        if(e.getCaught() == null){
-                            continue;
-                        }
-
-                        final ItemStack fishedItem = ((org.bukkit.entity.Item)e.getCaught()).getItemStack();
-
-                        final ItemStackSelection itemStackSelection = fishItemsObjective.getItemStackSelection();
-
-                        //Check if the Material of the collected item is equal to the Material needed in the CollectItemsObjective
-                        if (!itemStackSelection.checkIfIsIncluded(fishedItem)) {
-                            continue;
-                        }
-
-                        activeObjective.addProgress(fishedItem.getAmount());
-
-                    }
+                if(e.getCaught() == null){
+                    return;
                 }
 
+                final ItemStack fishedItem = ((org.bukkit.entity.Item)e.getCaught()).getItemStack();
+
+                final ItemStackSelection itemStackSelection = fishItemsObjective.getItemStackSelection();
+
+                //Check if the Material of the collected item is equal to the Material needed in the CollectItemsObjective
+                if (!itemStackSelection.checkIfIsIncluded(fishedItem)) {
+                    return;
+                }
+
+                activeObjective.addProgress(fishedItem.getAmount());
+
             }
-            activeQuest.removeCompletedObjectives(true);
-        }
-        questPlayer.removeCompletedQuests();
+        });
+        questPlayer.checkQueuedObjectives();
 
     }
 
@@ -866,27 +820,21 @@ public class QuestEvents implements Listener {
             if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
                 return;
             }
-            for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                    if (activeObjective.isUnlocked()) {
-                        if (activeObjective.getObjective() instanceof final CollectItemsObjective collectItemsObjective) {
+            questPlayer.queueObjectiveCheck(activeObjective -> {
+                if (activeObjective.getObjective() instanceof final CollectItemsObjective collectItemsObjective) {
 
-                            final ItemStackSelection itemStackSelection = collectItemsObjective.getItemStackSelection();
+                    final ItemStackSelection itemStackSelection = collectItemsObjective.getItemStackSelection();
 
-                            //Check if the Material of the collected item is equal to the Material needed in the CollectItemsObjective
-                            if (!itemStackSelection.checkIfIsIncluded(e.getItem().getItemStack())) {
-                                continue;
-                            }
-
-                            activeObjective.addProgress(e.getItem().getItemStack().getAmount());
-
-                        }
+                    //Check if the Material of the collected item is equal to the Material needed in the CollectItemsObjective
+                    if (!itemStackSelection.checkIfIsIncluded(e.getItem().getItemStack())) {
+                        return;
                     }
 
+                    activeObjective.addProgress(e.getItem().getItemStack().getAmount());
+
                 }
-                activeQuest.removeCompletedObjectives(true);
-            }
-            questPlayer.removeCompletedQuests();
+            });
+            questPlayer.checkQueuedObjectives();
         }
 
     }
@@ -900,29 +848,23 @@ public class QuestEvents implements Listener {
         if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
             return;
         }
-        for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-            for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                if (activeObjective.isUnlocked()) {
-                    if (activeObjective.getObjective() instanceof final CollectItemsObjective collectItemsObjective) {
-                        if (!collectItemsObjective.isDeductIfItemIsDropped()) {
-                            continue;
-                        }
-
-                        final ItemStackSelection itemStackSelection = collectItemsObjective.getItemStackSelection();
-
-                        if(!itemStackSelection.checkIfIsIncluded(e.getItemDrop().getItemStack())){
-                            continue;
-                        }
-
-                        activeObjective.removeProgress(e.getItemDrop().getItemStack().getAmount(), false);
-
-                    }
+        questPlayer.queueObjectiveCheck(activeObjective -> {
+            if (activeObjective.getObjective() instanceof final CollectItemsObjective collectItemsObjective) {
+                if (!collectItemsObjective.isDeductIfItemIsDropped()) {
+                    return;
                 }
 
+                final ItemStackSelection itemStackSelection = collectItemsObjective.getItemStackSelection();
+
+                if(!itemStackSelection.checkIfIsIncluded(e.getItemDrop().getItemStack())){
+                    return;
+                }
+
+                activeObjective.removeProgress(e.getItemDrop().getItemStack().getAmount(), false);
+
             }
-            activeQuest.removeCompletedObjectives(true);
-        }
-        questPlayer.removeCompletedQuests();
+        });
+        questPlayer.checkQueuedObjectives();
 
 
     }
@@ -958,68 +900,67 @@ public class QuestEvents implements Listener {
             if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
                 return;
             }
-            for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                    if (activeObjective.getObjective() instanceof final KillMobsObjective killMobsObjective) {
-                        if (activeObjective.isUnlocked()) {
-                            if(main.getIntegrationsManager().isProjectKorraEnabled() && !killMobsObjective.getProjectKorraAbility().isBlank()){
-                                continue; //See ProjectKorraEvents.java onEntityKilled() for that.
-                            }
-                            final EntityType killedMob = e.getEntity().getType();
-                            if (killMobsObjective.getMobToKill().equalsIgnoreCase("any") || killMobsObjective.getMobToKill().equalsIgnoreCase(killedMob.toString())) {
-                                if (e.getEntity() != e.getEntity().getKiller()) { //Suicide prevention
+            questPlayer.queueObjectiveCheck(activeObjective -> {
+                if (activeObjective.getObjective() instanceof final KillMobsObjective killMobsObjective) {
+                    if (activeObjective.isUnlocked()) {
+                        if(main.getIntegrationsManager().isProjectKorraEnabled() && !killMobsObjective.getProjectKorraAbility().isBlank()){
+                            return; //See ProjectKorraEvents.java onEntityKilled() for that.
+                        }
+                        final EntityType killedMob = e.getEntity().getType();
+                        if (killMobsObjective.getMobToKill().equalsIgnoreCase("any") || killMobsObjective.getMobToKill().equalsIgnoreCase(killedMob.toString())) {
+                            if (e.getEntity() != e.getEntity().getKiller()) { //Suicide prevention
 
-                                    //Extra Flags
-                                    if (!killMobsObjective.getNameTagContainsAny().isBlank()) {
-                                        final Component customName = e.getEntity().customName();
-                                        if (customName == null) {
-                                            continue;
-                                        }
-                                        final String customNamePlainStringLowercase = PlainTextComponentSerializer.plainText().serialize(customName).toLowerCase(
-                                            Locale.ROOT);
-                                        if(customNamePlainStringLowercase.isBlank()){
-                                            continue;
-                                        }
-
-                                        boolean foundOneNotFitting = false;
-                                        for (final String namePart : killMobsObjective.getNameTagContainsAny().toLowerCase(Locale.ROOT).split(" ")) {
-                                            if (!customNamePlainStringLowercase.contains(
-                                                namePart)) {
-                                                foundOneNotFitting = true;
-                                                break;
-                                            }
-                                        }
-                                        if (foundOneNotFitting) {
-                                            continue;
-                                        }
+                                //Extra Flags
+                                if (!killMobsObjective.getNameTagContainsAny().isBlank()) {
+                                    final Component customName = e.getEntity().customName();
+                                    if (customName == null) {
+                                        return;
                                     }
-                                    if (!killMobsObjective.getNameTagEquals().isBlank()) {
-                                        final Component customName = e.getEntity().customName();
-                                        if (customName == null) {
-                                            continue;
-                                        }
-                                        final String customNamePlainStringLowercase = PlainTextComponentSerializer.plainText().serialize(customName).toLowerCase(
-                                            Locale.ROOT);
-                                        if(customNamePlainStringLowercase.isBlank()){
-                                            continue;
-                                        }
-
-                                        if (!customNamePlainStringLowercase.equalsIgnoreCase(killMobsObjective.getNameTagEquals())) {
-                                            continue;
-                                        }
+                                    final String customNamePlainStringLowercase = PlainTextComponentSerializer.plainText().serialize(customName).toLowerCase(
+                                        Locale.ROOT);
+                                    if(customNamePlainStringLowercase.isBlank()){
+                                        return;
                                     }
 
-                                    activeObjective.addProgress(1);
+                                    boolean foundOneNotFitting = false;
+                                    for (final String namePart : killMobsObjective.getNameTagContainsAny().toLowerCase(Locale.ROOT).split(" ")) {
+                                        if (!customNamePlainStringLowercase.contains(
+                                            namePart)) {
+                                            foundOneNotFitting = true;
+                                            break;
+                                        }
+                                    }
+                                    if (foundOneNotFitting) {
+                                        return;
+                                    }
+                                }
+                                if (!killMobsObjective.getNameTagEquals().isBlank()) {
+                                    final Component customName = e.getEntity().customName();
+                                    if (customName == null) {
+                                        return;
+                                    }
+                                    final String customNamePlainStringLowercase = PlainTextComponentSerializer.plainText().serialize(customName).toLowerCase(
+                                        Locale.ROOT);
+                                    if(customNamePlainStringLowercase.isBlank()){
+                                        return;
+                                    }
+
+                                    if (!customNamePlainStringLowercase.equalsIgnoreCase(killMobsObjective.getNameTagEquals())) {
+                                        return;
+                                    }
                                 }
 
+                                activeObjective.addProgress(1);
                             }
-                        }
 
+                        }
                     }
+
                 }
-                activeQuest.removeCompletedObjectives(true);
-            }
-            questPlayer.removeCompletedQuests();
+            });
+            questPlayer.checkQueuedObjectives();
+
+
         }
 
     }
@@ -1032,26 +973,25 @@ public class QuestEvents implements Listener {
         if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
             return;
         }
-        for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-            for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                if (activeObjective.getObjective() instanceof final ConsumeItemsObjective consumeItemsObjective) {
-                    if (activeObjective.isUnlocked()) {
+        questPlayer.queueObjectiveCheck(activeObjective -> {
+            if (activeObjective.getObjective() instanceof final ConsumeItemsObjective consumeItemsObjective) {
+                if (activeObjective.isUnlocked()) {
 
-                        final ItemStackSelection itemStackSelection = consumeItemsObjective.getItemStackSelection();
+                    final ItemStackSelection itemStackSelection = consumeItemsObjective.getItemStackSelection();
 
-                        if(!itemStackSelection.checkIfIsIncluded(e.getItem())){
-                            continue;
-                        }
-
-                        activeObjective.addProgress(1);
-
+                    if(!itemStackSelection.checkIfIsIncluded(e.getItem())){
+                        return;
                     }
 
+                    activeObjective.addProgress(1);
+
                 }
+
             }
-            activeQuest.removeCompletedObjectives(true);
-        }
-        questPlayer.removeCompletedQuests();
+        });
+        questPlayer.checkQueuedObjectives();
+
+
 
     }
 
@@ -1113,33 +1053,27 @@ public class QuestEvents implements Listener {
         if (e.isCancelled() || questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
             return;
         }
-        for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-            for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                if (activeObjective.isUnlocked()) {
-                    if (activeObjective.getObjective() instanceof final ReachLocationObjective reachLocationObjective) {
+        questPlayer.queueObjectiveCheck(activeObjective -> {
+            if (activeObjective.getObjective() instanceof final ReachLocationObjective reachLocationObjective) {
 
-                        final Location minLocation = reachLocationObjective.getMinLocation();
-                        if(minLocation == null){
-                            continue;
-                        }
-                        if (minLocation.getWorld() != null && currentLocation.getWorld() != null && !currentLocation.getWorld().equals(minLocation.getWorld())) {
-                            continue;
-                        }
-                        final Location maxLocation = reachLocationObjective.getMaxLocation();
-                        if (currentLocation.getX() >= minLocation.getX() && currentLocation.getX() <= maxLocation.getX()) {
-                            if (currentLocation.getZ() >= minLocation.getZ() && currentLocation.getZ() <= maxLocation.getZ()) {
-                                if (currentLocation.getY() >= minLocation.getY() && currentLocation.getY() <= maxLocation.getY()) {
-                                    activeObjective.addProgress(1);
-                                }
-                            }
+                final Location minLocation = reachLocationObjective.getMinLocation();
+                if(minLocation == null){
+                    return;
+                }
+                if (minLocation.getWorld() != null && currentLocation.getWorld() != null && !currentLocation.getWorld().equals(minLocation.getWorld())) {
+                    return;
+                }
+                final Location maxLocation = reachLocationObjective.getMaxLocation();
+                if (currentLocation.getX() >= minLocation.getX() && currentLocation.getX() <= maxLocation.getX()) {
+                    if (currentLocation.getZ() >= minLocation.getZ() && currentLocation.getZ() <= maxLocation.getZ()) {
+                        if (currentLocation.getY() >= minLocation.getY() && currentLocation.getY() <= maxLocation.getY()) {
+                            activeObjective.addProgress(1);
                         }
                     }
                 }
-
             }
-            activeQuest.removeCompletedObjectives(true);
-        }
-        questPlayer.removeCompletedQuests();
+        });
+        questPlayer.checkQueuedObjectives();
 
     }
 
@@ -1190,18 +1124,13 @@ public class QuestEvents implements Listener {
         if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
             return;
         }
-        for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-            for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                if (activeObjective.isUnlocked()) {
-                    if (activeObjective.getObjective() instanceof SneakObjective) {
-                        activeObjective.addProgress(1);
-                    }
-                }
-
+        questPlayer.queueObjectiveCheck(activeObjective -> {
+            if (activeObjective.getObjective() instanceof SneakObjective) {
+                activeObjective.addProgress(1);
             }
-            activeQuest.removeCompletedObjectives(true);
-        }
-        questPlayer.removeCompletedQuests();
+        });
+        questPlayer.checkQueuedObjectives();
+
     }
 
 

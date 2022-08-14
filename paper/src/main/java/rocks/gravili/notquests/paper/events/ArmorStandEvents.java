@@ -20,6 +20,7 @@ package rocks.gravili.notquests.paper.events;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.ArmorStand;
@@ -39,8 +40,6 @@ import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
 import rocks.gravili.notquests.paper.conversation.Conversation;
-import rocks.gravili.notquests.paper.structs.ActiveObjective;
-import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.objectives.DeliverItemsObjective;
@@ -459,74 +458,73 @@ public class ArmorStandEvents implements Listener {
 
     public void showQuestOrHandleObjectivesOfArmorStands(final Player player, final ArmorStand armorStand, final PlayerInteractAtEntityEvent event) {
         //Handle Objectives
+        final AtomicBoolean handledObjective = new AtomicBoolean(false);
+
         final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
 
-        boolean handledObjective = false;
-
         if (questPlayer != null) {
-            if (questPlayer.getActiveQuests().size() > 0) {
-                for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                    for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                        if (activeObjective.isUnlocked()) {
-                            if (activeObjective.getObjective() instanceof final DeliverItemsObjective deliverItemsObjective) {
-                                if (deliverItemsObjective.getRecipientNPCID() == -1 && deliverItemsObjective.getRecipientArmorStandUUID().equals(armorStand.getUniqueId())) {
-                                    for (final ItemStack itemStack : player.getInventory().getContents()) {
-                                        if (itemStack != null) {
-                                            if(!deliverItemsObjective.getItemStackSelection().checkIfIsIncluded(itemStack)) {
-                                                continue;
-                                            }
-                                            final double progressLeft = activeObjective.getProgressNeeded() - activeObjective.getCurrentProgress();
-
-                                            if (progressLeft == 0) {
-                                                continue;
-                                            }
-                                            handledObjective = true;
-
-                                            if (progressLeft < itemStack.getAmount()) { //We can finish it with this itemStack
-                                                itemStack.setAmount((itemStack.getAmount() - (int) progressLeft));
-                                                activeObjective.addProgress(progressLeft, armorStand.getUniqueId());
-                                                player.sendMessage(main.parse(
-                                                        "<GREEN>You have delivered <highlight>" + progressLeft + "</highlight> items to <highlight>" + main.getArmorStandManager().getArmorStandName(armorStand)
-                                                ));
-                                                break;
-                                            } else {
-                                                player.getInventory().removeItemAnySlot(itemStack);
-                                                activeObjective.addProgress(itemStack.getAmount(), armorStand.getUniqueId());
-                                                player.sendMessage(main.parse(
-                                                        "<GREEN>You have delivered <highlight>" + itemStack.getAmount() + "</highlight> items to <highlight>" + main.getArmorStandManager().getArmorStandName(armorStand)
-                                                ));
-                                            }
-                                        }
-
-                                    }
-
+            questPlayer.queueObjectiveCheck(activeObjective -> {
+                if (activeObjective.getObjective() instanceof final DeliverItemsObjective deliverItemsObjective) {
+                    if (deliverItemsObjective.getRecipientNPCID() == -1 && deliverItemsObjective.getRecipientArmorStandUUID().equals(armorStand.getUniqueId())) {
+                        for (final ItemStack itemStack : player.getInventory().getContents()) {
+                            if (itemStack != null) {
+                                if(!deliverItemsObjective.getItemStackSelection().checkIfIsIncluded(itemStack)) {
+                                    continue;
                                 }
-                            } else if (activeObjective.getObjective() instanceof final TalkToNPCObjective talkToNPCObjective) {
-                                if (talkToNPCObjective.getNPCtoTalkID() == -1 && (talkToNPCObjective.getArmorStandUUID().equals(armorStand.getUniqueId()))) {
-                                    activeObjective.addProgress(1, armorStand.getUniqueId());
+                                final double progressLeft = activeObjective.getProgressNeeded() - activeObjective.getCurrentProgress();
+
+                                if (progressLeft == 0) {
+                                    continue;
+                                }
+                                handledObjective.set(true);
+
+                                if (progressLeft < itemStack.getAmount()) { //We can finish it with this itemStack
+                                    itemStack.setAmount((itemStack.getAmount() - (int) progressLeft));
+                                    activeObjective.addProgress(progressLeft, armorStand.getUniqueId());
                                     player.sendMessage(main.parse(
-                                            "<GREEN>You talked to <highlight>" + main.getArmorStandManager().getArmorStandName(armorStand)
+                                        "<GREEN>You have delivered <highlight>" + progressLeft + "</highlight> items to <highlight>" + main.getArmorStandManager().getArmorStandName(armorStand)
                                     ));
-                                    handledObjective = true;
+                                    break;
+                                } else {
+                                    player.getInventory().removeItemAnySlot(itemStack);
+                                    activeObjective.addProgress(itemStack.getAmount(), armorStand.getUniqueId());
+                                    player.sendMessage(main.parse(
+                                        "<GREEN>You have delivered <highlight>" + itemStack.getAmount() + "</highlight> items to <highlight>" + main.getArmorStandManager().getArmorStandName(armorStand)
+                                    ));
                                 }
                             }
-                            //Eventually trigger CompletionNPC Objective Completion if the objective is not set to complete automatically (so, if getCompletionArmorStandUUID() is not null)
-                            if (activeObjective.getObjective().getCompletionArmorStandUUID() != null) {
 
-                                activeObjective.addProgress(0, armorStand.getUniqueId());
-                            }
                         }
 
                     }
-                    activeQuest.removeCompletedObjectives(true);
                 }
-                questPlayer.removeCompletedQuests();
-            }
+            });
+            questPlayer.queueObjectiveCheck(activeObjective -> {
+                if (activeObjective.getObjective() instanceof final TalkToNPCObjective talkToNPCObjective) {
+                    if (talkToNPCObjective.getNPCtoTalkID() == -1 && (talkToNPCObjective.getArmorStandUUID().equals(armorStand.getUniqueId()))) {
+                        activeObjective.addProgress(1, armorStand.getUniqueId());
+                        player.sendMessage(main.parse(
+                            "<GREEN>You talked to <highlight>" + main.getArmorStandManager().getArmorStandName(armorStand)
+                        ));
+                        handledObjective.set(true);
+                    }
+                }
+            });
+            questPlayer.queueObjectiveCheck(activeObjective -> {
+                //Eventually trigger CompletionNPC Objective Completion if the objective is not set to complete automatically (so, if getCompletionArmorStandUUID() is not null)
+                if (activeObjective.getObjective().getCompletionArmorStandUUID() != null) {
+
+                    activeObjective.addProgress(0, armorStand.getUniqueId());
+                }
+            });
+            questPlayer.checkQueuedObjectives();
+
+
         }
 
 
         //Show quests
-        if (handledObjective) {
+        if (handledObjective.get()) {
             if (main.getConfiguration().isArmorStandPreventEditing()) {
                 event.setCancelled(true);
             }
@@ -541,7 +539,7 @@ public class ArmorStandEvents implements Listener {
 
         //Conversations
         final Conversation foundConversation = main.getConversationManager().getConversationAttachedToArmorstand(armorStand);
-        if (foundConversation != null) {
+        if (questPlayer != null && foundConversation != null) {
             main.getConversationManager().playConversation(questPlayer, foundConversation);
             if (main.getConfiguration().isArmorStandPreventEditing()) {
                 event.setCancelled(true);

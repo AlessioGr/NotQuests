@@ -19,6 +19,7 @@
 package rocks.gravili.notquests.paper.events.hooks;
 
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicBoolean;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.event.CitizensEnableEvent;
 import net.citizensnpcs.api.event.CitizensReloadEvent;
@@ -31,6 +32,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -48,7 +50,7 @@ import rocks.gravili.notquests.paper.structs.triggers.types.NPCDeathTrigger;
 public class CitizensEvents implements Listener {
     private final NotQuests main;
 
-    public CitizensEvents(NotQuests main) {
+    public CitizensEvents(final NotQuests main) {
         this.main = main;
         main.getLogManager().info("Initialized CitizensEvents");
     }
@@ -104,7 +106,7 @@ public class CitizensEvents implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     private void onNPCClickEvent(NPCRightClickEvent event) { //Disconnect objectives
         final NPC npc = event.getNPC();
         final NQNPC nqnpc = main.getNPCManager().getOrCreateNQNpc("Citizens", npc.getId());
@@ -113,111 +115,112 @@ public class CitizensEvents implements Listener {
         final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
 
 
-        boolean handledObjective = false;
+        final AtomicBoolean handledObjective = new AtomicBoolean(false);
         questPlayer.sendDebugMessage("Right-clicked NPC event: " + npc.getId() + ". NqNPC null: " + (nqnpc == null) );
-        if (questPlayer.getActiveQuests().size() > 0) {
-            for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                    if (activeObjective.isUnlocked()) {
 
-                        if (activeObjective.getObjective() instanceof final DeliverItemsObjective deliverItemsObjective) {
-                            if (deliverItemsObjective.getRecipientNPCID() == npc.getId()) {
-                                for (final ItemStack itemStack : player.getInventory().getContents()) {
-                                    if (itemStack != null) {
-                                        if(!deliverItemsObjective.getItemStackSelection().checkIfIsIncluded(itemStack)){
-                                            continue;
-                                        }
-
-                                        final double progressLeft = activeObjective.getProgressNeeded() - activeObjective.getCurrentProgress();
-
-                                        if (progressLeft == 0) {
-                                            continue;
-                                        }
-
-                                        handledObjective = true;
-
-                                        final String mmNpcName = main.getMiniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(npc.getName().replace("§","&")));
-
-                                        if (progressLeft < itemStack.getAmount()) { //We can finish it with this itemStack
-                                            itemStack.setAmount((itemStack.getAmount() - (int) progressLeft));
-                                            activeObjective.addProgress(progressLeft, nqnpc);
-
-
-
-                                            player.sendMessage(main.parse(
-                                                    "<GREEN>You have delivered <highlight>" + progressLeft + "</highlight> items to <highlight>" + mmNpcName
-                                            ));
-                                            break;
-                                        } else {
-                                            questPlayer.sendDebugMessage("Calling player.getInventory().removeItemAnySlot with amount " + itemStack.getAmount() + "...");
-                                            player.getInventory().removeItemAnySlot(itemStack);
-                                            activeObjective.addProgress(itemStack.getAmount(), nqnpc);
-                                            player.sendMessage(main.parse(
-                                                    "<GREEN>You have delivered <highlight>" + itemStack.getAmount() + "</highlight> items to <highlight>" + mmNpcName
-                                            ));
-                                        }
-                                    }
-
-                                }
-
+        questPlayer.queueObjectiveCheck(activeObjective -> {
+            if (activeObjective.getObjective() instanceof final DeliverItemsObjective deliverItemsObjective) {
+                if (deliverItemsObjective.getRecipientNPCID() == npc.getId()) {
+                    for (final ItemStack itemStack : player.getInventory().getContents()) {
+                        if (itemStack != null) {
+                            if(!deliverItemsObjective.getItemStackSelection().checkIfIsIncluded(itemStack)){
+                                continue;
                             }
-                        } else if (activeObjective.getObjective() instanceof final TalkToNPCObjective talkToNPCObjective) {
-                            if (talkToNPCObjective.getNPCtoTalkID() != -1 && talkToNPCObjective.getNPCtoTalkID() == npc.getId()) {
-                                activeObjective.addProgress(1, nqnpc);
-                                final String mmNpcName = main.getMiniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(npc.getName().replace("§","&")));
+
+                            final double progressLeft = activeObjective.getProgressNeeded() - activeObjective.getCurrentProgress();
+
+                            if (progressLeft == 0) {
+                                continue;
+                            }
+
+                            handledObjective.set(true);
+
+                            final String mmNpcName = main.getMiniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(npc.getName().replace("§","&")));
+
+                            if (progressLeft < itemStack.getAmount()) { //We can finish it with this itemStack
+                                itemStack.setAmount((itemStack.getAmount() - (int) progressLeft));
+                                activeObjective.addProgress(progressLeft, nqnpc);
+
+
 
                                 player.sendMessage(main.parse(
-                                        "<GREEN>You talked to <highlight>" +mmNpcName
+                                    "<GREEN>You have delivered <highlight>" + progressLeft + "</highlight> items to <highlight>" + mmNpcName
                                 ));
-                                handledObjective = true;
-                            }
-                        } else if (activeObjective.getObjective() instanceof final EscortNPCObjective escortNPCObjective) {
-                            if (escortNPCObjective.getNpcToEscortToID() == npc.getId()) {
-                                final NPC npcToEscort = CitizensAPI.getNPCRegistry().getById(escortNPCObjective.getNpcToEscortID());
-                                if (npcToEscort != null) {
-                                    if (npcToEscort.isSpawned() && (npcToEscort.getEntity().getLocation().distance(player.getLocation()) < 6)) {
-                                        activeObjective.addProgress(1, nqnpc);
-                                        final String mmNpcName = main.getMiniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(npcToEscort.getName()));
-
-                                        player.sendMessage(main.parse(
-                                                "<GREEN>You have successfully delivered the NPC <highlight>" + mmNpcName
-                                        ));
-                                        handledObjective = true;
-                                        FollowTrait followerTrait = null;
-                                        for (final Trait trait : npcToEscort.getTraits()) {
-                                            if (trait.getName().toLowerCase(Locale.ROOT).contains("follow")) {
-                                                followerTrait = (FollowTrait) trait;
-                                            }
-                                        }
-                                        if (followerTrait != null) {
-                                            npc.removeTrait(followerTrait.getClass());
-                                        }
-
-                                        npcToEscort.despawn();
-                                    } else {
-                                        player.sendMessage(main.parse(
-                                                "<RED>The NPC you have to escort is not close enough to you!"
-                                        ));
-                                    }
-                                }
-
-
+                                break;
+                            } else {
+                                questPlayer.sendDebugMessage("Calling player.getInventory().removeItemAnySlot with amount " + itemStack.getAmount() + "...");
+                                player.getInventory().removeItemAnySlot(itemStack);
+                                activeObjective.addProgress(itemStack.getAmount(), nqnpc);
+                                player.sendMessage(main.parse(
+                                    "<GREEN>You have delivered <highlight>" + itemStack.getAmount() + "</highlight> items to <highlight>" + mmNpcName
+                                ));
                             }
                         }
-                        //Eventually trigger CompletionNPC Objective Completion if the objective is not set to complete automatically (so, if getCompletionNPCID() is not -1)
-                        if (activeObjective.getObjective().getCompletionNPC() != null) {
-                            activeObjective.addProgress(0, nqnpc);
-                        }
+
                     }
 
                 }
-                activeQuest.removeCompletedObjectives(true);
             }
-            questPlayer.removeCompletedQuests();
-        }
+        });
+        questPlayer.queueObjectiveCheck(activeObjective -> {
+            if (activeObjective.getObjective() instanceof final TalkToNPCObjective talkToNPCObjective) {
+                if (talkToNPCObjective.getNPCtoTalkID() != -1 && talkToNPCObjective.getNPCtoTalkID() == npc.getId()) {
+                    activeObjective.addProgress(1, nqnpc);
+                    final String mmNpcName = main.getMiniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(npc.getName().replace("§","&")));
+
+                    player.sendMessage(main.parse(
+                        "<GREEN>You talked to <highlight>" +mmNpcName
+                    ));
+                    handledObjective.set(true);
+                }
+            }
+        });
+        questPlayer.queueObjectiveCheck(activeObjective -> {
+            if (activeObjective.getObjective() instanceof final EscortNPCObjective escortNPCObjective) {
+                if (escortNPCObjective.getNpcToEscortToID() == npc.getId()) {
+                    final NPC npcToEscort = CitizensAPI.getNPCRegistry().getById(escortNPCObjective.getNpcToEscortID());
+                    if (npcToEscort != null) {
+                        if (npcToEscort.isSpawned() && (npcToEscort.getEntity().getLocation().distance(player.getLocation()) < 6)) {
+                            activeObjective.addProgress(1, nqnpc);
+                            final String mmNpcName = main.getMiniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(npcToEscort.getName()));
+
+                            player.sendMessage(main.parse(
+                                "<GREEN>You have successfully delivered the NPC <highlight>" + mmNpcName
+                            ));
+                            handledObjective.set(true);
+                            FollowTrait followerTrait = null;
+                            for (final Trait trait : npcToEscort.getTraits()) {
+                                if (trait.getName().toLowerCase(Locale.ROOT).contains("follow")) {
+                                    followerTrait = (FollowTrait) trait;
+                                }
+                            }
+                            if (followerTrait != null) {
+                                npc.removeTrait(followerTrait.getClass());
+                            }
+
+                            npcToEscort.despawn();
+                        } else {
+                            player.sendMessage(main.parse(
+                                "<RED>The NPC you have to escort is not close enough to you!"
+                            ));
+                        }
+                    }
+
+
+                }
+            }
+        });
+        questPlayer.queueObjectiveCheck(activeObjective -> {
+            //Eventually trigger CompletionNPC Objective Completion if the objective is not set to complete automatically (so, if getCompletionNPCID() is not -1)
+            if (activeObjective.getObjective().getCompletionNPC() != null) {
+                activeObjective.addProgress(0, nqnpc);
+            }
+        });
+        questPlayer.checkQueuedObjectives();
+
 
         //Return if another action already happened
-        if (handledObjective) {
+        if (handledObjective.get()) {
             questPlayer.sendDebugMessage("Returning because of handled objective");
             return;
         }

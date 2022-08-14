@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
@@ -49,6 +50,7 @@ import rocks.gravili.notquests.paper.structs.conditions.Condition.ConditionResul
 import rocks.gravili.notquests.paper.structs.objectives.ConditionObjective;
 import rocks.gravili.notquests.paper.structs.objectives.NumberVariableObjective;
 import rocks.gravili.notquests.paper.structs.objectives.OtherQuestObjective;
+import rocks.gravili.notquests.paper.structs.objectives.RunCommandObjective;
 import rocks.gravili.notquests.paper.structs.triggers.ActiveTrigger;
 
 /**
@@ -88,6 +90,7 @@ public class QuestPlayer {
     private boolean finishedLoadingGeneralData = false;
     private boolean finishedLoadingTags = false;
 
+    private final ArrayList<Consumer<ActiveObjective>> queuedObjectivesToCheck = new ArrayList<>();
 
 
     public QuestPlayer(NotQuests main, UUID uuid) {
@@ -1060,5 +1063,32 @@ public class QuestPlayer {
 
     public final void setFinishedLoadingTags(boolean finishedLoadingTags) {
         this.finishedLoadingTags = finishedLoadingTags;
+    }
+
+
+    public void queueObjectiveCheck(final Consumer<ActiveObjective> runForEachObjective){
+        if(getActiveQuests().isEmpty()){
+            return;
+        }
+        queuedObjectivesToCheck.add(runForEachObjective);
+    }
+    public void checkQueuedObjectives(){
+        if(queuedObjectivesToCheck.isEmpty()){
+            return;
+        }
+        for (final ActiveQuest activeQuest : getActiveQuests()) {
+            for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
+                if (activeObjective.isUnlocked()) {
+                    for(final Consumer<ActiveObjective> runForEachObjective : queuedObjectivesToCheck){
+                        runForEachObjective.accept(activeObjective);
+                    }
+                }
+
+            }
+            activeQuest.removeCompletedObjectives(true);
+        }
+        removeCompletedQuests();
+
+        queuedObjectivesToCheck.clear();
     }
 }

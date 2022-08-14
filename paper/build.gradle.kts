@@ -155,7 +155,7 @@ dependencies {
     implementation("org.bstats:bstats-bukkit:3.0.0")
     //implementation("de.themoep:inventorygui:1.5-SNAPSHOT")
 
-    compileOnly("net.citizensnpcs:citizens-main:2.0.29-SNAPSHOT")
+    compileOnly("net.citizensnpcs:citizens-main:2.0.30-SNAPSHOT")
     compileOnly("me.clip:placeholderapi:2.11.1")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
 
