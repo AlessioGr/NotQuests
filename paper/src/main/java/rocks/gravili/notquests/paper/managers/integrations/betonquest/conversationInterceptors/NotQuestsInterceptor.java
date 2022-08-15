@@ -35,7 +35,12 @@ public class NotQuestsInterceptor implements Interceptor, Listener {
    */
   @Override
   public void sendMessage(final String message) {
-    final Component parsedMessage = LegacyComponentSerializer.legacy('§').deserialize(message.replace("&", "§"));
+    final Component parsedMessage = main.parse(
+        main.getMiniMessage().serialize(LegacyComponentSerializer.legacy('§').deserialize(message.replace("&", "§")))
+            .replace("\\<", "<")
+            .replace("</white><bold><white> </white></bold><white>", "")
+    );
+
     if (main.getConfiguration().deletePreviousConversations) {
       ArrayList<Component> hist =
           main.getConversationManager().getConversationChatHistory().get(player.getUniqueId());
@@ -51,7 +56,11 @@ public class NotQuestsInterceptor implements Interceptor, Listener {
 
   @Override
   public void sendMessage(final BaseComponent... message) {
-    final Component parsedMessage = BungeeComponentSerializer.legacy().deserialize(message);
+    final String mmString = main.getMiniMessage().serialize(BungeeComponentSerializer.get().deserialize(message))
+        .replace("\\<", "<")
+        .replace("</white><bold><white> </white></bold><white>", "");
+    final Component parsedMessage = main.parse(mmString);
+
     if (main.getConfiguration().deletePreviousConversations) {
       ArrayList<Component> hist =
           main.getConversationManager().getConversationChatHistory().get(player.getUniqueId());
@@ -71,58 +80,6 @@ public class NotQuestsInterceptor implements Interceptor, Listener {
   public void end() {
     HandlerList.unregisterAll(this);
 
-    removeOldMessages();
+    //main.getConversationManager().removeOldMessages();
   }
-
-  /** Resends the chat history without ANY conversation messages */
-  public void removeOldMessages() {
-    if (!main.getConfiguration().deletePreviousConversations) {
-      return;
-    }
-    // Send back old messages
-    ArrayList<Component> allChatHistory =
-        main.getConversationManager().getChatHistory().get(player.getUniqueId());
-
-    main.getLogManager().debug("Conversation stop stage 1");
-
-    if (allChatHistory == null) {
-      return;
-    }
-
-    ArrayList<Component> allConversationHistory =
-        main.getConversationManager()
-            .getConversationChatHistory()
-            .get(player.getUniqueId());
-    main.getLogManager().debug("Conversation stop stage 1.5");
-    if (allConversationHistory == null) {
-      return;
-    }
-    main.getLogManager().debug("Conversation stop stage 2");
-
-
-    Component collectiveComponent = Component.text("");
-    for (int i = 0; i < allChatHistory.size(); i++) {
-      Component component = allChatHistory.get(i);
-      if (component != null) {
-        // audience.sendMessage(component.append(Component.text("fg9023zf729ofz")));
-        collectiveComponent = collectiveComponent.append(component).append(Component.newline());
-      }
-    }
-    player.sendMessage(collectiveComponent);
-
-    allChatHistory.removeAll(allConversationHistory);
-    allConversationHistory.clear();
-    main.getConversationManager()
-        .getChatHistory()
-        .put(player.getUniqueId(), allChatHistory);
-    main.getConversationManager()
-        .getConversationChatHistory()
-        .put(player.getUniqueId(), allConversationHistory);
-
-    // maybe this won't send the huge, 1-component-chat-history again
-    allConversationHistory.add(collectiveComponent);
-  }
-
-
-
 }

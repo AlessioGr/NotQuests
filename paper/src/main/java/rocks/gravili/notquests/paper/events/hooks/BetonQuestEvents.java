@@ -18,14 +18,17 @@
 
 package rocks.gravili.notquests.paper.events.hooks;
 
+import org.betonquest.betonquest.BetonQuest;
 import org.betonquest.betonquest.api.ConversationOptionEvent;
 import org.betonquest.betonquest.api.PlayerObjectiveChangeEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
+import rocks.gravili.notquests.paper.structs.objectives.CollectItemsObjective;
 import rocks.gravili.notquests.paper.structs.objectives.hooks.betonquest.BetonQuestObjectiveStateChangeObjective;
 
 public class BetonQuestEvents implements Listener {
@@ -38,28 +41,33 @@ public class BetonQuestEvents implements Listener {
     @EventHandler
     public void onBetonQuestObjectiveStateChange(final PlayerObjectiveChangeEvent e) {
         final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(e.getPlayer().getUniqueId());
-        if (questPlayer != null) {
-            if (questPlayer.getActiveQuests().size() > 0) {
-                for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                    for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                        if (activeObjective.getObjective() instanceof BetonQuestObjectiveStateChangeObjective betonQuestObjectiveStateChangeObjective) {
-                            if (activeObjective.isUnlocked()) {
-                                if(e.getState() == betonQuestObjectiveStateChangeObjective.getObjectiveState()){
-                                    if(e.getObjectiveID().getFullID().equalsIgnoreCase(betonQuestObjectiveStateChangeObjective.getObjectiveFullID())){
-                                        activeObjective.addProgress(1);
-                                    }
-                                }
-                            }
-
+        if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
+            return;
+        }
+        questPlayer.queueObjectiveCheck(activeObjective -> {
+            if (activeObjective.getObjective() instanceof final BetonQuestObjectiveStateChangeObjective betonQuestObjectiveStateChangeObjective) {
+                if (activeObjective.isUnlocked()) {
+                    if(e.getState() == betonQuestObjectiveStateChangeObjective.getObjectiveState()){
+                        if(e.getObjectiveID().getFullID().equalsIgnoreCase(betonQuestObjectiveStateChangeObjective.getObjectiveFullID())){
+                            activeObjective.addProgress(1);
                         }
                     }
-                    activeQuest.removeCompletedObjectives(true);
                 }
-                questPlayer.removeCompletedQuests();
+
             }
-        }
+        });
+        questPlayer.checkQueuedObjectives();
     }
 
+
+    @EventHandler
+    public void onBetonQuestObjectiveStateChange(final ConversationOptionEvent e) {
+        final BetonQuest betonQuest = main.getIntegrationsManager().getBetonQuestManager().getBetonQuest();
+
+        if(e.getConversation().getInterceptor().getClass() == betonQuest.getInterceptor("notquests")){
+            main.getConversationManager().removeOldMessages(e.getPlayer());
+        }
+    }
 
 
 

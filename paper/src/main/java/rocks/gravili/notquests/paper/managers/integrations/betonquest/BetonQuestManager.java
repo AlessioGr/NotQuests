@@ -18,6 +18,7 @@
 
 package rocks.gravili.notquests.paper.managers.integrations.betonquest;
 
+
 import org.betonquest.betonquest.BetonQuest;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.integrations.betonquest.conditions.BQConditionsCondition;
@@ -78,4 +79,7 @@ public class BetonQuestManager {
   public BetonQuest getBetonQuest() {
     return betonQuest;
   }
+
+
+
 }
