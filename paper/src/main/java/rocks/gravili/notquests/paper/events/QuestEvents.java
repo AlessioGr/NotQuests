@@ -23,10 +23,15 @@ import static rocks.gravili.notquests.paper.commands.NotQuestColors.debugHighlig
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
+import io.papermc.paper.event.player.AsyncChatEvent;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import net.minecraft.network.protocol.game.ClientboundSystemChatPacket;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -1195,5 +1200,61 @@ public class QuestEvents implements Listener {
 
 
     }
+
+
+    @EventHandler
+    public void asyncChatEvent(AsyncChatEvent e) {
+        final Player playerWhoChatted = e.getPlayer();
+
+        for(final Audience audience : e.viewers()){
+            if(audience instanceof final Player player){
+                final Component adventureComponent = e.renderer().render(
+                    playerWhoChatted,
+                    playerWhoChatted.displayName(),
+                    e.message(),
+                    audience
+                );
+
+                final ArrayList<Component> convHist = main.getConversationManager().getConversationChatHistory().get(player.getUniqueId());
+                if (convHist != null && convHist.contains(adventureComponent)) {
+                    return;
+                }
+
+                ArrayList<Component> hist = main.getConversationManager().getChatHistory().get(player.getUniqueId());
+                if (hist != null) {
+                    hist.add(adventureComponent);
+                } else {
+                    hist = new ArrayList<>();
+                    hist.add(adventureComponent);
+                }
+
+                main.getLogManager().debug("Registering chat message with Message: " + PlainTextComponentSerializer.plainText().serialize(adventureComponent));
+                final int toRemove = hist.size() - main.getConversationManager().getMaxChatHistory();
+                if (toRemove > 0) {
+                    //main.getLogManager().log(Level.WARNING, "ToRemove: " + i);
+                    hist.subList(0, toRemove).clear();
+                }
+                //main.getLogManager().log(Level.WARNING, "After: " + hist.size());
+
+
+                main.getConversationManager().getChatHistory().put(player.getUniqueId(), hist);
+            }
+        }
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
