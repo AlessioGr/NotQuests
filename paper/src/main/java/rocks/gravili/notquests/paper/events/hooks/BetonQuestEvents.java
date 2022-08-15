@@ -18,6 +18,7 @@
 
 package rocks.gravili.notquests.paper.events.hooks;
 
+import org.betonquest.betonquest.api.ConversationOptionEvent;
 import org.betonquest.betonquest.api.PlayerObjectiveChangeEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -58,6 +59,8 @@ public class BetonQuestEvents implements Listener {
             }
         }
     }
+
+
 
 
 }

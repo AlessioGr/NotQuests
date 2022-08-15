@@ -21,6 +21,7 @@ package rocks.gravili.notquests.paper.managers.integrations.betonquest;
 import org.betonquest.betonquest.BetonQuest;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.integrations.betonquest.conditions.BQConditionsCondition;
+import rocks.gravili.notquests.paper.managers.integrations.betonquest.conversationInterceptors.NotQuestsInterceptor;
 import rocks.gravili.notquests.paper.managers.integrations.betonquest.events.BQAbortQuestEvent;
 import rocks.gravili.notquests.paper.managers.integrations.betonquest.events.BQActionEvent;
 import rocks.gravili.notquests.paper.managers.integrations.betonquest.events.BQFailQuestEvent;
@@ -69,6 +70,8 @@ public class BetonQuestManager {
       betonQuest.registerConditions(
           "nq_condition",
           BQConditionsCondition.class); // notquests_requirement requirementtype string int
+
+      betonQuest.registerInterceptor("notquests", NotQuestsInterceptor.class);
     }
   }
 
