@@ -1,7 +1,6 @@
 package rocks.gravili.notquests.paper.managers.integrations.betonquest.conversationInterceptors;
 
 import java.util.ArrayList;
-import java.util.List;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
