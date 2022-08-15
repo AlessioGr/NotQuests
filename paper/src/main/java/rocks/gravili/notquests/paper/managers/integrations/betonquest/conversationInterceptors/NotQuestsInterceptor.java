@@ -3,6 +3,8 @@ package rocks.gravili.notquests.paper.managers.integrations.betonquest.conversat
 import java.util.ArrayList;
 import java.util.List;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.betonquest.betonquest.BetonQuest;
 import org.betonquest.betonquest.conversation.Conversation;
@@ -18,7 +20,6 @@ public class NotQuestsInterceptor implements Interceptor, Listener {
 
   protected final Conversation conv;
   protected final Player player;
-  private final List<String> messages = new ArrayList<>();
 
   private final NotQuests main;
 
@@ -34,7 +35,7 @@ public class NotQuestsInterceptor implements Interceptor, Listener {
    */
   @Override
   public void sendMessage(final String message) {
-    final Component parsedMessage = main.parse(message);
+    final Component parsedMessage = LegacyComponentSerializer.legacy('§').deserialize(message.replace("&", "§"));
     if (main.getConfiguration().deletePreviousConversations) {
       ArrayList<Component> hist =
           main.getConversationManager().getConversationChatHistory().get(player.getUniqueId());
@@ -46,13 +47,22 @@ public class NotQuestsInterceptor implements Interceptor, Listener {
     }
 
     player.sendMessage(parsedMessage);
-    NotQuests.getInstance().sendMessage(player, message);
   }
 
   @Override
   public void sendMessage(final BaseComponent... message) {
-    player.spigot().sendMessage(message);
-    //Arrays.stream(message).forEach(m ->  NotQuests.getInstance().sendMessage(player,  LegacyComponentSerializer.legacy('&').serialize(m)));
+    final Component parsedMessage = BungeeComponentSerializer.legacy().deserialize(message);
+    if (main.getConfiguration().deletePreviousConversations) {
+      ArrayList<Component> hist =
+          main.getConversationManager().getConversationChatHistory().get(player.getUniqueId());
+      if (hist == null) {
+        hist = new ArrayList<>();
+      }
+      hist.add(parsedMessage);
+      main.getConversationManager().getConversationChatHistory().put(player.getUniqueId(), hist);
+    }
+
+    player.sendMessage(parsedMessage);    //Arrays.stream(message).forEach(m ->  NotQuests.getInstance().sendMessage(player,  LegacyComponentSerializer.legacy('&').serialize(m)));
 
   }
 
@@ -61,10 +71,7 @@ public class NotQuestsInterceptor implements Interceptor, Listener {
   public void end() {
     HandlerList.unregisterAll(this);
 
-    // Send all messages to player
-    for (final String message : messages) {
-      player.sendMessage(message);
-    }
+    removeOldMessages();
   }
 
   /** Resends the chat history without ANY conversation messages */

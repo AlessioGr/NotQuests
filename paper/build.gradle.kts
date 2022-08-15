@@ -185,9 +185,9 @@ dependencies {
     //Shaded
 
 
-    /*implementation("net.kyori:adventure-text-serializer-bungeecord:4.1.0")
+    implementation("net.kyori:adventure-text-serializer-bungeecord:4.1.2") {
         exclude(group = "net.kyori", module = "adventure-api")
-    }*/
+    }
 
     //CloudCommands
     implementation("cloud.commandframework:cloud-paper:1.8.0-SNAPSHOT") {
@@ -266,9 +266,9 @@ tasks.withType<ShadowJar> {
     relocate("com.github.retrooper.packetevents", "$shadowPath.packetevents.api")
 
     //Packet Stuff
-    //relocate('net.kyori.adventure.text.serializer.bungeecord', path.concat('.kyori.bungeecord'))
+   // relocate('net.kyori.adventure.text.serializer.bungeecord', path.concat('.kyori.bungeecord'))
     //relocate('net.kyori.adventure.platform.bukkit', path.concat('.kyori.platform-bukkit'))
-    //relocate("net.kyori.adventure.text.serializer.bungeecord", "$shadowPath.kyori.bungeecord")
+    relocate("net.kyori.adventure.text.serializer.bungeecord", "$shadowPath.kyori.bungeecord")
 
 
     relocate("org.incendo.interfaces", "$shadowPath.interfaces")
@@ -302,7 +302,7 @@ tasks.withType<ShadowJar> {
         include(dependency("org.incendo.interfaces:"))
 
         //include(dependency('net.kyori:adventure-platform-bukkit:')
-        //include(dependency("net.kyori:adventure-text-serializer-bungeecord:"))
+        include(dependency("net.kyori:adventure-text-serializer-bungeecord:"))
 
         include(dependency("com.github.Redempt:Crunch:"))
 

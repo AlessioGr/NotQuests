@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.minecraft.network.protocol.game.ClientboundSectionBlocksUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundSystemChatPacket;
 import org.bukkit.entity.Player;
@@ -129,7 +130,7 @@ public class NQPacketListener extends ChannelDuplexHandler {
                 hist.add(adventureComponent);
             }
 
-            main.getLogManager().debug("Registering chat message with Message: " + MiniMessage.builder().build().serialize(adventureComponent));
+            main.getLogManager().debug("Registering chat message with Message: " + PlainTextComponentSerializer.plainText().serialize(adventureComponent));
             final int toRemove = hist.size() - main.getConversationManager().getMaxChatHistory();
             if (toRemove > 0) {
                 //main.getLogManager().log(Level.WARNING, "ToRemove: " + i);
