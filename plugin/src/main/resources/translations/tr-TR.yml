@@ -24,9 +24,9 @@ chat:
   quest-completed-rewards-prefix: '    <highlight>Ödüller:'
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
-  quest-not-all-requirements-fulfilled: '<negative>You do not fulfill all the requirements this quest needs! Requirement still needed:'
-  action-not-all-conditions-fulfilled: '<negative>You do not fulfill all the conditions this action needs! Conditions still needed:'
-  missing-quest-description: <unimportant>This quest has no quest description.
+  quest-not-all-requirements-fulfilled: '<negative>Bu görevin gerektirdiği tüm gereksinimleri yerine getirmiyorsunuz! Görevin gerekliliği devam ediyor:'
+  action-not-all-conditions-fulfilled: '<negative>Bu eylemin ihtiyaç duyduğu tüm koşulları yerine getirmiyorsunuz! Hala gerekli koşullar var:'
+  missing-quest-description: <unimportant>Bu görevin bir açıklaması yok.
   objectives-label-after-quest-accepting: '<highlight>Hedefler:'
   questpoints:
     query: <main>Şu anda <highlight>%QUESTPOINTS%</highlight> görev puanına sahipsin.
@@ -357,4 +357,4 @@ gui:
           - "<veryUnimportant><strikethrough>No Description"
           - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVETASKDESCRIPTION%"
           - ""
-          - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
+          - "<unimportant><strikethrough>İlerleme: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
