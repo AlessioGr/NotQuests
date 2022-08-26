@@ -33,6 +33,7 @@ import cloud.commandframework.execution.CommandExecutionCoordinator;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.minecraft.extras.AudienceProvider;
 import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler;
+import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler.ExceptionType;
 import cloud.commandframework.minecraft.extras.MinecraftHelp;
 import cloud.commandframework.paper.PaperCommandManager;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -631,7 +632,18 @@ public class CommandManager {
                 (sender, e) -> {
                   minecraftAdminHelp.queryCommands(e.getMessage().split("syntax is: ")[1], sender);
                   return main.parse("<error>" + e.getMessage());
-                });
+                })
+            .withHandler(
+                ExceptionType.COMMAND_EXECUTION,
+                (sender, e) -> {
+                  return main.parse("<error>" + e.getMessage());
+                })
+            .withHandler(
+                ExceptionType.ARGUMENT_PARSING,
+                (sender, e) -> {
+                  return main.parse("<error>" + e.getMessage());
+                })
+        ;
 
     exceptionHandler.apply(commandManager, AudienceProvider.nativeAudience());
 
