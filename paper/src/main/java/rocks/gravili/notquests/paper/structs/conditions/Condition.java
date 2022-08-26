@@ -234,7 +234,7 @@ public abstract class Condition {
 
 
   public final boolean isHidden(final QuestPlayer questPlayer) {
-    return hidden.calculateBooleanValue(questPlayer);
+    return hidden != null && hidden.calculateBooleanValue(questPlayer);
   }
   public final NumberExpression getHiddenExpression() {
     if (hidden == null) {
