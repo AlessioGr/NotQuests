@@ -300,21 +300,10 @@ public class ConversationManager {
       final String starterLines = config.getString("start", "").replace(" ", "");
       for (final String starterLine : starterLines.split(",")) {
         final String initialLine = "Lines." + starterLine;
-        final String message = config.getString(initialLine + ".text", "Missing Message");
+        final String message = config.getString(initialLine + ".text", "/skip/");
         final ArrayList<Action> actions =
             parseActionString(config.getStringList(initialLine + ".actions"));
         final boolean shouting = config.getBoolean(initialLine + ".shout", false);
-
-        // Message
-        if (message.equals("Missing Message")) {
-          main.getLogManager()
-              .warn(
-                  "Warning: couldn't find message for starter line <highlight>"
-                      + starterLine
-                      + "</highlight> of conversation <highlight>"
-                      + conversationFile.getName()
-                      + "</highlight>");
-        }
 
         // Speaker
         Speaker foundSpeaker = null;
@@ -330,8 +319,13 @@ public class ConversationManager {
         }
 
         // Construct the ConversationLine
-        ConversationLine startLine =
+        final ConversationLine startLine =
             new ConversationLine(foundSpeaker, starterLine.split("\\.")[1], message);
+
+        if(message.equals("/skip/")){
+          startLine.setSkipMessage(true);
+        }
+
         // Actions
         if (actions != null && actions.size() > 0) {
           for (Action action : actions) {
@@ -393,7 +387,7 @@ public class ConversationManager {
 
           final String initialLine = "Lines." + nextLineFullIdentifier;
 
-          final String message = config.getString(initialLine + ".text", "");
+          final String message = config.getString(initialLine + ".text", "/next/");
           final String next = config.getString(initialLine + ".next", "");
           final ArrayList<Action> actions =
               parseActionString(config.getStringList(initialLine + ".actions"));
@@ -458,6 +452,11 @@ public class ConversationManager {
 
           ConversationLine newLine =
               new ConversationLine(foundSpeaker, nextLineFullIdentifier.split("\\.")[1], message);
+
+          if(message.equals("/skip/")){
+            newLine.setSkipMessage(true);
+          }
+
           // Actions
           if (actions != null && actions.size() > 0) {
             for (Action action : actions) {

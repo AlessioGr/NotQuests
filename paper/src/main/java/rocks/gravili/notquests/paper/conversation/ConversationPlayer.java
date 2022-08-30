@@ -238,28 +238,30 @@ public class ConversationPlayer {
    * @param conversationLine
    */
   public void sendLine(final ConversationLine conversationLine, boolean deletePrevious) {
-    Component line =
-        main.parse(
-            conversationLine.getSpeaker().getColor()
-                + "["
-                + conversationLine.getSpeaker().getSpeakerDisplayName()
-                + "] <GRAY>"
-                + main.getUtilManager().applyPlaceholders(conversationLine.getMessage(), player));
-    if (deletePrevious) {
-      main.getConversationManager().removeOldMessages(player);
-    }
-
-    if (main.getConfiguration().deletePreviousConversations) {
-      ArrayList<Component> hist =
-          main.getConversationManager().getConversationChatHistory().get(player.getUniqueId());
-      if (hist == null) {
-        hist = new ArrayList<>();
+    if(!conversationLine.isSkipMessage()){
+      final Component line =
+          main.parse(
+              conversationLine.getSpeaker().getColor()
+                  + "["
+                  + conversationLine.getSpeaker().getSpeakerDisplayName()
+                  + "] <GRAY>"
+                  + main.getUtilManager().applyPlaceholders(conversationLine.getMessage(), player));
+      if (deletePrevious) {
+        main.getConversationManager().removeOldMessages(player);
       }
-      hist.add(line);
-      main.getConversationManager().getConversationChatHistory().put(player.getUniqueId(), hist);
-    }
 
-    player.sendMessage(line);
+      if (main.getConfiguration().deletePreviousConversations) {
+        ArrayList<Component> hist =
+            main.getConversationManager().getConversationChatHistory().get(player.getUniqueId());
+        if (hist == null) {
+          hist = new ArrayList<>();
+        }
+        hist.add(line);
+        main.getConversationManager().getConversationChatHistory().put(player.getUniqueId(), hist);
+      }
+
+      player.sendMessage(line);
+    }
 
     if (conversationLine.getActions() != null && conversationLine.getActions().size() > 0) {
       for (final Action action : conversationLine.getActions()) {
