@@ -155,7 +155,7 @@ public class ConditionsYMLManager {
       condition
           .getCategory()
           .getConditionsConfig()
-          .set("conditions." + conditionIdentifier + ".hiddenStatusExpression", condition.getHiddenExpression());
+          .set("conditions." + conditionIdentifier + ".hiddenStatusExpression", condition.getHiddenExpression().getRawExpression());
 
       condition.save(
           condition.getCategory().getConditionsConfig(), "conditions." + conditionIdentifier);
