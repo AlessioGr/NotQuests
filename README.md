@@ -1,4 +1,5 @@
 # NotQuests
+Download: https://modrinth.com/plugin/notquests/versions
 
 [![GitHub issues](https://img.shields.io/github/issues/AlessioGr/NotQuests)](https://github.com/AlessioGr/NotQuests/issues)
 [![GitHub stars](https://img.shields.io/github/stars/AlessioGr/NotQuests)](https://github.com/AlessioGr/NotQuests/stargazers)
