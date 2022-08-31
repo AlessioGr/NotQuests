@@ -24,48 +24,48 @@ chat:
   quest-completed-rewards-prefix: '    <highlight>Ödüller:'
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
-  quest-not-all-requirements-fulfilled: '<negative>You do not fulfill all the requirements this quest needs! Requirement still needed:'
-  action-not-all-conditions-fulfilled: '<negative>You do not fulfill all the conditions this action needs! Conditions still needed:'
-  missing-quest-description: <unimportant>This quest has no quest description.
+  quest-not-all-requirements-fulfilled: '<negative>Bu görevin gerektirdiği tüm gereksinimleri yerine getirmiyorsunuz! Görevin gerekliliği devam ediyor:'
+  action-not-all-conditions-fulfilled: '<negative>Bu eylemin ihtiyaç duyduğu tüm koşulları yerine getirmiyorsunuz! Hala gerekli koşullar var:'
+  missing-quest-description: <unimportant>Bu görevin bir açıklaması yok.
   objectives-label-after-quest-accepting: '<highlight>Hedefler:'
   questpoints:
     query: <main>Şu anda <highlight>%QUESTPOINTS%</highlight> görev puanına sahipsin.
     none: <error>Sanırım hiç görev puanın yok!
     notify-when-changed:
-      set: '<main>Your quest points have been set to <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.'
-      add: '<highlight>+%QUESTPOINTSTOADD% <success>quest points!'
-      remove: '<highlight>-%QUESTPOINTSTOREMOVE% <negative>quest points!'
-  no-quests-accepted: <error>Seems like you don't have any active quests!
-  quest-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> does not exist!
-  quest-not-found-or-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> not found or not active!
-  active-quests-label: '<highlight>Active quests:'
-  take-disabled: <error>Accepting or previewing the quest <highlight>%QUESTNAME%</highlight> is disabled.
-  quest-not-active-error: '<error>Error: <highlight>%QUESTNAME%</highlight> is not an active Quest!'
-  force-add-active-quest-accepted: '<success>Successfully accepted the quest (Forced).'
-  add-active-quest-player-object-not-found: '<warn>Error: Player object not found. Please report this to the plugin developer.'
-  reached-max-accepts-limit: '<red>You have finished this quests too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
-  reached-max-active-quests-per-player-limit: '<red>You can not accept more than <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> Quests.'
+      set: '<main>Görev puanlarınız şu şekilde ayarlandı <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.'
+      add: '<highlight>+%QUESTPOINTSTOADD% <success>Görev puanı!'
+      remove: '<highlight>-%QUESTPOINTSTOREMOVE% <negative>Görev puanı!'
+  no-quests-accepted: <error>Görünüşe göre hiç aktif göreviniz yok!
+  quest-does-not-exist: <error>Görev <highlight>%QUESTNAME%</highlight> mevcut değil!
+  quest-not-found-or-does-not-exist: <error> <highlight>%QUESTNAME%</highlight> Görevi bulunamadı veya aktif değil!
+  active-quests-label: '<highlight>Aktif görevler:'
+  take-disabled: <error> <highlight>%QUESTNAME%</highlight> görevini kabul etme veya önizlemesi devre dışıdır.
+  quest-not-active-error: '<error>Hata: <highlight>%QUESTNAME%</highlight> aktif bir görev değil!'
+  force-add-active-quest-accepted: '<success>Görevi başarıyla kabul ettiniz (Zorla).'
+  add-active-quest-player-object-not-found: '<warn>Hata: Oyuncu nesnesi bulunamadı. Lütfen bunu eklenti geliştiricisine bildirin.'
+  reached-max-accepts-limit: '<red>Bu görevi çoktan bitirdiniz. Sadece <highlight>%MAXACCEPTS%</highlight> Sadece 10 kez görevi tamamlayabilirsin, fakat sen zaten<highlight>%COMPLETEDAMOUNT%</highlight> kez tamamladın.'
+  reached-max-active-quests-per-player-limit: '<red> <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> fazla Görev kabul edemezsiniz.'
   quest-on-cooldown:
-    minute: '<red>This quest is on a cooldown! You have to wait another <highlight>1 minute</highlight> until you can take it again.'
-    minutes: '<red>This quest is on a cooldown! You have to wait another <highlight>%MINUTES% minutes</highlight> until you can take it again.'
-    hour: '<red>This quest is on a cooldown! You have to wait another <highlight>1 hour</highlight> until you can take it again.'
-    hours: '<red>This quest is on a cooldown! You have to wait another <highlight>%HOURS% hours</highlight> until you can take it again.'
-    day: '<red>This quest is on a cooldown! You have to wait another <highlight>1 day</highlight> until you can take it again.'
-    days: '<red>This quest is on a cooldown! You have to wait another <highlight>%DAYS% days</highlight> until you can take it again.'
+    minute: '<red>Bu görev bekleme süresinde! Tekrar alabilmeniz için <highlight>1 dakika</highlight> daha beklemeniz gerekiyor.'
+    minutes: '<red>Bu görev bekleme süresinde! Tekrar alabilmeniz için <highlight>%MINUTES% dakika</highlight> daha beklemeniz gerekiyor.'
+    hour: '<red>Bu görev bekleme süresinde! Tekrar alabilmeniz için <highlight>1 Saat</highlight> daha beklemeniz gerekiyor.'
+    hours: '<red>Bu görev bekleme süresinde! Tekrar alabilmeniz için <highlight>%HOURS% saat</highlight> daha beklemeniz gerekiyor.'
+    day: '<red>Bu görev bekleme süresinde! Tekrar alabilmeniz için <highlight>1 Gün</highlight> daha beklemeniz gerekiyor.'
+    days: '<red>Bu görev bekleme süresinde! Tekrar alabilmeniz için <highlight>%DAYS% Gün</highlight> daha beklemeniz gerekiyor.'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>
-      <main>Choose your answer:</main>
-    choose-answer-answer-hover-text: '<highlight>Click to answer'
-    ended-previous-conversation: '<main>You have ended your previous conversation!'
+      <main>Yanıtınızı seçin:</main>
+    choose-answer-answer-hover-text: '<highlight>Cevap vermek için tıklayın'
+    ended-previous-conversation: '<main>Önceki konuşmanızı bitirdiniz!'
   objectives:
     counter: '<highlight>%OBJECTIVEID%.</highlight> <main>%OBJECTIVENAME%:'
     hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[HIDDEN]
-    description: '   <highlight>Description: <main>%OBJECTIVEDESCRIPTION%'
-    progress: '   <highlight>Progress: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
+    description: '   <highlight>Açıklama: <main>%OBJECTIVEDESCRIPTION%'
+    progress: '   <highlight>İlerleme: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
     successfully-completed: |2
 
-      <CENTER><success>[Objective Completed]
+      <CENTER><success>[Görev Tamamlandı]
       <CENTER><highlight><bold>%OBJECTIVENAME%</bold> <RESET><main>(%QUESTNAME%)
       <EMPTY>
     successfully-completed-rewards-prefix: '    <highlight>Ödüller:'
@@ -76,72 +76,72 @@ chat:
         prefix: '    <veryUnimportant>└─ <unimportant>'
         suffix: ''
       breakBlocks:
-        base: 'Break Blocks: <main>%BLOCKTOBREAK%'
+        base: 'Blokları kır: <main>%BLOCKTOBREAK%'
       breed:
-        base: 'Breed Mobs: <main>%ENTITYTOBREED%'
+        base: 'Cins Yaratıklar: <main>%ENTITYTOBREED%'
       collectItems:
-        base: 'Collect Items: <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
+        base: 'Eşyaları topla: <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
       consumeItems:
-        base: 'Consume Items: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
+        base: 'Eşyaları Tüket: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: 'Craft Items: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+        base: 'Eşyaları Üret: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: 'Deliver Items: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
-        deliver-to-npc: '      <GRAY>Deliver it to <WHITE>%NPCNAME%'
-        deliver-to-npc-not-available: '      <GRAY>The delivery NPC is currently not available!'
-        deliver-to-npc-citizens-not-found: '    <RED>Error: Citizens plugin not installed. Contact an admin.'
-        deliver-to-armorstand: '    <GRAY>Deliver it to <WHITE>%ARMORSTANDNAME%'
-        deliver-to-armorstand-not-available: '    <GRAY>The target Armor Stand is currently not available!'
+        base: 'Eşyaları Teslim et: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
+        deliver-to-npc: '      <GRAY> <WHITE>%NPCNAME% teslim et'
+        deliver-to-npc-not-available: '      <GRAY>Teslimat NPC''si şu anda mevcut değil!'
+        deliver-to-npc-citizens-not-found: '    <RED>Hata oluştu: Citizens eklentisi yüklü değil. Bir yönetici ile iletişime geçin.'
+        deliver-to-armorstand: '    <GRAY> <WHITE>%ARMORSTANDNAME% teslim et'
+        deliver-to-armorstand-not-available: '    <GRAY>Hedef Zırh Standı şu anda mevcut değil!'
       escortNPC:
-        base: 'Escort <main>%NPCNAME%</main> to <main>%DESTINATIONNPCNAME%'
+        base: '<main>%NPCNAME%</main> <main>%DESTINATIONNPCNAME% kadar eşlik edin'
       fishItems:
-        base: 'Fish Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
+        base: 'Balık eşyaları: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
       killMobs:
-        base: 'Kill mobs: <main>%MOBTOKILL%'
+        base: 'Yaratıkları öldür: <main>%MOBTOKILL%'
       otherQuest:
-        base: 'Complete Quest: <main>%OTHERQUESTNAME%'
+        base: 'Görevi tamamla: <main>%OTHERQUESTNAME%'
       placeBlocks:
-        base: 'Place Blocks: <main>%BLOCKTOPLACE%'
+        base: 'Blokları yerleştir: <main>%BLOCKTOPLACE%'
       reachLocation:
-        base: 'Reach Location: <main>%LOCATIONNAME%'
+        base: 'Ulaşma Yeri: <main>%LOCATIONNAME%'
       talkToNPC:
-        base: 'Talk to <main>%NAME%'
+        base: '<main>%NAME% ile konuşun'
       triggerCommand:
-        base: 'Goal: <main>%TRIGGERNAME%'
+        base: 'Hedef: <main>%TRIGGERNAME%'
       killEliteMobs:
-        base: 'Kill Elite Mob: <main>%ELITEMOBNAME%'
-        any: 'Kill any Elite Mob!'
+        base: 'Elit Yaratığı öldür: <main>%ELITEMOBNAME%'
+        any: 'Herhangi bir Elit Yaratığı öldürün!'
       runCommand:
-        base: 'Run command: <main>%COMMANDTORUN%'
+        base: 'Komutu çalıştır: <main>%COMMANDTORUN%'
       interact:
-        base: '%INTERACTTYPE% Location: <main>%COORDINATES% <main>in world %WORLDNAME%'
+        base: '%INTERACTTYPE% Konum: %WORLDNAME% <main>%COORDINATES% <main> kordinatlarında'
       jump:
-        base: 'Jump <main>%AMOUNTOFJUMPS%</main> times'
+        base: '<main>%AMOUNTOFJUMPS%</main> kez zıpla'
       sneak:
-        base: 'Sneak <main>%AMOUNTOFSNEAKS%</main> times'
+        base: '<main>%AMOUNTOFSNEAKS%</main> kez eğil'
       smelt:
-        base: 'Smelt Items: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+        base: 'Eşyaları Pişir: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       openBuriedTreasure:
-        base: 'Open buried treasures'
+        base: 'Gömülü hazineleri aç'
       townyReachResidentCount:
-        base: 'Reach resident amount: <main>%AMOUNT%'
+        base: 'İkamet miktarına ulaşın: <main>%AMOUNT%'
       townyNationReachTownCount:
-        base: 'Reach town amount with your nation: <main>%AMOUNT%'
+        base: 'Ülkenizle birlikte şehir miktarına ulaşın: <main>%AMOUNT%'
       jobsRebornReachJobLevel:
-        base: 'Reach job level <main>%AMOUNT%</main> with job <main>%JOB%'
+        base: 'İş düzeyine ulaşın <main>%AMOUNT%</main> with job <main>%JOB%'
       SlimefunResearch:
-        base: 'Spend on research'
+        base: 'Araştırma için harcama yapın'
       ProjectKorraUseAbility:
-        base: 'Use Ability: <main>%ABILITY%'
+        base: 'Yeteneğini kullan: <main>%ABILITY%'
       BetonQuestCompleteObjective:
-        base: 'Finish Objective: <main>%BETONQUESTOBJECTIVENAME%'
+        base: 'Hedefi Bitir: <main>%BETONQUESTOBJECTIVENAME%'
       ultimateJobsReachJobLevel:
-        base: 'Reach job level <main>%AMOUNT%</main> with job <main>%JOBID%'
+        base: '<main>%JOBID% işiyle iş seviyesi <main>%AMOUNT%</main> ulaşın'
   conditions:
     boolean:
-      not-fulfilled: "<warn>Following needs to be %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
-      variable-not-found: "<error>Error: variable <highlight>%VARIABLENAME%</highlight> not found. Report this to the Server owner."
-      wrong-operator: "<error>Error: variable operator <highlight>%OPERATOR%/highlight> is invalid. Report this to the Server owner."
+      not-fulfilled: "<warn>Takip edilmesi gereken %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
+      variable-not-found: "<error>değişken bulunamadı. <highlight>%VARIABLENAME%</highlight> Bunu Sunucu sahibine bildirin."
+      wrong-operator: "<error>Hata: değişken operatörü geçersiz. <highlight>%OPERATOR%/highlight> Bunu Sunucu sahibine bildirin."
 objective-tracking:
   actionbar-progress-update:
     default: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
@@ -151,27 +151,27 @@ objective-tracking:
     only-one-max-progress: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
 titles:
   quest-accepted:
-    title: <main>Quest accepted
+    title: <main>Görev kabul edildi
     subtitle: <highlight>%QUESTNAME%
   quest-completed:
-    title: <positive>Quest Completed
+    title: <positive>Görev Tamamlandı
     subtitle: <highlight>%QUESTNAME%
   quest-failed:
-    title: <negative>Quest Failed
+    title: <negative>Görev Başarısız
     subtitle: <highlight>%QUESTNAME%
 placeholders:
   questcooldownleftformatted:
     prefix: ''
-    minute: '1 minute'
-    minutes: '%MINUTES% minutes'
-    hour: '1 hour'
-    hours: '%HOURS% hours'
-    day: '1 day'
-    days: '%DAYS% days'
+    minute: '1 dakika'
+    minutes: '%MINUTES% Dakika'
+    hour: '1 Saat'
+    hours: '%HOURS% Saat'
+    day: '1 Gün'
+    days: '%DAYS% Gün'
     no-cooldown: ''
 gui:
   main:
-    title: '                <highlight2>Quests'
+    title: '                <highlight2>Görevler'
     backgroundFill:
       material: 'BLACK_STAINED_GLASS_PANE'
     background:
@@ -197,56 +197,56 @@ gui:
         maxY: 5
     button:
       questpoints:
-        name: "<highlight>Quest Points"
+        name: "<highlight>Görev Puanı"
         lore:
-          - "<main>Current quest points: <highlight2>%QUESTPOINTS%"
+          - "<main>Güncel görev puanları: <highlight2>%QUESTPOINTS%"
         x: 8
         y: 0
       takequest:
-        name: "<positive>Take a Quest"
+        name: "<positive>Bir Görev Alın"
         lore:
-          - "<unimportant>Start a new Quest!"
+          - "<unimportant>Yeni bir göreve başlayın!"
           - ""
-          - "<veryUnimportant>Some Quests cannot be"
-          - "<veryUnimportant>started like this."
+          - "<veryUnimportant>Bazı Görevler bu"
+          - "<veryUnimportant>şekilde başlamaz."
         x: 0
         y: 1
       abortquest:
-        name: "<negative>Abort a Quest"
+        name: "<negative>Görevi İptal Et"
         lore:
           - ""
-          - "<veryUnimportant>Aborting a Quest may"
-          - "<veryUnimportant>lead to punishments."
+          - "<veryUnimportant>Bir Görevi iptal etmek"
+          - "<veryUnimportant>cezalara yol açabilir."
         x: 0
         y: 2
       activequests:
-        name: "<highlight>Active Quests"
+        name: "<highlight>Aktif Görevler"
         lore:
           - ""
-          - "<veryUnimportant>Shows all of your"
-          - "<veryUnimportant>active Quests."
+          - "<veryUnimportant>Tüm aktif"
+          - "<veryUnimportant>Görevlerinizi gösterir."
         x: 0
         y: 3
   activeQuests:
-    title: '             <highlight2>Active Quests'
+    title: '             <highlight2>Aktif Görevler'
     button:
       activeQuestButton:
         name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
         lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<main>Click to see details!"
+          - "<unimportant>İlerleme <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
+          - "<main>Ayrıntıları görmek için tıklayın!"
   reward-hidden-text: . <unimportant>[HIDDEN]
   availableQuests:
-    title: '         <highlight2>Available Quests'
+    title: '         <highlight2>Mevcut Görevler'
     button:
       questPreview:
         name-if-not-accepted: "<highlight>%QUESTNAME%"
         name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
         lore:
           - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-          - "<main>Click to open Quest!"
+          - "<main>Görevi açmak için tıklayın!"
   takeQuestChoose:
-    title: <highlight2>Which Quest do you want to take?
+    title: <highlight2>Hangi görevi almak istiyorsun?
     size:
       minX: 3
       minY: 1
@@ -258,36 +258,36 @@ gui:
         name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
         lore:
           - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-          - "<main>Click to preview Quest!"
+          - "<main>Görevi önizlemek için tıklayın!"
   abortQuestChoose:
-    title: '  <highlight2>Active Quests you can abort'
+    title: '  <highlight2>İptal edebileceğiniz Görevler'
     button:
       abortQuestPreview:
         name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
         lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Click to abort Quest!"
+          - "<unimportant>İlerleme: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
+          - "<negative>Görevi iptal etmek için tıklayın!"
   abortQuest:
-    title: '         <negative>Abort Confirmation'
+    title: '         <negative>Onaylamayı İptal Et'
     button:
       confirmAbort:
         name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
         lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Click to abort the quest <highlight>%QUESTNAME%</highlight>!"
+          - "<unimportant>İlerleme: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
+          - "<negative>Görevi iptal etmek için tıklayın <highlight>%QUESTNAME%</highlight>!"
         x: 3
         y: 1
       cancelAbort:
-        name: "<positive>Click to NOT abort this quest"
+        name: "<positive>Bu görevi iptal ETMEMEK için tıklayın"
         lore:
-          - "<positive>and cancel this action"
+          - "<positive>ve bu işlemi iptal edin"
         x: 5
         y: 1
   previewQuest:
-    title: <highlight2>Quest Preview
+    title: <highlight2>Görev Önizlemesi
     button:
       description:
-        name: "<highlight>Description"
+        name: "<highlight>Açıklama"
         lore:
           - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
         lore-if-empty:
@@ -295,15 +295,15 @@ gui:
         x: 2
         y: 0
       rewards:
-        name: "<positive>Rewards"
+        name: "<positive>Ödüller"
         lore:
           - "<WHITE>%QUESTREWARDS%"
         lore-if-empty:
-          - "<veryUnimportant>None or hidden"
+          - "<veryUnimportant>Yok veya gizli"
         x: 4
         y: 0
       requirements:
-        name: "<negative>Requirements"
+        name: "<negative>Gereksinimler"
         lore:
           - "<WHITE>%QUESTREQUIREMENTS%"
         lore-if-empty:
@@ -313,48 +313,48 @@ gui:
       confirmTake:
         name: "<highlight>%QUESTNAME%"
         lore:
-          - "<positive>Click to take the quest <highlight>%QUESTNAME%"
+          - "<positive> <highlight>%QUESTNAME% görevini almak için tıklayın"
         x: 3
         y: 2
       cancelTake:
-        name: "<negative>Click to NOT take this quest"
+        name: "<negative>Bu göreve katılmamak için tıklayın"
         lore:
-          - "<negative>and cancel this action"
+          - "<negative>ve bu işlemi iptal edin"
         x: 5
         y: 2
   progress:
-    title: <highlight2>Details for Quest
+    title: <highlight2>Görev için ayrıntılar
     button:
       unlockedObjective:
         name: "<highlight2>%ACTIVEOBJECTIVEID%. <highlight>%OBJECTIVENAME%"
         lore:
-          - "<main><BOLD>ACTIVE</BOLD>"
+          - "<main><BOLD>AKTİF</BOLD>"
           - "<veryUnimportant>%WRAPPEDOBJECTIVEDESCRIPTION%"
           - "<unimportant>%OBJECTIVETASKDESCRIPTION%"
           - ""
-          - "<unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
+          - "<unimportant>İlerleme: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
         lore-if-description-empty:
-          - "<main><BOLD>ACTIVE</BOLD>"
-          - "<veryUnimportant>No Description"
+          - "<main><BOLD>AKTİF</BOLD>"
+          - "<veryUnimportant>Açıklama yok"
           - "<unimportant>%OBJECTIVETASKDESCRIPTION%"
           - ""
-          - "<unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
+          - "<unimportant>İlerleme: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
       lockedObjective:
         name: "<highlight2>%ACTIVEOBJECTIVEID%. <unimportant><BOLD>[HIDDEN]"
         lore:
-          - "<warn>This objective has not yet"
-          - "<warn>been unlocked!"
+          - "<warn>Bu hedef henüz gerçekleştirilmemiştir"
+          - "<warn>Kilit açıldı!"
       completedObjective:
         name: "<highlight2><strikethrough>%ACTIVEOBJECTIVEID%. <positive><strikethrough>%OBJECTIVENAME%"
         lore:
-          - "<positive><BOLD>COMPLETED</BOLD>"
+          - "<positive><BOLD>TAMAMLANDI</BOLD>"
           - "<veryUnimportant><strikethrough>%WRAPPEDOBJECTIVEDESCRIPTION%"
           - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVETASKDESCRIPTION%"
           - ""
-          - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
+          - "<unimportant><strikethrough>İlerleme: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
         lore-if-description-empty:
-          - "<positive><BOLD>COMPLETED</BOLD>"
-          - "<veryUnimportant><strikethrough>No Description"
+          - "<positive><BOLD>TAMAMLANDI</BOLD>"
+          - "<veryUnimportant><strikethrough>Açıklama yok"
           - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVETASKDESCRIPTION%"
           - ""
-          - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
+          - "<unimportant><strikethrough>İlerleme: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
