@@ -29,6 +29,7 @@ import cloud.commandframework.arguments.standard.StringArrayArgument;
 import cloud.commandframework.brigadier.CloudBrigadierManager;
 import cloud.commandframework.bukkit.CloudBukkitCapabilities;
 import cloud.commandframework.bukkit.parsers.WorldArgument;
+import cloud.commandframework.exceptions.ArgumentParseException;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.minecraft.extras.AudienceProvider;
@@ -630,18 +631,19 @@ public class CommandManager {
             .withHandler(
                 MinecraftExceptionHandler.ExceptionType.INVALID_SYNTAX,
                 (sender, e) -> {
-                  minecraftAdminHelp.queryCommands(e.getMessage().split("syntax is: ")[1], sender);
-                  return main.parse("<error>" + e.getMessage());
+                  final String[] split = e.getMessage().split("syntax is: ");
+                  minecraftAdminHelp.queryCommands(split[1], sender);
+                  return main.parse("<error>" + split[0] + "syntax is: <main>" + split[1]);
                 })
             .withHandler(
                 ExceptionType.COMMAND_EXECUTION,
                 (sender, e) -> {
-                  return main.parse("<error>" + e.getMessage());
+                  return main.parse("<error>" + e.getCause().getMessage());
                 })
             .withHandler(
                 ExceptionType.ARGUMENT_PARSING,
                 (sender, e) -> {
-                  return main.parse("<error>" + e.getMessage());
+                  return main.parse("<error>" + e.getCause().getMessage());
                 })
         ;
 
