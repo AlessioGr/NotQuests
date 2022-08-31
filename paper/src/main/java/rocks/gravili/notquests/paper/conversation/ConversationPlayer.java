@@ -19,6 +19,7 @@
 package rocks.gravili.notquests.paper.conversation;
 
 import java.util.ArrayList;
+import java.util.Map;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -239,13 +240,13 @@ public class ConversationPlayer {
    */
   public void sendLine(final ConversationLine conversationLine, boolean deletePrevious) {
     if(!conversationLine.isSkipMessage()){
+      final String lineString = main.getLanguageManager().getString("chat.conversations.speaker-line-format", questPlayer, Map.of(
+          "%SPEAKERCOLOR%", conversationLine.getSpeaker().getColor(),
+          "%SPEAKER%", conversationLine.getSpeaker().getSpeakerDisplayName(),
+          "%MESSAGE%", main.getUtilManager().applyPlaceholders(conversationLine.getMessage(), player)
+      ));
       final Component line =
-          main.parse(
-              conversationLine.getSpeaker().getColor()
-                  + "["
-                  + conversationLine.getSpeaker().getSpeakerDisplayName()
-                  + "] <GRAY>"
-                  + main.getUtilManager().applyPlaceholders(conversationLine.getMessage(), player));
+          main.parse(lineString);
       if (deletePrevious) {
         main.getConversationManager().removeOldMessages(player);
       }
@@ -278,12 +279,14 @@ public class ConversationPlayer {
    * @param conversationLine
    */
   public void sendOptionLine(final ConversationLine conversationLine) {
-    Component toSend =
-        main.parse(
-                conversationLine.getSpeaker().getColor()
-                    + " > <GRAY>"
-                    + main.getUtilManager()
-                        .applyPlaceholders(conversationLine.getMessage(), player))
+    final String toSendString = main.getLanguageManager().getString("chat.conversations.answer-option-line-format", questPlayer, Map.of(
+        "%SPEAKERCOLOR%", conversationLine.getSpeaker().getColor(),
+        "%SPEAKER%", conversationLine.getSpeaker().getSpeakerDisplayName(),
+        "%MESSAGE%", main.getUtilManager().applyPlaceholders(conversationLine.getMessage(), player)
+    ));
+
+    final Component toSend =
+        main.parse(toSendString)
             .clickEvent(
                 ClickEvent.runCommand(
                     "/notquests continueConversation " + conversationLine.getMessage()))
