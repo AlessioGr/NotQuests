@@ -52,6 +52,8 @@ chat:
       <main>Chọn câu trả lời của bạn:</main>
     choose-answer-answer-hover-text: '<highlight>Nhấn để trả lời'
     ended-previous-conversation: '<main>Bạn đã kết thúc cuộc trò chuyện trước đó của mình!'
+    speaker-line-format: '%SPEAKERCOLOR%[%SPEAKER%] <GRAY>%MESSAGE%'
+    answer-option-line-format: ' <main>> <gray>%MESSAGE%'
   objectives:
     counter: '<warn>%OBJECTIVEID%. %OBJECTIVENAME%:'
     hidden: <warn>%OBJECTIVEID%. <unimportant><bold>[KHÓA]
