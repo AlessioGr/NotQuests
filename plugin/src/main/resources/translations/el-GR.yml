@@ -51,6 +51,8 @@ chat:
       <main>Επιλέξτε την απάντησή σας:</main>
     choose-answer-answer-hover-text: '<highlight>Κάντε κλικ για να απαντήσετε'
     ended-previous-conversation: '<main>Έχετε τερματίσει την προηγούμενη συνομιλία σας!'
+    speaker-line-format: '%SPEAKERCOLOR%[%SPEAKER%] <GRAY>%MESSAGE%'
+    answer-option-line-format: ' <main>> <gray>%MESSAGE%'
   objectives:
     counter: '<warn>%OBJECTIVEID%. %OBJECTIVENAME%:'
     hidden: <warn>%OBJECTIVEID%. <unimportant><bold>[HIDDEN]
