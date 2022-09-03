@@ -40,6 +40,10 @@ public class NPCManager {
   }
 
   public void loadNPCData() {
+    if(main.getDataManager().isDisabled()){
+      main.getLogManager().info("Skipped loading NPC data, because NotQuests has been disabled due to a previous error");
+      return;
+    }
     if (main.getDataManager().isAlreadyLoadedQuests()) {
       for (final Category category : main.getDataManager().getCategories()) {
         loadNPCData(category);

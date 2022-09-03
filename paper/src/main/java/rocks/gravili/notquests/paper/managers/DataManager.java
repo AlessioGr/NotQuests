@@ -1623,7 +1623,7 @@ public class DataManager {
      * loading
      */
     public final boolean isSavingEnabled() {
-        return savingEnabled;
+        return savingEnabled || isDisabled();
     }
 
     /**
@@ -1658,6 +1658,10 @@ public class DataManager {
      * for some operations with the Citizens API.
      */
     public void loadNPCData() {
+        if(main.getDataManager().isDisabled()){
+            main.getLogManager().info("Skipped loading NPC data, because NotQuests has been disabled due to a previous error");
+            return;
+        }
         if (Bukkit.isPrimaryThread()) {
             Bukkit.getScheduler().runTaskAsynchronously(main.getMain(), () -> {
                 if (!isAlreadyLoadedQuests()) {
