@@ -636,11 +636,13 @@ public class DataManager {
 
         configuration.setCitizensNPCQuestGiverIndicatorParticleType(Particle.valueOf(getGeneralConfigString(
                 "visual.citizensnpc.quest-giver-indicator-particle.type",
-                "VILLAGER_ANGRY"
+                "VILLAGER_ANGRY",
+            "Change the particle type here. Available particle types can be found at https://jd.papermc.io/paper/1.19/org/bukkit/Particle.html"
         )));
         configuration.setCitizensNPCQuestGiverIndicatorText(getGeneralConfigString(
                 "visual.citizensnpc.quest-giver-indicator-above-name.text",
-                "","Leave empty for no text on NPC"
+            "",
+            "Leave empty for no text on NPC"
         ));
         configuration.setCitizensNPCQuestGiverIndicatorTextInterval(getGeneralConfigInt(
                 "visual.citizensnpc.quest-giver-indicator-above-name.text-interval",
@@ -649,33 +651,39 @@ public class DataManager {
 
         configuration.setCitizensNPCQuestGiverIndicatorParticleSpawnInterval(getGeneralConfigInt(
                 "visual.citizensnpc.quest-giver-indicator-particle.spawn-interval",
-                10
+                10,
+            "Changes how quickly the particles should spawn (in ticks). The higher the number, the slower they will spawn."
         ));
 
         configuration.setCitizensNPCQuestGiverIndicatorParticleCount(getGeneralConfigInt(
                 "visual.citizensnpc.quest-giver-indicator-particle.count",
-                1
+                1,
+            "Changes how many particles should be spawned at once."
         ));
 
         configuration.setCitizensNPCQuestGiverIndicatorParticleDisableIfTPSBelow(getGeneralConfigDouble(
                 "visual.citizensnpc.quest-giver-indicator-particle.disable-if-tps-below",
-                -1d
+                -1d,
+            "If the server's TPS is below this number, the particles will be disabled. Set to -1 to disable this feature."
         ));
         //
 
         configuration.setHideRewardsWithoutName(getGeneralConfigBoolean(
                 "visual.hide-rewards-without-name",
-                true
+                true,
+            "If this is set to true, rewards without a name will not be shown (both in chat and in the GUI)"
         ));
 
         configuration.setShowRewardsAfterQuestCompletion(getGeneralConfigBoolean(
                 "visual.show-rewards-after-quest-completion",
-                true
+                true,
+            "If this is set to true, quest rewards will be shown after a player completes a quest"
         ));
 
         configuration.setShowRewardsAfterObjectiveCompletion(getGeneralConfigBoolean(
                 "visual.show-rewards-after-objective-completion",
-                true
+                true,
+            "If this is set to true, objective rewards will be shown after a player completes an objective"
         ));
 
 
@@ -1229,7 +1237,9 @@ public class DataManager {
             getGeneralConfig().set(key, defaultValue);
             valueChanged = true;
         }
-        getGeneralConfig().setComments(key, Arrays.asList(commentLines));
+        final List<String> commentLinesList = Arrays.asList(commentLines);
+        commentLinesList.add("Default: " + defaultValue);
+        getGeneralConfig().setComments(key, commentLinesList);
         return getGeneralConfig().getString(key);
     }
 
@@ -1238,7 +1248,9 @@ public class DataManager {
             getGeneralConfig().set(key, defaultValue);
             valueChanged = true;
         }
-        getGeneralConfig().setComments(key, Arrays.asList(commentLines));
+        final List<String> commentLinesList = Arrays.asList(commentLines);
+        commentLinesList.add("Default: " + defaultValue);
+        getGeneralConfig().setComments(key, commentLinesList);
         return getGeneralConfig().getBoolean(key);
     }
 
@@ -1247,7 +1259,9 @@ public class DataManager {
             getGeneralConfig().set(key, defaultValue);
             valueChanged = true;
         }
-        getGeneralConfig().setComments(key, Arrays.asList(commentLines));
+        final List<String> commentLinesList = Arrays.asList(commentLines);
+        commentLinesList.add("Default: " + defaultValue);
+        getGeneralConfig().setComments(key, commentLinesList);
         return getGeneralConfig().getInt(key);
     }
 
@@ -1256,7 +1270,9 @@ public class DataManager {
             getGeneralConfig().set(key, defaultValue);
             valueChanged = true;
         }
-        getGeneralConfig().setComments(key, Arrays.asList(commentLines));
+        final List<String> commentLinesList = Arrays.asList(commentLines);
+        commentLinesList.add("Default: " + defaultValue);
+        getGeneralConfig().setComments(key, commentLinesList);
         return getGeneralConfig().getDouble(key);
     }
 
@@ -1265,7 +1281,9 @@ public class DataManager {
             getGeneralConfig().set(key, defaultValue);
             valueChanged = true;
         }
-        getGeneralConfig().setComments(key, Arrays.asList(commentLines));
+        final List<String> commentLinesList = Arrays.asList(commentLines);
+        commentLinesList.add("Default: " + defaultValue);
+        getGeneralConfig().setComments(key, commentLinesList);
         return getGeneralConfig().getItemStack(key);
     }
 
@@ -1274,7 +1292,9 @@ public class DataManager {
             getGeneralConfig().set(key, defaultValue);
             valueChanged = true;
         }
-        getGeneralConfig().setComments(key, Arrays.asList(commentLines));
+        final List<String> commentLinesList = Arrays.asList(commentLines);
+        commentLinesList.add("Default: " + defaultValue);
+        getGeneralConfig().setComments(key, commentLinesList);
         return getGeneralConfig().getStringList(key);
     }
 
