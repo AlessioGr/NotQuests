@@ -58,6 +58,8 @@ chat:
       <main>Elige tu respuesta:</main>
     choose-answer-answer-hover-text: '<highlight>Click para responder'
     ended-previous-conversation: '<main>¡Has terminado la conversación anterior!'
+    speaker-line-format: '%SPEAKERCOLOR%[%SPEAKER%] <GRAY>%MESSAGE%'
+    answer-option-line-format: ' <main>> <gray>%MESSAGE%'
   objectives:
     counter: '<highlight>%OBJECTIVEID%.</highlight> <main>%OBJECTIVENAME%:'
     hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[HIDDEN]
@@ -157,7 +159,7 @@ titles:
     title: <positive>Misión Completada
     subtitle: <highlight>%QUESTNAME%
   quest-failed:
-    title: <negative>Misión fallida
+    title: <negative>Misión Fallida
     subtitle: <highlight>%QUESTNAME%
 placeholders:
   questcooldownleftformatted:

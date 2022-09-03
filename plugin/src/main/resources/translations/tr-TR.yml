@@ -58,6 +58,8 @@ chat:
       <main>Yanıtınızı seçin:</main>
     choose-answer-answer-hover-text: '<highlight>Cevap vermek için tıklayın'
     ended-previous-conversation: '<main>Önceki konuşmanızı bitirdiniz!'
+    speaker-line-format: '%SPEAKERCOLOR%[%SPEAKER%] <GRAY>%MESSAGE%'
+    answer-option-line-format: ' <main>> <gray>%MESSAGE%'
   objectives:
     counter: '<highlight>%OBJECTIVEID%.</highlight> <main>%OBJECTIVENAME%:'
     hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[HIDDEN]

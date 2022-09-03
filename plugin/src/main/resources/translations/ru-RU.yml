@@ -1,6 +1,6 @@
 ---
 chat:
-  wrong-command-usage: <error>неправильное использование команды!
+  wrong-command-usage: <error>Неправильное использование команды!
   missing-permission: '<error>Нет разрешения! Требуется узел разрешения: <highlight>%PERMISSION%'
   too-many-arguments: <error>Слишком много аргументов!
   quest-successfully-accepted: |2
@@ -58,6 +58,8 @@ chat:
       <main>Выберите свой ответ:</main>
     choose-answer-answer-hover-text: '<highlight>Нажмите, чтобы ответить'
     ended-previous-conversation: '<main>Вы завершили предыдущий диалог!'
+    speaker-line-format: '%SPEAKERCOLOR%[%SPEAKER%] <GRAY>%MESSAGE%'
+    answer-option-line-format: ' <main>> <gray>%MESSAGE%'
   objectives:
     counter: '<highlight>%OBJECTIVEID%.</highlight> <main>%OBJECTIVENAME%:'
     hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[HIDDEN]
@@ -76,17 +78,17 @@ chat:
         prefix: '    <veryUnimportant>└─ <unimportant>'
         suffix: ''
       breakBlocks:
-        base: 'Break Blocks: <main>%BLOCKTOBREAK%'
+        base: 'Сломать блоки: <main>%BLOCKTOBREAK%'
       breed:
         base: 'Breed Mobs: <main>%ENTITYTOBREED%'
       collectItems:
-        base: 'Collect Items: <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
+        base: 'Собрать предметы: <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
       consumeItems:
-        base: 'Consume Items: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
+        base: 'Использовать предметы: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: 'Craft Items: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+        base: 'Создать Предметы: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: 'Deliver Items: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
+        base: 'Принести Предметы: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
         deliver-to-npc: '      <GRAY>Deliver it to <WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>The delivery NPC is currently not available!'
         deliver-to-npc-citizens-not-found: '    <RED>Error: Citizens plugin not installed. Contact an admin.'
@@ -173,7 +175,7 @@ gui:
   main:
     title: '                <highlight2>Задания'
     backgroundFill:
-      material: 'BLACK_STAINED_GLASS_PANE'
+      material: 'BLACK_STAINED_GLASS'
     background:
       '1':
         minX: 0
@@ -244,7 +246,7 @@ gui:
         name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
         lore:
           - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-          - "<main>Click to open Quest!"
+          - "<main>Нажмите, чтобы открыть квест!"
   takeQuestChoose:
     title: <highlight2>Which Quest do you want to take?
     size:
@@ -295,7 +297,7 @@ gui:
         x: 2
         y: 0
       rewards:
-        name: "<positive>Rewards"
+        name: "<positive>Награды"
         lore:
           - "<WHITE>%QUESTREWARDS%"
         lore-if-empty:
@@ -335,7 +337,7 @@ gui:
           - "<unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
         lore-if-description-empty:
           - "<main><BOLD>ACTIVE</BOLD>"
-          - "<veryUnimportant>No Description"
+          - "<veryUnimportant>Нет описания"
           - "<unimportant>%OBJECTIVETASKDESCRIPTION%"
           - ""
           - "<unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"

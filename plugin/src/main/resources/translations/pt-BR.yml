@@ -58,6 +58,8 @@ chat:
       <main>Escolha sua resposta:</main>
     choose-answer-answer-hover-text: '<highlight>Clique para responder'
     ended-previous-conversation: '<main>Você encerrou sua conversa anterior!'
+    speaker-line-format: '%SPEAKERCOLOR%[%SPEAKER%] <GRAY>%MESSAGE%'
+    answer-option-line-format: ' <main>> <gray>%MESSAGE%'
   objectives:
     counter: '<highlight>%OBJECTIVEID%.</highlight> <main>%OBJECTIVENAME%:'
     hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[HIDDEN]

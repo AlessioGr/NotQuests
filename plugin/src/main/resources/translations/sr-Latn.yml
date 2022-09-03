@@ -58,6 +58,8 @@ chat:
       <main>Odaberi svoj odgovor:</main>
     choose-answer-answer-hover-text: '<highlight>Klikni da odgovoriš'
     ended-previous-conversation: '<main>Završio si svoju prijašnju konverzaciju!'
+    speaker-line-format: '%SPEAKERCOLOR%[%SPEAKER%] <GRAY>%MESSAGE%'
+    answer-option-line-format: ' <main>> <gray>%MESSAGE%'
   objectives:
     counter: '<highlight>%OBJECTIVEID%.</highlight> <main>%OBJECTIVENAME%:'
     hidden: <highlight>%OBJECTIVEID%</highlight><unimportant><BOLD>[HIDDEN]
