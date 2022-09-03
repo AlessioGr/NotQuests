@@ -49,6 +49,11 @@ public class NPCManager {
         loadNPCData(category);
       }
     } else {
+      if(main.getDataManager().isDisabled()){
+        main.getLogManager().info("Tried to load NPC data before quest data was loaded. NotQuests has skipped scheduling another load though, because NotQuests has been disabled due to a previous error");
+        return;
+      }
+
       main.getLogManager().info("Tried to load NPC data before quest data was loaded. NotQuests is scheduling another load...");
 
       Bukkit.getScheduler().runTaskLaterAsynchronously(main.getMain(), () -> {
