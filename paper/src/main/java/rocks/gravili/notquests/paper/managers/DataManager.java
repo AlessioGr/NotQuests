@@ -1237,7 +1237,7 @@ public class DataManager {
             getGeneralConfig().set(key, defaultValue);
             valueChanged = true;
         }
-        final List<String> commentLinesList = Arrays.asList(commentLines);
+        final List<String> commentLinesList = new ArrayList<>(Arrays.asList(commentLines));
         commentLinesList.add("Default: " + defaultValue);
         getGeneralConfig().setComments(key, commentLinesList);
         return getGeneralConfig().getString(key);
@@ -1248,7 +1248,7 @@ public class DataManager {
             getGeneralConfig().set(key, defaultValue);
             valueChanged = true;
         }
-        final List<String> commentLinesList = Arrays.asList(commentLines);
+        final List<String> commentLinesList = new ArrayList<>(Arrays.asList(commentLines));
         commentLinesList.add("Default: " + defaultValue);
         getGeneralConfig().setComments(key, commentLinesList);
         return getGeneralConfig().getBoolean(key);
@@ -1259,7 +1259,7 @@ public class DataManager {
             getGeneralConfig().set(key, defaultValue);
             valueChanged = true;
         }
-        final List<String> commentLinesList = Arrays.asList(commentLines);
+        final List<String> commentLinesList = new ArrayList<>(Arrays.asList(commentLines));
         commentLinesList.add("Default: " + defaultValue);
         getGeneralConfig().setComments(key, commentLinesList);
         return getGeneralConfig().getInt(key);
@@ -1270,7 +1270,7 @@ public class DataManager {
             getGeneralConfig().set(key, defaultValue);
             valueChanged = true;
         }
-        final List<String> commentLinesList = Arrays.asList(commentLines);
+        final List<String> commentLinesList = new ArrayList<>(Arrays.asList(commentLines));
         commentLinesList.add("Default: " + defaultValue);
         getGeneralConfig().setComments(key, commentLinesList);
         return getGeneralConfig().getDouble(key);
@@ -1281,7 +1281,7 @@ public class DataManager {
             getGeneralConfig().set(key, defaultValue);
             valueChanged = true;
         }
-        final List<String> commentLinesList = Arrays.asList(commentLines);
+        final List<String> commentLinesList = new ArrayList<>(Arrays.asList(commentLines));
         commentLinesList.add("Default: " + defaultValue);
         getGeneralConfig().setComments(key, commentLinesList);
         return getGeneralConfig().getItemStack(key);
@@ -1292,7 +1292,7 @@ public class DataManager {
             getGeneralConfig().set(key, defaultValue);
             valueChanged = true;
         }
-        final List<String> commentLinesList = Arrays.asList(commentLines);
+        final List<String> commentLinesList = new ArrayList<>(Arrays.asList(commentLines));
         commentLinesList.add("Default: " + defaultValue);
         getGeneralConfig().setComments(key, commentLinesList);
         return getGeneralConfig().getStringList(key);
