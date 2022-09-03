@@ -1282,7 +1282,6 @@ public class DataManager {
             valueChanged = true;
         }
         final List<String> commentLinesList = new ArrayList<>(Arrays.asList(commentLines));
-        commentLinesList.add("Default: " + defaultValue);
         getGeneralConfig().setComments(key, commentLinesList);
         return getGeneralConfig().getItemStack(key);
     }
