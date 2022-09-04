@@ -75,6 +75,8 @@ repositories {
             includeGroup("com.willfp")
             includeGroup("com.github.war-systems")
             includeGroup("com.github.MilkBowl")
+            includeGroup("com.github.UlrichBR")
+            includeGroup("com.github.Slimefun")
         }
         metadataSources {
             artifact()
@@ -146,6 +148,8 @@ repositories {
     maven("https://repo.opencollab.dev/maven-snapshots/") {
         content {
             includeGroup("org.geysermc.floodgate")
+            includeGroup("org.geysermc.cumulus")
+            includeGroup("org.geysermc")
         }
     }
 
@@ -162,14 +166,14 @@ dependencies {
     //implementation("de.themoep:inventorygui:1.5-SNAPSHOT")
 
     compileOnly("net.citizensnpcs:citizens-main:2.0.30-SNAPSHOT")
-    compileOnly("me.clip:placeholderapi:2.11.1")
+    compileOnly("me.clip:placeholderapi:2.11.2")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
 
 
-    compileOnly("io.lumine:Mythic-Dist:5.0.2-SNAPSHOT")
+    compileOnly("io.lumine:Mythic-Dist:5.0.3-SNAPSHOT")
     compileOnly(files("libs/EliteMobs.jar"))
-    compileOnly(files("libs/UClans-API.jar"))
-    compileOnly(files("libs/ProjectKorra-1.9.3.jar"))
+    compileOnly("com.github.UlrichBR:UClansV5-API:4.2")
+    compileOnly(files("libs/ProjectKorra-1.10.0.jar"))
     //compileOnly(files("libs/UltimateJobs-0.2.0-SNAPSHOT.jar"))
 
 
@@ -178,12 +182,12 @@ dependencies {
     compileOnly("com.sk89q.worldedit:worldedit-core:7.3.0-SNAPSHOT")
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.3.0-SNAPSHOT")
 
-    compileOnly("com.github.TheBusyBiscuit:Slimefun4:RC-31")
+    compileOnly("com.github.Slimefun:Slimefun4:RC-32")
 
     compileOnly("net.luckperms:api:5.4")
 
     //compileOnly "com.github.NEZNAMY:TAB:2.9.2"
-    compileOnly("com.palmergames.bukkit.towny:towny:0.98.0.3")
+    compileOnly("com.github.TownyAdvanced:towny:0.98.2.0")
 
     compileOnly("com.github.Zrips:Jobs:v4.17.2")
 
@@ -233,8 +237,8 @@ dependencies {
     implementation("commons-io:commons-io:2.11.0")
 
     //compileOnly("com.willfp:EcoBosses:8.0.0")
-    compileOnly(files("libs/EcoBosses-v8.10.0.jar"))
-    compileOnly("com.willfp:eco:6.26.2")
+    compileOnly(files("libs/EcoBosses-v8.78.0.jar"))
+    compileOnly("com.willfp:eco:6.38.3")
 
     implementation("com.github.Redempt:Crunch:1.1.2")
 
@@ -245,7 +249,7 @@ dependencies {
 
     implementation("com.zaxxer:HikariCP:5.0.1")
 
-    compileOnly("com.github.war-systems:UltimateJobs:0.3.5")
+    compileOnly("com.github.war-systems:UltimateJobs:0.3.6")
 
 
 }
