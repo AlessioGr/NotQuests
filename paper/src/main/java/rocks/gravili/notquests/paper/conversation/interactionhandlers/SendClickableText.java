@@ -56,7 +56,7 @@ public class SendClickableText implements
         "%SPEAKERCOLOR%", speaker.getColor(),
         "%SPEAKER%", speaker.getSpeakerDisplayName(),
         "%MESSAGE%", main.getUtilManager().applyPlaceholders(optionMessage, player),
-        "%OPTIONNUMBER%", conversationPlayer.getCurrentPlayerLines().indexOf(conversationLine) + 1
+        "%OPTIONNUMBER%", ""+(conversationPlayer.getCurrentPlayerLines().indexOf(conversationLine) + 1)
     ));
 
     final Component toSend =
