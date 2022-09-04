@@ -59,7 +59,7 @@ chat:
     choose-answer-answer-hover-text: '<highlight>点击回答'
     ended-previous-conversation: '<main>您已经结束了之前的对话!'
     speaker-line-format: '%SPEAKERCOLOR%[%SPEAKER%] <GRAY>%MESSAGE%'
-    answer-option-line-format: ' <main>> <gray>%MESSAGE%'
+    answer-option-line-format: ' <main>%OPTIONNUMBER%. <gray>%MESSAGE%'
   objectives:
     counter: '<highlight>%OBJECTIVEID%.</highlight> <main>%OBJECTIVENAME%:'
     hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[已隐藏]
