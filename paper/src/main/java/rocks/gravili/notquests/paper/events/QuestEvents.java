@@ -1091,7 +1091,7 @@ public class QuestEvents implements Listener {
 
 
     @EventHandler
-    public void playerChatEvent(PlayerCommandPreprocessEvent e) {
+    public void playerCommandPreprocessEvent(PlayerCommandPreprocessEvent e) {
         final Player player = e.getPlayer();
 
         final ConversationPlayer conversationPlayer = main.getConversationManager().getOpenConversation(player.getUniqueId());
@@ -1102,15 +1102,6 @@ public class QuestEvents implements Listener {
             if (e.getMessage().startsWith("/notquests continueConversation ")) {
                 handleConversation(player, e.getMessage().split("/notquests continueConversation ")[1]);
                 e.setCancelled(true);
-            }else { //check if int
-                try{
-                    int parsed = Integer.parseInt(e.getMessage());
-                    if(handleConversation(player, parsed)){
-                        e.setCancelled(true);
-                    }
-                }catch (Exception ignored){
-                    return;
-                }
             }
         }
 
@@ -1253,8 +1244,25 @@ public class QuestEvents implements Listener {
     public void asyncChatEvent(AsyncChatEvent e) {
         final Player playerWhoChatted = e.getPlayer();
 
+        final Player player = e.getPlayer();
+
+        final ConversationPlayer conversationPlayer = main.getConversationManager().getOpenConversation(player.getUniqueId());
+        if(conversationPlayer != null){
+            if (player.hasPermission("notquests.use")) {
+                final String plainMessage = PlainTextComponentSerializer.plainText().serialize(e.message());
+                try{
+                    int parsed = Integer.parseInt(plainMessage);
+                    if(handleConversation(player, parsed)){
+                        e.setCancelled(true);
+                        return;
+                    }
+                }catch (Exception ignored){
+                }
+            }
+        }
+
         for(final Audience audience : e.viewers()){
-            if(audience instanceof final Player player){
+            if(audience instanceof final Player playerViewer){
                 final Component adventureComponent = e.renderer().render(
                     playerWhoChatted,
                     playerWhoChatted.displayName(),
@@ -1262,18 +1270,13 @@ public class QuestEvents implements Listener {
                     audience
                 );
 
-                final ArrayList<Component> convHist = main.getConversationManager().getConversationChatHistory().get(player.getUniqueId());
+                final ArrayList<Component> convHist = main.getConversationManager().getConversationChatHistory().get(playerViewer.getUniqueId());
                 if (convHist != null && convHist.contains(adventureComponent)) {
                     return;
                 }
 
-                ArrayList<Component> hist = main.getConversationManager().getChatHistory().get(player.getUniqueId());
-                if (hist != null) {
-                    hist.add(adventureComponent);
-                } else {
-                    hist = new ArrayList<>();
-                    hist.add(adventureComponent);
-                }
+                final ArrayList<Component> hist = main.getConversationManager().getChatHistory().getOrDefault(playerViewer.getUniqueId(), new ArrayList<>());
+                hist.add(adventureComponent);
 
                 main.getLogManager().debug("Registering chat message with Message: " + PlainTextComponentSerializer.plainText().serialize(adventureComponent));
                 final int toRemove = hist.size() - main.getConversationManager().getMaxChatHistory();
@@ -1284,7 +1287,7 @@ public class QuestEvents implements Listener {
                 //main.getLogManager().log(Level.WARNING, "After: " + hist.size());
 
 
-                main.getConversationManager().getChatHistory().put(player.getUniqueId(), hist);
+                main.getConversationManager().getChatHistory().put(playerViewer.getUniqueId(), hist);
             }
         }
 
