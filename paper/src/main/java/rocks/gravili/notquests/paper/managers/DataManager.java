@@ -1090,6 +1090,11 @@ public class DataManager {
                 true
         ));
 
+        configuration.setIntegrationFloodgateEnabled(getGeneralConfigBoolean(
+            "integrations.floodgate.enabled",
+            true
+        ));
+
         configuration.setActionBarFancyCommandCompletionEnabled(getGeneralConfigBoolean(
                 "visual.fancy-command-completion.actionbar-enabled",
                 true,

@@ -18,7 +18,6 @@
 
 package rocks.gravili.notquests.paper.managers.integrations;
 
-import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.event.server.PluginEnableEvent;
@@ -62,6 +61,9 @@ public class IntegrationsManager {
   private boolean mythicMobsEnabled = false;
   private boolean ecoBossesEnabled = false;
   private boolean ultimateJobsEnabled = false;
+
+  private boolean floodgateEnabled = false;
+
   // Managers
   private VaultManager vaultManager;
   private MythicMobsManager mythicMobsManager;
@@ -73,6 +75,9 @@ public class IntegrationsManager {
   private ProjectKorraManager projectKorraManager;
   private UltimateClansManager ultimateClansManager;
   private EcoBossesManager ecoBossesManager;
+
+  private FloodgateManager floodgateManager;
+
 
   public IntegrationsManager(final NotQuests main) {
     this.main = main;
@@ -338,6 +343,17 @@ public class IntegrationsManager {
                       .registerEvents(new ProjectKorraEvents(main), main.getMain());
                 }));
 
+    integrations.add(
+        new Integration(main, "Floodgate")
+            .setEnableCondition(() -> main.getConfiguration().isIntegrationFloodgateEnabled())
+            .setRunWhenEnabled(
+                () -> {
+                  floodgateManager = new FloodgateManager(main);
+                  floodgateEnabled = true;
+                  return true;
+                })
+    );
+
     integrationsNotEnabled.addAll(integrations);
   }
 
@@ -482,6 +498,10 @@ public class IntegrationsManager {
     return ultimateJobsEnabled;
   }
 
+  public boolean isFloodgateEnabled() {
+    return floodgateEnabled;
+  }
+
   public final MythicMobsManager getMythicMobsManager() {
     return mythicMobsManager;
   }
@@ -508,6 +528,10 @@ public class IntegrationsManager {
 
   public final ProjectKorraManager getProjectKorraManager() {
     return projectKorraManager;
+  }
+
+  public final FloodgateManager getFloodgateManager() {
+    return floodgateManager;
   }
 
   public final UltimateClansManager getUltimateClansManager() {

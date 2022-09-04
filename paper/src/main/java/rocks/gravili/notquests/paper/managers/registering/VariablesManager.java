@@ -82,6 +82,7 @@ import rocks.gravili.notquests.paper.structs.variables.RandomNumberBetweenRangeV
 import rocks.gravili.notquests.paper.structs.variables.TrueVariable;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 import rocks.gravili.notquests.paper.structs.variables.hooks.BetonQuestConditionVariable;
+import rocks.gravili.notquests.paper.structs.variables.hooks.FloodgateIsFloodgatePlayerVariable;
 import rocks.gravili.notquests.paper.structs.variables.hooks.PlaceholderAPINumberVariable;
 import rocks.gravili.notquests.paper.structs.variables.hooks.PlaceholderAPIStringVariable;
 import rocks.gravili.notquests.paper.structs.variables.hooks.ProjectKorraElementsVariable;
@@ -209,6 +210,10 @@ public class VariablesManager {
 
     if (main.getIntegrationsManager().isBetonQuestEnabled()) {
       registerVariable("BetonQuestCondition", BetonQuestConditionVariable.class);
+    }
+
+    if (main.getIntegrationsManager().isFloodgateEnabled()) {
+      registerVariable("FloodgateIsFloodgatePlayer", FloodgateIsFloodgatePlayerVariable.class);
     }
   }
 

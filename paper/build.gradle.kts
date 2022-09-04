@@ -143,6 +143,12 @@ repositories {
         }
     }
 
+    maven("https://repo.opencollab.dev/maven-snapshots/") {
+        content {
+            includeGroup("org.geysermc.floodgate")
+        }
+    }
+
     //mavenLocal()
 
 }
@@ -180,6 +186,8 @@ dependencies {
     compileOnly("com.palmergames.bukkit.towny:towny:0.98.0.3")
 
     compileOnly("com.github.Zrips:Jobs:v4.17.2")
+
+    compileOnly("org.geysermc.floodgate:api:2.0-SNAPSHOT")
 
 
     //Shaded

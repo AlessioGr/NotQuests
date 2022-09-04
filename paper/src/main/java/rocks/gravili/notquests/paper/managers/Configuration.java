@@ -116,6 +116,17 @@ public class Configuration {
   private boolean integrationProjectKorraEnabled = true;
   private boolean integrationEcoBossesEnabled = true;
   private boolean integrationUltimateJobsEnabled = true;
+
+  public boolean isIntegrationFloodgateEnabled() {
+    return integrationFloodgateEnabled;
+  }
+
+  public void setIntegrationFloodgateEnabled(boolean integrationFloodgateEnabled) {
+    this.integrationFloodgateEnabled = integrationFloodgateEnabled;
+  }
+
+  private boolean integrationFloodgateEnabled = true;
+
   // Other
   private boolean actionBarFancyCommandCompletionEnabled = true;
   private boolean titleFancyCommandCompletionEnabled = false;
