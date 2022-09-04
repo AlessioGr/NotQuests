@@ -1251,7 +1251,7 @@ public class QuestEvents implements Listener {
             if (player.hasPermission("notquests.use")) {
                 final String plainMessage = PlainTextComponentSerializer.plainText().serialize(e.message());
                 try{
-                    int parsed = Integer.parseInt(plainMessage);
+                    int parsed = Integer.parseInt(plainMessage.replace(".", ""));
                     if(handleConversation(player, parsed)){
                         e.setCancelled(true);
                         return;
