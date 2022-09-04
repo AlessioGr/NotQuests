@@ -36,6 +36,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.conversation.interactionhandlers.SendClickableText;
+import rocks.gravili.notquests.paper.conversation.interactionhandlers.ConversationInteractionHandler;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -61,8 +63,13 @@ public class ConversationManager {
   private final Speaker playerSpeaker;
   private final HashMap<UUID, ConversationPlayer> openConversations;
 
+  private final ArrayList<SendClickableText> interactionHandlers;
+
   public ConversationManager(final NotQuests main) {
     this.main = main;
+    interactionHandlers = new ArrayList<>();
+    interactionHandlers.add(new SendClickableText(main));
+
     conversations = new ArrayList<>();
 
     openConversations = new HashMap<>();
@@ -75,6 +82,10 @@ public class ConversationManager {
 
     // playConversation(Bukkit.getPlayer("NoeX"), createTestConversation());
     loadConversationsFromConfig();
+  }
+
+  public final ArrayList<ConversationInteractionHandler> getInteractionHandlers() {
+    return new ArrayList<>(interactionHandlers);
   }
 
   public final int getMaxChatHistory() {

@@ -71,6 +71,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.loot.LootTables;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
+import rocks.gravili.notquests.paper.conversation.ConversationLine;
 import rocks.gravili.notquests.paper.conversation.ConversationPlayer;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
@@ -1100,7 +1101,7 @@ public class QuestEvents implements Listener {
         }
     }
 
-    private void handleConversation(Player player, String option) {
+    private void handleConversation(final Player player, final String option) {
         final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
         if (main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId()) == null) {
             return;
@@ -1108,7 +1109,12 @@ public class QuestEvents implements Listener {
         //Check if the player has an open conversation
         final ConversationPlayer conversationPlayer = main.getConversationManager().getOpenConversation(player.getUniqueId());
         if (conversationPlayer != null) {
-            conversationPlayer.chooseOption(option);
+            for(final ConversationLine currentPlayerLine : conversationPlayer.getCurrentPlayerLines()){
+                if(currentPlayerLine.getMessage().equals(option)){
+                    conversationPlayer.chooseOption(currentPlayerLine);
+                    return;
+                }
+            }
         } else {
             questPlayer.sendDebugMessage("Tried to choose conversation option, but the conversationPlayer was not found! Active conversationPlayers count: <highlight>" + main.getConversationManager().getOpenConversations().size());
             questPlayer.sendDebugMessage("All active conversationPlayers: <highlight>" + main.getConversationManager().getOpenConversations().toString());
