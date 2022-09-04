@@ -72,7 +72,7 @@ public class ConversationPlayer {
   public boolean next(final ConversationLine currentLine, boolean deletePrevious) {
     sendLine(currentLine, deletePrevious);
 
-    ArrayList<ConversationLine> next =
+    final ArrayList<ConversationLine> next =
         findConversationLinesWhichFulfillsCondition(currentLine.getNext());
 
     if (next == null || next.isEmpty()) {
@@ -233,7 +233,7 @@ public class ConversationPlayer {
   public void sendLine(final ConversationLine conversationLine, final boolean deletePrevious) {
     if(!conversationLine.isSkipMessage()){
       for(final ConversationInteractionHandler interactionHandler : main.getConversationManager().getInteractionHandlers()){
-        interactionHandler.sendText(conversationLine.getMessage(), conversationLine.getSpeaker(), player, questPlayer, conversation, conversationLine, deletePrevious);
+        interactionHandler.sendText(conversationLine.getMessage(), conversationLine.getSpeaker(), player, questPlayer, conversation, conversationLine, deletePrevious, this);
       }
     }
 
@@ -254,7 +254,7 @@ public class ConversationPlayer {
   public void sendOptionLine(final ConversationLine conversationLine) {
 
     for(final ConversationInteractionHandler interactionHandler : main.getConversationManager().getInteractionHandlers()){
-      interactionHandler.sendOption(conversationLine.getMessage(), conversationLine.getSpeaker(), player, questPlayer, conversation, conversationLine);
+      interactionHandler.sendOption(conversationLine.getMessage(), conversationLine.getSpeaker(), player, questPlayer, conversation, conversationLine, this);
     }
   }
 

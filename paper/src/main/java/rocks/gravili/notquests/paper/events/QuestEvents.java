@@ -1092,19 +1092,59 @@ public class QuestEvents implements Listener {
 
     @EventHandler
     public void playerChatEvent(PlayerCommandPreprocessEvent e) {
-        if (e.getMessage().startsWith("/notquests continueConversation ")) {
-            final Player player = e.getPlayer();
-            if (player.hasPermission("notquests.use")) {
+        final Player player = e.getPlayer();
+
+        final ConversationPlayer conversationPlayer = main.getConversationManager().getOpenConversation(player.getUniqueId());
+        if(conversationPlayer != null){
+            if (!player.hasPermission("notquests.use")) {
+                return;
+            }
+            if (e.getMessage().startsWith("/notquests continueConversation ")) {
                 handleConversation(player, e.getMessage().split("/notquests continueConversation ")[1]);
                 e.setCancelled(true);
+            }else { //check if int
+                try{
+                    int parsed = Integer.parseInt(e.getMessage());
+                    if(handleConversation(player, parsed)){
+                        e.setCancelled(true);
+                    }
+                }catch (Exception ignored){
+                    return;
+                }
             }
         }
+
     }
 
-    private void handleConversation(final Player player, final String option) {
+    private final boolean handleConversation(final Player player, final int optionNumber) {
+        final int optionIndex = optionNumber-1;
         final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
         if (main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId()) == null) {
-            return;
+            return false;
+        }
+        //Check if the player has an open conversation
+        final ConversationPlayer conversationPlayer = main.getConversationManager().getOpenConversation(player.getUniqueId());
+        if (conversationPlayer != null) {
+            if(optionIndex < 0 || optionIndex >= conversationPlayer.getCurrentPlayerLines().size()){
+                return false;
+            }
+            final ConversationLine foundCurrentPlayerLine = conversationPlayer.getCurrentPlayerLines().get(optionIndex);
+            if(foundCurrentPlayerLine != null){
+                conversationPlayer.chooseOption(foundCurrentPlayerLine);
+                return true;
+            }
+        } else {
+            questPlayer.sendDebugMessage("Tried to choose conversation option, but the conversationPlayer was not found! Active conversationPlayers count: <highlight>" + main.getConversationManager().getOpenConversations().size());
+            questPlayer.sendDebugMessage("All active conversationPlayers: <highlight>" + main.getConversationManager().getOpenConversations().toString());
+            questPlayer.sendDebugMessage("Current QuestPlayer Object: <highlight>" + questPlayer);
+            questPlayer.sendDebugMessage("Current QuestPlayer: <highlight>" + questPlayer.getPlayer().getName());
+        }
+        return false;
+    }
+    private final boolean handleConversation(final Player player, final String option) {
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+        if (main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId()) == null) {
+            return false;
         }
         //Check if the player has an open conversation
         final ConversationPlayer conversationPlayer = main.getConversationManager().getOpenConversation(player.getUniqueId());
@@ -1112,7 +1152,7 @@ public class QuestEvents implements Listener {
             for(final ConversationLine currentPlayerLine : conversationPlayer.getCurrentPlayerLines()){
                 if(currentPlayerLine.getMessage().equals(option)){
                     conversationPlayer.chooseOption(currentPlayerLine);
-                    return;
+                    return true;
                 }
             }
         } else {
@@ -1121,6 +1161,7 @@ public class QuestEvents implements Listener {
             questPlayer.sendDebugMessage("Current QuestPlayer Object: <highlight>" + questPlayer);
             questPlayer.sendDebugMessage("Current QuestPlayer: <highlight>" + questPlayer.getPlayer().getName());
         }
+        return false;
     }
 
 

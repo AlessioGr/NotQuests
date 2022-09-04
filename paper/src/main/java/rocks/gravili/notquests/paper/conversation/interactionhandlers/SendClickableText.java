@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.conversation.Conversation;
 import rocks.gravili.notquests.paper.conversation.ConversationLine;
+import rocks.gravili.notquests.paper.conversation.ConversationPlayer;
 import rocks.gravili.notquests.paper.conversation.Speaker;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
@@ -24,7 +25,7 @@ public class SendClickableText implements
   @Override
   public void sendText(final String text, final Speaker speaker, final Player player, final
       QuestPlayer questPlayer, final
-  Conversation conversation, final ConversationLine conversationLine, final boolean deletePrevious) {
+  Conversation conversation, final ConversationLine conversationLine, final boolean deletePrevious, final ConversationPlayer conversationPlayer) {
 
 
     final String lineString = main.getLanguageManager().getString("chat.conversations.speaker-line-format", questPlayer, Map.of(
@@ -50,11 +51,12 @@ public class SendClickableText implements
 
   @Override
   public void sendOption(final String optionMessage, final Speaker speaker, final Player player, final QuestPlayer questPlayer, final
-      Conversation conversation, final ConversationLine conversationLine) {
+      Conversation conversation, final ConversationLine conversationLine, final ConversationPlayer conversationPlayer) {
     final String toSendString = main.getLanguageManager().getString("chat.conversations.answer-option-line-format", questPlayer, Map.of(
         "%SPEAKERCOLOR%", speaker.getColor(),
         "%SPEAKER%", speaker.getSpeakerDisplayName(),
-        "%MESSAGE%", main.getUtilManager().applyPlaceholders(optionMessage, player)
+        "%MESSAGE%", main.getUtilManager().applyPlaceholders(optionMessage, player),
+        "%OPTIONNUMBER%", conversationPlayer.getCurrentPlayerLines().indexOf(conversationLine) + 1
     ));
 
     final Component toSend =
