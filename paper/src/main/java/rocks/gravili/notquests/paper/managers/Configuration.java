@@ -130,6 +130,16 @@ public class Configuration {
   private boolean consoleColorsEnabled = true;
   private boolean consoleColorsDownsampleColors = false;
 
+  public boolean isConversationAllowAnswerNumberInChat() {
+    return conversationAllowAnswerNumberInChat;
+  }
+
+  public void setConversationAllowAnswerNumberInChat(boolean conversationAllowAnswerNumberInChat) {
+    this.conversationAllowAnswerNumberInChat = conversationAllowAnswerNumberInChat;
+  }
+
+  private boolean conversationAllowAnswerNumberInChat = true;
+
   private String colorsConsolePrefixPrefix = "<#393e46>[<gradient:#E0EAFC:#CFDEF3>";
   private String colorsConsolePrefixSuffix = "<#393e46>]<#636c73>: ";
   private String colorsConsoleInfoDefault = "<main>";

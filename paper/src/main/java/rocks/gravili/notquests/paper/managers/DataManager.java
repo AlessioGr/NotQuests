@@ -1202,6 +1202,13 @@ public class DataManager {
         ));
 
 
+        configuration.setConversationAllowAnswerNumberInChat(getGeneralConfigBoolean(
+            "conversations.interaction-handlers.clickable-text.allow-selecting-option-by-typing-number-in-chat",
+            true,
+            "If set to true, players can select an option / answer inside a conversation by typing the number of the option/answer in chat."
+        ));
+
+
         configuration.setConfigurationVersion(getGeneralConfigString(
                 "config-version-do-not-edit",
                 main.getMain().getDescription().getVersion(),

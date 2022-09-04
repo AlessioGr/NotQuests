@@ -1246,20 +1246,23 @@ public class QuestEvents implements Listener {
 
         final Player player = e.getPlayer();
 
-        final ConversationPlayer conversationPlayer = main.getConversationManager().getOpenConversation(player.getUniqueId());
-        if(conversationPlayer != null){
-            if (player.hasPermission("notquests.use")) {
-                final String plainMessage = PlainTextComponentSerializer.plainText().serialize(e.message());
-                try{
-                    int parsed = Integer.parseInt(plainMessage.replace(".", ""));
-                    if(handleConversation(player, parsed)){
-                        e.setCancelled(true);
-                        return;
+        if(main.getConfiguration().isConversationAllowAnswerNumberInChat()){
+            final ConversationPlayer conversationPlayer = main.getConversationManager().getOpenConversation(player.getUniqueId());
+            if(conversationPlayer != null){
+                if (player.hasPermission("notquests.use")) {
+                    final String plainMessage = PlainTextComponentSerializer.plainText().serialize(e.message());
+                    try{
+                        int parsed = Integer.parseInt(plainMessage.replace(".", ""));
+                        if(handleConversation(player, parsed)){
+                            e.setCancelled(true);
+                            return;
+                        }
+                    }catch (Exception ignored){
                     }
-                }catch (Exception ignored){
                 }
             }
         }
+
 
         for(final Audience audience : e.viewers()){
             if(audience instanceof final Player playerViewer){
