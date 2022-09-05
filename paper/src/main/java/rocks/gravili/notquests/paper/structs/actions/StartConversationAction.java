@@ -44,7 +44,7 @@ public class StartConversationAction extends Action {
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
       Command.Builder<CommandSender> builder,
-      ActionFor rewardFor) {
+      ActionFor actionFor) {
     manager.command(
         builder
             .argument(
@@ -66,7 +66,7 @@ public class StartConversationAction extends Action {
                   startConversationAction.setConversationToStart(foundConversation.getIdentifier());
                   startConversationAction.setEndPrevious(endPrevious);
 
-                  main.getActionManager().addAction(startConversationAction, context);
+                  main.getActionManager().addAction(startConversationAction, context, actionFor);
                 }));
   }
 

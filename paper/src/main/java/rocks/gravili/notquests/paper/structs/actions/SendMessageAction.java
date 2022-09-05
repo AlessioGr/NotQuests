@@ -56,7 +56,7 @@ public class SendMessageAction extends Action {
                   SendMessageAction sendMessageAction = new SendMessageAction(main);
                   sendMessageAction.setMessageToSend(messageToSend);
 
-                  main.getActionManager().addAction(sendMessageAction, context);
+                  main.getActionManager().addAction(sendMessageAction, context, actionFor);
                 }));
   }
 

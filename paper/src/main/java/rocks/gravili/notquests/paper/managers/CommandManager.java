@@ -114,6 +114,8 @@ public class CommandManager {
 
   private Command.Builder<CommandSender> adminEditObjectiveAddRewardCommandBuilder;
   private Command.Builder<CommandSender> adminAddActionCommandBuilder;
+  private Command.Builder<CommandSender> adminExecuteActionCommandBuilder;
+
   private Command.Builder<CommandSender> adminActionsCommandBuilder;
   private Command.Builder<CommandSender> adminActionsEditCommandBuilder;
   private Command.Builder<CommandSender> adminActionsAddConditionCommandBuilder;
@@ -620,6 +622,11 @@ public class CommandManager {
                           completions.add("[Enter new, unique Action Identifier]");
                           return completions;
                         }));
+
+    adminExecuteActionCommandBuilder =
+        adminCommandBuilder
+            .literal("actions")
+            .literal("execute");
   }
 
   public void setupCommands() {
@@ -800,6 +807,10 @@ public class CommandManager {
 
   public final Command.Builder<CommandSender> getAdminAddActionCommandBuilder() {
     return adminAddActionCommandBuilder;
+  }
+
+  public final Command.Builder<CommandSender> getAdminExecuteActionCommandBuilder() {
+    return adminExecuteActionCommandBuilder;
   }
 
   public final Command.Builder<CommandSender> getAdminAddConditionCommandBuilder() {

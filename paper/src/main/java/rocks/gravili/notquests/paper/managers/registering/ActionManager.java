@@ -19,6 +19,9 @@
 package rocks.gravili.notquests.paper.managers.registering;
 
 import cloud.commandframework.Command;
+import cloud.commandframework.arguments.flags.CommandFlag;
+import cloud.commandframework.bukkit.arguments.selector.SinglePlayerSelector;
+import cloud.commandframework.bukkit.parsers.selector.SinglePlayerSelectorArgument;
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
@@ -27,8 +30,11 @@ import java.lang.reflect.Method;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.UUID;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.Quest;
@@ -63,13 +69,16 @@ import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
 public class ActionManager {
   private final NotQuests main;
-
+  private final CommandFlag<SinglePlayerSelector> playerSelectorCommandFlag;
   private final HashMap<String, Class<? extends Action>> actions;
 
   public ActionManager(final NotQuests main) {
     this.main = main;
     actions = new HashMap<>();
-
+    playerSelectorCommandFlag = CommandFlag
+        .newBuilder("player")
+        .withArgument(SinglePlayerSelectorArgument.of("player"))
+        .build();
     registerDefaultActions();
   }
 
@@ -156,6 +165,17 @@ public class ActionManager {
                 .flag(main.getCommandManager().categoryFlag)
                 .flag(main.getCommandManager().delayFlag),
             ActionFor.ActionsYML); // For Actions.yml
+
+        commandHandler.invoke(
+            action,
+            main,
+            main.getCommandManager().getPaperCommandManager(),
+            main.getCommandManager()
+                .getAdminExecuteActionCommandBuilder()
+                .meta(CommandMeta.DESCRIPTION, "Executes a new " + identifier + " action inline")
+                .flag(playerSelectorCommandFlag)
+                .flag(main.getCommandManager().delayFlag),
+            ActionFor.INLINE); // For inline /qa actions execute
       } else {
         commandHandler.invoke(
             action,
@@ -186,6 +206,19 @@ public class ActionManager {
                 .flag(main.getCommandManager().categoryFlag)
                 .flag(main.getCommandManager().delayFlag),
             ActionFor.ActionsYML); // For Actions.yml
+
+
+        commandHandler.invoke(
+            action,
+            main,
+            main.getCommandManager().getPaperCommandManager(),
+            main.getCommandManager()
+                .getAdminExecuteActionCommandBuilder()
+                .literal(identifier)
+                .meta(CommandMeta.DESCRIPTION, "Executes a new " + identifier + " action inline")
+                .flag(playerSelectorCommandFlag)
+                .flag(main.getCommandManager().delayFlag),
+            ActionFor.INLINE); // For inline /qa actions execute
       }
 
     } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
@@ -218,7 +251,7 @@ public class ActionManager {
     return actions.keySet();
   }
 
-  public void addAction(final Action action, final CommandContext<CommandSender> context) {
+  public void addAction(final Action action, final CommandContext<CommandSender> context, final ActionFor actionFor) {
     final Quest quest = context.getOrDefault("quest", null);
     Objective objectiveOfQuest = null;
     if (quest != null && context.contains("Objective ID")) {
@@ -227,6 +260,18 @@ public class ActionManager {
     }
     final String actionIdentifier =
         context.getOrDefault("Action Identifier", context.getOrDefault("action", ""));
+
+    if (context.flags().contains(main.getCommandManager().delayFlag)) {
+      final Duration delayDuration =
+          context
+              .flags()
+              .getValue(
+                  main.getCommandManager().delayFlag,
+                  null);
+      if(delayDuration != null){
+        action.setExecutionDelay(delayDuration.toMillis());
+      }
+    }
 
     if (quest != null) {
       action.setQuest(quest);
@@ -264,43 +309,49 @@ public class ActionManager {
                         + "</highlight>!"));
       }
     } else {
-      if (actionIdentifier != null && !actionIdentifier.isBlank()) { // actions.yml
-        if (context.flags().contains(main.getCommandManager().categoryFlag)) {
-          final Category category =
-              context
-                  .flags()
-                  .getValue(
-                      main.getCommandManager().categoryFlag,
-                      main.getDataManager().getDefaultCategory());
-          action.setCategory(category);
-        }
-        if (context.flags().contains(main.getCommandManager().delayFlag)) {
-          final Duration delayDuration =
-              context
-                  .flags()
-                  .getValue(
-                      main.getCommandManager().delayFlag,
-                      null);
-          if(delayDuration != null){
-            action.setExecutionDelay(delayDuration.toMillis());
-          }
-        }
+      if(actionFor == ActionFor.INLINE){
+        //Execute action here
+        final SinglePlayerSelector singlePlayerSelector = context.flags().getValue(playerSelectorCommandFlag, null);
 
-
-        if (main.getActionsYMLManager().getAction(actionIdentifier) == null) {
-          context
-              .getSender()
-              .sendMessage(
-                  main.parse(main.getActionsYMLManager().addAction(actionIdentifier, action)));
-
+        final UUID uuid;
+        if(singlePlayerSelector != null && singlePlayerSelector.hasAny() && singlePlayerSelector.getPlayer() != null){
+          uuid = singlePlayerSelector.getPlayer().getUniqueId();
+        }else if(context.getSender() instanceof final Player senderPlayer){
+          uuid = senderPlayer.getUniqueId();
         } else {
-          context
-              .getSender()
-              .sendMessage(
-                  main.parse(
-                      "<error>Error! An action with the name <highlight>"
-                          + actionIdentifier
-                          + "</highlight> already exists!"));
+          uuid = null;
+        }
+
+        if(uuid != null){
+          action.execute(main.getQuestPlayerManager().getOrCreateQuestPlayer(uuid));
+        }
+      }else{
+        if (actionIdentifier != null && !actionIdentifier.isBlank()) { // actions.yml
+          if (context.flags().contains(main.getCommandManager().categoryFlag)) {
+            final Category category =
+                context
+                    .flags()
+                    .getValue(
+                        main.getCommandManager().categoryFlag,
+                        main.getDataManager().getDefaultCategory());
+            action.setCategory(category);
+          }
+
+          if (main.getActionsYMLManager().getAction(actionIdentifier) == null) {
+            context
+                .getSender()
+                .sendMessage(
+                    main.parse(main.getActionsYMLManager().addAction(actionIdentifier, action)));
+
+          } else {
+            context
+                .getSender()
+                .sendMessage(
+                    main.parse(
+                        "<error>Error! An action with the name <highlight>"
+                            + actionIdentifier
+                            + "</highlight> already exists!"));
+          }
         }
       }
     }
@@ -434,6 +485,17 @@ public class ActionManager {
                   .flag(main.getCommandManager().categoryFlag)
                   .flag(main.getCommandManager().delayFlag),
               ActionFor.ActionsYML); // For Actions.yml
+
+          commandHandler.invoke(
+              action,
+              main,
+              main.getCommandManager().getPaperCommandManager(),
+              main.getCommandManager()
+                  .getAdminExecuteActionCommandBuilder()
+                  .meta(CommandMeta.DESCRIPTION, "Executes a new " + identifier + " action inline")
+                  .flag(playerSelectorCommandFlag)
+                  .flag(main.getCommandManager().delayFlag),
+              ActionFor.INLINE); // For inline /qa actions execute
         }
       }
     } catch (final Exception e) {

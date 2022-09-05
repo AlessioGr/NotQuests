@@ -56,7 +56,7 @@ public class StringAction extends Action {
         additionalBooleanArguments = new HashMap<>();
     }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor actionFor) {
 
         for(String variableString : main.getVariablesManager().getVariableIdentifiers()){
 
@@ -122,7 +122,7 @@ public class StringAction extends Action {
                         stringAction.setAdditionalBooleanArguments(additionalBooleanArguments);
 
 
-                        main.getActionManager().addAction(stringAction, context);
+                        main.getActionManager().addAction(stringAction, context, actionFor);
 
                     })
             );

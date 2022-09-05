@@ -100,7 +100,7 @@ public abstract class Action {
   public abstract String getActionDescription(
       final QuestPlayer questPlayer, final Object... objects);
 
-  public abstract void executeInternally(final QuestPlayer questPlayer, Object... objects);
+  protected abstract void executeInternally(final QuestPlayer questPlayer, Object... objects);
 
   public void execute(final QuestPlayer questPlayer, Object... objects) {
     execute(questPlayer, -1, objects);

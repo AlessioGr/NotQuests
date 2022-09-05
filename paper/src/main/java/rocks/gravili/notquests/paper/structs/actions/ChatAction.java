@@ -25,7 +25,7 @@ public class ChatAction extends Action {
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
       Command.Builder<CommandSender> builder,
-      ActionFor rewardFor) {
+      ActionFor actionFor) {
     manager.command(
         builder
             .argument(
@@ -48,7 +48,7 @@ public class ChatAction extends Action {
                   final ChatAction chatAction = new ChatAction(main);
                   chatAction.setChatMessage(chatMessage);
 
-                  main.getActionManager().addAction(chatAction, context);
+                  main.getActionManager().addAction(chatAction, context, actionFor);
                 }));
   }
 

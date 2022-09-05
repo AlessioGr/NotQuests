@@ -57,7 +57,7 @@ public class SpawnMobAction extends Action {
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
       Command.Builder<CommandSender> builder,
-      ActionFor rewardFor) {
+      ActionFor actionFor) {
     CommandFlag<Integer> spawnRadiusX =
         CommandFlag.newBuilder("spawnRadiusX")
             .withArgument(
@@ -109,7 +109,7 @@ public class SpawnMobAction extends Action {
                   spawnMobAction.setSpawnRadiusY(spawnRadiusYValue);
                   spawnMobAction.setSpawnRadiusZ(spawnRadiusZValue);
 
-                  main.getActionManager().addAction(spawnMobAction, context);
+                  main.getActionManager().addAction(spawnMobAction, context, actionFor);
                 }));
 
     manager.command(
@@ -154,7 +154,7 @@ public class SpawnMobAction extends Action {
 
                   spawnMobAction.setSpawnLocation(location);
 
-                  main.getActionManager().addAction(spawnMobAction, context);
+                  main.getActionManager().addAction(spawnMobAction, context, actionFor);
                 }));
   }
 

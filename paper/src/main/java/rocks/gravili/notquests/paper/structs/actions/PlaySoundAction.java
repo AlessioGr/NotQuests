@@ -48,7 +48,7 @@ public class PlaySoundAction extends Action {
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
       Command.Builder<CommandSender> builder,
-      ActionFor rewardFor) {
+      ActionFor actionFor) {
 
     final CommandFlag<Float> volumeFlag =
         CommandFlag.newBuilder("volume")
@@ -180,7 +180,7 @@ public class PlaySoundAction extends Action {
                   }
 
 
-                  main.getActionManager().addAction(playSoundAction, context);
+                  main.getActionManager().addAction(playSoundAction, context, actionFor);
                 }));
   }
 

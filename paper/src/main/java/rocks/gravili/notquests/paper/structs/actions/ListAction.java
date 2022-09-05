@@ -57,7 +57,7 @@ public class ListAction extends Action {
         additionalBooleanArguments = new HashMap<>();
     }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor actionFor) {
         for(String variableString : main.getVariablesManager().getVariableIdentifiers()){
 
             Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
@@ -122,7 +122,7 @@ public class ListAction extends Action {
                         }
                         listAction.setAdditionalBooleanArguments(additionalBooleanArguments);
 
-                        main.getActionManager().addAction(listAction, context);
+                        main.getActionManager().addAction(listAction, context, actionFor);
                     })
             );
         }

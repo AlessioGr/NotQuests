@@ -52,7 +52,7 @@ public class BetonQuestFireInlineEventAction extends Action {
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
       Command.Builder<CommandSender> builder,
-      ActionFor rewardFor) {
+      ActionFor actionFor) {
     manager.command(
         builder
             .argument(
@@ -163,7 +163,7 @@ public class BetonQuestFireInlineEventAction extends Action {
                       new BetonQuestFireInlineEventAction(main);
                   betonQuestFireInlineEventAction.setEvent(event);
 
-                  main.getActionManager().addAction(betonQuestFireInlineEventAction, context);
+                  main.getActionManager().addAction(betonQuestFireInlineEventAction, context, actionFor);
                 }));
   }
 

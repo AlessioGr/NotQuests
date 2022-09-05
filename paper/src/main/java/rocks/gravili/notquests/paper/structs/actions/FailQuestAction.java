@@ -42,7 +42,7 @@ public class FailQuestAction extends Action {
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
       Command.Builder<CommandSender> builder,
-      ActionFor rewardFor) {
+      ActionFor actionFor) {
     manager.command(
         builder
             .argument(
@@ -55,7 +55,7 @@ public class FailQuestAction extends Action {
                   FailQuestAction failQuestAction = new FailQuestAction(main);
                   failQuestAction.setQuestToFailName(foundQuest.getQuestName());
 
-                  main.getActionManager().addAction(failQuestAction, context);
+                  main.getActionManager().addAction(failQuestAction, context, actionFor);
                 }));
   }
 

@@ -42,7 +42,7 @@ public class ConsoleCommandAction extends Action {
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
       Command.Builder<CommandSender> builder,
-      ActionFor rewardFor) {
+      ActionFor actionFor) {
     manager.command(
         builder
             .argument(
@@ -57,7 +57,7 @@ public class ConsoleCommandAction extends Action {
                   ConsoleCommandAction consoleCommandAction = new ConsoleCommandAction(main);
                   consoleCommandAction.setConsoleCommand(consoleCommand);
 
-                  main.getActionManager().addAction(consoleCommandAction, context);
+                  main.getActionManager().addAction(consoleCommandAction, context, actionFor);
                 }));
   }
 

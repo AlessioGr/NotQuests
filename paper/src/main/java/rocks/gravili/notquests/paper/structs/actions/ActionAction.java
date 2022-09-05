@@ -57,7 +57,7 @@ public class ActionAction extends Action {
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
       Command.Builder<CommandSender> builder,
-      ActionFor rewardFor) {
+      ActionFor actionFor) {
 
     CommandFlag<Integer> minRandomFlag =
         CommandFlag.newBuilder("minRandom")
@@ -144,7 +144,7 @@ public class ActionAction extends Action {
                     }
                   }
 
-                  main.getActionManager().addAction(actionAction, context);
+                  main.getActionManager().addAction(actionAction, context, actionFor);
                 }));
   }
 

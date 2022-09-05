@@ -43,7 +43,7 @@ public class GiveQuestAction extends Action {
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
       Command.Builder<CommandSender> builder,
-      ActionFor rewardFor) {
+      ActionFor actionFor) {
     manager.command(
         builder
             .argument(
@@ -64,7 +64,7 @@ public class GiveQuestAction extends Action {
                   giveQuestAction.setQuestToGiveName(foundQuest.getQuestName());
                   giveQuestAction.setForceGive(forceGive);
 
-                  main.getActionManager().addAction(giveQuestAction, context);
+                  main.getActionManager().addAction(giveQuestAction, context, actionFor);
                 }));
   }
 
