@@ -112,7 +112,7 @@ public abstract class Action {
     if(getExecutionDelay() == -1){
       executeInternally(questPlayer, objects);
     }else{
-      Bukkit.getScheduler().runTaskLater(main.getMain(), () -> executeInternally(questPlayer, objects), getExecutionDelay()/20000);
+      Bukkit.getScheduler().runTaskLater(main.getMain(), () -> executeInternally(questPlayer, objects), getExecutionDelay()/50);
     }
   }
 
