@@ -86,6 +86,7 @@ import rocks.gravili.notquests.paper.structs.variables.hooks.FloodgateIsFloodgat
 import rocks.gravili.notquests.paper.structs.variables.hooks.PlaceholderAPINumberVariable;
 import rocks.gravili.notquests.paper.structs.variables.hooks.PlaceholderAPIStringVariable;
 import rocks.gravili.notquests.paper.structs.variables.hooks.ProjectKorraElementsVariable;
+import rocks.gravili.notquests.paper.structs.variables.hooks.ProjectKorraIsBenderVariable;
 import rocks.gravili.notquests.paper.structs.variables.hooks.ProjectKorraSubElementsVariable;
 import rocks.gravili.notquests.paper.structs.variables.hooks.TownyNationNameVariable;
 import rocks.gravili.notquests.paper.structs.variables.hooks.TownyNationTownCountVariable;
@@ -206,6 +207,7 @@ public class VariablesManager {
     if (main.getIntegrationsManager().isProjectKorraEnabled()) {
       registerVariable("ProjectKorraElements", ProjectKorraElementsVariable.class);
       registerVariable("ProjectKorraSubElements", ProjectKorraSubElementsVariable.class);
+      registerVariable("ProjectKorraIsBender", ProjectKorraIsBenderVariable.class);
     }
 
     if (main.getIntegrationsManager().isBetonQuestEnabled()) {
