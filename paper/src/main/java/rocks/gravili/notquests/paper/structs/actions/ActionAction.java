@@ -30,10 +30,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.MultipleActionsSelector;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -199,61 +197,6 @@ public class ActionAction extends Action {
     this.ignoreConditions = ignoreConditions;
   }
 
-  public void executeInternallyV2(final QuestPlayer questPlayer, Object... objects) {
-    if (minRandom == -1 && maxRandom == -1) {
-      for (final Action action : getActions()) {
-        if (!isIgnoreConditions()) {
-          if (amount == 1) {
-            main.getActionManager()
-                .executeActionWithConditions(action, questPlayer, null, true, objects);
-          } else {
-            for (int i = 0; i < amount; i++) {
-              main.getActionManager()
-                  .executeActionWithConditions(action, questPlayer, null, true, objects);
-            }
-          }
-        } else {
-          if (amount == 1) {
-            action.execute(questPlayer, objects);
-          } else {
-            for (int i = 0; i < amount; i++) {
-              action.execute(questPlayer, objects);
-            }
-          }
-        }
-      }
-    } else {
-      Collections.shuffle(getActions());
-      final Random r = new Random();
-      final int low = getMinRandom();
-      final int high = getMaxRandom();
-      int amountOfActionsToExecute = (low == high) ? low : r.nextInt(high + 1 - low) + low;
-
-      for (int a = 0; a < amount; a++) {
-        for (int i = 0; i <= amountOfActionsToExecute - 1; i++) {
-          if (i >= getActions().size()) {
-            break;
-          }
-          final Action actionToExecute = getActions().get(i);
-
-          if (!isIgnoreConditions() && isOnlyCountForRandomIfConditionsFulfilled()) {
-            for (Condition condition : actionToExecute.getConditions()) {
-              if (!condition.check(questPlayer).fulfilled()) {
-                amountOfActionsToExecute++;
-                continue;
-              }
-            }
-            actionToExecute.execute(questPlayer, objects);
-          } else if (!isIgnoreConditions()) {
-            main.getActionManager()
-                .executeActionWithConditions(actionToExecute, questPlayer, null, true, objects);
-          } else {
-            actionToExecute.execute(questPlayer, objects);
-          }
-        }
-      }
-    }
-  }
     @Override
   public void executeInternally(final QuestPlayer questPlayer, Object... objects) {
     if (actions == null || actions.isEmpty()) {
@@ -264,10 +207,58 @@ public class ActionAction extends Action {
     main.getLogManager()
         .debug("Executing Action action. IsIgnoreConditions: " + isIgnoreConditions());
 
-      if(getExecutedActionDelay() == -1){
-        executeInternallyV2(questPlayer, objects);
-      }else{
-        Bukkit.getScheduler().runTaskLater(main.getMain(), () -> executeInternallyV2(questPlayer, objects), getExecutedActionDelay()/50);
+      if (minRandom == -1 && maxRandom == -1) {
+        for (final Action action : getActions()) {
+          if (!isIgnoreConditions()) {
+            if (amount == 1) {
+              main.getActionManager()
+                  .executeActionWithConditions(action, questPlayer, null, true, getExecutedActionDelay(), objects);
+            } else {
+              for (int i = 0; i < amount; i++) {
+                main.getActionManager()
+                    .executeActionWithConditions(action, questPlayer, null, true, getExecutedActionDelay(), objects);
+              }
+            }
+          } else {
+            if (amount == 1) {
+              action.execute(questPlayer, getExecutedActionDelay(), objects);
+            } else {
+              for (int i = 0; i < amount; i++) {
+                action.execute(questPlayer, getExecutedActionDelay(), objects);
+              }
+            }
+          }
+        }
+      } else {
+        Collections.shuffle(getActions());
+        final Random r = new Random();
+        final int low = getMinRandom();
+        final int high = getMaxRandom();
+        int amountOfActionsToExecute = (low == high) ? low : r.nextInt(high + 1 - low) + low;
+
+        for (int a = 0; a < amount; a++) {
+          for (int i = 0; i <= amountOfActionsToExecute - 1; i++) {
+            if (i >= getActions().size()) {
+              break;
+            }
+            final Action actionToExecute = getActions().get(i);
+
+            if (!isIgnoreConditions() && isOnlyCountForRandomIfConditionsFulfilled()) {
+              for (final Condition condition : actionToExecute.getConditions()) {
+                if (!condition.check(questPlayer).fulfilled()) {
+                  amountOfActionsToExecute++;
+                  continue;
+                }
+              }
+              actionToExecute.execute(questPlayer, getExecutedActionDelay(), objects);
+            } else if (!isIgnoreConditions()) {
+              main.getActionManager()
+                  .executeActionWithConditions(actionToExecute, questPlayer, null, true, getExecutedActionDelay(), objects);
+            } else {
+              actionToExecute.execute(questPlayer, getExecutedActionDelay(), objects);
+            }
+          }
+        }
       }
   }
 

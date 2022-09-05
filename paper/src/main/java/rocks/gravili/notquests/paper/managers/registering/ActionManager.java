@@ -312,6 +312,15 @@ public class ActionManager {
       final CommandSender sender,
       final boolean silent,
       final Object... objects) {
+    executeActionWithConditions(action, questPlayer, sender, silent,-1, null, objects);
+  }
+  public void executeActionWithConditions(
+      final Action action,
+      final QuestPlayer questPlayer,
+      final CommandSender sender,
+      final boolean silent,
+      final int delay,
+      final Object... objects) {
     main.getLogManager()
         .debug(
             "Executing Action "
@@ -328,7 +337,7 @@ public class ActionManager {
 
     if (action.getConditions().size() == 0) {
       main.getLogManager().debug("   Skipping Conditions");
-      action.execute(questPlayer, objects);
+      action.execute(questPlayer, delay, objects);
       if (!silent) {
         sender.sendMessage(
             main.parse(
