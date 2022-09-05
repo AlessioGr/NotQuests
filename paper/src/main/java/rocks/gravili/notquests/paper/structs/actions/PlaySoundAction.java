@@ -52,7 +52,7 @@ public class PlaySoundAction extends Action {
 
     final CommandFlag<Float> volumeFlag =
         CommandFlag.newBuilder("volume")
-            .withArgument(FloatArgument.newBuilder("volume").withMin(0).withMax(1).build())
+            .withArgument(FloatArgument.newBuilder("volume").withMin(0).build())
             .withDescription(ArgumentDescription.of("Sound volume (between 0 and 1)"))
             .build();
     final CommandFlag<Float> pitchFlag =
