@@ -23,6 +23,7 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.arguments.parser.ArgumentParseResult;
 import cloud.commandframework.arguments.standard.DoubleArgument;
+import cloud.commandframework.arguments.standard.DurationArgument;
 import cloud.commandframework.arguments.standard.FloatArgument;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.LongArgument;
@@ -42,6 +43,7 @@ import cloud.commandframework.paper.PaperCommandManager;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import io.leangen.geantyref.TypeToken;
 import java.lang.reflect.Field;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -83,6 +85,8 @@ public class CommandManager {
   public CommandFlag<String> taskDescription;
   public CommandFlag<Integer> maxDistance;
   public CommandFlag<Category> categoryFlag;
+  public CommandFlag<Duration> delayFlag;
+
   public CommandFlag<String> speakerColor;
   public CommandFlag<Integer> applyOn; // 0 = Quest
   public CommandFlag<World> world;
@@ -322,6 +326,11 @@ public class CommandManager {
         CommandFlag.newBuilder("category")
             .withArgument(CategorySelector.of("category", main))
             .withDescription(ArgumentDescription.of("Category name"))
+            .build();
+    delayFlag =
+        CommandFlag.newBuilder("delay")
+            .withArgument(DurationArgument.of("delay"))
+            .withDescription(ArgumentDescription.of("Delay in milliseconds"))
             .build();
 
     locationX =

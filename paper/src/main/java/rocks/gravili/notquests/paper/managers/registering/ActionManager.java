@@ -24,6 +24,7 @@ import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.time.Duration;
 import java.util.Collection;
 import java.util.HashMap;
 import org.bukkit.command.CommandSender;
@@ -152,7 +153,8 @@ public class ActionManager {
             main.getCommandManager()
                 .getAdminAddActionCommandBuilder()
                 .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action")
-                .flag(main.getCommandManager().categoryFlag),
+                .flag(main.getCommandManager().categoryFlag)
+                .flag(main.getCommandManager().delayFlag),
             ActionFor.ActionsYML); // For Actions.yml
       } else {
         commandHandler.invoke(
@@ -181,7 +183,8 @@ public class ActionManager {
                 .getAdminAddActionCommandBuilder()
                 .literal(identifier)
                 .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action")
-                .flag(main.getCommandManager().categoryFlag),
+                .flag(main.getCommandManager().categoryFlag)
+                .flag(main.getCommandManager().delayFlag),
             ActionFor.ActionsYML); // For Actions.yml
       }
 
@@ -271,6 +274,18 @@ public class ActionManager {
                       main.getDataManager().getDefaultCategory());
           action.setCategory(category);
         }
+        if (context.flags().contains(main.getCommandManager().delayFlag)) {
+          final Duration delayDuration =
+              context
+                  .flags()
+                  .getValue(
+                      main.getCommandManager().delayFlag,
+                      null);
+          if(delayDuration != null){
+            action.setExecutionDelay(delayDuration.toMillis());
+          }
+        }
+
 
         if (main.getActionsYMLManager().getAction(actionIdentifier) == null) {
           context
@@ -407,7 +422,8 @@ public class ActionManager {
               main.getCommandManager()
                   .getAdminAddActionCommandBuilder()
                   .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action")
-                  .flag(main.getCommandManager().categoryFlag),
+                  .flag(main.getCommandManager().categoryFlag)
+                  .flag(main.getCommandManager().delayFlag),
               ActionFor.ActionsYML); // For Actions.yml
         }
       }
