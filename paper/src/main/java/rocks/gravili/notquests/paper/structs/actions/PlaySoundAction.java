@@ -236,7 +236,6 @@ public class PlaySoundAction extends Action {
 
     this.playForEveryoneAtTheirLocation = configuration.getBoolean(initialPath + ".specifics.playForEveryoneAtTheirLocation", false);
     this.playForEveryoneAtSetLocation = configuration.getBoolean(initialPath + ".specifics.playForEveryoneAtSetLocation", false);
-
   }
 
   @Override
