@@ -66,7 +66,7 @@ public class PlaySoundAction extends Action {
                   final ArrayList<String> completions = new ArrayList<>();
 
                   for (final Sound sound : Sound.values()) {
-                    completions.add("" + sound.name());
+                    completions.add("" + sound.getKey().asString());
                   }
                   return completions;
                 }
