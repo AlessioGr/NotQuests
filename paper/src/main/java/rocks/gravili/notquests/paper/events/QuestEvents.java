@@ -40,6 +40,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Sheep;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -62,6 +63,7 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.inventory.CraftingInventory;
@@ -89,6 +91,7 @@ import rocks.gravili.notquests.paper.structs.objectives.OpenBuriedTreasureObject
 import rocks.gravili.notquests.paper.structs.objectives.PlaceBlocksObjective;
 import rocks.gravili.notquests.paper.structs.objectives.ReachLocationObjective;
 import rocks.gravili.notquests.paper.structs.objectives.RunCommandObjective;
+import rocks.gravili.notquests.paper.structs.objectives.ShearSheepObjective;
 import rocks.gravili.notquests.paper.structs.objectives.SmeltObjective;
 import rocks.gravili.notquests.paper.structs.objectives.SneakObjective;
 import rocks.gravili.notquests.paper.structs.triggers.ActiveTrigger;
@@ -1299,7 +1302,25 @@ public class QuestEvents implements Listener {
     }
 
 
-
+    @EventHandler(ignoreCancelled = true)
+    public void onShearSheep(final PlayerShearEntityEvent e) {
+        if (e.getEntity() instanceof Sheep) {
+            final Player player = e.getPlayer();
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
+                return;
+            }
+            questPlayer.queueObjectiveCheck(activeObjective -> {
+                if (activeObjective.getObjective() instanceof final ShearSheepObjective shearSheepObjective) {
+                    activeObjective.addProgress(1);
+                    if(shearSheepObjective.isCancelShearing()){
+                        e.setCancelled(true);
+                    }
+                }
+            });
+            questPlayer.checkQueuedObjectives();
+        }
+    }
 
 
 

@@ -48,6 +48,7 @@ import rocks.gravili.notquests.paper.structs.objectives.OtherQuestObjective;
 import rocks.gravili.notquests.paper.structs.objectives.PlaceBlocksObjective;
 import rocks.gravili.notquests.paper.structs.objectives.ReachLocationObjective;
 import rocks.gravili.notquests.paper.structs.objectives.RunCommandObjective;
+import rocks.gravili.notquests.paper.structs.objectives.ShearSheepObjective;
 import rocks.gravili.notquests.paper.structs.objectives.SmeltObjective;
 import rocks.gravili.notquests.paper.structs.objectives.SneakObjective;
 import rocks.gravili.notquests.paper.structs.objectives.TalkToNPCObjective;
@@ -101,6 +102,8 @@ public class ObjectiveManager {
     registerObjective("Sneak", SneakObjective.class);
     registerObjective("SmeltItems", SmeltObjective.class);
     registerObjective("OpenBuriedTreasure", OpenBuriedTreasureObjective.class);
+    registerObjective("ShearSheep", ShearSheepObjective.class);
+
     registerObjective("NumberVariable", NumberVariableObjective.class); //Special
 
     // Towny
