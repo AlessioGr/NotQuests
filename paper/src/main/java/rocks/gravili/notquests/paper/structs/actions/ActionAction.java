@@ -21,13 +21,16 @@ package rocks.gravili.notquests.paper.structs.actions;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.flags.CommandFlag;
+import cloud.commandframework.arguments.standard.DurationArgument;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.paper.PaperCommandManager;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -45,6 +48,8 @@ public class ActionAction extends Action {
   private int minRandom = -1;
   private int maxRandom = -1;
   private boolean onlyCountForRandomIfConditionsFulfilled = false;
+
+  private long executedActionDelay = -1; // Cooldown in milliseconds. -1 or smaller => no cooldown.
 
   public ActionAction(final NotQuests main) {
     super(main);
@@ -78,6 +83,12 @@ public class ActionAction extends Action {
                     "If this is set, it will only execute a random amount of quests with this maximum"))
             .build();
 
+    CommandFlag<Duration> executedActionDelay =
+        CommandFlag.newBuilder("executedActionDelay")
+            .withArgument(DurationArgument.of("delay"))
+            .withDescription(ArgumentDescription.of("Delay in milliseconds"))
+            .build();
+
     manager.command(
         builder
             .argument(
@@ -94,6 +105,7 @@ public class ActionAction extends Action {
                     .withDescription(ArgumentDescription.of("Ignores action conditions")))
             .flag(minRandomFlag)
             .flag(maxRandomFlag)
+            .flag(executedActionDelay)
             .flag(
                 manager
                     .flagBuilder("onlyCountForRandomIfConditionsFulfilled")
@@ -102,8 +114,8 @@ public class ActionAction extends Action {
                             "Does not count an action to the min or max random counter if its conditions are not fulfilled, if this flag is set")))
             .handler(
                 (context) -> {
-                  ArrayList<Action> foundActions = context.get("Actions");
-                  int amount = context.get("amount");
+                  final ArrayList<Action> foundActions = context.get("Actions");
+                  final int amount = context.get("amount");
                   final boolean ignoreConditions = context.flags().isPresent("ignoreConditions");
 
                   final int minRandom = context.flags().getValue(minRandomFlag, -1);
@@ -111,7 +123,7 @@ public class ActionAction extends Action {
                   final boolean onlyCountForRandomIfConditionsFulfilled =
                       context.flags().isPresent("onlyCountForRandomIfConditionsFulfilled");
 
-                  ActionAction actionAction = new ActionAction(main);
+                  final ActionAction actionAction = new ActionAction(main);
                   actionAction.setActions(foundActions);
                   actionAction.setAmount(amount);
 
@@ -121,6 +133,18 @@ public class ActionAction extends Action {
                       onlyCountForRandomIfConditionsFulfilled);
 
                   actionAction.setIgnoreConditions(ignoreConditions);
+
+                  if (context.flags().contains(executedActionDelay)) {
+                    final Duration delayDuration =
+                        context
+                            .flags()
+                            .getValue(
+                                executedActionDelay,
+                                null);
+                    if(delayDuration != null){
+                      actionAction.setExecutedActionDelay(delayDuration.toMillis());
+                    }
+                  }
 
                   main.getActionManager().addAction(actionAction, context);
                 }));
@@ -175,18 +199,7 @@ public class ActionAction extends Action {
     this.ignoreConditions = ignoreConditions;
   }
 
-  @Override
-  public void executeInternally(final QuestPlayer questPlayer, Object... objects) {
-    if (actions == null || actions.isEmpty()) {
-      main.getLogManager().warn("Tried to execute Action Action action with no valid actions.");
-      return;
-    }
-
-    main.getLogManager()
-        .debug("Executing Action action. IsIgnoreConditions: " + isIgnoreConditions());
-
-    final Player player = questPlayer.getPlayer();
-
+  public void executeInternallyV2(final QuestPlayer questPlayer, Object... objects) {
     if (minRandom == -1 && maxRandom == -1) {
       for (final Action action : getActions()) {
         if (!isIgnoreConditions()) {
@@ -241,6 +254,22 @@ public class ActionAction extends Action {
       }
     }
   }
+    @Override
+  public void executeInternally(final QuestPlayer questPlayer, Object... objects) {
+    if (actions == null || actions.isEmpty()) {
+      main.getLogManager().warn("Tried to execute Action Action action with no valid actions.");
+      return;
+    }
+
+    main.getLogManager()
+        .debug("Executing Action action. IsIgnoreConditions: " + isIgnoreConditions());
+
+      if(getExecutedActionDelay() == -1){
+        executeInternallyV2(questPlayer, objects);
+      }else{
+        Bukkit.getScheduler().runTaskLater(main.getMain(), () -> executeInternallyV2(questPlayer, objects), getExecutedActionDelay()/50);
+      }
+  }
 
   @Override
   public void save(FileConfiguration configuration, String initialPath) {
@@ -264,6 +293,9 @@ public class ActionAction extends Action {
     configuration.set(
         initialPath + ".specifics.onlyCountForRandomIfConditionsFulfilled",
         isOnlyCountForRandomIfConditionsFulfilled());
+    if(getExecutedActionDelay() != -1){
+      configuration.set(initialPath + ".specifics.executedActionDelay", getExecutedActionDelay());
+    }
   }
 
   @Override
@@ -271,7 +303,7 @@ public class ActionAction extends Action {
     this.actions = new ArrayList<>();
 
     if (configuration.contains(initialPath + ".specifics.actions")) {
-      List<String> actionNames = configuration.getStringList(initialPath + ".specifics.actions");
+      final List<String> actionNames = configuration.getStringList(initialPath + ".specifics.actions");
       for (String actionName : actionNames) {
         final Action action = main.getActionsYMLManager().getAction(actionName);
         if (action == null) {
@@ -309,6 +341,9 @@ public class ActionAction extends Action {
     this.onlyCountForRandomIfConditionsFulfilled =
         configuration.getBoolean(
             initialPath + ".specifics.onlyCountForRandomIfConditionsFulfilled", false);
+    this.executedActionDelay = configuration.getInt(initialPath + ".specifics.executedActionDelay", -1);
+
+
   }
 
   @Override
@@ -343,5 +378,13 @@ public class ActionAction extends Action {
   @Override
   public String getActionDescription(final QuestPlayer questPlayer, final Object... objects) {
     return "Executes Actions: " + getActions().toString();
+  }
+
+  public long getExecutedActionDelay() {
+    return executedActionDelay;
+  }
+
+  public void setExecutedActionDelay(long executedActionDelay) {
+    this.executedActionDelay = executedActionDelay;
   }
 }
