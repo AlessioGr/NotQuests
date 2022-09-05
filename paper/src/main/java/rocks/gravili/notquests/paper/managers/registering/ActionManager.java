@@ -47,6 +47,7 @@ import rocks.gravili.notquests.paper.structs.actions.ItemStackListAction;
 import rocks.gravili.notquests.paper.structs.actions.ListAction;
 import rocks.gravili.notquests.paper.structs.actions.NumberAction;
 import rocks.gravili.notquests.paper.structs.actions.ChatAction;
+import rocks.gravili.notquests.paper.structs.actions.PlaySoundAction;
 import rocks.gravili.notquests.paper.structs.actions.PlayerCommandAction;
 import rocks.gravili.notquests.paper.structs.actions.SendMessageAction;
 import rocks.gravili.notquests.paper.structs.actions.SpawnMobAction;
@@ -91,6 +92,9 @@ public class ActionManager {
     registerAction("SpawnMob", SpawnMobAction.class);
     registerAction("SendMessage", SendMessageAction.class);
     registerAction("BroadcastMessage", BroadcastMessageAction.class);
+
+    registerAction("PlaySound", PlaySoundAction.class);
+
 
     registerAction("Number", NumberAction.class);
     registerAction("String", StringAction.class);

@@ -22,6 +22,8 @@ import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.arguments.parser.ArgumentParseResult;
+import cloud.commandframework.arguments.standard.DoubleArgument;
+import cloud.commandframework.arguments.standard.FloatArgument;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.LongArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
@@ -84,6 +86,10 @@ public class CommandManager {
   public CommandFlag<String> speakerColor;
   public CommandFlag<Integer> applyOn; // 0 = Quest
   public CommandFlag<World> world;
+  public CommandFlag<Double> locationX;
+  public CommandFlag<Double> locationY;
+  public CommandFlag<Double> locationZ;
+
   public CommandFlag<String> triggerWorldString;
   public CommandFlag<Long> minimumTimeAfterCompletion;
   public CommandFlag<String> withProjectKorraAbilityFlag;
@@ -316,6 +322,24 @@ public class CommandManager {
         CommandFlag.newBuilder("category")
             .withArgument(CategorySelector.of("category", main))
             .withDescription(ArgumentDescription.of("Category name"))
+            .build();
+
+    locationX =
+        CommandFlag.newBuilder("locationX")
+            .withArgument(DoubleArgument.of("locationX"))
+            .withDescription(ArgumentDescription.of("Enter x coordinate location"))
+            .build();
+
+    locationY =
+        CommandFlag.newBuilder("locationY")
+            .withArgument(DoubleArgument.of("locationY"))
+            .withDescription(ArgumentDescription.of("Enter y coordinate location"))
+            .build();
+
+    locationZ =
+        CommandFlag.newBuilder("locationZ")
+            .withArgument(DoubleArgument.of("locationZ"))
+            .withDescription(ArgumentDescription.of("Enter z coordinate location"))
             .build();
   }
 
