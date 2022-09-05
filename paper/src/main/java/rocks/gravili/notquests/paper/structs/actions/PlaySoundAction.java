@@ -12,6 +12,7 @@ import java.util.Locale;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -22,6 +23,9 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
 public class PlaySoundAction extends Action {
 
   private String soundName = "";
+
+  private String soundCategory = "master";
+
   private boolean stopOtherSounds = false;
 
   private boolean playForEveryoneAtSetLocation = false;
@@ -56,12 +60,30 @@ public class PlaySoundAction extends Action {
             .withArgument(FloatArgument.newBuilder("pitch").withMin(0).withMax(1).build())
             .withDescription(ArgumentDescription.of("Sound pitch (between 0 and 1)"))
             .build();
+
+    final CommandFlag<String> soundCategoryFlag =
+        CommandFlag.newBuilder("SoundCategory")
+            .withArgument(StringArgument.<CommandSender>newBuilder("SoundCategory").withSuggestionsProvider(
+                (context, lastString) -> {
+                  final List<String> allArgs = context.getRawInput();
+                  main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Sound category]", "");
+
+                  final ArrayList<String> completions = new ArrayList<>();
+
+                  for (final SoundCategory soundCategory : SoundCategory.values()) {
+                    completions.add("" + soundCategory.name().toLowerCase());
+                  }
+                  return completions;
+                }
+            ).single().build())
+            .withDescription(ArgumentDescription.of("Sound category. Default: master"))
+            .build();
     manager.command(
         builder
             .argument(StringArgument.<CommandSender>newBuilder("Sound").withSuggestionsProvider(
                 (context, lastString) -> {
                   final List<String> allArgs = context.getRawInput();
-                  main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Sound']", "");
+                  main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Sound name]", "");
 
                   final ArrayList<String> completions = new ArrayList<>();
 
@@ -95,6 +117,7 @@ public class PlaySoundAction extends Action {
             .flag(main.getCommandManager().locationZ)
             .flag(volumeFlag)
             .flag(pitchFlag)
+            .flag(soundCategoryFlag)
             .handler(
                 (context) -> {
                   final String soundName = context.get("Sound");
@@ -130,13 +153,18 @@ public class PlaySoundAction extends Action {
                           .flags()
                           .getValue(pitchFlag, -1f);
 
+                  final String soundCategoryValue =
+                      context
+                          .flags()
+                          .getValue(soundCategoryFlag, "master");
+
                   final PlaySoundAction playSoundAction =
                       new PlaySoundAction(main);
                   playSoundAction.setSoundName(soundName);
                   playSoundAction.setStopOtherSounds(stopOtherSounds);
                   playSoundAction.setPlayForEveryoneAtTheirLocation(playForEveryoneAtTheirLocationFlagResult);
                   playSoundAction.setPlayForEveryoneAtSetLocation(playForEveryoneAtSetLocationFlagResult);
-
+                  playSoundAction.setSoundCategory(soundCategoryValue);
 
                   if(world != null && locationX >= -0.02 && locationY >= -0.02 && locationZ >= -0.02){
                     playSoundAction.setWorldName(world.getName());
@@ -185,14 +213,16 @@ public class PlaySoundAction extends Action {
         location = new Location(world, locationX, locationY, locationZ);
       }
     }
+    final SoundCategory soundCategoryObject = SoundCategory.valueOf(soundCategory.toUpperCase(Locale.ROOT));
     if(isPlayForEveryoneAtTheirLocation()){
       for (final Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-        onlinePlayer.playSound(onlinePlayer.getLocation(), soundName, volume >= -0.02 ? volume : 1, pitch >= -0.02 ? pitch : 1);
+        onlinePlayer.playSound(onlinePlayer.getLocation(), soundName, soundCategoryObject,
+            volume >= -0.02 ? volume : 1, pitch >= -0.02 ? pitch : 1);
       }
     } else if(isPlayForEveryoneAtSetLocation()) {
-      location.getWorld().playSound(location, soundName, volume >= -0.02 ? volume : 1, pitch >= -0.02 ? pitch : 1);
+      location.getWorld().playSound(location, soundName, soundCategoryObject, volume >= -0.02 ? volume : 1, pitch >= -0.02 ? pitch : 1);
     } else {
-      player.playSound(location, soundName, volume >= -0.02 ? volume : 1, pitch >= -0.02 ? pitch : 1);
+      player.playSound(location, soundName, soundCategoryObject, volume >= -0.02 ? volume : 1, pitch >= -0.02 ? pitch : 1);
     }
   }
 
@@ -221,6 +251,7 @@ public class PlaySoundAction extends Action {
 
     configuration.set(initialPath + ".specifics.playForEveryoneAtTheirLocation", isPlayForEveryoneAtTheirLocation());
     configuration.set(initialPath + ".specifics.playForEveryoneAtSetLocation", isPlayForEveryoneAtSetLocation());
+    configuration.set(initialPath + ".specifics.soundCategory", getSoundCategory());
   }
 
   @Override
@@ -236,6 +267,8 @@ public class PlaySoundAction extends Action {
 
     this.playForEveryoneAtTheirLocation = configuration.getBoolean(initialPath + ".specifics.playForEveryoneAtTheirLocation", false);
     this.playForEveryoneAtSetLocation = configuration.getBoolean(initialPath + ".specifics.playForEveryoneAtSetLocation", false);
+    this.soundCategory = configuration.getString(initialPath + ".specifics.soundCategory", "master");
+
   }
 
   @Override
@@ -322,6 +355,14 @@ public class PlaySoundAction extends Action {
 
   public void setPlayForEveryoneAtTheirLocation(boolean playForEveryoneAtTheirLocation) {
     this.playForEveryoneAtTheirLocation = playForEveryoneAtTheirLocation;
+  }
+
+  public String getSoundCategory() {
+    return soundCategory;
+  }
+
+  public void setSoundCategory(String soundCategory) {
+    this.soundCategory = soundCategory;
   }
 }
 
