@@ -237,6 +237,10 @@ public class ObjectiveManager {
                   .literal(identifier)
                   .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " objective"));
 
+          //TODO Check if right? Why action stuff?
+          //TODO: Maybe remove everything below? Why is that there?
+          //TODO: I removed it for now.
+          /*
           commandHandler.invoke(
               objective,
               main,
@@ -261,7 +265,7 @@ public class ObjectiveManager {
                   .getAdminAddActionCommandBuilder()
                   .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action")
                   .flag(main.getCommandManager().categoryFlag)
-          ); // For Actions.yml
+          ); // For Actions.yml*/
         }
       }
     } catch (final Exception e) {
