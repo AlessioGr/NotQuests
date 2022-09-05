@@ -57,8 +57,8 @@ public class PlaySoundAction extends Action {
             .build();
     final CommandFlag<Float> pitchFlag =
         CommandFlag.newBuilder("pitch")
-            .withArgument(FloatArgument.newBuilder("pitch").withMin(0).withMax(1).build())
-            .withDescription(ArgumentDescription.of("Sound pitch (between 0 and 1)"))
+            .withArgument(FloatArgument.newBuilder("pitch").withMin(0).build())
+            .withDescription(ArgumentDescription.of("Sound pitch"))
             .build();
 
     final CommandFlag<String> soundCategoryFlag =
