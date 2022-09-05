@@ -312,7 +312,7 @@ public class ActionManager {
       final CommandSender sender,
       final boolean silent,
       final Object... objects) {
-    executeActionWithConditions(action, questPlayer, sender, silent,-1, null, objects);
+    executeActionWithConditions(action, questPlayer, sender, silent,-1, objects);
   }
   public void executeActionWithConditions(
       final Action action,
