@@ -84,7 +84,7 @@ public class ActionAction extends Action {
     CommandFlag<Duration> executedActionDelay =
         CommandFlag.newBuilder("executedActionDelay")
             .withArgument(DurationArgument.of("executedActionDelay"))
-            .withDescription(ArgumentDescription.of("Delay in milliseconds"))
+            .withDescription(ArgumentDescription.of("Delay its actions will be executed in milliseconds. This overrides the existing delay of sub-actions."))
             .build();
 
     manager.command(
