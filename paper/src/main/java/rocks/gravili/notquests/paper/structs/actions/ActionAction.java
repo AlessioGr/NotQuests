@@ -85,7 +85,7 @@ public class ActionAction extends Action {
 
     CommandFlag<Duration> executedActionDelay =
         CommandFlag.newBuilder("executedActionDelay")
-            .withArgument(DurationArgument.of("delay"))
+            .withArgument(DurationArgument.of("executedActionDelay"))
             .withDescription(ArgumentDescription.of("Delay in milliseconds"))
             .build();
 
