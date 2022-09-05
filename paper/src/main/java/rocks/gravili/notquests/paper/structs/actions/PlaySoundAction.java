@@ -98,12 +98,7 @@ public class PlaySoundAction extends Action {
             .handler(
                 (context) -> {
                   final String soundName = context.get("Sound");
-                  try{
-                    Sound.valueOf(soundName);
-                  }catch (IllegalArgumentException e){
-                    context.getSender().sendMessage(main.parse("<error>Error: The sound '" + soundName + "' does not exist!"));
-                    return;
-                  }
+
                   final boolean stopOtherSounds = context.flags().isPresent("stopOtherSounds");
                   final boolean playForEveryoneAtSetLocationFlagResult = context.flags().isPresent("playForEveryoneAtSetLocation");
                   final boolean playForEveryoneAtTheirLocationFlagResult = context.flags().isPresent("playForEveryoneAtTheirLocation");
@@ -179,32 +174,25 @@ public class PlaySoundAction extends Action {
 
   @Override
   public void executeInternally(final QuestPlayer questPlayer, Object... objects) {
-    try{
-      final Sound sound = Sound.valueOf(soundName);
-      final Player player = questPlayer.getPlayer();
-      if(isStopOtherSounds()){
-        player.stopAllSounds();
+    final Player player = questPlayer.getPlayer();
+    if(isStopOtherSounds()){
+      player.stopAllSounds();
+    }
+    Location location = player.getLocation();
+    if(worldName != null && locationX >= -0.02 && locationY >= -0.02 && locationZ >= -0.02){
+      final World world = Bukkit.getWorld(worldName);
+      if(world != null){
+        location = new Location(world, locationX, locationY, locationZ);
       }
-      Location location = player.getLocation();
-      if(worldName != null && locationX >= -0.02 && locationY >= -0.02 && locationZ >= -0.02){
-        final World world = Bukkit.getWorld(worldName);
-        if(world != null){
-          location = new Location(world, locationX, locationY, locationZ);
-        }
+    }
+    if(isPlayForEveryoneAtTheirLocation()){
+      for (final Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+        onlinePlayer.playSound(onlinePlayer.getLocation(), soundName, volume >= -0.02 ? volume : 1, pitch >= -0.02 ? pitch : 1);
       }
-      if(isPlayForEveryoneAtTheirLocation()){
-        for (final Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-          onlinePlayer.playSound(onlinePlayer.getLocation(), sound, volume >= -0.02 ? volume : 1, pitch >= -0.02 ? pitch : 1);
-        }
-      } else if(isPlayForEveryoneAtSetLocation()) {
-        location.getWorld().playSound(location, sound, volume >= -0.02 ? volume : 1, pitch >= -0.02 ? pitch : 1);
-      } else {
-        player.playSound(location, sound, volume >= -0.02 ? volume : 1, pitch >= -0.02 ? pitch : 1);
-      }
-    }catch (Exception e){
-      main.getLogManager().warn("Error executing PlaySound action. The sound '" + soundName + "' does not exist!");
-      questPlayer.sendDebugMessage("Error executing PlaySound action. The sound '" + soundName + "' does not exist!");
-      return;
+    } else if(isPlayForEveryoneAtSetLocation()) {
+      location.getWorld().playSound(location, soundName, volume >= -0.02 ? volume : 1, pitch >= -0.02 ? pitch : 1);
+    } else {
+      player.playSound(location, soundName, volume >= -0.02 ? volume : 1, pitch >= -0.02 ? pitch : 1);
     }
   }
 
