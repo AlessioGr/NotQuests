@@ -120,6 +120,8 @@ public class CommandManager {
   private Command.Builder<CommandSender> adminActionsEditCommandBuilder;
   private Command.Builder<CommandSender> adminActionsAddConditionCommandBuilder;
   private Command.Builder<CommandSender> adminAddConditionCommandBuilder;
+  private Command.Builder<CommandSender> adminConditionCheckCommandBuilder;
+
   private AdminCommands adminCommands;
   private AdminEditCommands adminEditCommands;
   private AdminTagCommands adminTagCommands;
@@ -601,6 +603,11 @@ public class CommandManager {
                           return completions;
                         }));
 
+    adminConditionCheckCommandBuilder =
+        adminCommandBuilder
+            .literal("conditions")
+            .literal("check");
+
     adminAddActionCommandBuilder =
         adminCommandBuilder
             .literal("actions")
@@ -815,6 +822,9 @@ public class CommandManager {
 
   public final Command.Builder<CommandSender> getAdminAddConditionCommandBuilder() {
     return adminAddConditionCommandBuilder;
+  }
+  public final Command.Builder<CommandSender> getAdminConditionCheckCommandBuilder() {
+    return adminConditionCheckCommandBuilder;
   }
 
   public final Command.Builder<CommandSender> getAdminEditObjectivesBuilder() {

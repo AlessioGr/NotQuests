@@ -325,8 +325,7 @@ public class ActionManager {
         if(uuid != null){
           action.execute(main.getQuestPlayerManager().getOrCreateQuestPlayer(uuid));
         }
-      }else{
-        if (actionIdentifier != null && !actionIdentifier.isBlank()) { // actions.yml
+      }else if (actionIdentifier != null && !actionIdentifier.isBlank()) { // actions.yml
           if (context.flags().contains(main.getCommandManager().categoryFlag)) {
             final Category category =
                 context
@@ -352,7 +351,6 @@ public class ActionManager {
                             + actionIdentifier
                             + "</highlight> already exists!"));
           }
-        }
       }
     }
   }
