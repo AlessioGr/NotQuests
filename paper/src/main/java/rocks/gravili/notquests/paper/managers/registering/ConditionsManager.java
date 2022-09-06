@@ -325,7 +325,6 @@ public class ConditionsManager {
                     uuid = null;
                     player = null;
                 }
-
                 if(uuid != null){
                     main.sendMessage(context.getSender(),"<main>" + condition.getConditionType() + " condition result for player " + (player != null ? main.getMiniMessage().serialize(player.name()) : "unknown") + ":</main> <highlight>" +  condition.check(main.getQuestPlayerManager().getOrCreateQuestPlayer(uuid)));
                 }
