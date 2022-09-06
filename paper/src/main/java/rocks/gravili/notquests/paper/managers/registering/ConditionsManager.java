@@ -41,6 +41,7 @@ import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.BooleanCondition;
 import rocks.gravili.notquests.paper.structs.conditions.CompletedObjectiveCondition;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
+import rocks.gravili.notquests.paper.structs.conditions.Condition.ConditionResult;
 import rocks.gravili.notquests.paper.structs.conditions.ConditionFor;
 import rocks.gravili.notquests.paper.structs.conditions.DateCondition;
 import rocks.gravili.notquests.paper.structs.conditions.ItemStackListCondition;
@@ -326,7 +327,8 @@ public class ConditionsManager {
                     player = null;
                 }
                 if(uuid != null){
-                    main.sendMessage(context.getSender(),"<main>" + condition.getConditionType() + " condition result for player " + (player != null ? main.getMiniMessage().serialize(player.name()) : "unknown") + ":</main> <highlight>" +  condition.check(main.getQuestPlayerManager().getOrCreateQuestPlayer(uuid)));
+                    final ConditionResult conditionResult = condition.check(main.getQuestPlayerManager().getOrCreateQuestPlayer(uuid));
+                    main.sendMessage(context.getSender(),"<main>" + condition.getConditionType() + " condition result for player " + (player != null ? main.getMiniMessage().serialize(player.name()) : "unknown") + ":</main> <highlight>" +  conditionResult.message() + (conditionResult.fulfilled() ? "<positive>fulfilled" : " <negative>(not fulfilled)") );
                 }
             } else if (conditionIdentifier != null && !conditionIdentifier.isBlank()) { //conditions.yml
 
