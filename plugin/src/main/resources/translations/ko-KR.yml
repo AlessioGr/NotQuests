@@ -70,7 +70,7 @@ chat:
       <CENTER><success>[Objective Completed]
       <CENTER><highlight><bold>%OBJECTIVENAME%</bold> <RESET><main>(%QUESTNAME%)
       <EMPTY>
-    successfully-completed-rewards-prefix: '    <highlight>Rewards:'
+    successfully-completed-rewards-prefix: '    <highlight>보상:'
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
     successfully-completed-rewards-suffix: <EMPTY>
     taskDescription:
