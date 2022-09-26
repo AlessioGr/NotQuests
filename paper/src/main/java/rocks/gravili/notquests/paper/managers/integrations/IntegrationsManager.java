@@ -369,6 +369,21 @@ public class IntegrationsManager {
     return enabledIntegrations;
   }
 
+  public final String getEnabledIntegrationDiscordString() {
+    final StringBuilder enabledIntegrationsString = new StringBuilder();
+    for (final EnabledIntegration enabledIntegration : getEnabledIntegrations()) {
+      enabledIntegrationsString.append("\n- ");
+
+      enabledIntegrationsString
+          .append(enabledIntegration.getExactName())
+          .append(" *(")
+          .append(enabledIntegration.getVersionString())
+          .append(")*");
+    }
+
+    return enabledIntegrationsString.toString();
+  }
+
   public final String getEnabledIntegrationString() {
     final StringBuilder enabledIntegrationsString = new StringBuilder();
     int counter = 0;

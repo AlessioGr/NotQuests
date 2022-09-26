@@ -34,6 +34,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
@@ -675,7 +677,16 @@ public class AdminCommands {
                             "\n<main>Server Brand: <highlight>" + Bukkit.getServer().getName() +
                             "\n<main>Java version: <highlight>" + (System.getProperty("java.version") != null ? System.getProperty("java.version") : "null") +
                             "\n<main>Enabled integrations: <highlight>" + main.getIntegrationsManager().getEnabledIntegrationString()
-                    ));
+                    )
+                            .hoverEvent(HoverEvent.showText(main.parse("<main>Click to copy this information to your clipboard.")))
+                            .clickEvent(ClickEvent.copyToClipboard("**NotQuests version:** "+ main.getMain().getDescription().getVersion() +
+                                    "\n**NotQuests module:** Paper" +
+                                    "\n**Server version:** " + Bukkit.getVersion() +
+                                    "\n**Server Brand:** " + Bukkit.getServer().getName() +
+                                    "\n**Java version:** " + (System.getProperty("java.version") != null ? System.getProperty("java.version") : "null") +
+                                    "\n**Enabled integrations:**" + main.getIntegrationsManager().getEnabledIntegrationDiscordString()
+                            ))
+                        );
                 }));
 
 
