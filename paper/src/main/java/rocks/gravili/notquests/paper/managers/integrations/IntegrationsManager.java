@@ -372,7 +372,7 @@ public class IntegrationsManager {
   public final String getEnabledIntegrationDiscordString() {
     final StringBuilder enabledIntegrationsString = new StringBuilder();
     for (final EnabledIntegration enabledIntegration : getEnabledIntegrations()) {
-      enabledIntegrationsString.append("\n- ");
+      enabledIntegrationsString.append("\n> - ");
 
       enabledIntegrationsString
           .append(enabledIntegration.getExactName())
