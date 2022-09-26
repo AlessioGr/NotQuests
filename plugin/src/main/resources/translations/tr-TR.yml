@@ -125,6 +125,8 @@ chat:
         base: 'Eşyaları Pişir: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       openBuriedTreasure:
         base: 'Gömülü hazineleri aç'
+      shearSheep:
+        base: 'Shear <main>%AMOUNTOFSHEEP%</main> sheep'
       townyReachResidentCount:
         base: 'İkamet miktarına ulaşın: <main>%AMOUNT%'
       townyNationReachTownCount:

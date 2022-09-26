@@ -125,6 +125,8 @@ chat:
         base: '烧炼物品：<main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       openBuriedTreasure:
         base: '打开埋藏的宝藏'
+      shearSheep:
+        base: '修剪 <main>%AMOUNTOFSHEEP%</main> 只羊'
       townyReachResidentCount:
         base: '达到居民数量：<main>%AMOUNT%'
       townyNationReachTownCount:

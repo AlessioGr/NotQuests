@@ -125,6 +125,8 @@ chat:
         base: 'Fondre des items : <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       openBuriedTreasure:
         base: 'Ouvrir des trésors enfouis'
+      shearSheep:
+        base: 'Tondre <main>%AMOUNTOFSHEEP%</main> moutons'
       townyReachResidentCount:
         base: 'Atteindre le nombre de résidents : <main>%AMOUNT%'
       townyNationReachTownCount:
