@@ -29,6 +29,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import rocks.gravili.notquests.paper.conversation.ConversationEvents;
 import rocks.gravili.notquests.paper.conversation.ConversationManager;
 import rocks.gravili.notquests.paper.events.ArmorStandEvents;
@@ -298,6 +299,9 @@ public class NotQuests {
         metrics.addCustomChart(new SingleLineChart("conversations", new Callable<Integer>() {
             @Override
             public Integer call() {
+                if(getConversationManager() == null) {
+                    return 0;
+                }
                 return getConversationManager().getAllConversations().size();
             }
         }));
@@ -493,7 +497,7 @@ public class NotQuests {
         return this.commandManager;
     }
 
-    public ConversationManager getConversationManager() {
+    public @Nullable ConversationManager getConversationManager() {
         return this.conversationManager;
     }
 

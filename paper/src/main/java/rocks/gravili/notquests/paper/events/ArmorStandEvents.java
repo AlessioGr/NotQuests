@@ -538,13 +538,16 @@ public class ArmorStandEvents implements Listener {
         }
 
         //Conversations
-        final Conversation foundConversation = main.getConversationManager().getConversationAttachedToArmorstand(armorStand);
-        if (questPlayer != null && foundConversation != null) {
-            main.getConversationManager().playConversation(questPlayer, foundConversation);
-            if (main.getConfiguration().isArmorStandPreventEditing()) {
-                event.setCancelled(true);
+        if(main.getConversationManager() != null){
+            final Conversation foundConversation = main.getConversationManager().getConversationAttachedToArmorstand(armorStand);
+            if (questPlayer != null && foundConversation != null) {
+                main.getConversationManager().playConversation(questPlayer, foundConversation);
+                if (main.getConfiguration().isArmorStandPreventEditing()) {
+                    event.setCancelled(true);
+                }
             }
         }
+
 
     }
 

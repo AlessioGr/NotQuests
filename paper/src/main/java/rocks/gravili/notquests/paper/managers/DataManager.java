@@ -1943,13 +1943,18 @@ public class DataManager {
 
     public void closeDatabaseConnection() {
         main.getLogManager().info("Closing database connection...");
-        try{
-            hikariDataSource.close();
-            //getConnection().close();
-        }catch (Exception e){
-            main.getLogManager().severe("Error closing database connection:");
-            e.printStackTrace();
+        if(hikariDataSource != null){
+            try{
+                hikariDataSource.close();
+                //getConnection().close();
+            }catch (Exception e){
+                main.getLogManager().severe("Error closing database connection:");
+                e.printStackTrace();
+            }
+        }else{
+            main.getLogManager().severe("Skipped closing database connection, because the data source is null. Was there a previous error which needs to be fixed? Check your console logs!");
         }
+
     }
 
 

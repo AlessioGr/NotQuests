@@ -108,10 +108,13 @@ public class ConversationSelector<C> extends CommandArgument<C, Conversation> {
     @NotNull
     @Override
     public List<String> suggestions(@NotNull CommandContext<C> context, @NotNull String input) {
-      List<String> questNames = new java.util.ArrayList<>();
-      for (Conversation conversation : main.getConversationManager().getAllConversations()) {
-        questNames.add(conversation.getIdentifier());
+      final List<String> questNames = new java.util.ArrayList<>();
+      if(main.getConversationManager() != null){
+        for (final Conversation conversation : main.getConversationManager().getAllConversations()) {
+          questNames.add(conversation.getIdentifier());
+        }
       }
+
       final List<String> allArgs = context.getRawInput();
 
       main.getUtilManager()
@@ -131,6 +134,13 @@ public class ConversationSelector<C> extends CommandArgument<C, Conversation> {
         return ArgumentParseResult.failure(
             new NoInputProvidedException(ConversationsParser.class, context));
       }
+
+      if(main.getConversationManager() == null){
+        return ArgumentParseResult.failure(
+            new Exception(
+                "ConversationManager is null. Check your console for previous NotQuests startup errors."));
+      }
+
       final String conversationIdentifierInput = inputQueue.peek();
       final Conversation foundConversation =
           main.getConversationManager().getConversation(conversationIdentifierInput);

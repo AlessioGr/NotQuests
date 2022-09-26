@@ -29,9 +29,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
-import net.minecraft.network.protocol.game.ClientboundSystemChatPacket;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -1095,22 +1093,26 @@ public class QuestEvents implements Listener {
 
     @EventHandler
     public void playerCommandPreprocessEvent(PlayerCommandPreprocessEvent e) {
-        final Player player = e.getPlayer();
+        if(main.getConversationManager() != null){
+            final Player player = e.getPlayer();
 
-        final ConversationPlayer conversationPlayer = main.getConversationManager().getOpenConversation(player.getUniqueId());
-        if(conversationPlayer != null){
-            if (!player.hasPermission("notquests.use")) {
-                return;
-            }
-            if (e.getMessage().startsWith("/notquests continueConversation ")) {
-                handleConversation(player, e.getMessage().split("/notquests continueConversation ")[1]);
-                e.setCancelled(true);
+            final ConversationPlayer conversationPlayer = main.getConversationManager().getOpenConversation(player.getUniqueId());
+            if(conversationPlayer != null){
+                if (!player.hasPermission("notquests.use")) {
+                    return;
+                }
+                if (e.getMessage().startsWith("/notquests continueConversation ")) {
+                    handleConversation(player, e.getMessage().split("/notquests continueConversation ")[1]);
+                    e.setCancelled(true);
+                }
             }
         }
-
     }
 
     private final boolean handleConversation(final Player player, final int optionNumber) {
+        if(main.getConversationManager() == null){
+            return false;
+        }
         final int optionIndex = optionNumber-1;
         final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
         if (main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId()) == null) {
@@ -1136,6 +1138,9 @@ public class QuestEvents implements Listener {
         return false;
     }
     private final boolean handleConversation(final Player player, final String option) {
+        if(main.getConversationManager() == null){
+            return false;
+        }
         final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
         if (main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId()) == null) {
             return false;
@@ -1249,7 +1254,7 @@ public class QuestEvents implements Listener {
 
         final Player player = e.getPlayer();
 
-        if(main.getConfiguration().isConversationAllowAnswerNumberInChat()){
+        if(main.getConversationManager() != null && main.getConfiguration().isConversationAllowAnswerNumberInChat()){
             final ConversationPlayer conversationPlayer = main.getConversationManager().getOpenConversation(player.getUniqueId());
             if(conversationPlayer != null){
                 if (player.hasPermission("notquests.use")) {

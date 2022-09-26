@@ -618,7 +618,11 @@ public class AdminCommands {
 
                     main.getDataManager().loadGeneralConfig();
                     main.getLanguageManager().loadLanguageConfig();
-                    main.getConversationManager().loadConversationsFromConfig();
+                    if(main.getConversationManager() != null) {
+                      main.getConversationManager().loadConversationsFromConfig();
+                    }else{
+                      context.getSender().sendMessage("<error> Loading conversations has been skipped: ConversationManager is null");
+                    }
                     context.getSender().sendMessage(Component.empty());
                     context.getSender().sendMessage(main.parse("<success>NotQuests general.yml, language configuration and conversations have been re-loaded. <unimportant>If you want to reload more, please use the ServerUtils plugin (available on spigot) or restart the server. This reload command does not reload the quests file or the database."));
                 }));
@@ -645,9 +649,13 @@ public class AdminCommands {
                 .literal("conversations")
                 .meta(CommandMeta.DESCRIPTION, "Reload the conversations from conversations files.")
                 .handler((context) -> {
+                  if(main.getConversationManager() != null) {
                     main.getConversationManager().loadConversationsFromConfig();
-                    context.getSender().sendMessage(Component.empty());
                     context.getSender().sendMessage(main.parse("<success>Conversations have been reloaded."));
+                  }else{
+                    context.getSender().sendMessage("<error> Loading conversations has been skipped: ConversationManager is null");
+                  }
+                  context.getSender().sendMessage(Component.empty());
                 }));
 
         manager.command(builder.literal("save")
