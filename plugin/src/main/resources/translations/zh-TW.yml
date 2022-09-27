@@ -126,7 +126,7 @@ chat:
       openBuriedTreasure:
         base: '打開埋藏的寶藏'
       shearSheep:
-        base: 'Shear <main>%AMOUNTOFSHEEP%</main> sheep'
+        base: '剪 <main>%AMOUNTOFSHEEP%</main> 次羊毛'
       townyReachResidentCount:
         base: '達到常駐人數: <main>%AMOUNT%'
       townyNationReachTownCount:
