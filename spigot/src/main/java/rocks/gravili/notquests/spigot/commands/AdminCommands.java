@@ -29,6 +29,8 @@ import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
@@ -613,18 +615,27 @@ public class AdminCommands {
         manager.command(builder.literal("version", "ver", "v", "info")
                 .meta(CommandMeta.DESCRIPTION, "Displays the version of the NotQuests plugin you're using.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
+                  final Audience audience = main.adventure().sender(context.getSender());
 
-                    final String versionInformation = ("<main>NotQuests version: <highlight>"+ main.getMain().getDescription().getVersion() +
-                            "\n<main>NotQuests module:</gradient></gradient><reset> <yellow>Spigot <red>(limited functionality)" +
-                            "\n<main>Server version: <highlight>" + Bukkit.getVersion()+
-                            "\n<main>Server Brand: <highlight>" + Bukkit.getServer().getName() +
-                            "\n<main>Java version: <highlight>" + (System.getProperty("java.version") != null ? System.getProperty("java.version") : "null") +
-                            "\n<main>Enabled integrations: <highlight>" + String.join(", ", main.getIntegrationsManager().getEnabledIntegrations()))
-                            .replace("<main>", NotQuestColors.mainGradient)
-                            .replace("<highlight>", highlightGradient);
+                  final String versionInformation = ("<main>NotQuests version: <highlight>"+ main.getMain().getDescription().getVersion() +
+                      "\n<main>NotQuests module:</gradient></gradient><reset> <yellow>Spigot <red>(limited functionality)" +
+                      "\n<main>Server version: <highlight>" + Bukkit.getVersion()+
+                      "\n<main>Server Brand: <highlight>" + Bukkit.getServer().getName() +
+                      "\n<main>Java version: <highlight>" + (System.getProperty("java.version") != null ? System.getProperty("java.version") : "null") +
+                      "\n<main>Enabled integrations: <highlight>" + String.join(", ", main.getIntegrationsManager().getEnabledIntegrations()))
+                      .replace("<main>", NotQuestColors.mainGradient)
+                      .replace("<highlight>", highlightGradient);
 
-                    audience.sendMessage(miniMessage.deserialize(versionInformation));
+                  audience.sendMessage(miniMessage.deserialize(versionInformation)
+                      .hoverEvent(HoverEvent.showText(miniMessage.deserialize("<main>Click to copy this information to your clipboard.".replace("<main>", NotQuestColors.mainGradient))))
+                      .clickEvent(
+                          ClickEvent.copyToClipboard("**NotQuests version:** "+ main.getMain().getDescription().getVersion() +
+                          "\n**NotQuests module:** Paper" +
+                          "\n**Server version:** " + Bukkit.getVersion() +
+                          "\n**Server Brand:** " + Bukkit.getServer().getName() +
+                          "\n**Java version:** " + (System.getProperty("java.version") != null ? System.getProperty("java.version") : "null") +
+                          "\n**Enabled integrations:**" + String.join("\n> - ", main.getIntegrationsManager().getEnabledIntegrations())
+                      )));
                 }));
 
 

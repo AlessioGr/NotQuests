@@ -74,6 +74,33 @@ public class IntegrationsManager {
         return enabledIntegrations;
     }
 
+    public final String getEnabledIntegrationDiscordString() {
+        final StringBuilder enabledIntegrationsString = new StringBuilder();
+        for (final String enabledIntegration : getEnabledIntegrations()) {
+            enabledIntegrationsString.append("\n- ");
+
+            enabledIntegrationsString
+                .append(enabledIntegration);
+        }
+
+        return enabledIntegrationsString.toString();
+    }
+
+    public final String getEnabledIntegrationString() {
+        final StringBuilder enabledIntegrationsString = new StringBuilder();
+        int counter = 0;
+        for (final String enabledIntegration : getEnabledIntegrations()) {
+            counter++;
+            if (counter > 1) {
+                enabledIntegrationsString.append("<veryUnimportant>,</veryUnimportant> ");
+            }
+            enabledIntegrationsString
+                .append(enabledIntegration);
+        }
+
+        return enabledIntegrationsString.toString();
+    }
+
     public void enableIntegrations() {
 
         //UltimateJobs
