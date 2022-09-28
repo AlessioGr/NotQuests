@@ -126,7 +126,7 @@ chat:
       openBuriedTreasure:
         base: 'Abrir tesoro enterrado'
       shearSheep:
-        base: 'Shear <main>%AMOUNTOFSHEEP%</main> sheep'
+        base: 'Esquilar <main>%AMOUNTOFSHEEP%</main> ovejas'
       townyReachResidentCount:
         base: 'Alcanzar la cantidad de residentes: <main>%AMOUNT%'
       townyNationReachTownCount:
