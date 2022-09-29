@@ -155,10 +155,12 @@ public class NQNPCSelector<C> extends CommandArgument<C, NQNPCResult> { //TODO: 
       final String input = inputQueue.peek();
 
       if(allowNone && input.equalsIgnoreCase("none")){
+        inputQueue.remove();
         return ArgumentParseResult.success(new NQNPCResult(null, true, false));
       }
 
       if(allowRightClickSelect && input.equalsIgnoreCase("rightClickSelect")){
+        inputQueue.remove();
         return ArgumentParseResult.success(new NQNPCResult(null, false, true));
       }
 
