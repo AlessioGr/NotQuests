@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.conversation.Conversation;
 import rocks.gravili.notquests.paper.managers.integrations.citizens.QuestGiverNPCTrait;
+import rocks.gravili.notquests.paper.structs.Quest;
 
 public class ZNPCNPC extends NQNPC {
   private NPC cachedNPC;
@@ -75,9 +76,9 @@ public class ZNPCNPC extends NQNPC {
   }
 
   @Override
-  public void removeQuestGiverNPCTrait() {
+  public String removeQuestGiverNPCTrait(final @Nullable Boolean showQuestInNPC, final Quest quest) {
     if (!updateCachedNPC()) {
-      return;
+      return "NPC not found";
     }
 
     final ArrayList<Trait> npcTraitsToRemove = new ArrayList<>();
@@ -93,12 +94,13 @@ public class ZNPCNPC extends NQNPC {
 
     // cachedNPC.removeTrait(QuestGiverNPCTrait.class); //This is not enough to ensure compatibility
     // with ServerUtils
+    return "";
   }
 
   @Override
-  public void addQuestGiverNPCTrait() {
+  public String addQuestGiverNPCTrait(final @Nullable Boolean showQuestInNPC, final Quest quest) {
     if (!updateCachedNPC()) {
-      return;
+      return "NPC not found";
     }
     boolean hasTrait = false;
     for (Trait trait : cachedNPC.getTraits()) {
@@ -112,6 +114,7 @@ public class ZNPCNPC extends NQNPC {
       // npc.getTraits().toString());
       cachedNPC.addTrait(QuestGiverNPCTrait.class);
     }
+    return "";
   }
 
   @Override

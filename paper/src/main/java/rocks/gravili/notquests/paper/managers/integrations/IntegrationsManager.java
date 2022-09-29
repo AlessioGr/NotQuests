@@ -242,6 +242,13 @@ public class IntegrationsManager {
                   citizensManager = new CitizensManager(main);
                   return true;
                 })
+            .setRunWhenRegisteringEventsOnTime(
+                () -> {
+                  main.getMain()
+                      .getServer()
+                      .getPluginManager()
+                      .registerEvents(new CitizensEvents(main), main.getMain());
+                })
             .setRunAlsoWhenEnabledLate(
                 () -> {
                   main.getDataManager().setAlreadyLoadedNPCs(false);
@@ -360,6 +367,13 @@ public class IntegrationsManager {
                   zNPCsEnabled = true;
                   zNPCsManager = new ZNPCsManager(main);
                   return true;
+                })
+            .setRunWhenRegisteringEventsOnTime(
+                () -> {
+                  main.getMain()
+                      .getServer()
+                      .getPluginManager()
+                      .registerEvents(new ZNPCsEvents(main), main.getMain());
                 })
             .setRunAlsoWhenEnabledLate(
                 () -> {

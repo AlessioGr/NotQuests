@@ -376,7 +376,11 @@ public class AdminEditCommands {
                           (nqnpc) -> {
                             if (!quest.getAttachedNPCsWithQuestShowing().contains(nqnpc)
                                 && !quest.getAttachedNPCsWithoutQuestShowing().contains(nqnpc)) {
-                              quest.bindToNPC(nqnpc, showInNPC);
+                              final String result = quest.bindToNPC(nqnpc, showInNPC);
+                              if(!result.isBlank()){
+                                player.sendMessage(main.parse(result));
+                                return;
+                              }
                               context
                                   .getSender()
                                   .sendMessage(

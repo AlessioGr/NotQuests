@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.conversation.Conversation;
+import rocks.gravili.notquests.paper.structs.Quest;
 
 public abstract class NQNPC { //TODO: Even though I'm trying to pool NPC names, a custom .equals() method might be a good idea
   protected final NotQuests main;
@@ -46,9 +47,9 @@ public abstract class NQNPC { //TODO: Even though I'm trying to pool NPC names, 
   //DO NOT PERSIST? Or do persist? idk. Adds trait for citizens npc
   public abstract void bindToConversation(final Conversation conversation);
 
-  public abstract void removeQuestGiverNPCTrait();
+  public abstract String removeQuestGiverNPCTrait(final @Nullable Boolean showQuestInNPC, final Quest quest);
 
-  public abstract void addQuestGiverNPCTrait();
+  public abstract String addQuestGiverNPCTrait(final @Nullable Boolean showQuestInNPC, final Quest quest); //When non-empty string returned: cancel adding quest / error
 
   public abstract Entity getEntity();
 
