@@ -33,6 +33,7 @@ import rocks.gravili.notquests.paper.events.hooks.ProjectKorraEvents;
 import rocks.gravili.notquests.paper.events.hooks.SlimefunEvents;
 import rocks.gravili.notquests.paper.events.hooks.TownyEvents;
 import rocks.gravili.notquests.paper.events.hooks.UltimateJobsEvents;
+import rocks.gravili.notquests.paper.events.hooks.ZNPCsEvents;
 import rocks.gravili.notquests.paper.managers.integrations.betonquest.BetonQuestManager;
 import rocks.gravili.notquests.paper.managers.integrations.citizens.CitizensManager;
 import rocks.gravili.notquests.paper.managers.integrations.znpcs.ZNPCsManager;
@@ -359,6 +360,17 @@ public class IntegrationsManager {
                   zNPCsEnabled = true;
                   zNPCsManager = new ZNPCsManager(main);
                   return true;
+                })
+            .setRunAlsoWhenEnabledLate(
+                () -> {
+                  main.getDataManager().setAlreadyLoadedNPCs(false);
+                  main.getMain()
+                      .getServer()
+                      .getPluginManager()
+                      .registerEvents(new ZNPCsEvents(main), main.getMain());
+                  if (!main.getDataManager().isAlreadyLoadedNPCs()) { // Just making sure
+                    main.getDataManager().loadNPCData();
+                  }
                 })
     );
 
