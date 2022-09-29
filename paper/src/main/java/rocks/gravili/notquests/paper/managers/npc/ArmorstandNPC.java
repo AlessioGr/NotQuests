@@ -12,7 +12,7 @@ public class ArmorstandNPC extends NQNPC {
   private final NQNPCID npcID;
 
   public ArmorstandNPC(final NotQuests main, final NQNPCID npcID) {
-    super(main, "citizens");
+    super(main, "armorstand");
     this.npcID = npcID;
     this.cachedArmorstand = (ArmorStand) main.getMain().getServer().getEntity(npcID.getUUIDID());
     }
