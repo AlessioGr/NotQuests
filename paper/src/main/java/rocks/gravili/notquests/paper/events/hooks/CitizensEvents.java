@@ -30,14 +30,19 @@ import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.trait.FollowTrait;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.conversation.Conversation;
 import rocks.gravili.notquests.paper.managers.npc.NQNPC;
+import rocks.gravili.notquests.paper.managers.npc.NQNPCID;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -109,10 +114,26 @@ public class CitizensEvents implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     private void onNPCClickEvent(NPCRightClickEvent event) { //Disconnect objectives
         final NPC npc = event.getNPC();
-        final NQNPC nqnpc = main.getNPCManager().getOrCreateNQNpc("Citizens", npc.getId());
+        final NQNPC nqnpc = main.getNPCManager().getOrCreateNQNpc("Citizens", NQNPCID.fromInteger(npc.getId()));
 
         final Player player = event.getClicker();
         final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
+
+        //Handle special items first
+        final ItemStack heldItem = player.getInventory().getItemInMainHand();
+        if (player.hasPermission("notquests.admin.armorstandeditingitems") && heldItem.getType() != Material.AIR && heldItem.getItemMeta() != null) {
+            final PersistentDataContainer container = heldItem.getItemMeta().getPersistentDataContainer();
+
+            final NamespacedKey specialActionItemKey = new NamespacedKey(main.getMain(), "notquests-nqnpc-selector-with-action");
+
+            if (container.has(specialActionItemKey, PersistentDataType.INTEGER)) {
+                int id = container.get(specialActionItemKey, PersistentDataType.INTEGER); //Not null, because we check for it in container.has()
+
+                main.getNPCManager().executeNPCSelectionAction(nqnpc, id);
+            }
+        }
+
+
 
 
         final AtomicBoolean handledObjective = new AtomicBoolean(false);

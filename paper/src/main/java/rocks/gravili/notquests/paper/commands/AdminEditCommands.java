@@ -24,7 +24,6 @@ import cloud.commandframework.arguments.parser.ArgumentParseResult;
 import cloud.commandframework.arguments.standard.BooleanArgument;
 import cloud.commandframework.arguments.standard.DurationArgument;
 import cloud.commandframework.arguments.standard.IntegerArgument;
-import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.arguments.standard.StringArrayArgument;
 import cloud.commandframework.bukkit.parsers.WorldArgument;
 import cloud.commandframework.meta.CommandMeta;
@@ -54,10 +53,13 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.CategorySelector;
 import rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionArgument;
 import rocks.gravili.notquests.paper.commands.arguments.MiniMessageSelector;
+import rocks.gravili.notquests.paper.commands.arguments.NQNPCSelector;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
+import rocks.gravili.notquests.paper.commands.arguments.wrappers.NQNPCResult;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
+import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.PredefinedProgressOrder;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.actions.Action;
@@ -343,9 +345,170 @@ public class AdminEditCommands {
 
         final Command.Builder<CommandSender> categoryBuilder = editBuilder.literal("category");
         handleCategories(categoryBuilder);
+
+
+      final Command.Builder<CommandSender> npcsBuilder = editBuilder.literal("npcs");
+      handleNPCs(npcsBuilder);
+
     }
 
-    public void handleCategories(final Command.Builder<CommandSender> builder){
+  public void handleNPCs(final Command.Builder<CommandSender> builder){
+    manager.command(
+        builder
+            .literal("add")
+            .argument(NQNPCSelector.of("NPC", main, false, true), ArgumentDescription.of("ID of the Citizens NPC to whom the Quest should be attached."))
+            .flag(
+                manager
+                    .flagBuilder("hideInNPC")
+                    .withDescription(
+                        ArgumentDescription.of("Makes the Quest hidden from in the NPC.")))
+            .meta(CommandMeta.DESCRIPTION, "Attaches the Quest to a Citizens NPC.")
+            .handler(
+                (context) -> {
+                  final Quest quest = context.get("quest");
+                  final boolean showInNPC = !context.flags().isPresent("hideInNPC");
+
+                  final NQNPCResult nqnpcResult = context.get("NPC");
+
+                  if (nqnpcResult.isRightClickSelect()) {//Armor Stands
+                    if (context.getSender() instanceof final Player player) {
+                      main.getNPCManager().handleRightClickNQNPCSelectionWithAction(
+                          (nqnpc) -> {
+                            if (!quest.getAttachedNPCsWithQuestShowing().contains(nqnpc)
+                                && !quest.getAttachedNPCsWithoutQuestShowing().contains(nqnpc)) {
+                              quest.bindToNPC(nqnpc, showInNPC);
+                              context
+                                  .getSender()
+                                  .sendMessage(
+                                      main.parse(
+                                          "<success>Quest <highlight>"
+                                              + quest.getQuestName()
+                                              + "</highlight> has been bound to the NPC with the ID <highlight2>"
+                                              + nqnpc.getID().toString()
+                                              + "</highlight2>! Showing Quest: <highlight>"
+                                              + showInNPC
+                                              + "</highlight>."));
+                            } else {
+                              context
+                                  .getSender()
+                                  .sendMessage(
+                                      main.parse(
+                                          "<warn>Quest <highlight>"
+                                              + quest.getQuestName()
+                                              + "</highlight> has already been bound to the NPC with the ID <highlight2>"
+                                              + nqnpc.getID().toString()
+                                              + "</highlight2>!"));
+                            }
+                          },
+                          player,
+                          "<success>You have been given an item with which you can attach the NPC to a Quest by rightclicking the NPC. Check your inventory!",
+                          "<LIGHT_PURPLE>Attach Quest <highlight>" + quest.getQuestName() + "</highlight> to this NPC",
+                          "<WHITE>Right-click an NPC to attach it to the Quest <highlight>" + quest.getQuestName() + "</highlight> and ObjectiveID."
+                      );
+
+                    } else {
+                      context.getSender().sendMessage(main.parse("<error>Error: this command can only be run as a player."));
+                    }
+
+                  }else {
+                    final NQNPC nqnpc = nqnpcResult.getNQNPC();
+                    if (!quest.getAttachedNPCsWithQuestShowing().contains(nqnpc)
+                        && !quest.getAttachedNPCsWithoutQuestShowing().contains(nqnpc)) {
+                      quest.bindToNPC(nqnpc, showInNPC);
+                      context
+                          .getSender()
+                          .sendMessage(
+                              main.parse(
+                                  "<success>Quest <highlight>"
+                                      + quest.getQuestName()
+                                      + "</highlight> has been bound to the NPC with the ID <highlight2>"
+                                      + nqnpc.getID().toString()
+                                      + "</highlight2>! Showing Quest: <highlight>"
+                                      + showInNPC
+                                      + "</highlight>."));
+                    } else {
+                      context
+                          .getSender()
+                          .sendMessage(
+                              main.parse(
+                                  "<warn>Quest <highlight>"
+                                      + quest.getQuestName()
+                                      + "</highlight> has already been bound to the NPC with the ID <highlight2>"
+                                      + nqnpc.getID().toString()
+                                      + "</highlight2>!"));
+                    }
+                  }
+
+                }));
+
+    manager.command(
+        builder
+            .literal("clear")
+            .meta(CommandMeta.DESCRIPTION, "De-attaches this Quest from all NPCs.")
+            .handler(
+                (context) -> {
+                  final Quest quest = context.get("quest");
+                  quest.clearNPCs();
+                  context
+                      .getSender()
+                      .sendMessage(
+                          main.parse(
+                              "<success>All NPCs of Quest <highlight>"
+                                  + quest.getQuestName()
+                                  + "</highlight> have been removed!"));
+                }));
+
+    manager.command(
+        builder
+            .literal("list")
+            .meta(
+                CommandMeta.DESCRIPTION, "Lists all NPCs which have this Quest attached.")
+            .handler(
+                (context) -> {
+                  final Quest quest = context.get("quest");
+                  context
+                      .getSender()
+                      .sendMessage(
+                          main.parse(
+                              "<highlight>NPCs bound to quest <highlight2>"
+                                  + quest.getQuestName()
+                                  + "</highlight2> with Quest showing:"));
+                  int counter = 1;
+                  for (final NQNPC nqNPC : quest.getAttachedNPCsWithQuestShowing()) {
+                    context
+                        .getSender()
+                        .sendMessage(
+                            main.parse(
+                                "<highlight>"
+                                    + counter
+                                    + ".</highlight> <main>ID:</main> <highlight2>"
+                                    + nqNPC.getID().toString()));
+                    counter++;
+                  }
+                  counter = 1;
+                  context
+                      .getSender()
+                      .sendMessage(
+                          main.parse(
+                              "<highlight>NPCs bound to quest <highlight2>"
+                                  + quest.getQuestName()
+                                  + "</highlight2> without Quest showing:"));
+                  for (final NQNPC nqNPC : quest.getAttachedNPCsWithoutQuestShowing()) {
+                    context
+                        .getSender()
+                        .sendMessage(
+                            main.parse(
+                                "<highlight>"
+                                    + counter
+                                    + ".</highlight> <main>ID:</main> <highlight2>"
+                                    + nqNPC.getID().toString()));
+                    counter++;
+                  }
+                }));
+  }
+
+
+  public void handleCategories(final Command.Builder<CommandSender> builder){
         manager.command(builder.literal("show")
                 .meta(CommandMeta.DESCRIPTION, "Shows the current category of this Quest.")
                 .handler((context) -> {
@@ -767,21 +930,7 @@ public class AdminEditCommands {
                 }));
         manager.command(builder.literal("completionNPC") //TODO: Generalize for NqNPCs
                 .literal("set")
-                .argument(StringArgument.<CommandSender>newBuilder("Completion NPC").withSuggestionsProvider(
-                        (context, lastString) -> {
-                            final List<String> allArgs = context.getRawInput();
-                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Completion NPC ID / 'armorstand']", "");
-
-                            ArrayList<String> completions = new ArrayList<>();
-
-
-                            for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
-                                completions.add("" + npc.getId());
-                            }
-                            completions.add("armorstand");
-                            return completions;
-                        }
-                ).single().build(), ArgumentDescription.of("Completion NPC"))
+                .argument(NQNPCSelector.of("Completion NPC", main, true, true), ArgumentDescription.of("Completion NPC"))
                 .meta(CommandMeta.DESCRIPTION, "Sets the completionNPC of an objective.")
                 .handler((context) -> {
                     final Quest quest = context.get("quest");
@@ -789,72 +938,41 @@ public class AdminEditCommands {
                     final Objective objective = quest.getObjectiveFromID(objectiveID);
                     assert objective != null; //Shouldn't be null
 
-                    final String completionNPC = context.get("Completion NPC");
+                    final NQNPCResult completionNPCResult = context.get("Completion NPC");
 
-                    if (completionNPC.equalsIgnoreCase("-1")) {
+                    if (completionNPCResult.isNone()) {
 
                         objective.setCompletionNPC(null, true);
-                        objective.setCompletionArmorStandUUID(null, true);
                         context.getSender().sendMessage(main.parse(
                                 "<success>The completionNPC of the objective with the ID <highlight>" + objectiveID + "</highlight> has been removed!"
                         ));
 
-                    } else if (!completionNPC.equalsIgnoreCase("armorstand")) {
-                        final int completionNPCID = Integer.parseInt(completionNPC);
-                        //TODO: Generalize too
+                    } else if (completionNPCResult.isRightClickSelect()) {//Armor Stands
+                      if (context.getSender() instanceof final Player player) {
+                        main.getNPCManager().handleRightClickNQNPCSelectionWithAction(
+                            (nqnpc) -> {
+                              objective.setCompletionNPC(nqnpc, true);
+                              player.sendMessage(main.parse(
+                                  "<success>The completionArmorStandUUID of the objective with the ID <highlight>" + objectiveID + "</highlight> has been set to the NPC with the ID <highlight2>" + nqnpc.getID().toString()+ "</highlight2> and name <highlight2>" + "todo" + "</highlight2>!"
+                              ));
+                            },
+                            player,
+                            "<success>You have been given an item with which you can add the completionNPC of this Objective to an NPC. Check your inventory!",
+                            "<LIGHT_PURPLE>Set completionNPC of Quest <highlight>" + quest.getQuestName() + "</highlight> to this NPC",
+                            "<WHITE>Right-click an NPC to set it as the completionNPC of Quest <highlight>" + quest.getQuestName() + "</highlight> and ObjectiveID <highlight>" + objectiveID + "</highlight>."
+                        );
 
-                      objective.setCompletionNPC(main.getNPCManager().getOrCreateNQNpc("Citizens", completionNPCID), true);
+                      } else {
+                        context.getSender().sendMessage(main.parse("<error>Error: this command can only be run as a player."));
+                      }
 
-                        context.getSender().sendMessage(main.parse(
-                                "<success>The completionNPC of the objective with the ID <highlight>" + objectiveID
-                                        + "</highlight> has been set to the NPC with the ID <highlight2>" + completionNPCID + "</highlight2>!"
-                        ));
+                    } else {
+                      objective.setCompletionNPC(completionNPCResult.getNQNPC(), true);
 
-                    } else { //Armor Stands
-
-                        if (context.getSender() instanceof final Player player) {
-                            ItemStack itemStack = new ItemStack(Material.PAPER, 1);
-                            //give a specialitem. clicking an armorstand with that special item will remove the pdb.
-
-                            NamespacedKey key = new NamespacedKey(main.getMain(), "notquests-item");
-                            NamespacedKey QuestNameKey = new NamespacedKey(main.getMain(), "notquests-questname");
-                            NamespacedKey ObjectiveIDKey = new NamespacedKey(main.getMain(), "notquests-objectiveid");
-
-                            ItemMeta itemMeta = itemStack.getItemMeta();
-                            List<Component> lore = new ArrayList<>();
-
-                            assert itemMeta != null;
-
-                            itemMeta.getPersistentDataContainer().set(QuestNameKey, PersistentDataType.STRING, quest.getQuestName());
-                            itemMeta.getPersistentDataContainer().set(ObjectiveIDKey, PersistentDataType.INTEGER, objectiveID);
-                            itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 6);
-
-
-                            itemMeta.displayName(main.parse(
-                                    "<LIGHT_PURPLE>Set completionNPC of Quest <highlight>" + quest.getQuestName() + "</highlight> to this Armor Stand"
-                            ));
-                            //Only paper lore.add(Component.text("§fRight-click an Armor Stand to see which Quests are attached to it."));
-                            lore.add(main.parse(
-                                    "<WHITE>Right-click an Armor Stand to set it as the completionNPC of Quest <highlight>" + quest.getQuestName() + "</highlight> and ObjectiveID <highlight>" + objectiveID + "</highlight>."
-                            ));
-
-                            itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-
-                            itemMeta.lore(lore);
-
-                            itemStack.setItemMeta(itemMeta);
-
-                            player.getInventory().addItem(itemStack);
-
-                            context.getSender().sendMessage(main.parse(
-                                    "<success>You have been given an item with which you can add the completionNPC of this Objective to an armor stand. Check your inventory!"
-                            ));
-
-                        } else {
-                            context.getSender().sendMessage(main.parse("<error>Error: this command can only be run as a player."));
-                        }
-
-
+                      context.getSender().sendMessage(main.parse(
+                          "<success>The completionNPC of the objective with the ID <highlight>" + objectiveID
+                              + "</highlight> has been set to the NPC with the ID <highlight2>" + completionNPCResult.getNQNPC().getID() + "</highlight2>!"
+                      ));
                     }
                 }));
 

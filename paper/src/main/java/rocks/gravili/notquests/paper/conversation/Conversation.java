@@ -152,11 +152,11 @@ public class Conversation {
 
   public void bindToAllCitizensNPCs() {
     for (NQNPC nqnpc : npcs) {
-      bindToCitizensNPC(nqnpc);
+      bindToNQNPC(nqnpc);
     }
   }
 
-  public void bindToCitizensNPC(NQNPC nqnpc) {
+  public void bindToNQNPC(final NQNPC nqnpc) {
     if (nqnpc == null) {
       return;
     }
@@ -182,7 +182,7 @@ public class Conversation {
 
   public void addNPC(final NQNPC nqnpc) {
     this.npcs.add(nqnpc);
-    bindToCitizensNPC(nqnpc);
+    bindToNQNPC(nqnpc);
 
     if (configFile == null || config == null) {
       return;

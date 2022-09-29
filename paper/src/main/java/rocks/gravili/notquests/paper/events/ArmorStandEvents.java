@@ -40,6 +40,8 @@ import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
 import rocks.gravili.notquests.paper.conversation.Conversation;
+import rocks.gravili.notquests.paper.managers.npc.NQNPC;
+import rocks.gravili.notquests.paper.managers.npc.NQNPCID;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.objectives.DeliverItemsObjective;
@@ -65,10 +67,16 @@ public class ArmorStandEvents implements Listener {
             if (player.hasPermission("notquests.admin.armorstandeditingitems") && heldItem.getType() != Material.AIR && heldItem.getItemMeta() != null) {
                 final PersistentDataContainer container = heldItem.getItemMeta().getPersistentDataContainer();
 
+                final NamespacedKey specialActionItemKey = new NamespacedKey(main.getMain(), "notquests-nqnpc-selector-with-action");
                 final NamespacedKey specialItemKey = new NamespacedKey(main.getMain(), "notquests-item");
 
+                if (container.has(specialActionItemKey, PersistentDataType.INTEGER)) {
+                    int id = container.get(specialActionItemKey, PersistentDataType.INTEGER); //Not null, because we check for it in container.has()
 
-                if (container.has(specialItemKey, PersistentDataType.INTEGER)) {
+                    final NQNPC armorStandNQNPC = main.getNPCManager().getOrCreateNQNpc("armorstand",
+                        NQNPCID.fromUUID(armorStand.getUniqueId()));
+                    main.getNPCManager().executeNPCSelectionAction(armorStandNQNPC, id);
+                } else if (container.has(specialItemKey, PersistentDataType.INTEGER)) {
 
                     int id = container.get(specialItemKey, PersistentDataType.INTEGER); //Not null, because we check for it in container.has()
 
@@ -312,7 +320,7 @@ public class ArmorStandEvents implements Listener {
                         if (quest != null) {
                             final Objective objective = quest.getObjectiveFromID(objectiveID);
                             if (objective != null) {
-                                objective.setCompletionArmorStandUUID(armorStand.getUniqueId(), true);
+                                objective.setCompletionNPC(main.getNPCManager().getOrCreateNQNpc("armorstand", NQNPCID.fromUUID(armorStand.getUniqueId())), true);
                                 player.sendMessage(main.parse(
                                         "<success>The completionArmorStandUUID of the objective with the ID <highlight>" + objectiveID + "</highlight> has been set to the Armor Stand with the UUID <highlight2>" + armorStand.getUniqueId() + "</highlight2> and name <highlight2>" + main.getArmorStandManager().getArmorStandName(armorStand) + "</highlight2>!"
                                 ));

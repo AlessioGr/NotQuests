@@ -261,11 +261,7 @@ public class QuestManager {
                             final String objectiveDescription = category.getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".description", "");
                             final String objectiveTaskDescription = category.getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".taskDescription", "");
                             final NQNPC completionNPC = NQNPC.fromConfig(main, category.getQuestsConfig(), "quests." + quest.getQuestName() + ".objectives." + objectiveNumber + ".completionNPC");
-                            final String completionArmorStandUUIDString = category.getQuestsConfig().getString("quests." + quest.getQuestName() + ".objectives." + objectiveNumber + ".completionArmorStandUUID", null);
-                            if (completionArmorStandUUIDString != null) {
-                                final UUID completionArmorStandUUID = UUID.fromString(completionArmorStandUUIDString);
-                                objective.setCompletionArmorStandUUID(completionArmorStandUUID, false);
-                            }
+
 
                             objective.setDescription(objectiveDescription.replace("\\n", "\n"), false);
                             objective.setTaskDescription(objectiveTaskDescription.replace("\\n", "\n"), false);

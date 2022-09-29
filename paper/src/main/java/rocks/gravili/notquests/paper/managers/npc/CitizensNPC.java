@@ -6,7 +6,6 @@ import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Entity;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.conversation.Conversation;
@@ -14,17 +13,17 @@ import rocks.gravili.notquests.paper.managers.integrations.citizens.QuestGiverNP
 
 public class CitizensNPC extends NQNPC {
   private NPC cachedNPC;
-  private final int npcID;
+  private final NQNPCID npcID;
 
-  public CitizensNPC(final NotQuests main, final int npcID) {
-    super(main, "Citizens");
+  public CitizensNPC(final NotQuests main, final NQNPCID npcID) {
+    super(main, "citizens");
     this.npcID = npcID;
-    this.cachedNPC = CitizensAPI.getNPCRegistry().getById(npcID);
+    this.cachedNPC = CitizensAPI.getNPCRegistry().getById(npcID.getIntegerID());
   }
 
   private boolean updateCachedNPC() {
     if (cachedNPC == null) {
-      cachedNPC = CitizensAPI.getNPCRegistry().getById(npcID);
+      cachedNPC = CitizensAPI.getNPCRegistry().getById(npcID.getIntegerID());
     }
     return cachedNPC != null;
   }
@@ -41,13 +40,12 @@ public class CitizensNPC extends NQNPC {
                 .deserialize(cachedNPC.getName().replace("§", "&")));
   }
 
-  @NotNull
   @Override
-  public int getID() {
+  public NQNPCID getID() {
     if (!updateCachedNPC()) {
       return npcID;
     }
-    return cachedNPC.getId();
+    return NQNPCID.fromInteger(cachedNPC.getId());
   }
 
   @Override

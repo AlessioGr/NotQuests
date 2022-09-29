@@ -42,12 +42,15 @@ import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.CategorySelector;
 import rocks.gravili.notquests.paper.commands.arguments.ConversationSelector;
+import rocks.gravili.notquests.paper.commands.arguments.NQNPCSelector;
 import rocks.gravili.notquests.paper.commands.arguments.SpeakerSelector;
+import rocks.gravili.notquests.paper.commands.arguments.wrappers.NQNPCResult;
 import rocks.gravili.notquests.paper.conversation.Conversation;
 import rocks.gravili.notquests.paper.conversation.ConversationLine;
 import rocks.gravili.notquests.paper.conversation.ConversationManager;
 import rocks.gravili.notquests.paper.conversation.Speaker;
 import rocks.gravili.notquests.paper.managers.data.Category;
+import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 
 public class AdminConversationCommands {
   private final NotQuests main;
@@ -322,66 +325,64 @@ public class AdminConversationCommands {
 
     manager.command(
         conversationEditBuilder
-            .literal("armorstand")
-            .literal("add", "set")
-            .senderType(Player.class)
-            .meta(CommandMeta.DESCRIPTION, "Gives you an item to add conversation to an armorstand")
+            .literal("npcs")
+            .literal("add")
+            .argument(NQNPCSelector.of("NPC", main, false, true), ArgumentDescription.of("ID of the NPC which should start the conversation"))
+            .meta(CommandMeta.DESCRIPTION, "Add conversation to NPC")
             .handler(
                 (context) -> {
-                  final Player player = (Player) context.getSender();
-
                   final Conversation foundConversation = context.get("conversation");
+                  final NQNPCResult nqNPCResult = context.get("NPC");
 
-                  ItemStack itemStack = new ItemStack(Material.PAPER, 1);
-                  // give a specialitem. clicking an armorstand with that special item will remove
-                  // the pdb.
-
-                  NamespacedKey key = new NamespacedKey(main.getMain(), "notquests-item");
-                  NamespacedKey conversationIdentifierKey =
-                      new NamespacedKey(main.getMain(), "notquests-conversation");
-
-                  ItemMeta itemMeta = itemStack.getItemMeta();
-                  List<Component> lore = new ArrayList<>();
-
-                  assert itemMeta != null;
-
-                  itemMeta
-                      .getPersistentDataContainer()
-                      .set(
-                          conversationIdentifierKey,
-                          PersistentDataType.STRING,
-                          foundConversation.getIdentifier());
-                  itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 8);
-
-                  itemMeta.displayName(
-                      main.parse(
+                  if (nqNPCResult.isRightClickSelect()) {//Armor Stands
+                    if (context.getSender() instanceof final Player player) {
+                      main.getNPCManager().handleRightClickNQNPCSelectionWithAction(
+                          (nqnpc) -> {
+                            foundConversation.addNPC( nqnpc );
+                            context
+                                .getSender()
+                                .sendMessage(
+                                    main.parse(
+                                        "<main>NPCs of conversation <highlight>"
+                                            + foundConversation.getIdentifier()
+                                            + "</highlight> has been added by <highlight2>"
+                                            + nqnpc.getID().toString()
+                                            + "</highlight2>!"));
+                          },
+                          player,
+                          "<success>You have been given an item with which you can add the conversation <highlight>"
+                              + foundConversation.getIdentifier()
+                              + "</highlight> to an armor stand. Check your inventory!",
                           "<LIGHT_PURPLE>Add conversation <highlight>"
                               + foundConversation.getIdentifier()
-                              + "</highlight> to this Armor Stand"));
-                  lore.add(
-                      main.parse(
+                              + "</highlight> to this Armor Stand",
                           "<WHITE>Right-click an Armor Stand to add the conversation <highlight>"
                               + foundConversation.getIdentifier()
-                              + "</highlight> to it."));
+                              + "</highlight> to it."
+                      );
 
-                  itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+                    } else {
+                      context.getSender().sendMessage(main.parse("<error>Error: this command can only be run as a player."));
+                    }
+                  }else {
+                    final NQNPC nqNPC = nqNPCResult.getNQNPC();
+                    foundConversation.addNPC( nqNPC );
 
-                  itemMeta.lore(lore);
+                    context
+                        .getSender()
+                        .sendMessage(
+                            main.parse(
+                                "<main>NPCs of conversation <highlight>"
+                                    + foundConversation.getIdentifier()
+                                    + "</highlight> has been added by <highlight2>"
+                                    + nqNPC.getID().toString()
+                                    + "</highlight2>!"));
+                  }
 
-                  itemStack.setItemMeta(itemMeta);
 
-                  player.getInventory().addItem(itemStack);
-
-                  context
-                      .getSender()
-                      .sendMessage(
-                          main.parse(
-                              "<success>You have been given an item with which you can add the conversation <highlight>"
-                                  + foundConversation.getIdentifier()
-                                  + "</highlight> to an armor stand. Check your inventory!"));
                 }));
 
-    manager.command(
+    manager.command( //TODO: Generalize with an npc remove command
         conversationEditBuilder
             .literal("armorstand")
             .literal("remove", "delete")

@@ -246,16 +246,8 @@ public class IntegrationsManager {
                   if (!main.getDataManager().isAlreadyLoadedNPCs()) { // Just making sure
                     main.getDataManager().loadNPCData();
                   }
-                  citizensManager.registerAnyCitizensCommands();
                 })
-            .setRunWhenRegisteringEventsOnTime(
-                () -> {
-                  main.getMain()
-                      .getServer()
-                      .getPluginManager()
-                      .registerEvents(new CitizensEvents(main), main.getMain());
-                  citizensManager.registerAnyCitizensCommands();
-                }));
+    );
 
     integrations.add(
         new Integration(main, "Slimefun")
