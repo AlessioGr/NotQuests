@@ -119,6 +119,7 @@ public class CitizensEvents implements Listener {
         final Player player = event.getClicker();
         final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
 
+        questPlayer.sendDebugMessage("Clicked on Citizens NPC!");
         //Handle special items first
         final ItemStack heldItem = player.getInventory().getItemInMainHand();
         if (player.hasPermission("notquests.admin.armorstandeditingitems") && heldItem.getType() != Material.AIR && heldItem.getItemMeta() != null) {

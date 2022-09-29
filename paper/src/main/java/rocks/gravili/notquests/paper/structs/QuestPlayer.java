@@ -1076,6 +1076,7 @@ public class QuestPlayer {
         if(queuedObjectivesToCheck.isEmpty()){
             return;
         }
+        sendDebugMessage("Checking queued objectives...");
         for (final ActiveQuest activeQuest : getActiveQuests()) {
             for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                 if (activeObjective.isUnlocked()) {
