@@ -526,10 +526,10 @@ public class Quest {
 
     npc.addQuestGiverNPCTrait();
 
-    npc.saveToConfig(category.getQuestsConfig(), "quests." + questName + ".npcs." + npc.getID() + ".npcData");
+    npc.saveToConfig(category.getQuestsConfig(), "quests." + questName + ".npcs." + npc.getID().getEitherAsString() + ".npcData");
     category
         .getQuestsConfig()
-        .set("quests." + questName + ".npcs." + npc.getID() + ".questShowing", showQuest);
+        .set("quests." + questName + ".npcs." + npc.getID().getEitherAsString() + ".questShowing", showQuest);
     category.saveQuestsConfig();
   }
 
@@ -563,7 +563,7 @@ public class Quest {
         }
       }
 
-      category.getQuestsConfig().set("quests." + questName + ".npcs." + npc.getID(), null);
+      category.getQuestsConfig().set("quests." + questName + ".npcs." + npc.getID().getEitherAsString(), null);
       category.saveQuestsConfig();
 
       attachedNPCsWithQuestShowing.remove(npc);

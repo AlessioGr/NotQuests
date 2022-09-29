@@ -70,4 +70,11 @@ public class NQNPCID {
   public static NQNPCID fromUUID(final UUID uuidID) {
     return new NQNPCID(-1, uuidID);
   }
+
+  public final String getEitherAsString(){
+    if(uuidID != null){
+      return uuidID.toString();
+    }
+    return ""+integerID;
+  }
 }
