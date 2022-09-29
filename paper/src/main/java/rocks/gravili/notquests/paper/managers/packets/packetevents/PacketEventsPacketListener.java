@@ -70,14 +70,14 @@ public class PacketEventsPacketListener implements PacketListener {
         hist.add(component);
       }
 
-      main.getLogManager()
+      /*main.getLogManager()
           .debug(
               "Registering chat message with position: "
                   + wrapperPlayServerChatMessage.getPosition()
                   + " and packet ID: "
                   + wrapperPlayServerChatMessage.getPacketId()
                   + ". Message: "
-                  + MiniMessage.builder().build().serialize(component));
+                  + MiniMessage.builder().build().serialize(component));*/
       int toRemove = hist.size() - main.getConversationManager().getMaxChatHistory();
       if (toRemove > 0) {
         // main.getLogManager().log(Level.WARNING, "ToRemove: " + i);
