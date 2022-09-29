@@ -68,6 +68,7 @@ import rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionArgume
 import rocks.gravili.notquests.paper.commands.arguments.MiniMessageSelector;
 import rocks.gravili.notquests.paper.commands.arguments.MiniMessageStringSelector;
 import rocks.gravili.notquests.paper.commands.arguments.MultipleActionsSelector;
+import rocks.gravili.notquests.paper.commands.arguments.NQNPCSelector;
 import rocks.gravili.notquests.paper.commands.arguments.QuestSelector;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
@@ -419,6 +420,10 @@ public class CommandManager {
             builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
         cloudBrigadierManager.registerMapping(
             new TypeToken<ItemStackSelectionArgument.MaterialParser<CommandSender>>() {},
+            builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
+
+        cloudBrigadierManager.registerMapping(
+            new TypeToken<NQNPCSelector.NQNPCsParser<CommandSender>>() {},
             builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
       } else {
         main.getLogManager()

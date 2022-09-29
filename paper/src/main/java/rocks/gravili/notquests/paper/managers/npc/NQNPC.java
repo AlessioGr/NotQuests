@@ -39,10 +39,8 @@ public abstract class NQNPC { //TODO: Even though I'm trying to pool NPC names, 
     if(type == null){
       return null;
     }
-    if(type.equals("Citizens")){
-      return main.getNPCManager().getOrCreateNQNpc("Citizens", loadedID);
-    }
-    return null;
+
+    return main.getNPCManager().getOrCreateNQNpc(type, loadedID);
   }
 
   //DO NOT PERSIST? Or do persist? idk. Adds trait for citizens npc

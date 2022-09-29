@@ -35,6 +35,7 @@ import rocks.gravili.notquests.paper.events.hooks.TownyEvents;
 import rocks.gravili.notquests.paper.events.hooks.UltimateJobsEvents;
 import rocks.gravili.notquests.paper.managers.integrations.betonquest.BetonQuestManager;
 import rocks.gravili.notquests.paper.managers.integrations.citizens.CitizensManager;
+import rocks.gravili.notquests.paper.managers.integrations.znpcs.ZNPCsManager;
 import rocks.gravili.notquests.paper.placeholders.QuestPlaceholders;
 
 public class IntegrationsManager {
@@ -64,6 +65,9 @@ public class IntegrationsManager {
 
   private boolean floodgateEnabled = false;
 
+  private boolean zNPCsEnabled = false;
+
+
   // Managers
   private VaultManager vaultManager;
   private MythicMobsManager mythicMobsManager;
@@ -75,8 +79,9 @@ public class IntegrationsManager {
   private ProjectKorraManager projectKorraManager;
   private UltimateClansManager ultimateClansManager;
   private EcoBossesManager ecoBossesManager;
-
   private FloodgateManager floodgateManager;
+
+  private ZNPCsManager zNPCsManager;
 
 
   public IntegrationsManager(final NotQuests main) {
@@ -346,6 +351,17 @@ public class IntegrationsManager {
                 })
     );
 
+    integrations.add(
+        new Integration(main, "ServersNPC")
+            .setEnableCondition(() -> main.getConfiguration().isIntegrationZNPCsEnabled())
+            .setRunWhenEnabled(
+                () -> {
+                  zNPCsEnabled = true;
+                  zNPCsManager = new ZNPCsManager(main);
+                  return true;
+                })
+    );
+
     integrationsNotEnabled.addAll(integrations);
   }
 
@@ -449,64 +465,68 @@ public class IntegrationsManager {
    *
    * @return if Citizens is enabled
    */
-  public boolean isCitizensEnabled() {
+  public final boolean isCitizensEnabled() {
     return citizensEnabled;
   }
 
-  public boolean isMythicMobsEnabled() {
+  public final boolean isMythicMobsEnabled() {
     return mythicMobsEnabled;
   }
 
-  public boolean isEliteMobsEnabled() {
+  public final boolean isEliteMobsEnabled() {
     return eliteMobsEnabled;
   }
 
-  public boolean isSlimefunEnabled() {
+  public final boolean isSlimefunEnabled() {
     return slimefunEnabled;
   }
 
-  public boolean isPlaceholderAPIEnabled() {
+  public final boolean isPlaceholderAPIEnabled() {
     return placeholderAPIEnabled;
   }
 
-  public boolean isBetonQuestEnabled() {
+  public final boolean isBetonQuestEnabled() {
     return betonQuestEnabled;
   }
 
-  public boolean isWorldEditEnabled() {
+  public final boolean isWorldEditEnabled() {
     return worldEditEnabled;
   }
 
-  public boolean isLuckpermsEnabled() {
+  public final boolean isLuckpermsEnabled() {
     return luckpermsEnabled;
   }
 
-  public boolean isUltimateClansEnabled() {
+  public final boolean isUltimateClansEnabled() {
     return ultimateClansEnabled;
   }
 
-  public boolean isTownyEnabled() {
+  public final boolean isTownyEnabled() {
     return townyEnabled;
   }
 
-  public boolean isJobsRebornEnabled() {
+  public final boolean isJobsRebornEnabled() {
     return jobsRebornEnabled;
   }
 
-  public boolean isProjectKorraEnabled() {
+  public final boolean isProjectKorraEnabled() {
     return projectKorraEnabled;
   }
 
-  public boolean isEcoBossesEnabled() {
+  public final boolean isEcoBossesEnabled() {
     return ecoBossesEnabled;
   }
 
-  public boolean isUltimateJobsEnabled() {
+  public final boolean isUltimateJobsEnabled() {
     return ultimateJobsEnabled;
   }
 
-  public boolean isFloodgateEnabled() {
+  public final boolean isFloodgateEnabled() {
     return floodgateEnabled;
+  }
+
+  public final boolean isZNPCsEnabled() {
+    return zNPCsEnabled;
   }
 
   public final MythicMobsManager getMythicMobsManager() {
@@ -531,6 +551,10 @@ public class IntegrationsManager {
 
   public final CitizensManager getCitizensManager() {
     return citizensManager;
+  }
+
+  public final ZNPCsManager getZNPCsManager() {
+    return zNPCsManager;
   }
 
   public final ProjectKorraManager getProjectKorraManager() {

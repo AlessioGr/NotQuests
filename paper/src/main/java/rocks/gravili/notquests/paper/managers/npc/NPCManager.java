@@ -39,6 +39,11 @@ public class NPCManager {
         npcs.add("citizens:"+npcID);
       }
     }
+    if(main.getIntegrationsManager().isZNPCsEnabled()){
+      for(final int npcID : main.getIntegrationsManager().getZNPCsManager().getAllNPCIDs()){
+        npcs.add("znpcs:"+npcID);
+      }
+    }
     return npcs;
   }
 
@@ -58,6 +63,10 @@ public class NPCManager {
       final ArmorstandNPC newArmorStandNPC = new ArmorstandNPC(main, npcID);
       npcs.add(newArmorStandNPC);
       return newArmorStandNPC;
+    }else if(type.equalsIgnoreCase("znpcs")){
+      final ZNPCNPC newZNPCNPC = new ZNPCNPC(main, npcID);
+      npcs.add(newZNPCNPC);
+      return newZNPCNPC;
     }
 
     return null;

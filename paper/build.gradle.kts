@@ -194,6 +194,8 @@ dependencies {
     compileOnly("org.geysermc.floodgate:api:2.0-SNAPSHOT")
 
 
+
+
     //Shaded
 
 
@@ -239,6 +241,9 @@ dependencies {
     //compileOnly("com.willfp:EcoBosses:8.0.0")
     compileOnly(files("libs/EcoBosses-v8.78.0.jar"))
     compileOnly("com.willfp:eco:6.38.3")
+
+    compileOnly(files("libs/znpc-servers-3.9.jar"))
+
 
     implementation("com.github.Redempt:Crunch:1.1.2")
 

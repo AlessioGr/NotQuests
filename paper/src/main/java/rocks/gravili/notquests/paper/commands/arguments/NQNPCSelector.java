@@ -162,7 +162,7 @@ public class NQNPCSelector<C> extends CommandArgument<C, NQNPCResult> { //TODO: 
         return ArgumentParseResult.success(new NQNPCResult(null, false, true));
       }
 
-      if(!input.contains(":")){
+      if(!input.contains(":") || input.split(":").length != 2){
         return ArgumentParseResult.failure(
             new IllegalArgumentException("Wrong input. Format needs to be [NPC Plugin Name]:[NPC ID]. Please follow the command suggestions."));
       }

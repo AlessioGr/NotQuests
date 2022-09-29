@@ -250,6 +250,7 @@ bukkit {
         "eco",
         "UltimateJobs",
         "Floodgate",
+        "ZNPCs",
     )
 
     load = net.minecrell.pluginyml.bukkit.BukkitPluginDescription.PluginLoadOrder.POSTWORLD

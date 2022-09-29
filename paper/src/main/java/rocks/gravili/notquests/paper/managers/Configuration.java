@@ -117,6 +117,17 @@ public class Configuration {
   private boolean integrationEcoBossesEnabled = true;
   private boolean integrationUltimateJobsEnabled = true;
 
+  private boolean integrationZNPCsEnabled = true;
+
+  public boolean isIntegrationZNPCsEnabled() {
+    return integrationZNPCsEnabled;
+  }
+
+  public void setIntegrationZNPCsEnabled(boolean integrationZNPCsEnabled) {
+    this.integrationZNPCsEnabled = integrationZNPCsEnabled;
+  }
+
+
   public boolean isIntegrationFloodgateEnabled() {
     return integrationFloodgateEnabled;
   }
