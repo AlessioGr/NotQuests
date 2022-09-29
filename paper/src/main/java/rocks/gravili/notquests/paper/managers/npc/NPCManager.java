@@ -142,18 +142,18 @@ public class NPCManager {
         //NPC
         final ConfigurationSection npcsConfigurationSection = category.getQuestsConfig().getConfigurationSection("quests." + questName + ".npcs");
         if (npcsConfigurationSection != null) {
-          for (final String npcNumber : npcsConfigurationSection.getKeys(false)) {
+          for (final String npcIdentifyingString : npcsConfigurationSection.getKeys(false)) {
 
             if (category.getQuestsConfig() != null) {
-              final NQNPC nqNPC = NQNPC.fromConfig(main, category.getQuestsConfig(), "quests." + questName + ".npcs." + npcNumber + ".npcData");
+              final NQNPC nqNPC = NQNPC.fromConfig(main, category.getQuestsConfig(), "quests." + questName + ".npcs." + npcIdentifyingString + ".npcData");
               if (nqNPC != null) {
-                final boolean questShowing = category.getQuestsConfig().getBoolean("quests." + questName + ".npcs." + npcNumber + ".questShowing", true);
+                final boolean questShowing = category.getQuestsConfig().getBoolean("quests." + questName + ".npcs." + npcIdentifyingString + ".questShowing", true);
                 // call the callback with the result
                 main.getLogManager().info("Attaching Quest with the name <highlight>" + quest.getQuestName() + "</highlight> to NPC with the ID <highlight>" + nqNPC.getID() + " </highlight>and name <highlight>" + nqNPC.getName());
                 quest.removeNPC(nqNPC);
                 quest.bindToNPC(nqNPC, questShowing);
               } else {
-                main.getLogManager().warn("Error attaching npc with ID <highlight>" + category.getQuestsConfig().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID")
+                main.getLogManager().warn("Error attaching npc with ID <highlight>" + category.getQuestsConfig().getInt("quests." + questName + ".npcs." + npcIdentifyingString + ".npcID")
                     + "</highlight> to quest <highlight>" + quest.getQuestName() + "</highlight> - NPC not found.");
               }
             } else {

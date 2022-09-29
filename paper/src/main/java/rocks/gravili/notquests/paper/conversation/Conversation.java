@@ -187,7 +187,7 @@ public class Conversation {
     if (configFile == null || config == null) {
       return;
     }
-    nqnpc.saveToConfig(config, "npcs." + npcs.size());
+    nqnpc.saveToConfig(config, "npcs." + nqnpc.getIdentifyingString());
 
     try {
       config.save(configFile);

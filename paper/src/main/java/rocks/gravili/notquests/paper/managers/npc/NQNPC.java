@@ -18,6 +18,10 @@ public abstract class NQNPC { //TODO: Even though I'm trying to pool NPC names, 
   public abstract @Nullable String getName();
   public abstract NQNPCID getID();
 
+  public final String getIdentifyingString(){
+    return npcType + "-" + getID().getEitherAsString();
+  }
+
   public final @NotNull String getNPCType() {
     return npcType;
   }

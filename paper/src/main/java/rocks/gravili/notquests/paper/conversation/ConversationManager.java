@@ -250,9 +250,9 @@ public class ConversationManager {
       final ArrayList<NQNPC> npcs = new ArrayList<>();
       final ConfigurationSection npcsConfigurationSection = config.getConfigurationSection("npcs");
       if(npcsConfigurationSection != null){
-        for (final String npcIDString : npcsConfigurationSection.getKeys(false)) {
+        for (final String npcIdentifyingString : npcsConfigurationSection.getKeys(false)) {
           npcs.add(
-              NQNPC.fromConfig(main, config, "npcs." + npcIDString)
+              NQNPC.fromConfig(main, config, "npcs." + npcIdentifyingString)
           );
         }
       }

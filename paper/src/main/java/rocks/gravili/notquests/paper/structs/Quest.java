@@ -530,10 +530,10 @@ public class Quest {
     }
 
 
-    npc.saveToConfig(category.getQuestsConfig(), "quests." + questName + ".npcs." + npc.getID().getEitherAsString() + ".npcData");
+    npc.saveToConfig(category.getQuestsConfig(), "quests." + questName + ".npcs." + npc.getIdentifyingString() + ".npcData");
     category
         .getQuestsConfig()
-        .set("quests." + questName + ".npcs." + npc.getID().getEitherAsString() + ".questShowing", showQuestInNPC);
+        .set("quests." + questName + ".npcs." + npc.getIdentifyingString() + ".questShowing", showQuestInNPC);
     category.saveQuestsConfig();
     return "";
   }
@@ -568,7 +568,7 @@ public class Quest {
         }
       }
 
-      category.getQuestsConfig().set("quests." + questName + ".npcs." + npc.getID().getEitherAsString(), null);
+      category.getQuestsConfig().set("quests." + questName + ".npcs." + npc.getIdentifyingString(), null);
       category.saveQuestsConfig();
 
       attachedNPCsWithQuestShowing.remove(npc);
