@@ -1,15 +1,11 @@
 package rocks.gravili.notquests.paper.managers.npc;
 
-import java.util.ArrayList;
-import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.npc.NPC;
-import net.citizensnpcs.api.trait.Trait;
+import io.github.znetworkw.znpcservers.npc.NPC;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.conversation.Conversation;
-import rocks.gravili.notquests.paper.managers.integrations.citizens.QuestGiverNPCTrait;
 import rocks.gravili.notquests.paper.structs.Quest;
 
 public class ZNPCNPC extends NQNPC {
@@ -19,12 +15,12 @@ public class ZNPCNPC extends NQNPC {
   public ZNPCNPC(final NotQuests main, final NQNPCID npcID) {
     super(main, "znpcs");
     this.npcID = npcID;
-    this.cachedNPC = CitizensAPI.getNPCRegistry().getById(npcID.getIntegerID());
+    this.cachedNPC = NPC.find(npcID.getIntegerID());
   }
 
   private boolean updateCachedNPC() {
     if (cachedNPC == null) {
-      cachedNPC = CitizensAPI.getNPCRegistry().getById(npcID.getIntegerID());
+      cachedNPC = NPC.find(npcID.getIntegerID());
     }
     return cachedNPC != null;
   }
@@ -38,7 +34,7 @@ public class ZNPCNPC extends NQNPC {
     return main.getMiniMessage()
         .serialize(
             LegacyComponentSerializer.legacyAmpersand()
-                .deserialize(cachedNPC.getName().replace("§", "&")));
+                .deserialize(""+cachedNPC.getEntityID()));
   }
 
   @Override
@@ -46,7 +42,7 @@ public class ZNPCNPC extends NQNPC {
     if (!updateCachedNPC()) {
       return npcID;
     }
-    return NQNPCID.fromInteger(cachedNPC.getId());
+    return npcID;
   }
 
   @Override
@@ -55,65 +51,16 @@ public class ZNPCNPC extends NQNPC {
       return;
     }
 
-    boolean hasTrait = false;
-    for (Trait trait : cachedNPC.getTraits()) {
-      if (trait.getName().contains("questgiver")) {
-        hasTrait = true;
-        break;
-      }
-    }
-    if (!cachedNPC.hasTrait(QuestGiverNPCTrait.class) && !hasTrait) {
-      main.getLogManager()
-          .info(
-              "Trying to add Conversation <highlight>"
-                  + conversation.getIdentifier()
-                  + "</highlight> to NPC with ID <highlight>"
-                  + cachedNPC.getId()
-                  + "</highlight>...");
-
-      cachedNPC.addTrait(QuestGiverNPCTrait.class);
-    }
+    return;
   }
 
   @Override
   public String removeQuestGiverNPCTrait(final @Nullable Boolean showQuestInNPC, final Quest quest) {
-    if (!updateCachedNPC()) {
-      return "NPC not found";
-    }
-
-    final ArrayList<Trait> npcTraitsToRemove = new ArrayList<>();
-    for (final Trait trait : cachedNPC.getTraits()) {
-      if (trait.getName().equalsIgnoreCase("nquestgiver")) {
-        npcTraitsToRemove.add(trait);
-      }
-    }
-    for (final Trait trait : npcTraitsToRemove) {
-      cachedNPC.removeTrait(trait.getClass());
-    }
-    npcTraitsToRemove.clear();
-
-    // cachedNPC.removeTrait(QuestGiverNPCTrait.class); //This is not enough to ensure compatibility
-    // with ServerUtils
     return "";
   }
 
   @Override
   public String addQuestGiverNPCTrait(final @Nullable Boolean showQuestInNPC, final Quest quest) {
-    if (!updateCachedNPC()) {
-      return "NPC not found";
-    }
-    boolean hasTrait = false;
-    for (Trait trait : cachedNPC.getTraits()) {
-      if (trait.getName().contains("questgiver")) {
-        hasTrait = true;
-        break;
-      }
-    }
-    if (!cachedNPC.hasTrait(QuestGiverNPCTrait.class) && !hasTrait) {
-      // System.out.println("§2NPC doesnt have trait. giving him trait... Cur traits: " +
-      // npc.getTraits().toString());
-      cachedNPC.addTrait(QuestGiverNPCTrait.class);
-    }
     return "";
   }
 

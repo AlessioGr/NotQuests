@@ -20,39 +20,28 @@ package rocks.gravili.notquests.paper.structs.objectives;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
-import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.paper.PaperCommandManager;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
-import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.npc.NPC;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionArgument;
+import rocks.gravili.notquests.paper.commands.arguments.NQNPCSelector;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
+import rocks.gravili.notquests.paper.commands.arguments.wrappers.NQNPCResult;
+import rocks.gravili.notquests.paper.managers.npc.NQNPC;
+import rocks.gravili.notquests.paper.managers.npc.NQNPCID;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 public class DeliverItemsObjective extends Objective {
 
-    private int recipientNPCID = -1;
-    private UUID recipientArmorStandUUID = null;
+    private NQNPC recipientNPC;
     private ItemStackSelection itemStackSelection;
 
 
@@ -66,19 +55,7 @@ public class DeliverItemsObjective extends Objective {
         manager.command(addObjectiveBuilder
                 .argument(ItemStackSelectionArgument.of("materials", main), ArgumentDescription.of("Material of the item which needs to be delivered"))
                 .argument(NumberVariableValueArgument.newBuilder("amount", main, null), ArgumentDescription.of("Amount of items which need to be delivered"))
-                .argument(StringArgument.<CommandSender>newBuilder("NPC or Armorstand").withSuggestionsProvider((context, lastString) -> {
-                    ArrayList<String> completions = new ArrayList<>();
-                    if (main.getIntegrationsManager().isCitizensEnabled()) {
-                        for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
-                            completions.add("" + npc.getId());
-                        }
-                    }
-                    completions.add("armorstand");
-                    final List<String> allArgs = context.getRawInput();
-                    main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Recipient NPC ID / 'armorstand']", "");
-
-                    return completions;
-                }).build(), ArgumentDescription.of("ID of the Citizens NPC or 'armorstand' to whom the items should be delivered."))
+                .argument(NQNPCSelector.of("NPC", main, false, true), ArgumentDescription.of("NPC to whom the items should be delivered."))
                 .handler((context) -> {
                     final Quest quest = context.get("quest");
                     final String amountToDeliverExpression = context.get("amount");
@@ -87,104 +64,41 @@ public class DeliverItemsObjective extends Objective {
                     final ItemStackSelection itemStackSelection = context.get("materials");
 
 
-                    final String npcIDOrArmorstand = context.get("NPC or Armorstand");
+                    final NQNPCResult nqNPCResult = context.get("NPC");
 
+                    if (nqNPCResult.isRightClickSelect()) {//Armor Stands
+                        if (context.getSender() instanceof final Player player) {
+                            main.getNPCManager().handleRightClickNQNPCSelectionWithAction(
+                                (nqNPC) -> {
+                                    final DeliverItemsObjective deliverItemsObjective = new DeliverItemsObjective(main);
+                                    deliverItemsObjective.setItemStackSelection(itemStackSelection);
 
-                    if (!npcIDOrArmorstand.equalsIgnoreCase("armorstand")) {
-                        if (!main.getIntegrationsManager().isCitizensEnabled()) {
-                            context.getSender().sendMessage(main.parse(
-                                    "<error>Error: Any kind of NPC stuff has been disabled, because you don't have the Citizens plugin installed on your server. You need to install the Citizens plugin in order to use Citizen NPCs. You can, however, use armor stands as an alternative. To do that, just enter 'armorstand' instead of the NPC ID."
-                            ));
-                            return;
-                        }
-                        int npcID;
-                        try {
-                            npcID = Integer.parseInt(npcIDOrArmorstand);
-                        } catch (NumberFormatException e) {
-                            context.getSender().sendMessage(
-                                    main.parse(
-                                            "<error>Invalid NPC ID."
-                                    )
+                                    deliverItemsObjective.setProgressNeededExpression(amountToDeliverExpression);
+                                    deliverItemsObjective.setRecipientNPC(nqNPC);
+
+                                    main.getObjectiveManager().addObjective(deliverItemsObjective, context);
+                                },
+                                player,
+                                "<success>You have been given an item with which you can add the DeliverItems Objective to an NPC by rightclicking the NPC. Check your inventory!",
+                                "<LIGHT_PURPLE>Add DeliverItems Objective to NPC",
+                                "<WHITE>Right-click an NPC to add the following objective to it:",
+                                "<YELLOW>DeliverItems <WHITE>Objective of Quest <highlight>" + quest.getQuestName() + "</highlight>."
                             );
-                            return;
+
+                        } else {
+                            context.getSender().sendMessage(main.parse("<error>Error: this command can only be run as a player."));
                         }
-                        DeliverItemsObjective deliverItemsObjective = new DeliverItemsObjective(main);
+                    }else {
+                        final NQNPC nqNPC = nqNPCResult.getNQNPC();
+
+                        final DeliverItemsObjective deliverItemsObjective = new DeliverItemsObjective(main);
                         deliverItemsObjective.setItemStackSelection(itemStackSelection);
 
                         deliverItemsObjective.setProgressNeededExpression(amountToDeliverExpression);
-                        deliverItemsObjective.setRecipientNPCID(npcID);
+                        deliverItemsObjective.setRecipientNPC(nqNPC);
 
                         main.getObjectiveManager().addObjective(deliverItemsObjective, context);
-                    } else {//Armorstands
-                        if (context.getSender() instanceof Player player) {
-
-
-                            Random rand = new Random();
-                            int randomNum = rand.nextInt((Integer.MAX_VALUE - 1) + 1) + 1;
-
-                            main.getDataManager().getItemStackSelectionCache().put(randomNum, itemStackSelection);
-
-
-
-
-                            ItemStack itemStack = new ItemStack(Material.PAPER, 1);
-                            //give a specialitem. clicking an armorstand with that special item will remove the pdb.
-
-                            NamespacedKey key = new NamespacedKey(main.getMain(), "notquests-item");
-                            NamespacedKey QuestNameKey = new NamespacedKey(main.getMain(), "notquests-questname");
-
-                            NamespacedKey ItemStackKey = new NamespacedKey(main.getMain(), "notquests-itemstackcache");
-                            NamespacedKey ItemStackAmountKey = new NamespacedKey(main.getMain(), "notquests-itemstackamount");
-
-
-                            ItemMeta itemMeta = itemStack.getItemMeta();
-                            List<Component> lore = new ArrayList<>();
-
-                            assert itemMeta != null;
-
-                            itemMeta.getPersistentDataContainer().set(QuestNameKey, PersistentDataType.STRING, quest.getQuestName());
-                            itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 7);
-
-
-                            itemMeta.getPersistentDataContainer().set(ItemStackKey, PersistentDataType.INTEGER, randomNum);
-                            itemMeta.getPersistentDataContainer().set(ItemStackAmountKey, PersistentDataType.STRING, amountToDeliverExpression);
-
-
-                            itemMeta.displayName(main.parse(
-                                    "<LIGHT_PURPLE>Add DeliverItems Objective to Armor Stand"
-                            ));
-
-                            lore.add(main.parse(
-                                    "<WHITE>Right-click an Armor Stand to add the following objective to it:"
-                            ));
-                            lore.add(main.parse(
-                                    "<YELLOW>DeliverItems <WHITE>Objective of Quest <highlight>" + quest.getQuestName() + "</highlight>."
-                            ));
-
-                            itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-
-                            itemMeta.lore(lore);
-
-                            itemStack.setItemMeta(itemMeta);
-
-                            player.getInventory().addItem(itemStack);
-
-                            context.getSender().sendMessage(
-                                    main.parse(
-                                            "<success>You have been given an item with which you can add the DeliverItems Objective to an armor stand. Check your inventory!"
-                                    )
-                            );
-
-
-                        } else {
-                            context.getSender().sendMessage(
-                                    main.parse(
-                                            "<error>Must be a player!"
-                                    )
-                            );
-                        }
                     }
-
 
                 }));
     }
@@ -205,26 +119,16 @@ public class DeliverItemsObjective extends Objective {
     public void onObjectiveCompleteOrLock(final ActiveObjective activeObjective, final boolean lockedOrCompletedDuringPluginStartupQuestLoadingProcess, final boolean completed) {
     }
 
-    public final int getRecipientNPCID() {
-        return recipientNPCID;
+    public final NQNPC getRecipientNPC() {
+        return recipientNPC;
     }
 
-    public void setRecipientNPCID(final int recipientNPCID) {
-        this.recipientNPCID = recipientNPCID;
-    }
-
-    public final UUID getRecipientArmorStandUUID() {
-        return recipientArmorStandUUID;
-    }
-
-    public void setRecipientArmorStandUUID(final UUID recipientArmorStandUUID) {
-        this.recipientArmorStandUUID = recipientArmorStandUUID;
+    public void setRecipientNPC(final NQNPC recipientNPC) {
+        this.recipientNPC = recipientNPC;
     }
 
     @Override
     public String getTaskDescriptionInternal(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
-
-
         String toReturn;
         toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.base", questPlayer, activeObjective, Map.of(
                 "%ITEMTODELIVERTYPE%", getItemStackSelection().getAllMaterialsListed(),
@@ -233,33 +137,12 @@ public class DeliverItemsObjective extends Objective {
                 "%)%", ""
         ));
 
-
-        if (main.getIntegrationsManager().isCitizensEnabled() && getRecipientNPCID() != -1) {
-            final NPC npc = CitizensAPI.getNPCRegistry().getById(getRecipientNPCID());
-            if (npc != null) {
-                final String mmNpcName = main.getMiniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(npc.getName().replace("§","&")));
-
-                toReturn += "\n" + main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-npc", questPlayer, activeObjective, Map.of(
-                        "%NPCNAME%", mmNpcName
-                ));
-            } else {
-                toReturn += "\n" + main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-npc-not-available", questPlayer, activeObjective);
-            }
+        if (recipientNPC != null) {;
+            toReturn += "\n" + main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-npc", questPlayer, activeObjective, Map.of(
+                "%NPCNAME%", recipientNPC.getName() != null ? recipientNPC.getName() : recipientNPC.getID().getEitherAsString()
+            ));
         } else {
-
-            if (getRecipientNPCID() != -1) {
-                toReturn += main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-npc-citizens-not-found", questPlayer, activeObjective);
-            } else { //Armor Stands
-                final UUID armorStandUUID = getRecipientArmorStandUUID();
-                if (armorStandUUID != null) {
-                    toReturn += "\n" + main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-armorstand", questPlayer, activeObjective, Map.of(
-                            "%ARMORSTANDNAME%", main.getArmorStandManager().getArmorStandName(armorStandUUID)
-                    ));
-                } else {
-                    toReturn += "\n" + main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-armorstand-not-available", questPlayer, activeObjective);
-                }
-            }
-
+            toReturn += "\n" + main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-npc-not-available", questPlayer, activeObjective);
         }
         return toReturn;
     }
@@ -267,13 +150,7 @@ public class DeliverItemsObjective extends Objective {
     @Override
     public void save(FileConfiguration configuration, String initialPath) {
         getItemStackSelection().saveToFileConfiguration(configuration, initialPath + ".specifics.itemStackSelection");
-
-        configuration.set(initialPath + ".specifics.recipientNPCID", getRecipientNPCID());
-        if (getRecipientArmorStandUUID() != null) {
-            configuration.set(initialPath + ".specifics.recipientArmorStandID", getRecipientArmorStandUUID().toString());
-        } else {
-            configuration.set(initialPath + ".specifics.recipientArmorStandID", null);
-        }
+        recipientNPC.saveToConfig(configuration, initialPath + ".specifics.recipientNPC");
     }
 
     @Override
@@ -297,17 +174,15 @@ public class DeliverItemsObjective extends Objective {
             //Let's hope it saves somewhere, else conversion will happen again...
         }
 
-        recipientNPCID = configuration.getInt(initialPath + ".specifics.recipientNPCID");
+        recipientNPC = NQNPC.fromConfig(main, configuration, initialPath + ".specifics.recipientNPC");
 
-        if (recipientNPCID != -1) {
-            recipientArmorStandUUID = null;
-        } else {
-            final String armorStandUUIDString = configuration.getString(initialPath + ".specifics.recipientArmorStandID");
-            if (armorStandUUIDString != null) {
-                recipientArmorStandUUID = UUID.fromString(armorStandUUIDString);
-            } else {
-                recipientArmorStandUUID = null;
+        if (recipientNPC == null) { //Convert
+            recipientNPC = main.getNPCManager().getOrCreateNQNpc("citizens", NQNPCID.fromInteger(configuration.getInt(initialPath + ".specifics.recipientNPCID")));
+
+            if (recipientNPC == null) {
+                recipientNPC = main.getNPCManager().getOrCreateNQNpc("armorstand", NQNPCID.fromUUID(UUID.fromString(configuration.getString(initialPath + ".specifics.recipientArmorStandID", ""))));
             }
         }
+
     }
 }
