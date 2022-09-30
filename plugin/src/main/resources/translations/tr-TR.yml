@@ -91,9 +91,6 @@ chat:
         base: 'Eşyaları Teslim et: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
         deliver-to-npc: '      <GRAY> <WHITE>%NPCNAME% teslim et'
         deliver-to-npc-not-available: '      <GRAY>Teslimat NPC''si şu anda mevcut değil!'
-        deliver-to-npc-citizens-not-found: '    <RED>Hata oluştu: Citizens eklentisi yüklü değil. Bir yönetici ile iletişime geçin.'
-        deliver-to-armorstand: '    <GRAY> <WHITE>%ARMORSTANDNAME% teslim et'
-        deliver-to-armorstand-not-available: '    <GRAY>Hedef Zırh Standı şu anda mevcut değil!'
       escortNPC:
         base: '<main>%NPCNAME%</main> <main>%DESTINATIONNPCNAME% kadar eşlik edin'
       fishItems:
