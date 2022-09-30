@@ -62,6 +62,8 @@ public class ArmorStandEvents implements Listener {
 
             final ArmorStand armorStand = (ArmorStand) event.getRightClicked();
             final ItemStack heldItem = event.getPlayer().getInventory().getItemInMainHand();
+            final NQNPC armorStandNQNPC = main.getNPCManager().getOrCreateNQNpc("armorstand",
+                NQNPCID.fromUUID(armorStand.getUniqueId()));
 
             if (player.hasPermission("notquests.admin.armorstandeditingitems") && heldItem.getType() != Material.AIR && heldItem.getItemMeta() != null) {
                 final PersistentDataContainer container = heldItem.getItemMeta().getPersistentDataContainer();
@@ -72,8 +74,6 @@ public class ArmorStandEvents implements Listener {
                 if (container.has(specialActionItemKey, PersistentDataType.INTEGER)) {
                     int id = container.get(specialActionItemKey, PersistentDataType.INTEGER); //Not null, because we check for it in container.has()
 
-                    final NQNPC armorStandNQNPC = main.getNPCManager().getOrCreateNQNpc("armorstand",
-                        NQNPCID.fromUUID(armorStand.getUniqueId()));
                     main.getNPCManager().executeNPCSelectionAction(armorStandNQNPC, id);
                 } else if (container.has(specialItemKey, PersistentDataType.INTEGER)) {
 
@@ -233,25 +233,6 @@ public class ArmorStandEvents implements Listener {
                             }
                         }
 
-                    } else if (id == 5) { //Add Objective TalkToNPC
-
-                        final Quest quest = main.getQuestManager().getQuest(questName);
-                        if (quest != null) {
-                            TalkToNPCObjective talkToNPCObjective = new TalkToNPCObjective(main);
-                            talkToNPCObjective.setQuest(quest);
-                            talkToNPCObjective.setObjectiveID(quest.getFreeObjectiveID());
-                            talkToNPCObjective.setArmorStandUUID(armorStand.getUniqueId());
-                            quest.addObjective(talkToNPCObjective, true);
-                            player.sendMessage(main.parse(
-                                    "<GREEN>Objective successfully added to quest <highlight>" + quest.getQuestName() + "</highlight>!"
-                            ));
-
-                        } else {
-                            player.sendMessage(main.parse(
-                                    "<error>Error: Quest <highlight>" + questName + "</highlight> does not exist."
-                            ));
-                        }
-
                     } else if (id == 6) { //Set as completionNPC to an objective of a Quest
                         final Quest quest = main.getQuestManager().getQuest(questName);
                         if (quest != null) {
@@ -346,11 +327,11 @@ public class ArmorStandEvents implements Listener {
 
                     }
                 }else {
-                    showQuestOrHandleObjectivesOfArmorStands(player, armorStand, event);
+                    showQuestOrHandleObjectivesOfArmorStands(player, armorStand, armorStandNQNPC, event);
 
                 }
             } else {
-                showQuestOrHandleObjectivesOfArmorStands(player, armorStand, event);
+                showQuestOrHandleObjectivesOfArmorStands(player, armorStand, armorStandNQNPC, event);
             }
 
 
@@ -358,7 +339,7 @@ public class ArmorStandEvents implements Listener {
     }
 
 
-    public void showQuestOrHandleObjectivesOfArmorStands(final Player player, final ArmorStand armorStand, final PlayerInteractAtEntityEvent event) {
+    public void showQuestOrHandleObjectivesOfArmorStands(final Player player, final ArmorStand armorStand, final NQNPC armorStandNQNPC, final PlayerInteractAtEntityEvent event) {
         //Handle Objectives
         final AtomicBoolean handledObjective = new AtomicBoolean(false);
 
@@ -367,9 +348,7 @@ public class ArmorStandEvents implements Listener {
         if (questPlayer != null) {
             questPlayer.queueObjectiveCheck(activeObjective -> {
                 if (activeObjective.getObjective() instanceof final DeliverItemsObjective deliverItemsObjective) {
-                    final NQNPC armorStandNQNPC = main.getNPCManager().getOrCreateNQNpc("armorstand",
-                        NQNPCID.fromUUID(armorStand.getUniqueId()));
-                    if (deliverItemsObjective.getRecipientNPC().equals(armorStandNQNPC)) {
+                    if (armorStandNQNPC.equals(deliverItemsObjective.getRecipientNPC())) {
                         for (final ItemStack itemStack : player.getInventory().getContents()) {
                             if (itemStack != null) {
                                 if(!deliverItemsObjective.getItemStackSelection().checkIfIsIncluded(itemStack)) {
@@ -405,7 +384,7 @@ public class ArmorStandEvents implements Listener {
             });
             questPlayer.queueObjectiveCheck(activeObjective -> {
                 if (activeObjective.getObjective() instanceof final TalkToNPCObjective talkToNPCObjective) {
-                    if (talkToNPCObjective.getNPCtoTalkID() == -1 && (talkToNPCObjective.getArmorStandUUID().equals(armorStand.getUniqueId()))) {
+                    if (armorStandNQNPC.equals(talkToNPCObjective.getNPCtoTalkTo())) {
                         activeObjective.addProgress(1, armorStand.getUniqueId());
                         player.sendMessage(main.parse(
                             "<GREEN>You talked to <highlight>" + main.getArmorStandManager().getArmorStandName(armorStand)
