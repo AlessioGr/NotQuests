@@ -4,7 +4,9 @@
 name: Gradle-ci
 
 #on: [ push, pull_request ]
-on: []
+on:
+  release:
+    types: [created]
 
 jobs:
   build:
