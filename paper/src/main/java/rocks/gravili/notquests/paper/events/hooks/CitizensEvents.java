@@ -115,9 +115,13 @@ public class CitizensEvents implements Listener {
     private void onNPCClickEvent(NPCRightClickEvent event) { //Disconnect objectives
         final NPC npc = event.getNPC();
         final NQNPC nqNPC = main.getNPCManager().getOrCreateNQNpc("Citizens", NQNPCID.fromInteger(npc.getId()));
-
         final Player player = event.getClicker();
         final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
+
+        if(nqNPC == null){
+            questPlayer.sendDebugMessage("Error: NQNpc is null");
+        }
+
 
         questPlayer.sendDebugMessage("Clicked on Citizens NPC!");
         //Handle special items first
@@ -142,7 +146,7 @@ public class CitizensEvents implements Listener {
 
         questPlayer.queueObjectiveCheck(activeObjective -> {
             if (activeObjective.getObjective() instanceof final DeliverItemsObjective deliverItemsObjective) {
-                if (deliverItemsObjective.getRecipientNPC().equals(nqNPC)) {
+                if (nqNPC.equals(deliverItemsObjective.getRecipientNPC())) {
                     for (final ItemStack itemStack : player.getInventory().getContents()) {
                         if (itemStack != null) {
                             if(!deliverItemsObjective.getItemStackSelection().checkIfIsIncluded(itemStack)){
@@ -186,7 +190,7 @@ public class CitizensEvents implements Listener {
         });
         questPlayer.queueObjectiveCheck(activeObjective -> {
             if (activeObjective.getObjective() instanceof final TalkToNPCObjective talkToNPCObjective) {
-                if (talkToNPCObjective.getNPCtoTalkID() != -1 && talkToNPCObjective.getNPCtoTalkID() == npc.getId()) {
+                if (nqNPC.equals(talkToNPCObjective.getNPCtoTalkTo())) {
                     activeObjective.addProgress(1, nqNPC);
                     final String mmNpcName = main.getMiniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(npc.getName().replace("§","&")));
 

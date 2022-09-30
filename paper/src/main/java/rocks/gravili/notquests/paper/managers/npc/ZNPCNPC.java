@@ -69,6 +69,6 @@ public class ZNPCNPC extends NQNPC {
     if (!updateCachedNPC()) {
       return null;
     }
-    return cachedNPC.getEntity();
+    return (Entity) cachedNPC.getBukkitEntity();
   }
 }
