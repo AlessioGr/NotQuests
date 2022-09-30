@@ -91,9 +91,6 @@ chat:
         base: '給予物品: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
         deliver-to-npc: '      <GRAY>將物品給予給 <WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>負責收取物品的NPC目前不在!'
-        deliver-to-npc-citizens-not-found: '    <RED>錯誤: 服務器未安裝 Citizens. 請告知OP'
-        deliver-to-armorstand: '    <GRAY>将物品給予 <WHITE>%ARMORSTANDNAME%'
-        deliver-to-armorstand-not-available: '    <GRAY>負責收取物品的盔甲架目前不在!'
       escortNPC:
         base: '護送 <main>%NPCNAME%</main> 到 <main>%DESTINATIONNPCNAME%'
       fishItems:
