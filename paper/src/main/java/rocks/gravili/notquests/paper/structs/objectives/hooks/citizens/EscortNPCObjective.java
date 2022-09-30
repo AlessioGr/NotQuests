@@ -39,7 +39,7 @@ import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
-public class EscortNPCObjective extends Objective {
+public class EscortNPCObjective extends Objective { //TODO: Add support for other NPC systems
 
   private int npcToEscortID = -1;
   private int npcToEscortToID = -1;
@@ -69,9 +69,9 @@ public class EscortNPCObjective extends Objective {
                 IntegerArgument.<CommandSender>newBuilder("NPC to escort")
                     .withSuggestionsProvider(
                         (context, lastString) -> {
-                          ArrayList<String> completions = new ArrayList<>();
-                          for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
-                            completions.add("" + npc.getId());
+                          final ArrayList<String> completions = new ArrayList<>();
+                          for (final int npcID : main.getIntegrationsManager().getCitizensManager().getAllNPCIDs()) {
+                            completions.add("" + npcID);
                           }
                           final List<String> allArgs = context.getRawInput();
                           main.getUtilManager()
@@ -89,12 +89,12 @@ public class EscortNPCObjective extends Objective {
                 IntegerArgument.<CommandSender>newBuilder("Destination NPC")
                     .withSuggestionsProvider(
                         (context, lastString) -> {
-                          ArrayList<String> completions = new ArrayList<>();
+                          final ArrayList<String> completions = new ArrayList<>();
                           try {
                             int npcToEscortID = context.get("NPC to escort");
-                            for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
-                              if (npc.getId() != npcToEscortID) {
-                                completions.add("" + npc.getId());
+                            for (final int npcID : main.getIntegrationsManager().getCitizensManager().getAllNPCIDs()) {
+                              if (npcID != npcToEscortID) {
+                                completions.add("" + npcID);
                               }
                             }
                           } catch (Exception ignored) {
@@ -132,7 +132,7 @@ public class EscortNPCObjective extends Objective {
                     return;
                   }
 
-                  EscortNPCObjective escortNPCObjective = new EscortNPCObjective(main);
+                  final EscortNPCObjective escortNPCObjective = new EscortNPCObjective(main);
 
                   escortNPCObjective.setSpawnLocation(spawnLocation);
 
@@ -197,6 +197,13 @@ public class EscortNPCObjective extends Objective {
   }
 
   @Override
+  public void load(FileConfiguration configuration, String initialPath) {
+    npcToEscortID = configuration.getInt(initialPath + ".specifics.NPCToEscortID");
+    npcToEscortToID = configuration.getInt(initialPath + ".specifics.destinationNPCID");
+    setSpawnLocation(configuration.getLocation(initialPath + ".specifics.spawnLocation", null));
+  }
+
+  @Override
   public void onObjectiveUnlock(
       final ActiveObjective activeObjective,
       final boolean unlockedDuringPluginStartupQuestLoadingProcess) {
@@ -229,10 +236,5 @@ public class EscortNPCObjective extends Objective {
     this.npcToEscortToID = npcToEscortToID;
   }
 
-  @Override
-  public void load(FileConfiguration configuration, String initialPath) {
-    npcToEscortID = configuration.getInt(initialPath + ".specifics.NPCToEscortID");
-    npcToEscortToID = configuration.getInt(initialPath + ".specifics.destinationNPCID");
-    setSpawnLocation(configuration.getLocation(initialPath + ".specifics.spawnLocation", null));
-  }
+
 }
