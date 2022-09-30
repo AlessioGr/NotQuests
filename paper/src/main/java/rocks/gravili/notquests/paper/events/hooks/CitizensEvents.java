@@ -120,6 +120,7 @@ public class CitizensEvents implements Listener {
 
         if(nqNPC == null){
             questPlayer.sendDebugMessage("Error: NQNpc is null");
+            return;
         }
 
 
@@ -142,7 +143,7 @@ public class CitizensEvents implements Listener {
 
 
         final AtomicBoolean handledObjective = new AtomicBoolean(false);
-        questPlayer.sendDebugMessage("Right-clicked NPC event: " + npc.getId() + ". NqNPC null: " + (nqNPC == null) );
+        questPlayer.sendDebugMessage("Right-clicked NPC event: " + npc.getId() + "." );
 
         questPlayer.queueObjectiveCheck(activeObjective -> {
             if (activeObjective.getObjective() instanceof final DeliverItemsObjective deliverItemsObjective) {
@@ -255,12 +256,12 @@ public class CitizensEvents implements Listener {
         main.getQuestManager().sendQuestsPreviewOfQuestShownNPCs(nqNPC, questPlayer);
 
         //Conversations
-        final Conversation foundConversation = main.getConversationManager().getConversationForNPC(nqNPC);
-        if (foundConversation != null) {
-            main.getConversationManager().playConversation(questPlayer, foundConversation);
+        if(main.getConversationManager() != null){
+            final Conversation foundConversation = main.getConversationManager().getConversationForNPC(nqNPC);
+            if (foundConversation != null) {
+                main.getConversationManager().playConversation(questPlayer, foundConversation);
+            }
         }
-
-
     }
 
     @EventHandler
