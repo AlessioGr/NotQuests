@@ -91,9 +91,6 @@ chat:
         base: 'Livrer des items : <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
         deliver-to-npc: '      <GRAY>Livrez-le à <WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>Le PNJ de livraison n''est actuellement pas disponible!'
-        deliver-to-npc-citizens-not-found: '    <RED>Erreur: Le plugin Citizens n''est pas installé. Contactez un administrateur.'
-        deliver-to-armorstand: '    <GRAY>Livrez-le à <WHITE>%ARMORSTANDNAME%'
-        deliver-to-armorstand-not-available: '    <GRAY>Le porte-armure de destination n''est actuellement pas disponible !'
       escortNPC:
         base: 'Escorter <main>%NPCNAME%</main> à <main>%DESTINATIONNPCNAME%'
       fishItems:
