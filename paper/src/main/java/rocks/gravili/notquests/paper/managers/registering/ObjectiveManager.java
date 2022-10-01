@@ -48,6 +48,7 @@ import rocks.gravili.notquests.paper.structs.objectives.OtherQuestObjective;
 import rocks.gravili.notquests.paper.structs.objectives.PlaceBlocksObjective;
 import rocks.gravili.notquests.paper.structs.objectives.ReachLocationObjective;
 import rocks.gravili.notquests.paper.structs.objectives.RunCommandObjective;
+import rocks.gravili.notquests.paper.structs.objectives.ShearSheepObjective;
 import rocks.gravili.notquests.paper.structs.objectives.SmeltObjective;
 import rocks.gravili.notquests.paper.structs.objectives.SneakObjective;
 import rocks.gravili.notquests.paper.structs.objectives.TalkToNPCObjective;
@@ -101,6 +102,8 @@ public class ObjectiveManager {
     registerObjective("Sneak", SneakObjective.class);
     registerObjective("SmeltItems", SmeltObjective.class);
     registerObjective("OpenBuriedTreasure", OpenBuriedTreasureObjective.class);
+    registerObjective("ShearSheep", ShearSheepObjective.class);
+
     registerObjective("NumberVariable", NumberVariableObjective.class); //Special
 
     // Towny
@@ -234,6 +237,10 @@ public class ObjectiveManager {
                   .literal(identifier)
                   .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " objective"));
 
+          //TODO Check if right? Why action stuff?
+          //TODO: Maybe remove everything below? Why is that there?
+          //TODO: I removed it for now.
+          /*
           commandHandler.invoke(
               objective,
               main,
@@ -258,7 +265,7 @@ public class ObjectiveManager {
                   .getAdminAddActionCommandBuilder()
                   .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action")
                   .flag(main.getCommandManager().categoryFlag)
-          ); // For Actions.yml
+          ); // For Actions.yml*/
         }
       }
     } catch (final Exception e) {

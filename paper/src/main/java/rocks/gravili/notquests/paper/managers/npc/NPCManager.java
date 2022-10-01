@@ -1,8 +1,21 @@
 package rocks.gravili.notquests.paper.managers.npc;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Consumer;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.Quest;
@@ -10,41 +23,76 @@ import rocks.gravili.notquests.paper.structs.Quest;
 public class NPCManager {
   private final NotQuests main;
 
+  private final ArrayList<Consumer<NQNPC>> npcSelectionActions;
+
   private final ArrayList<NQNPC> npcs;
   public NPCManager(final NotQuests main){
     this.main = main;
     npcs = new ArrayList<>();
+    npcSelectionActions = new ArrayList<>();
   }
 
-  public final NQNPC getOrCreateNQNpc(final String type, final int npcID){
+  public final ArrayList<String> getAllNPCsString(){ //TODO: Armor stands?
+    final ArrayList<String> npcs = new ArrayList<>();
+    if(main.getIntegrationsManager().isCitizensEnabled()){
+      for(final int npcID : main.getIntegrationsManager().getCitizensManager().getAllNPCIDs()){
+        npcs.add("citizens:"+npcID);
+      }
+    }
+    if(main.getIntegrationsManager().isZNPCsEnabled()){
+      for(final int npcID : main.getIntegrationsManager().getZNPCsManager().getAllNPCIDs()){
+        npcs.add("znpcs:"+npcID);
+      }
+    }
+    return npcs;
+  }
+
+  public final @Nullable NQNPC getOrCreateNQNpc(final @NotNull String type, final @NotNull NQNPCID npcID){
     main.getLogManager().debug("Called getOrCreateNQNpc with type " + type + " and npcID " + npcID);
     for(final NQNPC nqnpc : npcs){
-      if(nqnpc.getID() == npcID && nqnpc.getNPCType().equalsIgnoreCase(type)){
+      if(nqnpc.getID().equals(npcID) && nqnpc.getNPCType().equalsIgnoreCase(type)){
         return nqnpc;
       }
     }
 
-    if(type.equalsIgnoreCase("Citizens")){
+    if(type.equalsIgnoreCase("citizens")){
       final CitizensNPC newCitizensNPC = new CitizensNPC(main, npcID);
       npcs.add(newCitizensNPC);
       return newCitizensNPC;
+    }else if(type.equalsIgnoreCase("armorstand")){
+      final ArmorstandNPC newArmorStandNPC = new ArmorstandNPC(main, npcID);
+      npcs.add(newArmorStandNPC);
+      return newArmorStandNPC;
+    }else if(type.equalsIgnoreCase("znpcs")){
+      final ZNPCNPC newZNPCNPC = new ZNPCNPC(main, npcID);
+      npcs.add(newZNPCNPC);
+      return newZNPCNPC;
     }
 
     return null;
   }
 
-  public void cleanupBuggedNPCs() { //TODO: Currently only works with Citizens :(
+  public void cleanupBuggedNPCs() { //TODO: Currently only works with Citizens
     if(main.getIntegrationsManager().isCitizensEnabled()){
       main.getIntegrationsManager().getCitizensManager().cleanupBuggedNPCs();
     }
   }
 
   public void loadNPCData() {
+    if(main.getDataManager().isDisabled()){
+      main.getLogManager().info("Skipped loading NPC data, because NotQuests has been disabled due to a previous error");
+      return;
+    }
     if (main.getDataManager().isAlreadyLoadedQuests()) {
       for (final Category category : main.getDataManager().getCategories()) {
         loadNPCData(category);
       }
     } else {
+      if(main.getDataManager().isDisabled()){
+        main.getLogManager().info("Tried to load NPC data before quest data was loaded. NotQuests has skipped scheduling another load though, because NotQuests has been disabled due to a previous error");
+        return;
+      }
+
       main.getLogManager().info("Tried to load NPC data before quest data was loaded. NotQuests is scheduling another load...");
 
       Bukkit.getScheduler().runTaskLaterAsynchronously(main.getMain(), () -> {
@@ -94,18 +142,18 @@ public class NPCManager {
         //NPC
         final ConfigurationSection npcsConfigurationSection = category.getQuestsConfig().getConfigurationSection("quests." + questName + ".npcs");
         if (npcsConfigurationSection != null) {
-          for (final String npcNumber : npcsConfigurationSection.getKeys(false)) {
+          for (final String npcIdentifyingString : npcsConfigurationSection.getKeys(false)) {
 
             if (category.getQuestsConfig() != null) {
-              final NQNPC nqNPC = NQNPC.fromConfig(main, category.getQuestsConfig(), "quests." + questName + ".npcs." + npcNumber + ".npcData");
+              final NQNPC nqNPC = NQNPC.fromConfig(main, category.getQuestsConfig(), "quests." + questName + ".npcs." + npcIdentifyingString + ".npcData");
               if (nqNPC != null) {
-                final boolean questShowing = category.getQuestsConfig().getBoolean("quests." + questName + ".npcs." + npcNumber + ".questShowing", true);
+                final boolean questShowing = category.getQuestsConfig().getBoolean("quests." + questName + ".npcs." + npcIdentifyingString + ".questShowing", true);
                 // call the callback with the result
                 main.getLogManager().info("Attaching Quest with the name <highlight>" + quest.getQuestName() + "</highlight> to NPC with the ID <highlight>" + nqNPC.getID() + " </highlight>and name <highlight>" + nqNPC.getName());
                 quest.removeNPC(nqNPC);
                 quest.bindToNPC(nqNPC, questShowing);
               } else {
-                main.getLogManager().warn("Error attaching npc with ID <highlight>" + category.getQuestsConfig().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID")
+                main.getLogManager().warn("Error attaching npc with ID <highlight>" + category.getQuestsConfig().getInt("quests." + questName + ".npcs." + npcIdentifyingString + ".npcID")
                     + "</highlight> to quest <highlight>" + quest.getQuestName() + "</highlight> - NPC not found.");
               }
             } else {
@@ -137,5 +185,56 @@ public class NPCManager {
       }
     }*/
     return true;
+  }
+
+
+
+  public void handleRightClickNQNPCSelectionWithAction(final @NotNull Consumer<NQNPC> actionWhenSelected, final @NotNull Player player, final @Nullable String successMessage, final @Nullable String displayName, final @Nullable String... lore){
+    final ItemStack itemStack = new ItemStack(Material.PAPER, 1);
+    //give a specialitem. clicking an armorstand with that special item will remove the pdb.
+
+    final NamespacedKey key = new NamespacedKey(main.getMain(), "notquests-nqnpc-selector-with-action");
+
+    final ItemMeta itemMeta = itemStack.getItemMeta();
+    final List<Component> loreComponentList = new ArrayList<>();
+
+    itemMeta.displayName(main.parse(Objects.requireNonNullElse(displayName,
+        "<LIGHT_PURPLE>Right click any NQNPC to execute action")));
+
+    if(lore != null){
+      for (final String loreLine : lore) {
+        loreComponentList.add(main.parse(loreLine));
+      }
+
+    }
+
+    npcSelectionActions.add(actionWhenSelected);
+
+
+    itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, npcSelectionActions.size()-1);
+
+
+    itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+
+    itemMeta.lore(loreComponentList);
+
+    itemStack.setItemMeta(itemMeta);
+
+    player.getInventory().addItem(itemStack);
+
+    player.sendMessage(main.parse(
+        Objects.requireNonNullElse(successMessage, "<success>You have been given an item with which you can execute a certain action when right-clicking any NQNPC. Check your inventory!")
+    ));
+  }
+
+  public final ArrayList<Consumer<NQNPC>> getNPCSelectionActions() {
+    return npcSelectionActions;
+  }
+
+  public void executeNPCSelectionAction(final NQNPC nqnpc, final int npcSelectionActionID){
+    if(npcSelectionActionID < npcSelectionActions.size()){
+      npcSelectionActions.get(npcSelectionActionID).accept(nqnpc);
+      //npcSelectionActions.remove(npcSelectionActionID); //This can shift the IDs badly. lets just leave it, else we'd need to use a hashmap
+    }
   }
 }

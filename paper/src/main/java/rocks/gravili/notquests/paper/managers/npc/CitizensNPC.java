@@ -6,25 +6,25 @@ import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Entity;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.conversation.Conversation;
 import rocks.gravili.notquests.paper.managers.integrations.citizens.QuestGiverNPCTrait;
+import rocks.gravili.notquests.paper.structs.Quest;
 
 public class CitizensNPC extends NQNPC {
   private NPC cachedNPC;
-  private final int npcID;
+  private final NQNPCID npcID;
 
-  public CitizensNPC(final NotQuests main, final int npcID) {
-    super(main, "Citizens");
+  public CitizensNPC(final NotQuests main, final NQNPCID npcID) {
+    super(main, "citizens");
     this.npcID = npcID;
-    this.cachedNPC = CitizensAPI.getNPCRegistry().getById(npcID);
+    this.cachedNPC = CitizensAPI.getNPCRegistry().getById(npcID.getIntegerID());
   }
 
   private boolean updateCachedNPC() {
     if (cachedNPC == null) {
-      cachedNPC = CitizensAPI.getNPCRegistry().getById(npcID);
+      cachedNPC = CitizensAPI.getNPCRegistry().getById(npcID.getIntegerID());
     }
     return cachedNPC != null;
   }
@@ -41,13 +41,12 @@ public class CitizensNPC extends NQNPC {
                 .deserialize(cachedNPC.getName().replace("§", "&")));
   }
 
-  @NotNull
   @Override
-  public int getID() {
+  public NQNPCID getID() {
     if (!updateCachedNPC()) {
       return npcID;
     }
-    return cachedNPC.getId();
+    return NQNPCID.fromInteger(cachedNPC.getId());
   }
 
   @Override
@@ -77,9 +76,9 @@ public class CitizensNPC extends NQNPC {
   }
 
   @Override
-  public void removeQuestGiverNPCTrait() {
+  public String removeQuestGiverNPCTrait(final @Nullable Boolean showQuestInNPC, final Quest quest) {
     if (!updateCachedNPC()) {
-      return;
+      return "NPC not found!";
     }
 
     final ArrayList<Trait> npcTraitsToRemove = new ArrayList<>();
@@ -95,12 +94,13 @@ public class CitizensNPC extends NQNPC {
 
     // cachedNPC.removeTrait(QuestGiverNPCTrait.class); //This is not enough to ensure compatibility
     // with ServerUtils
+    return "";
   }
 
   @Override
-  public void addQuestGiverNPCTrait() {
+  public String addQuestGiverNPCTrait(final @Nullable Boolean showQuestInNPC, final Quest quest) {
     if (!updateCachedNPC()) {
-      return;
+      return "NPC not found";
     }
     boolean hasTrait = false;
     for (Trait trait : cachedNPC.getTraits()) {
@@ -114,6 +114,7 @@ public class CitizensNPC extends NQNPC {
       // npc.getTraits().toString());
       cachedNPC.addTrait(QuestGiverNPCTrait.class);
     }
+    return "";
   }
 
   @Override

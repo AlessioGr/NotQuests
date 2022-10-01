@@ -2,6 +2,7 @@ package rocks.gravili.notquests.paper.structs.actions;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
+import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.arguments.standard.StringArrayArgument;
 import cloud.commandframework.paper.PaperCommandManager;
 import java.util.ArrayList;
@@ -24,31 +25,30 @@ public class ChatAction extends Action {
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
       Command.Builder<CommandSender> builder,
-      ActionFor rewardFor) {
+      ActionFor actionFor) {
     manager.command(
         builder
             .argument(
-                StringArrayArgument.of("Chat Message",
+                StringArgument.<CommandSender>newBuilder("Chat Message").withSuggestionsProvider(
                     (context, lastString) -> {
                       final List<String> allArgs = context.getRawInput();
-                      main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "<enter chat message>", "");
+                      main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "<enter chat message. Wrap in \"\" to use spaces>", "");
 
                       ArrayList<String> completions = new ArrayList<>();
-                      completions.add("<enter chat message>");
+                      completions.add("<enter chat message. Wrap in \"\" to use spaces>");
                       return completions;
                     }
-                ),
-                ArgumentDescription.of(
-                    "Message which will be sent / chatted from the player's perspective."))
+                ).quoted().withDefaultDescription(ArgumentDescription.of(
+                    "Message which will be sent / chatted from the player's perspective.")).build())
             .handler(
                 (context) -> {
-                  final String chatMessage = String.join(" ", (String[]) context.get("Chat Message"));
+                  final String chatMessage = context.get("Chat Message");
 
 
                   final ChatAction chatAction = new ChatAction(main);
                   chatAction.setChatMessage(chatMessage);
 
-                  main.getActionManager().addAction(chatAction, context);
+                  main.getActionManager().addAction(chatAction, context, actionFor);
                 }));
   }
 

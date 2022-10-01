@@ -32,6 +32,7 @@ public class EnabledIntegration extends Integration {
    **/
   public void registeringEventsOnTime() {
     if (super.getRunWhenRegisteringEventsOnTime() != null) {
+      main.getLogManager().info("Registering events for " + getExactName() + " (on time)...");
       super.getRunWhenRegisteringEventsOnTime().run();
     }
   }

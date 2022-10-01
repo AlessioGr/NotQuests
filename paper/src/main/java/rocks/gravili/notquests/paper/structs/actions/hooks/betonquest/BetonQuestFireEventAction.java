@@ -51,7 +51,7 @@ public class BetonQuestFireEventAction extends Action {
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
       Command.Builder<CommandSender> builder,
-      ActionFor rewardFor) {
+      ActionFor actionFor) {
     manager.command(
         builder
             .argument(
@@ -112,7 +112,7 @@ public class BetonQuestFireEventAction extends Action {
                   betonQuestFireEventAction.setPackageName(packageName);
                   betonQuestFireEventAction.setEventName(eventName);
 
-                  main.getActionManager().addAction(betonQuestFireEventAction, context);
+                  main.getActionManager().addAction(betonQuestFireEventAction, context, actionFor);
                 }));
   }
 

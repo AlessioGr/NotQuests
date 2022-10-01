@@ -32,6 +32,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.npc.NQNPC;
+import rocks.gravili.notquests.paper.managers.npc.NQNPCID;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
@@ -153,7 +154,7 @@ public class QuestGiverNPCTrait extends Trait {
               if (e instanceof final Player player) {
                 QuestPlayer qp = main.getQuestPlayerManager().getQuestPlayer(e.getUniqueId());
                 ArrayList<Quest> questsArrayList = main.getQuestManager().getAllQuestsAttachedToNPC(
-                    main.getNPCManager().getOrCreateNQNpc("Citizens", getNPC().getId()));
+                    main.getNPCManager().getOrCreateNQNpc("Citizens", NQNPCID.fromInteger(getNPC().getId())));
                 main.getPacketManager().getModernPacketInjector().sendHolo(
                         player,
                         npcHolo,
@@ -261,7 +262,7 @@ public class QuestGiverNPCTrait extends Trait {
                 + " </highlight>and name <highlight>"
                 + npc.getName().replace("&", "").replace("§", "")
                 + " </highlight>has been removed!");
-    final NQNPC nqnpc = main.getNPCManager().getOrCreateNQNpc("Citizens", getNPC().getId());
+    final NQNPC nqnpc = main.getNPCManager().getOrCreateNQNpc("Citizens", NQNPCID.fromInteger(getNPC().getId()));
     for (final Quest quest : main.getQuestManager().getAllQuestsAttachedToNPC(nqnpc)) {
       quest.removeNPC(nqnpc);
     }

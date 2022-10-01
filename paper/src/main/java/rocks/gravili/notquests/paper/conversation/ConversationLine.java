@@ -32,6 +32,7 @@ public class ConversationLine {
   private final String fullIdentifier;
   private String color = "<GRAY>";
   private boolean shout = false;
+  private boolean skipMessage = false;
 
   public ConversationLine(final Speaker speaker, final String identifier, final String message) {
     this.speaker = speaker;
@@ -102,5 +103,13 @@ public class ConversationLine {
 
   public void addAction(final Action newAction) {
     this.actions.add(newAction);
+  }
+
+  public final boolean isSkipMessage() {
+    return skipMessage;
+  }
+
+  public void setSkipMessage(final boolean skipMessage) {
+    this.skipMessage = skipMessage;
   }
 }

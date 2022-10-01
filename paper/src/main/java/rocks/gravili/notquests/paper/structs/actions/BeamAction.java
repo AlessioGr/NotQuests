@@ -50,7 +50,7 @@ public class BeamAction extends Action {
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
       Command.Builder<CommandSender> builder,
-      ActionFor rewardFor) {
+      ActionFor actionFor) {
     manager.command(
         builder
             .argument(
@@ -82,7 +82,7 @@ public class BeamAction extends Action {
                   beamAction.setBeamName(beamName);
                   beamAction.setRemove(true);
 
-                  main.getActionManager().addAction(beamAction, context);
+                  main.getActionManager().addAction(beamAction, context, actionFor);
                 }));
 
     manager.command(
@@ -125,7 +125,7 @@ public class BeamAction extends Action {
                   beamAction.setRemove(false);
                   beamAction.setBeamLocation(location);
 
-                  main.getActionManager().addAction(beamAction, context);
+                  main.getActionManager().addAction(beamAction, context, actionFor);
                 }));
   }
 

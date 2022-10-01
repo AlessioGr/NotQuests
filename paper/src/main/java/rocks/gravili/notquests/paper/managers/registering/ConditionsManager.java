@@ -21,7 +21,6 @@ package rocks.gravili.notquests.paper.managers.registering;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.flags.CommandFlag;
-import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.bukkit.arguments.selector.SinglePlayerSelector;
 import cloud.commandframework.bukkit.parsers.selector.SinglePlayerSelectorArgument;
 import cloud.commandframework.context.CommandContext;
@@ -34,19 +33,15 @@ import java.util.HashMap;
 import java.util.UUID;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.VariableSelector;
-import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
-import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.managers.data.Category;
-import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.BooleanCondition;
 import rocks.gravili.notquests.paper.structs.conditions.CompletedObjectiveCondition;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
+import rocks.gravili.notquests.paper.structs.conditions.Condition.ConditionResult;
 import rocks.gravili.notquests.paper.structs.conditions.ConditionFor;
 import rocks.gravili.notquests.paper.structs.conditions.DateCondition;
 import rocks.gravili.notquests.paper.structs.conditions.ItemStackListCondition;
@@ -55,11 +50,10 @@ import rocks.gravili.notquests.paper.structs.conditions.NumberCondition;
 import rocks.gravili.notquests.paper.structs.conditions.StringCondition;
 import rocks.gravili.notquests.paper.structs.conditions.WorldTimeCondition;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
-import rocks.gravili.notquests.paper.structs.variables.Variable;
-import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
 
 public class ConditionsManager {
     private final NotQuests main;
+    private final CommandFlag<SinglePlayerSelector> playerSelectorCommandFlag;
 
     private final HashMap<String, Class<? extends Condition>> conditions;
 
@@ -67,7 +61,10 @@ public class ConditionsManager {
     public ConditionsManager(final NotQuests main) {
         this.main = main;
         conditions = new HashMap<>();
-
+        playerSelectorCommandFlag = CommandFlag
+            .newBuilder("player")
+            .withArgument(SinglePlayerSelectorArgument.of("player"))
+            .build();
         registerDefaultConditions();
 
     }
@@ -101,114 +98,6 @@ public class ConditionsManager {
             registerCondition("BetonQuestCheckCondition", BetonQuestCheckConditionCondition.class);
             registerCondition("BetonQuestCheckInlineCondition", BetonQuestCheckInlineConditionCondition.class);
         }*/
-
-
-        //Variable check commands
-        for (String variableString : main.getVariablesManager().getVariableIdentifiers()) {
-
-            Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
-
-            if (variable == null) {
-                continue;
-            }
-            if (main.getVariablesManager().alreadyFullRegisteredVariables.contains(variableString)) {
-                continue;
-            }
-
-
-            final CommandFlag<SinglePlayerSelector> playerSelectorCommandFlag = CommandFlag
-                    .newBuilder("player")
-                    .withArgument(SinglePlayerSelectorArgument.of("player"))
-                    .build();
-
-            final Command.Builder<CommandSender> variableCheckCommandBuilder = main.getCommandManager().getAdminCommandBuilder()
-                    .literal("variables", "variable")
-                    .literal("check");
-
-
-            main.getCommandManager().getPaperCommandManager().command(
-                    main.getVariablesManager().registerVariableCommands(variableString, variableCheckCommandBuilder)
-                    .flag(playerSelectorCommandFlag)
-                    .handler((context) -> {
-
-                        final SinglePlayerSelector singlePlayerSelector = context.flags().getValue(playerSelectorCommandFlag, null);
-
-                        Player player = null;
-                        UUID uuid = null;
-                        if(singlePlayerSelector != null && singlePlayerSelector.hasAny() && singlePlayerSelector.getPlayer() != null){
-                            uuid = singlePlayerSelector.getPlayer().getUniqueId();
-                            player = singlePlayerSelector.getPlayer();
-                        }else{
-                            if(context.getSender() instanceof final Player senderPlayer){
-                                uuid = senderPlayer.getUniqueId();
-                                player = senderPlayer;
-                            }
-                        }
-
-
-                        final HashMap<String, String> additionalStringArguments = new HashMap<>();
-                        for (final StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()) {
-                            additionalStringArguments.put(stringArgument.getName(), context.get(stringArgument.getName()));
-                        }
-                        variable.setAdditionalStringArguments(additionalStringArguments);
-
-                        final HashMap<String, NumberExpression> additionalNumberArguments = new HashMap<>();
-                        for (final NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()) {
-                            additionalNumberArguments.put(numberVariableValueArgument.getName(), new NumberExpression(main, context.get(numberVariableValueArgument.getName())));
-                        }
-                        variable.setAdditionalNumberArguments(additionalNumberArguments);
-
-                        final HashMap<String, NumberExpression> additionalBooleanArguments = new HashMap<>();
-                        for (final BooleanVariableValueArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()) {
-                            additionalBooleanArguments.put(booleanArgument.getName(), new NumberExpression(main, context.get(booleanArgument.getName())));
-                        }
-                        for (final CommandFlag<?> commandFlag : variable.getRequiredBooleanFlags()) {
-                            additionalBooleanArguments.put(commandFlag.getName(), context.flags().isPresent(commandFlag.getName()) ? NumberExpression.ofStatic(main, 1) : NumberExpression.ofStatic(main, 0));
-                        }
-                        variable.setAdditionalBooleanArguments(additionalBooleanArguments);
-
-
-                        final Object variableValue = variable.getValue(uuid != null ? main.getQuestPlayerManager().getOrCreateQuestPlayer(uuid) : null);
-                        String variableValueString = variableValue != null ? variableValue.toString() : "null";
-
-                        if(variableValue != null){
-                            if(variable.getVariableDataType() == VariableDataType.LIST){
-                                variableValueString = String.join(",", (String[])variableValue);
-                            }else if(variable.getVariableDataType() == VariableDataType.ITEMSTACKLIST){
-                                variableValueString = "";
-                                int counter = 0;
-                                for(final ItemStack itemStack : (ItemStack[])variableValue){
-                                    if(counter == 0){
-                                        variableValueString += itemStack.toString();
-                                    }else{
-                                        variableValueString += ", " + itemStack.toString();
-                                    }
-                                    counter++;
-                                }
-                            }
-                        }
-
-
-
-                        main.sendMessage(context.getSender(), "<main>" + variableString + " variable (" + variable.getVariableDataType() + ") result for player " + (player != null ? main.getMiniMessage().serialize(player.name()) : "unknown") + ":</main> <highlight>" +  variableValueString);
-                    })
-            );
-
-
-        }
-        main.getCommandManager().getPaperCommandManager().command(main.getCommandManager().getAdminCommandBuilder().literal("variables")
-                .literal("check")
-                .argument(VariableSelector.of("variable", main), ArgumentDescription.of("Variable Name"))
-                .flag(main.getCommandManager().categoryFlag)
-                .meta(CommandMeta.DESCRIPTION, "Create a new quest.")
-                .handler((context) -> {
-                    if (context.flags().contains(main.getCommandManager().categoryFlag)) {
-                        final Category category = context.flags().getValue(main.getCommandManager().categoryFlag, main.getDataManager().getDefaultCategory());
-                        context.getSender().sendMessage(main.parse(main.getQuestManager().createQuest(context.get("Quest Name"), category)));
-                    }else{
-                        context.getSender().sendMessage(main.parse(main.getQuestManager().createQuest(context.get("Quest Name"))));
-                    }
-                }));
 
     }
 
@@ -261,13 +150,19 @@ public class ConditionsManager {
                                 .withDescription(ArgumentDescription.of("Negates this condition"))
                         )
                         .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition")
-                        .flag(main.getCommandManager().categoryFlag), ConditionFor.ConditionsYML); //For Actions.yml
+                        .flag(main.getCommandManager().categoryFlag), ConditionFor.ConditionsYML); //For conditions.yml
                 commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminActionsAddConditionCommandBuilder().flag(
                         main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
                                 .withDescription(ArgumentDescription.of("Negates this condition"))
                         )
-                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition"), ConditionFor.Action); //For Actions.yml
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition"), ConditionFor.Action); //For conditions.yml
 
+                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminConditionCheckCommandBuilder().flag(
+                        main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
+                            .withDescription(ArgumentDescription.of("Negates this condition"))
+                    )
+                    .meta(CommandMeta.DESCRIPTION, "Checks a " + identifier + " condition inline")
+                    .flag(playerSelectorCommandFlag), ConditionFor.INLINE); //For inline /qa conditions check
             }else{
                 commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRequirementCommandBuilder().literal(identifier).flag(
                         main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
@@ -304,12 +199,21 @@ public class ConditionsManager {
                                 .withDescription(ArgumentDescription.of("Negates this condition"))
                 )
                         .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition")
-                        .flag(main.getCommandManager().categoryFlag), ConditionFor.ConditionsYML); //For Actions.yml
+                        .flag(main.getCommandManager().categoryFlag), ConditionFor.ConditionsYML); //For conditions.yml
                 commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminActionsAddConditionCommandBuilder().literal(identifier).flag(
                         main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
                                 .withDescription(ArgumentDescription.of("Negates this condition"))
                 )
-                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition"), ConditionFor.Action); //For Actions.yml
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition"), ConditionFor.Action); //For conditions.yml
+
+
+                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminConditionCheckCommandBuilder().literal(identifier).flag(
+                        main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
+                            .withDescription(ArgumentDescription.of("Negates this condition"))
+                    )
+                    .meta(CommandMeta.DESCRIPTION, "Checks a " + identifier + " condition inline")
+                    .flag(playerSelectorCommandFlag), ConditionFor.INLINE); //For inline /qa conditions check
+
             }
 
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
@@ -406,7 +310,27 @@ public class ConditionsManager {
                 ));
             }
         } else {
-            if (conditionIdentifier != null && !conditionIdentifier.isBlank()) { //conditions.yml
+            if(conditionFor == ConditionFor.INLINE){
+                //Execute action here
+                final SinglePlayerSelector singlePlayerSelector = context.flags().getValue(playerSelectorCommandFlag, null);
+
+                final UUID uuid;
+                final Player player;
+                if(singlePlayerSelector != null && singlePlayerSelector.hasAny() && singlePlayerSelector.getPlayer() != null){
+                    uuid = singlePlayerSelector.getPlayer().getUniqueId();
+                    player = singlePlayerSelector.getPlayer();
+                }else if(context.getSender() instanceof final Player senderPlayer){
+                    uuid = senderPlayer.getUniqueId();
+                    player = senderPlayer;
+                } else {
+                    uuid = null;
+                    player = null;
+                }
+                if(uuid != null){
+                    final ConditionResult conditionResult = condition.check(main.getQuestPlayerManager().getOrCreateQuestPlayer(uuid));
+                    main.sendMessage(context.getSender(),"<main>" + condition.getConditionType() + " condition result for player " + (player != null ? main.getMiniMessage().serialize(player.name()) : "unknown") + ":</main> <highlight>" +  conditionResult.message() + (conditionResult.fulfilled() ? "<positive>fulfilled" : " <negative>(not fulfilled)") );
+                }
+            } else if (conditionIdentifier != null && !conditionIdentifier.isBlank()) { //conditions.yml
 
                 if (context.flags().contains(main.getCommandManager().categoryFlag)) {
                     final Category category = context.flags().getValue(main.getCommandManager().categoryFlag, main.getDataManager().getDefaultCategory());
@@ -418,7 +342,7 @@ public class ConditionsManager {
                 } else {
                     context.getSender().sendMessage(main.parse("<error>Error! A condition with the name <highlight>" + conditionIdentifier + "</highlight> already exists!"));
                 }
-            } else { //Condition for Actions.yml action
+            } else { //Condition For conditions.yml action
 
                 if ( foundAction != null || (actionIdentifier != null && !actionIdentifier.isBlank()) ) {
 
@@ -491,12 +415,19 @@ public class ConditionsManager {
                                             .withDescription(ArgumentDescription.of("Negates this condition"))
                             )
                             .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition")
-                            .flag(main.getCommandManager().categoryFlag), ConditionFor.ConditionsYML); //For Actions.yml
+                            .flag(main.getCommandManager().categoryFlag), ConditionFor.ConditionsYML); //For conditions.yml
                     commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminActionsAddConditionCommandBuilder().flag(
                                     main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
                                             .withDescription(ArgumentDescription.of("Negates this condition"))
                             )
-                            .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition"), ConditionFor.Action); //For Actions.yml
+                            .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition"), ConditionFor.Action); //For conditions.yml
+
+                    commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminConditionCheckCommandBuilder().flag(
+                            main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
+                                .withDescription(ArgumentDescription.of("Negates this condition"))
+                        )
+                        .meta(CommandMeta.DESCRIPTION, "Checks a " + identifier + " condition inline")
+                        .flag(playerSelectorCommandFlag), ConditionFor.INLINE); //For inline /qa conditions check
 
                 }
             }

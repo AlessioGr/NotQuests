@@ -22,6 +22,9 @@ import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.arguments.parser.ArgumentParseResult;
+import cloud.commandframework.arguments.standard.DoubleArgument;
+import cloud.commandframework.arguments.standard.DurationArgument;
+import cloud.commandframework.arguments.standard.FloatArgument;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.LongArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
@@ -29,15 +32,18 @@ import cloud.commandframework.arguments.standard.StringArrayArgument;
 import cloud.commandframework.brigadier.CloudBrigadierManager;
 import cloud.commandframework.bukkit.CloudBukkitCapabilities;
 import cloud.commandframework.bukkit.parsers.WorldArgument;
+import cloud.commandframework.exceptions.ArgumentParseException;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.minecraft.extras.AudienceProvider;
 import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler;
+import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler.ExceptionType;
 import cloud.commandframework.minecraft.extras.MinecraftHelp;
 import cloud.commandframework.paper.PaperCommandManager;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import io.leangen.geantyref.TypeToken;
 import java.lang.reflect.Field;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -62,6 +68,7 @@ import rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionArgume
 import rocks.gravili.notquests.paper.commands.arguments.MiniMessageSelector;
 import rocks.gravili.notquests.paper.commands.arguments.MiniMessageStringSelector;
 import rocks.gravili.notquests.paper.commands.arguments.MultipleActionsSelector;
+import rocks.gravili.notquests.paper.commands.arguments.NQNPCSelector;
 import rocks.gravili.notquests.paper.commands.arguments.QuestSelector;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
@@ -79,9 +86,15 @@ public class CommandManager {
   public CommandFlag<String> taskDescription;
   public CommandFlag<Integer> maxDistance;
   public CommandFlag<Category> categoryFlag;
+  public CommandFlag<Duration> delayFlag;
+
   public CommandFlag<String> speakerColor;
   public CommandFlag<Integer> applyOn; // 0 = Quest
   public CommandFlag<World> world;
+  public CommandFlag<Double> locationX;
+  public CommandFlag<Double> locationY;
+  public CommandFlag<Double> locationZ;
+
   public CommandFlag<String> triggerWorldString;
   public CommandFlag<Long> minimumTimeAfterCompletion;
   public CommandFlag<String> withProjectKorraAbilityFlag;
@@ -102,10 +115,14 @@ public class CommandManager {
 
   private Command.Builder<CommandSender> adminEditObjectiveAddRewardCommandBuilder;
   private Command.Builder<CommandSender> adminAddActionCommandBuilder;
+  private Command.Builder<CommandSender> adminExecuteActionCommandBuilder;
+
   private Command.Builder<CommandSender> adminActionsCommandBuilder;
   private Command.Builder<CommandSender> adminActionsEditCommandBuilder;
   private Command.Builder<CommandSender> adminActionsAddConditionCommandBuilder;
   private Command.Builder<CommandSender> adminAddConditionCommandBuilder;
+  private Command.Builder<CommandSender> adminConditionCheckCommandBuilder;
+
   private AdminCommands adminCommands;
   private AdminEditCommands adminEditCommands;
   private AdminTagCommands adminTagCommands;
@@ -315,6 +332,29 @@ public class CommandManager {
             .withArgument(CategorySelector.of("category", main))
             .withDescription(ArgumentDescription.of("Category name"))
             .build();
+    delayFlag =
+        CommandFlag.newBuilder("delay")
+            .withArgument(DurationArgument.of("delay"))
+            .withDescription(ArgumentDescription.of("Delay in milliseconds"))
+            .build();
+
+    locationX =
+        CommandFlag.newBuilder("locationX")
+            .withArgument(DoubleArgument.of("locationX"))
+            .withDescription(ArgumentDescription.of("Enter x coordinate location"))
+            .build();
+
+    locationY =
+        CommandFlag.newBuilder("locationY")
+            .withArgument(DoubleArgument.of("locationY"))
+            .withDescription(ArgumentDescription.of("Enter y coordinate location"))
+            .build();
+
+    locationZ =
+        CommandFlag.newBuilder("locationZ")
+            .withArgument(DoubleArgument.of("locationZ"))
+            .withDescription(ArgumentDescription.of("Enter z coordinate location"))
+            .build();
   }
 
   public final CommandMap getCommandMap() {
@@ -380,6 +420,10 @@ public class CommandManager {
             builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
         cloudBrigadierManager.registerMapping(
             new TypeToken<ItemStackSelectionArgument.MaterialParser<CommandSender>>() {},
+            builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
+
+        cloudBrigadierManager.registerMapping(
+            new TypeToken<NQNPCSelector.NQNPCsParser<CommandSender>>() {},
             builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
       } else {
         main.getLogManager()
@@ -564,6 +608,11 @@ public class CommandManager {
                           return completions;
                         }));
 
+    adminConditionCheckCommandBuilder =
+        adminCommandBuilder
+            .literal("conditions")
+            .literal("check");
+
     adminAddActionCommandBuilder =
         adminCommandBuilder
             .literal("actions")
@@ -585,6 +634,11 @@ public class CommandManager {
                           completions.add("[Enter new, unique Action Identifier]");
                           return completions;
                         }));
+
+    adminExecuteActionCommandBuilder =
+        adminCommandBuilder
+            .literal("actions")
+            .literal("execute");
   }
 
   public void setupCommands() {
@@ -629,9 +683,21 @@ public class CommandManager {
             .withHandler(
                 MinecraftExceptionHandler.ExceptionType.INVALID_SYNTAX,
                 (sender, e) -> {
-                  minecraftAdminHelp.queryCommands(e.getMessage().split("syntax is: ")[1], sender);
-                  return main.parse("<error>" + e.getMessage());
-                });
+                  final String[] split = e.getMessage().split("syntax is: ");
+                  minecraftAdminHelp.queryCommands(split[1], sender);
+                  return main.parse("<error>" + split[0] + "syntax is: <main>" + split[1]);
+                })
+            .withHandler(
+                ExceptionType.COMMAND_EXECUTION,
+                (sender, e) -> {
+                  return main.parse("<error>" + e.getCause().getMessage());
+                })
+            .withHandler(
+                ExceptionType.ARGUMENT_PARSING,
+                (sender, e) -> {
+                  return main.parse("<error>" + e.getCause().getMessage());
+                })
+        ;
 
     exceptionHandler.apply(commandManager, AudienceProvider.nativeAudience());
 
@@ -755,8 +821,15 @@ public class CommandManager {
     return adminAddActionCommandBuilder;
   }
 
+  public final Command.Builder<CommandSender> getAdminExecuteActionCommandBuilder() {
+    return adminExecuteActionCommandBuilder;
+  }
+
   public final Command.Builder<CommandSender> getAdminAddConditionCommandBuilder() {
     return adminAddConditionCommandBuilder;
+  }
+  public final Command.Builder<CommandSender> getAdminConditionCheckCommandBuilder() {
+    return adminConditionCheckCommandBuilder;
   }
 
   public final Command.Builder<CommandSender> getAdminEditObjectivesBuilder() {

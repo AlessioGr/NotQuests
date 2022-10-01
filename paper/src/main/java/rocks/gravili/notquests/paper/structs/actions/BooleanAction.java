@@ -59,7 +59,7 @@ public class BooleanAction extends Action {
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
       Command.Builder<CommandSender> builder,
-      ActionFor rewardFor) {
+      ActionFor actionFor) {
 
     for (final String variableString : main.getVariablesManager().getVariableIdentifiers()) {
 
@@ -152,7 +152,7 @@ public class BooleanAction extends Action {
                     }
                     booleanAction.setAdditionalBooleanArguments(additionalBooleanArguments);
 
-                    main.getActionManager().addAction(booleanAction, context);
+                    main.getActionManager().addAction(booleanAction, context, actionFor);
                   }));
     }
     alreadyLoadedOnce = true;

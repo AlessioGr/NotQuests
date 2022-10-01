@@ -505,7 +505,7 @@ public class Quest {
     arrayList.addAll(attachedNPCsWithoutQuestShowing);
     for (final NQNPC npc : arrayList) {
       if (main.getQuestManager().getAllQuestsAttachedToNPC(npc).size() == 1) {
-        npc.removeQuestGiverNPCTrait();
+        npc.removeQuestGiverNPCTrait(null, this);
       }
     }
     attachedNPCsWithQuestShowing.clear();
@@ -514,23 +514,28 @@ public class Quest {
     category.saveQuestsConfig();
   }
 
-  public void bindToNPC(final NQNPC npc, final boolean showQuest) {
+  public String bindToNPC(final NQNPC npc, final boolean showQuestInNPC) {
+    final String result = npc.addQuestGiverNPCTrait(showQuestInNPC, this);
+    if(!result.isBlank()){
+      return result;
+    }
+
     if (!attachedNPCsWithQuestShowing.contains(npc)
         && !attachedNPCsWithoutQuestShowing.contains(npc)) {
-      if (showQuest) {
+      if (showQuestInNPC) {
         attachedNPCsWithQuestShowing.add(npc);
       } else {
         attachedNPCsWithoutQuestShowing.add(npc);
       }
     }
 
-    npc.addQuestGiverNPCTrait();
 
-    npc.saveToConfig(category.getQuestsConfig(), "quests." + questName + ".npcs." + npc.getID() + ".npcData");
+    npc.saveToConfig(category.getQuestsConfig(), "quests." + questName + ".npcs." + npc.getIdentifyingString() + ".npcData");
     category
         .getQuestsConfig()
-        .set("quests." + questName + ".npcs." + npc.getID() + ".questShowing", showQuest);
+        .set("quests." + questName + ".npcs." + npc.getIdentifyingString() + ".questShowing", showQuestInNPC);
     category.saveQuestsConfig();
+    return "";
   }
 
   public final CopyOnWriteArrayList<NQNPC> getAttachedNPCsWithQuestShowing() {
@@ -558,12 +563,12 @@ public class Quest {
           if (main.getQuestManager().getAllQuestsAttachedToNPC(npc).size() == 1) {
             // npc.removeTrait(QuestGiverNPCTrait.class);
             // System.out.println("§e1");
-             npc.removeQuestGiverNPCTrait();
+             npc.removeQuestGiverNPCTrait(null, this);
           }
         }
       }
 
-      category.getQuestsConfig().set("quests." + questName + ".npcs." + npc.getID(), null);
+      category.getQuestsConfig().set("quests." + questName + ".npcs." + npc.getIdentifyingString(), null);
       category.saveQuestsConfig();
 
       attachedNPCsWithQuestShowing.remove(npc);

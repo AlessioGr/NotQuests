@@ -22,22 +22,76 @@ import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.arguments.standard.StringArgument;
+import cloud.commandframework.bukkit.arguments.selector.SinglePlayerSelector;
+import cloud.commandframework.bukkit.parsers.selector.SinglePlayerSelectorArgument;
 import cloud.commandframework.context.CommandContext;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.UUID;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import redempt.crunch.CompiledExpression;
 import redempt.crunch.Crunch;
 import redempt.crunch.functional.EvaluationEnvironment;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
-import rocks.gravili.notquests.paper.structs.variables.*;
+import rocks.gravili.notquests.paper.structs.variables.ActiveQuestsVariable;
+import rocks.gravili.notquests.paper.structs.variables.AdvancementVariable;
+import rocks.gravili.notquests.paper.structs.variables.BlockVariable;
+import rocks.gravili.notquests.paper.structs.variables.ChanceVariable;
+import rocks.gravili.notquests.paper.structs.variables.CompletedObjectiveIDsOfQuestVariable;
+import rocks.gravili.notquests.paper.structs.variables.CompletedQuestsVariable;
+import rocks.gravili.notquests.paper.structs.variables.ConditionVariable;
+import rocks.gravili.notquests.paper.structs.variables.ContainerInventoryVariable;
+import rocks.gravili.notquests.paper.structs.variables.DayOfWeekVariable;
+import rocks.gravili.notquests.paper.structs.variables.FalseVariable;
+import rocks.gravili.notquests.paper.structs.variables.InventoryVariable;
+import rocks.gravili.notquests.paper.structs.variables.ItemInInventoryEnchantmentsVariable;
+import rocks.gravili.notquests.paper.structs.variables.MoneyVariable;
+import rocks.gravili.notquests.paper.structs.variables.PermissionVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerClimbingVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerCurrentBiomeVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerCurrentPositionXVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerCurrentPositionYVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerCurrentPositionZVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerCurrentWorldVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerExperienceLevelVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerExperienceVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerFlySpeedVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerFlyingVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerGameModeVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerGlowingVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerHealthVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerInLavaVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerInWaterVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerMaxHealthVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerNameVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerOpVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerPingVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerPlaytimeHoursVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerPlaytimeMinutesVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerPlaytimeTicksVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerSleepingVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerSneakingVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerSprintingVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerSwimmingVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerWalkSpeedVariable;
+import rocks.gravili.notquests.paper.structs.variables.QuestAbleToAcceptVariable;
+import rocks.gravili.notquests.paper.structs.variables.QuestOnCooldownVariable;
+import rocks.gravili.notquests.paper.structs.variables.QuestPointsVariable;
+import rocks.gravili.notquests.paper.structs.variables.QuestReachedMaxAcceptsVariable;
+import rocks.gravili.notquests.paper.structs.variables.RandomNumberBetweenRangeVariable;
+import rocks.gravili.notquests.paper.structs.variables.TrueVariable;
+import rocks.gravili.notquests.paper.structs.variables.Variable;
 import rocks.gravili.notquests.paper.structs.variables.hooks.BetonQuestConditionVariable;
+import rocks.gravili.notquests.paper.structs.variables.hooks.FloodgateIsFloodgatePlayerVariable;
 import rocks.gravili.notquests.paper.structs.variables.hooks.PlaceholderAPINumberVariable;
 import rocks.gravili.notquests.paper.structs.variables.hooks.PlaceholderAPIStringVariable;
 import rocks.gravili.notquests.paper.structs.variables.hooks.ProjectKorraElementsVariable;
+import rocks.gravili.notquests.paper.structs.variables.hooks.ProjectKorraIsBenderVariable;
 import rocks.gravili.notquests.paper.structs.variables.hooks.ProjectKorraSubElementsVariable;
 import rocks.gravili.notquests.paper.structs.variables.hooks.TownyNationNameVariable;
 import rocks.gravili.notquests.paper.structs.variables.hooks.TownyNationTownCountVariable;
@@ -161,10 +215,113 @@ public class VariablesManager {
     if (main.getIntegrationsManager().isProjectKorraEnabled()) {
       registerVariable("ProjectKorraElements", ProjectKorraElementsVariable.class);
       registerVariable("ProjectKorraSubElements", ProjectKorraSubElementsVariable.class);
+      registerVariable("ProjectKorraIsBender", ProjectKorraIsBenderVariable.class);
     }
 
     if (main.getIntegrationsManager().isBetonQuestEnabled()) {
       registerVariable("BetonQuestCondition", BetonQuestConditionVariable.class);
+    }
+
+    if (main.getIntegrationsManager().isFloodgateEnabled()) {
+      registerVariable("FloodgateIsFloodgatePlayer", FloodgateIsFloodgatePlayerVariable.class);
+    }
+    registerVariableCheckCommands();
+  }
+
+  public void registerVariableCheckCommands(){
+    //Variable check commands
+    for (final String variableString : getVariableIdentifiers()) {
+
+      final Variable<?> variable = getVariableFromString(variableString);
+
+      if (variable == null) {
+        continue;
+      }
+      if (alreadyFullRegisteredVariables.contains(variableString)) {
+        continue;
+      }
+
+
+      final CommandFlag<SinglePlayerSelector> playerSelectorCommandFlag = CommandFlag
+          .newBuilder("player")
+          .withArgument(SinglePlayerSelectorArgument.of("player"))
+          .build();
+
+      final Command.Builder<CommandSender> variableCheckCommandBuilder = main.getCommandManager().getAdminCommandBuilder()
+          .literal("variables", "variable")
+          .literal("check");
+
+
+      main.getCommandManager().getPaperCommandManager().command(
+          registerVariableCommands(variableString, variableCheckCommandBuilder)
+              .flag(playerSelectorCommandFlag)
+              .handler((context) -> {
+
+                final SinglePlayerSelector singlePlayerSelector = context.flags().getValue(playerSelectorCommandFlag, null);
+
+                final Player player;
+                final UUID uuid;
+                if(singlePlayerSelector != null && singlePlayerSelector.hasAny() && singlePlayerSelector.getPlayer() != null){
+                  uuid = singlePlayerSelector.getPlayer().getUniqueId();
+                  player = singlePlayerSelector.getPlayer();
+                }else if(context.getSender() instanceof final Player senderPlayer){
+                  uuid = senderPlayer.getUniqueId();
+                  player = senderPlayer;
+                } else {
+                  uuid = null;
+                  player = null;
+                }
+
+
+                final HashMap<String, String> additionalStringArguments = new HashMap<>();
+                for (final StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()) {
+                  additionalStringArguments.put(stringArgument.getName(), context.get(stringArgument.getName()));
+                }
+                variable.setAdditionalStringArguments(additionalStringArguments);
+
+                final HashMap<String, NumberExpression> additionalNumberArguments = new HashMap<>();
+                for (final NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()) {
+                  additionalNumberArguments.put(numberVariableValueArgument.getName(), new NumberExpression(main, context.get(numberVariableValueArgument.getName())));
+                }
+                variable.setAdditionalNumberArguments(additionalNumberArguments);
+
+                final HashMap<String, NumberExpression> additionalBooleanArguments = new HashMap<>();
+                for (final BooleanVariableValueArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()) {
+                  additionalBooleanArguments.put(booleanArgument.getName(), new NumberExpression(main, context.get(booleanArgument.getName())));
+                }
+                for (final CommandFlag<?> commandFlag : variable.getRequiredBooleanFlags()) {
+                  additionalBooleanArguments.put(commandFlag.getName(), context.flags().isPresent(commandFlag.getName()) ? NumberExpression.ofStatic(main, 1) : NumberExpression.ofStatic(main, 0));
+                }
+                variable.setAdditionalBooleanArguments(additionalBooleanArguments);
+
+
+                final Object variableValue = variable.getValue(uuid != null ? main.getQuestPlayerManager().getOrCreateQuestPlayer(uuid) : null);
+                String variableValueString = variableValue != null ? variableValue.toString() : "null";
+
+                if(variableValue != null){
+                  if(variable.getVariableDataType() == VariableDataType.LIST){
+                    variableValueString = String.join(",", (String[])variableValue);
+                  }else if(variable.getVariableDataType() == VariableDataType.ITEMSTACKLIST){
+                    variableValueString = "";
+                    int counter = 0;
+                    for(final ItemStack itemStack : (ItemStack[])variableValue){
+                      if(counter == 0){
+                        variableValueString += itemStack.toString();
+                      }else{
+                        variableValueString += ", " + itemStack.toString();
+                      }
+                      counter++;
+                    }
+                  }
+                }
+
+
+
+                main.sendMessage(context.getSender(), "<main>" + variableString + " variable (" + variable.getVariableDataType() + ") result for player " + (player != null ? main.getMiniMessage().serialize(player.name()) : "unknown") + ":</main> <highlight>" +  variableValueString);
+              })
+      );
+
+
     }
   }
 

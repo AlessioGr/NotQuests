@@ -58,6 +58,8 @@ chat:
       <main>Odaberi svoj odgovor:</main>
     choose-answer-answer-hover-text: '<highlight>Klikni da odgovoriš'
     ended-previous-conversation: '<main>Završio si svoju prijašnju konverzaciju!'
+    speaker-line-format: '%SPEAKERCOLOR%[%SPEAKER%] <GRAY>%MESSAGE%'
+    answer-option-line-format: ' <main>%OPTIONNUMBER%. <gray>%MESSAGE%'
   objectives:
     counter: '<highlight>%OBJECTIVEID%.</highlight> <main>%OBJECTIVENAME%:'
     hidden: <highlight>%OBJECTIVEID%</highlight><unimportant><BOLD>[HIDDEN]
@@ -89,9 +91,6 @@ chat:
         base: 'Deliver Items: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
         deliver-to-npc: '      <GRAY>Dostaviti <WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>The delivery NPC is currently not available!'
-        deliver-to-npc-citizens-not-found: '    <RED>Pogreška: Dodatak "Citizens" nije instaliran. Kontaktirajte administratora.'
-        deliver-to-armorstand: '    <GRAY>Dostaviti <WHITE>%ARMORSTANDNAME%'
-        deliver-to-armorstand-not-available: '    <GRAY>The target Armor Stand is currently not available!'
       escortNPC:
         base: 'Escort <main>%NPCNAME%</main> to <main>%DESTINATIONNPCNAME%'
       fishItems:
@@ -123,6 +122,8 @@ chat:
         base: 'Smelt Items: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       openBuriedTreasure:
         base: 'Open buried treasures'
+      shearSheep:
+        base: 'Shear <main>%AMOUNTOFSHEEP%</main> sheep'
       townyReachResidentCount:
         base: 'Reach resident amount: <main>%AMOUNT%'
       townyNationReachTownCount:

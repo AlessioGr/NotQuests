@@ -1,4 +1,5 @@
 # NotQuests
+Download: https://modrinth.com/plugin/notquests/versions
 
 [![GitHub issues](https://img.shields.io/github/issues/AlessioGr/NotQuests)](https://github.com/AlessioGr/NotQuests/issues)
 [![GitHub stars](https://img.shields.io/github/stars/AlessioGr/NotQuests)](https://github.com/AlessioGr/NotQuests/stargazers)
@@ -119,7 +120,7 @@ Admin Commands - Quest Editing:
 
 
 **Requirements to run this:**
-- Paper or Spigot 1.17.1 or 1.19 (Paper is recommended)
+- Paper 1.17.1 - 1.19.2
 - Java 17
 
 

@@ -1,15 +1,15 @@
 ---
 chat:
-  wrong-command-usage: <error>指令的用法不对!
+  wrong-command-usage: <error>指令错误!
   missing-permission: '<error>权限不足! 需要权限: <highlight>%PERMISSION%'
-  too-many-arguments: <error>指令的参数过多!
+  too-many-arguments: <error>参数过多!
   quest-successfully-accepted: |2
 
     <CENTER><main>[任务已接受]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
   quest-description: '<main>任务描述: <unimportant>%QUESTDESCRIPTION%'
-  quest-already-accepted: <error>早已接受该任务.
+  quest-already-accepted: <error>已经接受该任务了.
   quest-failed: |2
 
     <CENTER><negative>[任务失败]
@@ -21,11 +21,11 @@ chat:
     <CENTER><positive>[任务已完成]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
-  quest-completed-rewards-prefix: '    <highlight>奖励:'
+  quest-completed-rewards-prefix: '    <highlight>任务奖励:'
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
   quest-not-all-requirements-fulfilled: '<negative>您没有满足该任务的前置要求! 缺少要求:'
-  action-not-all-conditions-fulfilled: '<negative>您没有满足该任务的前置条件! 缺少条件:'
+  action-not-all-conditions-fulfilled: '<negative>你没有满足这个任务的所有前置条件！需求仍然需要：'
   missing-quest-description: <unimportant>此任务没有描述.
   objectives-label-after-quest-accepting: '<highlight>目标:'
   questpoints:
@@ -58,6 +58,8 @@ chat:
       <main>请选择你的答案:</main>
     choose-answer-answer-hover-text: '<highlight>点击回答'
     ended-previous-conversation: '<main>您已经结束了之前的对话!'
+    speaker-line-format: '%SPEAKERCOLOR%[%SPEAKER%] <GRAY>%MESSAGE%'
+    answer-option-line-format: ' <main>%OPTIONNUMBER%. <gray>%MESSAGE%'
   objectives:
     counter: '<highlight>%OBJECTIVEID%.</highlight> <main>%OBJECTIVENAME%:'
     hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[已隐藏]
@@ -76,67 +78,66 @@ chat:
         prefix: '    <veryUnimportant>└─ <unimportant>'
         suffix: ''
       breakBlocks:
-        base: 'Break Blocks: <main>%BLOCKTOBREAK%'
+        base: '破坏方块：<main>%BLOCKTOBREAK%'
       breed:
-        base: 'Breed Mobs: <main>%ENTITYTOBREED%'
+        base: '繁殖生物：<main>%ENTITYTOBREED%'
       collectItems:
-        base: 'Collect Items: <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
+        base: '收集物品：<main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
       consumeItems:
-        base: 'Consume Items: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
+        base: '消耗物品：<main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: 'Craft Items: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+        base: '制作物品：<main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: 'Deliver Items: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
+        base: '交付物品：<main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
         deliver-to-npc: '      <GRAY>把物品递交给 <WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>负责收取物品的NPC暂时不在!'
-        deliver-to-npc-citizens-not-found: '    <RED>错误: 服务器没有安装 Citizens. 请告知服务器管理员.'
-        deliver-to-armorstand: '    <GRAY>将物品递交给 <WHITE>%ARMORSTANDNAME%'
-        deliver-to-armorstand-not-available: '    <GRAY>负责收取物品的盔甲架不存在!'
       escortNPC:
-        base: 'Escort <main>%NPCNAME%</main> to <main>%DESTINATIONNPCNAME%'
+        base: '护送 <main>%NPCNAME%</main> to <main>%DESTINATIONNPCNAME%'
       fishItems:
-        base: 'Fish Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
+        base: '钓出物品：<main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
       killMobs:
-        base: 'Kill mobs: <main>%MOBTOKILL%'
+        base: '击杀生物：Kill mobs: <main>%MOBTOKILL%'
       otherQuest:
-        base: 'Complete Quest: <main>%OTHERQUESTNAME%'
+        base: '完成前置任务：<main>%OTHERQUESTNAME%'
       placeBlocks:
-        base: 'Place Blocks: <main>%BLOCKTOPLACE%'
+        base: '放置方块：<main>%BLOCKTOPLACE%'
       reachLocation:
-        base: 'Reach Location: <main>%LOCATIONNAME%'
+        base: '到达任务地点：<main>%LOCATIONNAME%'
       talkToNPC:
-        base: 'Talk to <main>%NAME%'
+        base: '与 <main>%NAME% <unimportant>对话'
       triggerCommand:
-        base: 'Goal: <main>%TRIGGERNAME%'
+        base: '目标：<main>%TRIGGERNAME%'
       killEliteMobs:
-        base: 'Kill Elite Mob: <main>%ELITEMOBNAME%'
-        any: 'Kill any Elite Mob!'
+        base: '击杀精英怪物： <main>%ELITEMOBNAME%'
+        any: '击杀所有精英生物！'
       runCommand:
-        base: 'Run command: <main>%COMMANDTORUN%'
+        base: '执行命令：<main>%COMMANDTORUN%'
       interact:
-        base: '%INTERACTTYPE% Location: <main>%COORDINATES% <main>in world %WORLDNAME%'
+        base: '%INTERACTTYPE% 坐标：<main>%COORDINATES% <main>世界：%WORLDNAME%'
       jump:
-        base: 'Jump <main>%AMOUNTOFJUMPS%</main> times'
+        base: '跳跃 <main>%AMOUNTOFJUMPS%</main> 次'
       sneak:
-        base: 'Sneak <main>%AMOUNTOFSNEAKS%</main> times'
+        base: '蹲 <main>%AMOUNTOFSNEAKS%</main> 次'
       smelt:
-        base: 'Smelt Items: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+        base: '烧炼物品：<main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       openBuriedTreasure:
-        base: 'Open buried treasures'
+        base: '打开埋藏的宝藏'
+      shearSheep:
+        base: '修剪 <main>%AMOUNTOFSHEEP%</main> 只羊'
       townyReachResidentCount:
-        base: 'Reach resident amount: <main>%AMOUNT%'
+        base: '达到居民数量：<main>%AMOUNT%'
       townyNationReachTownCount:
-        base: 'Reach town amount with your nation: <main>%AMOUNT%'
+        base: '让你的国家达到城镇数量：<main>%AMOUNT%'
       jobsRebornReachJobLevel:
-        base: 'Reach job level <main>%AMOUNT%</main> with job <main>%JOB%'
+        base: '达到职业等级：<main>%AMOUNT%</main> 工作： <main>%JOB%'
       SlimefunResearch:
-        base: 'Spend on research'
+        base: '研究'
       ProjectKorraUseAbility:
-        base: 'Use Ability: <main>%ABILITY%'
+        base: '运用能力：<main>%ABILITY%'
       BetonQuestCompleteObjective:
-        base: 'Finish Objective: <main>%BETONQUESTOBJECTIVENAME%'
+        base: '完成目标:：<main>%BETONQUESTOBJECTIVENAME%'
       ultimateJobsReachJobLevel:
-        base: 'Reach job level <main>%AMOUNT%</main> with job <main>%JOBID%'
+        base: '达到职业等级：<main>%AMOUNT%</main> 工作： <main>%JOBID%'
   conditions:
     boolean:
       not-fulfilled: "<warn>以下需要 %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."

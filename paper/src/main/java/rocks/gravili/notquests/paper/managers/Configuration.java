@@ -116,6 +116,28 @@ public class Configuration {
   private boolean integrationProjectKorraEnabled = true;
   private boolean integrationEcoBossesEnabled = true;
   private boolean integrationUltimateJobsEnabled = true;
+
+  private boolean integrationZNPCsEnabled = true;
+
+  public boolean isIntegrationZNPCsEnabled() {
+    return integrationZNPCsEnabled;
+  }
+
+  public void setIntegrationZNPCsEnabled(boolean integrationZNPCsEnabled) {
+    this.integrationZNPCsEnabled = integrationZNPCsEnabled;
+  }
+
+
+  public boolean isIntegrationFloodgateEnabled() {
+    return integrationFloodgateEnabled;
+  }
+
+  public void setIntegrationFloodgateEnabled(boolean integrationFloodgateEnabled) {
+    this.integrationFloodgateEnabled = integrationFloodgateEnabled;
+  }
+
+  private boolean integrationFloodgateEnabled = true;
+
   // Other
   private boolean actionBarFancyCommandCompletionEnabled = true;
   private boolean titleFancyCommandCompletionEnabled = false;
@@ -129,6 +151,16 @@ public class Configuration {
 
   private boolean consoleColorsEnabled = true;
   private boolean consoleColorsDownsampleColors = false;
+
+  public boolean isConversationAllowAnswerNumberInChat() {
+    return conversationAllowAnswerNumberInChat;
+  }
+
+  public void setConversationAllowAnswerNumberInChat(boolean conversationAllowAnswerNumberInChat) {
+    this.conversationAllowAnswerNumberInChat = conversationAllowAnswerNumberInChat;
+  }
+
+  private boolean conversationAllowAnswerNumberInChat = true;
 
   private String colorsConsolePrefixPrefix = "<#393e46>[<gradient:#E0EAFC:#CFDEF3>";
   private String colorsConsolePrefixSuffix = "<#393e46>]<#636c73>: ";

@@ -57,7 +57,7 @@ public class BroadcastMessageAction extends Action {
                   BroadcastMessageAction broadcastMessageAction = new BroadcastMessageAction(main);
                   broadcastMessageAction.setMessageToBroadcast(messageToBroadcast);
 
-                  main.getActionManager().addAction(broadcastMessageAction, context);
+                  main.getActionManager().addAction(broadcastMessageAction, context, actionFor);
                 }));
   }
 

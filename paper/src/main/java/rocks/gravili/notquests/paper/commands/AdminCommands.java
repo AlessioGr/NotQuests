@@ -34,6 +34,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
@@ -618,7 +620,11 @@ public class AdminCommands {
 
                     main.getDataManager().loadGeneralConfig();
                     main.getLanguageManager().loadLanguageConfig();
-                    main.getConversationManager().loadConversationsFromConfig();
+                    if(main.getConversationManager() != null) {
+                      main.getConversationManager().loadConversationsFromConfig();
+                    }else{
+                      context.getSender().sendMessage("<error> Loading conversations has been skipped: ConversationManager is null");
+                    }
                     context.getSender().sendMessage(Component.empty());
                     context.getSender().sendMessage(main.parse("<success>NotQuests general.yml, language configuration and conversations have been re-loaded. <unimportant>If you want to reload more, please use the ServerUtils plugin (available on spigot) or restart the server. This reload command does not reload the quests file or the database."));
                 }));
@@ -645,9 +651,13 @@ public class AdminCommands {
                 .literal("conversations")
                 .meta(CommandMeta.DESCRIPTION, "Reload the conversations from conversations files.")
                 .handler((context) -> {
+                  if(main.getConversationManager() != null) {
                     main.getConversationManager().loadConversationsFromConfig();
-                    context.getSender().sendMessage(Component.empty());
                     context.getSender().sendMessage(main.parse("<success>Conversations have been reloaded."));
+                  }else{
+                    context.getSender().sendMessage("<error> Loading conversations has been skipped: ConversationManager is null");
+                  }
+                  context.getSender().sendMessage(Component.empty());
                 }));
 
         manager.command(builder.literal("save")
@@ -667,7 +677,16 @@ public class AdminCommands {
                             "\n<main>Server Brand: <highlight>" + Bukkit.getServer().getName() +
                             "\n<main>Java version: <highlight>" + (System.getProperty("java.version") != null ? System.getProperty("java.version") : "null") +
                             "\n<main>Enabled integrations: <highlight>" + main.getIntegrationsManager().getEnabledIntegrationString()
-                    ));
+                    )
+                            .hoverEvent(HoverEvent.showText(main.parse("<main>Click to copy this information to your clipboard.")))
+                            .clickEvent(ClickEvent.copyToClipboard("**NotQuests version:** "+ main.getMain().getDescription().getVersion() +
+                                    "\n**NotQuests module:** Paper" +
+                                    "\n**Server version:** " + Bukkit.getVersion() +
+                                    "\n**Server Brand:** " + Bukkit.getServer().getName() +
+                                    "\n**Java version:** " + (System.getProperty("java.version") != null ? System.getProperty("java.version") : "null") +
+                                    "\n**Enabled integrations:**" + main.getIntegrationsManager().getEnabledIntegrationDiscordString()
+                            ))
+                        );
                 }));
 
 

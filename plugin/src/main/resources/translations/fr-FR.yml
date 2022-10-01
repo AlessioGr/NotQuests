@@ -58,6 +58,8 @@ chat:
       <main>Choisissez votre réponse :</main>
     choose-answer-answer-hover-text: '<highlight>Cliquez pour répondre'
     ended-previous-conversation: '<main>Vous avez terminé votre conversation précédente !'
+    speaker-line-format: '%SPEAKERCOLOR%[%SPEAKER%] <GRAY>%MESSAGE%'
+    answer-option-line-format: ' <main>%OPTIONNUMBER%. <gray>%MESSAGE%'
   objectives:
     counter: '<highlight>%OBJECTIVEID%</highlight><main>%OBJECTIVENAME%:'
     hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[CACHÉ]
@@ -89,9 +91,6 @@ chat:
         base: 'Livrer des items : <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
         deliver-to-npc: '      <GRAY>Livrez-le à <WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>Le PNJ de livraison n''est actuellement pas disponible!'
-        deliver-to-npc-citizens-not-found: '    <RED>Erreur: Le plugin Citizens n''est pas installé. Contactez un administrateur.'
-        deliver-to-armorstand: '    <GRAY>Livrez-le à <WHITE>%ARMORSTANDNAME%'
-        deliver-to-armorstand-not-available: '    <GRAY>Le porte-armure de destination n''est actuellement pas disponible !'
       escortNPC:
         base: 'Escorter <main>%NPCNAME%</main> à <main>%DESTINATIONNPCNAME%'
       fishItems:
@@ -123,6 +122,8 @@ chat:
         base: 'Fondre des items : <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       openBuriedTreasure:
         base: 'Ouvrir des trésors enfouis'
+      shearSheep:
+        base: 'Tondre <main>%AMOUNTOFSHEEP%</main> moutons'
       townyReachResidentCount:
         base: 'Atteindre le nombre de résidents : <main>%AMOUNT%'
       townyNationReachTownCount:

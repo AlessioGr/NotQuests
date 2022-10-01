@@ -42,7 +42,7 @@ public class CompleteQuestAction extends Action {
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
       Command.Builder<CommandSender> builder,
-      ActionFor rewardFor) {
+      ActionFor actionFor) {
     manager.command(
         builder
             .argument(
@@ -56,7 +56,7 @@ public class CompleteQuestAction extends Action {
                   CompleteQuestAction completeQuestAction = new CompleteQuestAction(main);
                   completeQuestAction.setQuestToCompleteName(foundQuest.getQuestName());
 
-                  main.getActionManager().addAction(completeQuestAction, context);
+                  main.getActionManager().addAction(completeQuestAction, context, actionFor);
                 }));
   }
 

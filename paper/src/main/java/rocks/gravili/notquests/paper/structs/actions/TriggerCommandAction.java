@@ -44,7 +44,7 @@ public class TriggerCommandAction extends Action {
         super(main);
     }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor actionFor) {
         manager.command(builder
                 .argument(StringArgument.<CommandSender>newBuilder("Trigger Name").withSuggestionsProvider(
                         (context, lastString) -> {
@@ -69,7 +69,7 @@ public class TriggerCommandAction extends Action {
                     TriggerCommandAction triggerCommandAction = new TriggerCommandAction(main);
                     triggerCommandAction.setTriggerCommand(triggerName);
 
-                    main.getActionManager().addAction(triggerCommandAction, context);
+                    main.getActionManager().addAction(triggerCommandAction, context, actionFor);
                 }));
     }
 

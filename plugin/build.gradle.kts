@@ -224,8 +224,8 @@ bukkit {
     name = "NotQuests"
     version = rootProject.version.toString()
     main = "rocks.gravili.notquests.Main"
-    apiVersion = "1.19"
-    authors = listOf("NoeX")
+    apiVersion = "1.18"
+    authors = listOf("AlessioGr")
     description = "Flexible, open, GUI Quest Plugin for Minecraft 1.19"
     website = "https://www.notquests.com"
     softDepend = listOf(
@@ -248,7 +248,9 @@ bukkit {
         "ProjectKorra",
         "EcoBosses",
         "eco",
-        "UltimateJobs"
+        "UltimateJobs",
+        "Floodgate",
+        "ZNPCs",
     )
 
     load = net.minecrell.pluginyml.bukkit.BukkitPluginDescription.PluginLoadOrder.POSTWORLD

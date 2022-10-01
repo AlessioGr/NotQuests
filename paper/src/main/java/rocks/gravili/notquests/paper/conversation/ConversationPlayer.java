@@ -20,10 +20,9 @@ package rocks.gravili.notquests.paper.conversation;
 
 import java.util.ArrayList;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.conversation.interactionhandlers.ConversationInteractionHandler;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
@@ -35,11 +34,10 @@ public class ConversationPlayer {
   private final Player player;
 
   private final Conversation conversation;
-
   private final ArrayList<ConversationLine> currentPlayerLines;
 
   public ConversationPlayer(
-      NotQuests main, QuestPlayer questPlayer, Player player, final Conversation conversation) {
+      final NotQuests main, final QuestPlayer questPlayer, final Player player, final Conversation conversation) {
     this.main = main;
     this.questPlayer = questPlayer;
     this.player = player;
@@ -74,7 +72,7 @@ public class ConversationPlayer {
   public boolean next(final ConversationLine currentLine, boolean deletePrevious) {
     sendLine(currentLine, deletePrevious);
 
-    ArrayList<ConversationLine> next =
+    final ArrayList<ConversationLine> next =
         findConversationLinesWhichFulfillsCondition(currentLine.getNext());
 
     if (next == null || next.isEmpty()) {
@@ -139,11 +137,9 @@ public class ConversationPlayer {
     main.sendMessage(player, chooseAnswerPrefixMiniMessage);
 
     if (main.getConfiguration().deletePreviousConversations) {
-      ArrayList<Component> hist =
-          main.getConversationManager().getConversationChatHistory().get(player.getUniqueId());
-      if (hist == null) {
-        hist = new ArrayList<>();
-      }
+      final ArrayList<Component> hist =
+          main.getConversationManager().getConversationChatHistory().getOrDefault(player.getUniqueId(), new ArrayList<>());
+
       if (!chooseAnswerPrefixMiniMessage.isBlank()) {
         hist.add(main.parse(chooseAnswerPrefixMiniMessage));
       }
@@ -156,17 +152,14 @@ public class ConversationPlayer {
     }
 
     if (main.getConfiguration().deletePreviousConversations) {
-      ArrayList<Component> hist =
-          main.getConversationManager().getConversationChatHistory().get(player.getUniqueId());
-      if (hist == null) {
-        hist = new ArrayList<>();
-      }
+      final ArrayList<Component> hist =
+          main.getConversationManager().getConversationChatHistory().getOrDefault(player.getUniqueId(), new ArrayList<>());
+
       hist.add(Component.empty());
+      main.getConversationManager().getConversationChatHistory().put(player.getUniqueId(), hist);
     }
 
     player.sendMessage(Component.empty());
-
-    return;
   }
 
   public ArrayList<ConversationLine> findConversationLinesWhichFulfillsCondition(
@@ -237,31 +230,14 @@ public class ConversationPlayer {
    *
    * @param conversationLine
    */
-  public void sendLine(final ConversationLine conversationLine, boolean deletePrevious) {
-    Component line =
-        main.parse(
-            conversationLine.getSpeaker().getColor()
-                + "["
-                + conversationLine.getSpeaker().getSpeakerDisplayName()
-                + "] <GRAY>"
-                + main.getUtilManager().applyPlaceholders(conversationLine.getMessage(), player));
-    if (deletePrevious) {
-      removeOldMessages();
-    }
-
-    if (main.getConfiguration().deletePreviousConversations) {
-      ArrayList<Component> hist =
-          main.getConversationManager().getConversationChatHistory().get(player.getUniqueId());
-      if (hist == null) {
-        hist = new ArrayList<>();
+  public void sendLine(final ConversationLine conversationLine, final boolean deletePrevious) {
+    if(!conversationLine.isSkipMessage()){
+      for(final ConversationInteractionHandler interactionHandler : main.getConversationManager().getInteractionHandlers()){
+        interactionHandler.sendText(conversationLine.getMessage(), conversationLine.getSpeaker(), player, questPlayer, conversation, conversationLine, deletePrevious, this);
       }
-      hist.add(line);
-      main.getConversationManager().getConversationChatHistory().put(player.getUniqueId(), hist);
     }
 
-    player.sendMessage(line);
-
-    if (conversationLine.getActions() != null && conversationLine.getActions().size() > 0) {
+    if (conversationLine.getActions() != null && !conversationLine.getActions().isEmpty()) {
       for (final Action action : conversationLine.getActions()) {
         questPlayer.sendDebugMessage("Executing action for conversation line...");
         main.getActionManager().executeActionWithConditions(action, questPlayer, player, true);
@@ -276,36 +252,10 @@ public class ConversationPlayer {
    * @param conversationLine
    */
   public void sendOptionLine(final ConversationLine conversationLine) {
-    Component toSend =
-        main.parse(
-                conversationLine.getSpeaker().getColor()
-                    + " > <GRAY>"
-                    + main.getUtilManager()
-                        .applyPlaceholders(conversationLine.getMessage(), player))
-            .clickEvent(
-                ClickEvent.runCommand(
-                    "/notquests continueConversation " + conversationLine.getMessage()))
-            .hoverEvent(
-                HoverEvent.showText(
-                    main.parse(
-                        main.getLanguageManager()
-                            .getString(
-                                "chat.conversations.choose-answer-answer-hover-text",
-                                player,
-                                conversation,
-                                conversationLine))));
 
-    if (main.getConfiguration().deletePreviousConversations) {
-      ArrayList<Component> hist =
-          main.getConversationManager().getConversationChatHistory().get(player.getUniqueId());
-      if (hist == null) {
-        hist = new ArrayList<>();
-      }
-      hist.add(toSend);
-      main.getConversationManager().getConversationChatHistory().put(player.getUniqueId(), hist);
+    for(final ConversationInteractionHandler interactionHandler : main.getConversationManager().getInteractionHandlers()){
+      interactionHandler.sendOption(conversationLine.getMessage(), conversationLine.getSpeaker(), player, questPlayer, conversation, conversationLine, this);
     }
-
-    player.sendMessage(toSend);
   }
 
   /**
@@ -313,107 +263,57 @@ public class ConversationPlayer {
    *
    * @param option option which the player chooses = exact message
    */
-  public void chooseOption(final String option) {
+  public void chooseOption(final ConversationLine option) {
     questPlayer.sendDebugMessage(
         "Conversation option triggered: "
             + option
             + ". currentPlayerLines count: "
             + currentPlayerLines.size());
-    for (final ConversationLine playerOptionLine : currentPlayerLines) {
-      questPlayer.sendDebugMessage(
-          "Looking through current player line: <highlight>" + playerOptionLine.getMessage());
-      if (playerOptionLine.getMessage().equalsIgnoreCase(option)) {
 
-        // Trigger its actions first:
-        if (playerOptionLine.getActions() != null && playerOptionLine.getActions().size() > 0) {
-          for (final Action action : playerOptionLine.getActions()) {
-            questPlayer.sendDebugMessage("Executing action for conversation line...");
-            main.getActionManager().executeActionWithConditions(action, questPlayer, player, true);
-          }
-        }
+    if(!currentPlayerLines.contains(option)){
+      questPlayer.sendDebugMessage("Option is not in current player lines. Ignoring.");
+      return;
+    }
 
-        questPlayer.sendDebugMessage("Conversation option found!");
+    // Trigger its actions first:
+    if (option.getActions() != null && !option.getActions().isEmpty()) {
+      for (final Action action : option.getActions()) {
+        questPlayer.sendDebugMessage("Executing action for conversation line...");
+        main.getActionManager().executeActionWithConditions(action, questPlayer, player, true);
+      }
+    }
 
-        ArrayList<ConversationLine> next =
-            findConversationLinesWhichFulfillsCondition(playerOptionLine.getNext());
+    questPlayer.sendDebugMessage("Conversation option found!");
 
-        if (next == null || next.isEmpty()) {
-          questPlayer.sendDebugMessage("Clearing currentPlayerLines (1)");
-          currentPlayerLines.clear();
-          main.getConversationManager().stopConversation(this);
-          return;
+    final ArrayList<ConversationLine> next =
+        findConversationLinesWhichFulfillsCondition(option.getNext());
+
+    if (next == null || next.isEmpty()) {
+      questPlayer.sendDebugMessage("Clearing currentPlayerLines (1)");
+      currentPlayerLines.clear();
+      main.getConversationManager().stopConversation(this);
+    } else {
+      questPlayer.sendDebugMessage("Clearing currentPlayerLines (2)");
+      currentPlayerLines.clear();
+      if (next.size() == 1) {
+
+        if (!next.get(0).getSpeaker().isPlayer()) {
+          next(next.get(0), true);
         } else {
-          questPlayer.sendDebugMessage("Clearing currentPlayerLines (2)");
-          currentPlayerLines.clear();
-          if (next.size() == 1) {
-
-            if (!next.get(0).getSpeaker().isPlayer()) {
-              next(next.get(0), true);
-            } else {
-              nextPlayer(next);
-            }
-
-          } else { // Multiple player options
-            nextPlayer(next);
-          }
-
-          return;
+          nextPlayer(next);
         }
+
+      } else { // Multiple player options
+        nextPlayer(next);
       }
     }
-  }
-
-  /** Resends the chat history without ANY conversation messages */
-  public void removeOldMessages() {
-    if (!main.getConfiguration().deletePreviousConversations) {
-      return;
-    }
-    // Send back old messages
-    ArrayList<Component> allChatHistory =
-        main.getConversationManager().getChatHistory().get(getQuestPlayer().getUniqueId());
-
-    main.getLogManager().debug("Conversation stop stage 1");
-
-    if (allChatHistory == null) {
-      return;
-    }
-
-    ArrayList<Component> allConversationHistory =
-        main.getConversationManager()
-            .getConversationChatHistory()
-            .get(getQuestPlayer().getUniqueId());
-    main.getLogManager().debug("Conversation stop stage 1.5");
-    if (allConversationHistory == null) {
-      return;
-    }
-    main.getLogManager().debug("Conversation stop stage 2");
-
-    final Player player = getQuestPlayer().getPlayer();
-
-    Component collectiveComponent = Component.text("");
-    for (int i = 0; i < allChatHistory.size(); i++) {
-      Component component = allChatHistory.get(i);
-      if (component != null) {
-        // audience.sendMessage(component.append(Component.text("fg9023zf729ofz")));
-        collectiveComponent = collectiveComponent.append(component).append(Component.newline());
-      }
-    }
-    player.sendMessage(collectiveComponent);
-
-    allChatHistory.removeAll(allConversationHistory);
-    allConversationHistory.clear();
-    main.getConversationManager()
-        .getChatHistory()
-        .put(getQuestPlayer().getUniqueId(), allChatHistory);
-    main.getConversationManager()
-        .getConversationChatHistory()
-        .put(getQuestPlayer().getUniqueId(), allConversationHistory);
-
-    // maybe this won't send the huge, 1-component-chat-history again
-    allConversationHistory.add(collectiveComponent);
   }
 
   public final QuestPlayer getQuestPlayer() {
     return questPlayer;
+  }
+
+  public final ArrayList<ConversationLine> getCurrentPlayerLines() {
+    return currentPlayerLines;
   }
 }

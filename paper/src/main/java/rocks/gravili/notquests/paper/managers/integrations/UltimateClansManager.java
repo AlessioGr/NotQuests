@@ -18,7 +18,7 @@
 
 package rocks.gravili.notquests.paper.managers.integrations;
 
-import me.ulrich.clans.packets.interfaces.UClans;
+import me.ulrich.clans.interfaces.UClans;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;

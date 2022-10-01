@@ -117,7 +117,7 @@ public class NQPacketListener extends ChannelDuplexHandler {
                 hist.add(component);
             }
 
-            main.getLogManager().debug("Registering chat message with Message: " + MiniMessage.builder().build().serialize(component));
+            //main.getLogManager().debug("Registering chat message with Message: " + MiniMessage.builder().build().serialize(component));
             int toRemove = hist.size() - main.getConversationManager().getMaxChatHistory();
             if (toRemove > 0) {
                 //main.getLogManager().log(Level.WARNING, "ToRemove: " + i);

@@ -20,6 +20,7 @@ package rocks.gravili.notquests.paper.structs.actions;
 
 import java.util.ArrayList;
 import javax.annotation.Nullable;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -38,6 +39,8 @@ public abstract class Action {
   private Objective objective;
   private Category category;
   private int actionID = -1;
+  private long executionDelay = -1; // Cooldown in milliseconds. -1 or smaller => no cooldown.
+
 
   public Action(NotQuests main) {
     this.main = main;
@@ -97,16 +100,25 @@ public abstract class Action {
   public abstract String getActionDescription(
       final QuestPlayer questPlayer, final Object... objects);
 
-  public abstract void executeInternally(final QuestPlayer questPlayer, Object... objects);
+  protected abstract void executeInternally(final QuestPlayer questPlayer, Object... objects);
 
   public void execute(final QuestPlayer questPlayer, Object... objects) {
+    execute(questPlayer, -1, objects);
+  }
+  public void execute(final QuestPlayer questPlayer, final int delayOverride, Object... objects) {
     if (main.getDataManager().isDisabled()) {
       return;
     }
     if (questPlayer != null) {
       questPlayer.sendDebugMessage("Executing action " + getActionName());
     }
-    executeInternally(questPlayer, objects);
+
+    if(getExecutionDelay() == -1 && delayOverride == -1){
+      executeInternally(questPlayer, objects);
+    }else{
+      final long delayToUse = delayOverride == -1 ? getExecutionDelay()/50 : delayOverride/50;
+      Bukkit.getScheduler().runTaskLater(main.getMain(), () -> executeInternally(questPlayer, objects), delayToUse);
+    }
   }
 
   public abstract void save(final FileConfiguration configuration, final String initialPath);
@@ -139,6 +151,15 @@ public abstract class Action {
       condition.save(configuration, initialPath + ".conditions." + conditions.size());
     }
   }
+
+  public final long getExecutionDelay() {
+    return executionDelay;
+  }
+
+  public void setExecutionDelay(final long executionDelay) {
+    this.executionDelay = executionDelay;
+  }
+
 
   public void removeCondition(
       final Condition condition,
@@ -226,6 +247,11 @@ public abstract class Action {
     if (!actionsDisplayName.isBlank()) {
       action.setActionName(actionsDisplayName);
     }
+
+    final long actionExecutionDelay =
+        config.getLong(initialPath + ".executionDelay", -1);
+    action.setExecutionDelay(actionExecutionDelay);
+
 
     action.load(config, initialPath);
 

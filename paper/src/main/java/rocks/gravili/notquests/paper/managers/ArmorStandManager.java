@@ -72,7 +72,7 @@ public class ArmorStandManager {
     public void loadAllArmorStandsFromLoadedChunks() {
         for (final World world : Bukkit.getWorlds()) {
             for (LivingEntity entity : world.getLivingEntities()) {
-                if (entity instanceof ArmorStand armorStand) {
+                if (entity instanceof final ArmorStand armorStand) {
                     final PersistentDataContainer armorStandPDB = armorStand.getPersistentDataContainer();
 
                     boolean hasShowingQuestsPDBKey = false;

@@ -188,7 +188,7 @@ public class Category {
                     + file.getName()
                     + " configuration of category <highlight>"
                     + getCategoryName()
-                    + "</highlight>. It either doesn't exist, is invalid or has an error.",
+                    + "</highlight>. It either doesn't exist, is invalid or has an error. Please carefully read the error below and try to fix it:",
                 e);
       }
     }

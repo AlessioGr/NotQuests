@@ -143,7 +143,7 @@ public class CategorySelector<C> extends CommandArgument<C, Category> {
       final Category foundCategory = main.getDataManager().getCategory(input);
       if (foundCategory == null) {
         return ArgumentParseResult.failure(
-            new IllegalArgumentException("Error: The category " + input + " does not exist."));
+            new IllegalArgumentException("Error: The category <highlight>" + input + "</highlight> does not exist."));
       }
 
       return ArgumentParseResult.success(foundCategory);

@@ -89,18 +89,22 @@ public class ProjectKorraManager {
   }
 
   public final ArrayList<String> getAllSubElements() {
-    ArrayList<String> allSubElementsStringList = new ArrayList<>();
-    for (Element.SubElement subElement : Element.getAllSubElements()) {
+    final ArrayList<String> allSubElementsStringList = new ArrayList<>();
+    for (final Element.SubElement subElement : Element.getAllSubElements()) {
       allSubElementsStringList.add(subElement.getName());
     }
     return allSubElementsStringList;
   }
 
-  public final ArrayList<String> getSubElements(Player player) {
-    ArrayList<String> subElements = new ArrayList<>();
-    for (Element.SubElement subElement : BendingPlayer.getBendingPlayer(player).getSubElements()) {
+  public final ArrayList<String> getSubElements(final Player player) {
+    final ArrayList<String> subElements = new ArrayList<>();
+    for (final Element.SubElement subElement : BendingPlayer.getBendingPlayer(player).getSubElements()) {
       subElements.add(subElement.getName());
     }
     return subElements;
+  }
+
+  public final boolean isBender(final Player player) {
+    return BendingPlayer.getBendingPlayer(player).isBender();
   }
 }

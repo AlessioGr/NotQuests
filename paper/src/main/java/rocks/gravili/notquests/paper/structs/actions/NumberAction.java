@@ -56,7 +56,7 @@ public class NumberAction extends Action {
         additionalBooleanArguments = new HashMap<>();
     }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor actionFor) {
         for (final String variableString : main.getVariablesManager().getVariableIdentifiers()) {
 
             final Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
@@ -126,7 +126,7 @@ public class NumberAction extends Action {
 
                         numberAction.initializeExpressionAndCachedVariable(amountExpression, variable.getVariableType());
 
-                        main.getActionManager().addAction(numberAction, context);
+                        main.getActionManager().addAction(numberAction, context, actionFor);
 
                     })
             );

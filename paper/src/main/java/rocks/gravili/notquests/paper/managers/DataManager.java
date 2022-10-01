@@ -636,11 +636,13 @@ public class DataManager {
 
         configuration.setCitizensNPCQuestGiverIndicatorParticleType(Particle.valueOf(getGeneralConfigString(
                 "visual.citizensnpc.quest-giver-indicator-particle.type",
-                "VILLAGER_ANGRY"
+                "VILLAGER_ANGRY",
+            "Change the particle type here. Available particle types can be found at https://jd.papermc.io/paper/1.19/org/bukkit/Particle.html"
         )));
         configuration.setCitizensNPCQuestGiverIndicatorText(getGeneralConfigString(
                 "visual.citizensnpc.quest-giver-indicator-above-name.text",
-                "","Leave empty for no text on NPC"
+            "",
+            "Leave empty for no text on NPC"
         ));
         configuration.setCitizensNPCQuestGiverIndicatorTextInterval(getGeneralConfigInt(
                 "visual.citizensnpc.quest-giver-indicator-above-name.text-interval",
@@ -649,33 +651,39 @@ public class DataManager {
 
         configuration.setCitizensNPCQuestGiverIndicatorParticleSpawnInterval(getGeneralConfigInt(
                 "visual.citizensnpc.quest-giver-indicator-particle.spawn-interval",
-                10
+                10,
+            "Changes how quickly the particles should spawn (in ticks). The higher the number, the slower they will spawn."
         ));
 
         configuration.setCitizensNPCQuestGiverIndicatorParticleCount(getGeneralConfigInt(
                 "visual.citizensnpc.quest-giver-indicator-particle.count",
-                1
+                1,
+            "Changes how many particles should be spawned at once."
         ));
 
         configuration.setCitizensNPCQuestGiverIndicatorParticleDisableIfTPSBelow(getGeneralConfigDouble(
                 "visual.citizensnpc.quest-giver-indicator-particle.disable-if-tps-below",
-                -1d
+                -1d,
+            "If the server's TPS is below this number, the particles will be disabled. Set to -1 to disable this feature."
         ));
         //
 
         configuration.setHideRewardsWithoutName(getGeneralConfigBoolean(
                 "visual.hide-rewards-without-name",
-                true
+                true,
+            "If this is set to true, rewards without a name will not be shown (both in chat and in the GUI)"
         ));
 
         configuration.setShowRewardsAfterQuestCompletion(getGeneralConfigBoolean(
                 "visual.show-rewards-after-quest-completion",
-                true
+                true,
+            "If this is set to true, quest rewards will be shown after a player completes a quest"
         ));
 
         configuration.setShowRewardsAfterObjectiveCompletion(getGeneralConfigBoolean(
                 "visual.show-rewards-after-objective-completion",
-                true
+                true,
+            "If this is set to true, objective rewards will be shown after a player completes an objective"
         ));
 
 
@@ -1082,6 +1090,17 @@ public class DataManager {
                 true
         ));
 
+        configuration.setIntegrationZNPCsEnabled(getGeneralConfigBoolean(
+            "integrations.zNPCs.enabled",
+            true
+        ));
+
+
+        configuration.setIntegrationFloodgateEnabled(getGeneralConfigBoolean(
+            "integrations.floodgate.enabled",
+            true
+        ));
+
         configuration.setActionBarFancyCommandCompletionEnabled(getGeneralConfigBoolean(
                 "visual.fancy-command-completion.actionbar-enabled",
                 true,
@@ -1169,7 +1188,7 @@ public class DataManager {
 
         main.getLogManager().info("Detected version: " + Bukkit.getBukkitVersion() + " <highlight>(Paper)");
 
-        if (!Bukkit.getBukkitVersion().contains("1.19") || Bukkit.getBukkitVersion().contains("1.19.1") || Bukkit.getBukkitVersion().contains("1.19.2")) {
+        if (!Bukkit.getBukkitVersion().contains("1.19.2")) {
             if (!configuration.isPacketMagicUnsafeDisregardVersion()) {
                 configuration.setPacketMagic(false);
                 main.getLogManager().info("Packet magic has been disabled, because you are using an unsupported bukkit version...");
@@ -1191,6 +1210,13 @@ public class DataManager {
         configuration.setUpdateCheckerNotifyOpsInChat(getGeneralConfigBoolean(
                 "general.update-checker.notify-ops-in-chat",
                 true
+        ));
+
+
+        configuration.setConversationAllowAnswerNumberInChat(getGeneralConfigBoolean(
+            "conversations.interaction-handlers.clickable-text.allow-selecting-option-by-typing-number-in-chat",
+            true,
+            "If set to true, players can select an option / answer inside a conversation by typing the number of the option/answer in chat."
         ));
 
 
@@ -1229,7 +1255,9 @@ public class DataManager {
             getGeneralConfig().set(key, defaultValue);
             valueChanged = true;
         }
-        getGeneralConfig().setComments(key, Arrays.asList(commentLines));
+        final List<String> commentLinesList = new ArrayList<>(Arrays.asList(commentLines));
+        commentLinesList.add("Default: " + defaultValue);
+        getGeneralConfig().setComments(key, commentLinesList);
         return getGeneralConfig().getString(key);
     }
 
@@ -1238,7 +1266,9 @@ public class DataManager {
             getGeneralConfig().set(key, defaultValue);
             valueChanged = true;
         }
-        getGeneralConfig().setComments(key, Arrays.asList(commentLines));
+        final List<String> commentLinesList = new ArrayList<>(Arrays.asList(commentLines));
+        commentLinesList.add("Default: " + defaultValue);
+        getGeneralConfig().setComments(key, commentLinesList);
         return getGeneralConfig().getBoolean(key);
     }
 
@@ -1247,7 +1277,9 @@ public class DataManager {
             getGeneralConfig().set(key, defaultValue);
             valueChanged = true;
         }
-        getGeneralConfig().setComments(key, Arrays.asList(commentLines));
+        final List<String> commentLinesList = new ArrayList<>(Arrays.asList(commentLines));
+        commentLinesList.add("Default: " + defaultValue);
+        getGeneralConfig().setComments(key, commentLinesList);
         return getGeneralConfig().getInt(key);
     }
 
@@ -1256,7 +1288,9 @@ public class DataManager {
             getGeneralConfig().set(key, defaultValue);
             valueChanged = true;
         }
-        getGeneralConfig().setComments(key, Arrays.asList(commentLines));
+        final List<String> commentLinesList = new ArrayList<>(Arrays.asList(commentLines));
+        commentLinesList.add("Default: " + defaultValue);
+        getGeneralConfig().setComments(key, commentLinesList);
         return getGeneralConfig().getDouble(key);
     }
 
@@ -1265,7 +1299,8 @@ public class DataManager {
             getGeneralConfig().set(key, defaultValue);
             valueChanged = true;
         }
-        getGeneralConfig().setComments(key, Arrays.asList(commentLines));
+        final List<String> commentLinesList = new ArrayList<>(Arrays.asList(commentLines));
+        getGeneralConfig().setComments(key, commentLinesList);
         return getGeneralConfig().getItemStack(key);
     }
 
@@ -1274,7 +1309,9 @@ public class DataManager {
             getGeneralConfig().set(key, defaultValue);
             valueChanged = true;
         }
-        getGeneralConfig().setComments(key, Arrays.asList(commentLines));
+        final List<String> commentLinesList = new ArrayList<>(Arrays.asList(commentLines));
+        commentLinesList.add("Default: " + defaultValue);
+        getGeneralConfig().setComments(key, commentLinesList);
         return getGeneralConfig().getStringList(key);
     }
 
@@ -1623,7 +1660,7 @@ public class DataManager {
      * loading
      */
     public final boolean isSavingEnabled() {
-        return savingEnabled;
+        return savingEnabled || isDisabled();
     }
 
     /**
@@ -1912,13 +1949,22 @@ public class DataManager {
 
     public void closeDatabaseConnection() {
         main.getLogManager().info("Closing database connection...");
-        try{
-            hikariDataSource.close();
-            //getConnection().close();
-        }catch (Exception e){
-            main.getLogManager().severe("Error closing database connection:");
-            e.printStackTrace();
+        if(hikariDataSource != null){
+            if(!hikariDataSource.isClosed()){
+                try{
+                    hikariDataSource.close();
+                    //getConnection().close();
+                }catch (Exception e){
+                    main.getLogManager().severe("Error closing database connection:");
+                    e.printStackTrace();
+                }
+            }else{
+                main.getLogManager().info("Skipped closing database connection: connection is already closed.");
+            }
+        }else{
+            main.getLogManager().severe("Skipped closing database connection, because the data source is null. Was there a previous error which needs to be fixed? Check your console logs!");
         }
+
     }
 
 

@@ -24,5 +24,6 @@ public enum ConditionFor {
   OBJECTIVEPROGRESS,
   OBJECTIVECOMPLETE,
   ConditionsYML,
+  INLINE,
   Action
 }

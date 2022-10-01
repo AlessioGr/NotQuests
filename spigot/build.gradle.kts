@@ -155,9 +155,9 @@ dependencies {
     //implementation(files("libs/InventoryGui.jar"))
 
     compileOnly("org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT")
-    compileOnly("net.citizensnpcs:citizens-main:2.0.29-SNAPSHOT")
-    compileOnly("me.clip:placeholderapi:2.11.1")
-    compileOnly("com.github.MilkBowl:VaultAPI:1.7")
+    compileOnly("net.citizensnpcs:citizens-main:2.0.30-SNAPSHOT")
+    compileOnly("me.clip:placeholderapi:2.11.2")
+    compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
 
 
     compileOnly("io.lumine:Mythic-Dist:5.0.2-SNAPSHOT")

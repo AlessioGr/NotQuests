@@ -23,7 +23,7 @@ public class PlayerCommandAction extends Action {
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
       Command.Builder<CommandSender> builder,
-      ActionFor rewardFor) {
+      ActionFor actionFor) {
     manager.command(
         builder
             .argument(
@@ -38,7 +38,7 @@ public class PlayerCommandAction extends Action {
                   PlayerCommandAction playerCommandAction = new PlayerCommandAction(main);
                   playerCommandAction.setPlayerCommand(playerCommand);
 
-                  main.getActionManager().addAction(playerCommandAction, context);
+                  main.getActionManager().addAction(playerCommandAction, context, actionFor);
                 }));
   }
 

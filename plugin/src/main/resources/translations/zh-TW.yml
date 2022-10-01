@@ -58,6 +58,8 @@ chat:
       <main>選擇你的答案:</main>
     choose-answer-answer-hover-text: '<highlight>點擊回答'
     ended-previous-conversation: '<main>你已經結束了之前的對話!'
+    speaker-line-format: '%SPEAKERCOLOR%[%SPEAKER%] <GRAY>%MESSAGE%'
+    answer-option-line-format: ' <main>%OPTIONNUMBER%. <gray>%MESSAGE%'
   objectives:
     counter: '<highlight>%OBJECTIVEID%.</highlight> <main>%OBJECTIVENAME%:'
     hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[以隱藏]
@@ -89,9 +91,6 @@ chat:
         base: '給予物品: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
         deliver-to-npc: '      <GRAY>將物品給予給 <WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>負責收取物品的NPC目前不在!'
-        deliver-to-npc-citizens-not-found: '    <RED>錯誤: 服務器未安裝 Citizens. 請告知OP'
-        deliver-to-armorstand: '    <GRAY>将物品給予 <WHITE>%ARMORSTANDNAME%'
-        deliver-to-armorstand-not-available: '    <GRAY>負責收取物品的盔甲架目前不在!'
       escortNPC:
         base: '護送 <main>%NPCNAME%</main> 到 <main>%DESTINATIONNPCNAME%'
       fishItems:
@@ -123,6 +122,8 @@ chat:
         base: '冶煉物品: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       openBuriedTreasure:
         base: '打開埋藏的寶藏'
+      shearSheep:
+        base: '剪 <main>%AMOUNTOFSHEEP%</main> 次羊毛'
       townyReachResidentCount:
         base: '達到常駐人數: <main>%AMOUNT%'
       townyNationReachTownCount:

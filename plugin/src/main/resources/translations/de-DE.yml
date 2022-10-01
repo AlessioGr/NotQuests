@@ -58,6 +58,8 @@ chat:
       <main>Wähle deine Antwort:</main>
     choose-answer-answer-hover-text: '<highlight>Klicke zum antworten'
     ended-previous-conversation: '<main>Deine letztes Gespräch wurde beendet.'
+    speaker-line-format: '%SPEAKERCOLOR%[%SPEAKER%] <GRAY>%MESSAGE%'
+    answer-option-line-format: ' <main>%OPTIONNUMBER%. <gray>%MESSAGE%'
   objectives:
     counter: '<highlight>%OBJECTIVEID%.</highlight> <main>%OBJECTIVENAME%:'
     hidden: <highlight>%OBJECTIVEID%. <unimportant><bold>[VERBORGEN]
@@ -89,9 +91,6 @@ chat:
         base: 'Deliver Items: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
         deliver-to-npc: '      <GRAY>Bringe es zu <WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>Der Empfänger-NPC ist derzeit nicht verfügbar!'
-        deliver-to-npc-citizens-not-found: '    <RED>Fehler: Das Citizens Plugin ist nicht installiert. Bitte kontaktiere einen Admin.'
-        deliver-to-armorstand: '    <GRAY>Bringe es zu <WHITE>%ARMORSTANDNAME%'
-        deliver-to-armorstand-not-available: '    <GRAY>Der Empfänger-NPC ist derzeit nicht verfügbar!'
       escortNPC:
         base: 'Escort <main>%NPCNAME%</main> to <main>%DESTINATIONNPCNAME%'
       fishItems:
@@ -123,6 +122,8 @@ chat:
         base: 'Smelt Items: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       openBuriedTreasure:
         base: 'Open buried treasures'
+      shearSheep:
+        base: 'Shear <main>%AMOUNTOFSHEEP%</main> sheep'
       townyReachResidentCount:
         base: 'Reach resident amount: <main>%AMOUNT%'
       townyNationReachTownCount:

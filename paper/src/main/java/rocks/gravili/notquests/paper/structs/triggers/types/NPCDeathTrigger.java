@@ -25,14 +25,12 @@ import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import java.util.ArrayList;
 import java.util.List;
-import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 
-public class NPCDeathTrigger extends Trigger {
+public class NPCDeathTrigger extends Trigger { //TODO: Add support for other NPC systems
 
   private int npcToDieID = -1;
 
@@ -50,9 +48,9 @@ public class NPCDeathTrigger extends Trigger {
                 IntegerArgument.<CommandSender>newBuilder("NPC")
                     .withSuggestionsProvider(
                         (context, lastString) -> {
-                          ArrayList<String> completions = new ArrayList<>();
-                          for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
-                            completions.add("" + npc.getId());
+                          final ArrayList<String> completions = new ArrayList<>();
+                          for (final int npcID : main.getIntegrationsManager().getCitizensManager().getAllNPCIDs()) {
+                            completions.add("" + npcID);
                           }
                           final List<String> allArgs = context.getRawInput();
                           main.getUtilManager()

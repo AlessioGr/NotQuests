@@ -158,7 +158,7 @@ public class QuestSelector<C> extends CommandArgument<C, Quest> {
                 }
             }
             if (this.takeEnabledOnly && !foundQuest.isTakeEnabled() ) {
-                if (context.getSender() instanceof Player player) {
+                if (context.getSender() instanceof final Player player) {
                     if (!main.getQuestManager().isPlayerCloseToCitizenOrArmorstandWithQuest(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), foundQuest)) {
                         return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.take-disabled", player, foundQuest)));
                     }

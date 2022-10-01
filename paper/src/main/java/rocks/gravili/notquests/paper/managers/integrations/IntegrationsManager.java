@@ -18,7 +18,6 @@
 
 package rocks.gravili.notquests.paper.managers.integrations;
 
-import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.event.server.PluginEnableEvent;
@@ -34,8 +33,10 @@ import rocks.gravili.notquests.paper.events.hooks.ProjectKorraEvents;
 import rocks.gravili.notquests.paper.events.hooks.SlimefunEvents;
 import rocks.gravili.notquests.paper.events.hooks.TownyEvents;
 import rocks.gravili.notquests.paper.events.hooks.UltimateJobsEvents;
+import rocks.gravili.notquests.paper.events.hooks.ZNPCsEvents;
 import rocks.gravili.notquests.paper.managers.integrations.betonquest.BetonQuestManager;
 import rocks.gravili.notquests.paper.managers.integrations.citizens.CitizensManager;
+import rocks.gravili.notquests.paper.managers.integrations.znpcs.ZNPCsManager;
 import rocks.gravili.notquests.paper.placeholders.QuestPlaceholders;
 
 public class IntegrationsManager {
@@ -62,6 +63,12 @@ public class IntegrationsManager {
   private boolean mythicMobsEnabled = false;
   private boolean ecoBossesEnabled = false;
   private boolean ultimateJobsEnabled = false;
+
+  private boolean floodgateEnabled = false;
+
+  private boolean zNPCsEnabled = false;
+
+
   // Managers
   private VaultManager vaultManager;
   private MythicMobsManager mythicMobsManager;
@@ -73,6 +80,10 @@ public class IntegrationsManager {
   private ProjectKorraManager projectKorraManager;
   private UltimateClansManager ultimateClansManager;
   private EcoBossesManager ecoBossesManager;
+  private FloodgateManager floodgateManager;
+
+  private ZNPCsManager zNPCsManager;
+
 
   public IntegrationsManager(final NotQuests main) {
     this.main = main;
@@ -231,6 +242,13 @@ public class IntegrationsManager {
                   citizensManager = new CitizensManager(main);
                   return true;
                 })
+            .setRunWhenRegisteringEventsOnTime(
+                () -> {
+                  main.getMain()
+                      .getServer()
+                      .getPluginManager()
+                      .registerEvents(new CitizensEvents(main), main.getMain());
+                })
             .setRunAlsoWhenEnabledLate(
                 () -> {
                   main.getDataManager().setAlreadyLoadedNPCs(false);
@@ -241,16 +259,8 @@ public class IntegrationsManager {
                   if (!main.getDataManager().isAlreadyLoadedNPCs()) { // Just making sure
                     main.getDataManager().loadNPCData();
                   }
-                  citizensManager.registerAnyCitizensCommands();
                 })
-            .setRunWhenRegisteringEventsOnTime(
-                () -> {
-                  main.getMain()
-                      .getServer()
-                      .getPluginManager()
-                      .registerEvents(new CitizensEvents(main), main.getMain());
-                  citizensManager.registerAnyCitizensCommands();
-                }));
+    );
 
     integrations.add(
         new Integration(main, "Slimefun")
@@ -338,6 +348,46 @@ public class IntegrationsManager {
                       .registerEvents(new ProjectKorraEvents(main), main.getMain());
                 }));
 
+    integrations.add(
+        new Integration(main, "Floodgate")
+            .setEnableCondition(() -> main.getConfiguration().isIntegrationFloodgateEnabled())
+            .setRunWhenEnabled(
+                () -> {
+                  floodgateManager = new FloodgateManager(main);
+                  floodgateEnabled = true;
+                  return true;
+                })
+    );
+
+    integrations.add(
+        new Integration(main, "ServersNPC")
+            .setEnableCondition(() -> main.getConfiguration().isIntegrationZNPCsEnabled())
+            .setRunWhenEnabled(
+                () -> {
+                  zNPCsEnabled = true;
+                  zNPCsManager = new ZNPCsManager(main);
+                  return true;
+                })
+            .setRunWhenRegisteringEventsOnTime(
+                () -> {
+                  main.getMain()
+                      .getServer()
+                      .getPluginManager()
+                      .registerEvents(new ZNPCsEvents(main), main.getMain());
+                })
+            .setRunAlsoWhenEnabledLate(
+                () -> {
+                  main.getDataManager().setAlreadyLoadedNPCs(false);
+                  main.getMain()
+                      .getServer()
+                      .getPluginManager()
+                      .registerEvents(new ZNPCsEvents(main), main.getMain());
+                  if (!main.getDataManager().isAlreadyLoadedNPCs()) { // Just making sure
+                    main.getDataManager().loadNPCData();
+                  }
+                })
+    );
+
     integrationsNotEnabled.addAll(integrations);
   }
 
@@ -351,6 +401,21 @@ public class IntegrationsManager {
 
   public final CopyOnWriteArrayList<EnabledIntegration> getEnabledIntegrations() {
     return enabledIntegrations;
+  }
+
+  public final String getEnabledIntegrationDiscordString() {
+    final StringBuilder enabledIntegrationsString = new StringBuilder();
+    for (final EnabledIntegration enabledIntegration : getEnabledIntegrations()) {
+      enabledIntegrationsString.append("\n> - ");
+
+      enabledIntegrationsString
+          .append(enabledIntegration.getExactName())
+          .append(" *(")
+          .append(enabledIntegration.getVersionString())
+          .append(")*");
+    }
+
+    return enabledIntegrationsString.toString();
   }
 
   public final String getEnabledIntegrationString() {
@@ -426,60 +491,68 @@ public class IntegrationsManager {
    *
    * @return if Citizens is enabled
    */
-  public boolean isCitizensEnabled() {
+  public final boolean isCitizensEnabled() {
     return citizensEnabled;
   }
 
-  public boolean isMythicMobsEnabled() {
+  public final boolean isMythicMobsEnabled() {
     return mythicMobsEnabled;
   }
 
-  public boolean isEliteMobsEnabled() {
+  public final boolean isEliteMobsEnabled() {
     return eliteMobsEnabled;
   }
 
-  public boolean isSlimefunEnabled() {
+  public final boolean isSlimefunEnabled() {
     return slimefunEnabled;
   }
 
-  public boolean isPlaceholderAPIEnabled() {
+  public final boolean isPlaceholderAPIEnabled() {
     return placeholderAPIEnabled;
   }
 
-  public boolean isBetonQuestEnabled() {
+  public final boolean isBetonQuestEnabled() {
     return betonQuestEnabled;
   }
 
-  public boolean isWorldEditEnabled() {
+  public final boolean isWorldEditEnabled() {
     return worldEditEnabled;
   }
 
-  public boolean isLuckpermsEnabled() {
+  public final boolean isLuckpermsEnabled() {
     return luckpermsEnabled;
   }
 
-  public boolean isUltimateClansEnabled() {
+  public final boolean isUltimateClansEnabled() {
     return ultimateClansEnabled;
   }
 
-  public boolean isTownyEnabled() {
+  public final boolean isTownyEnabled() {
     return townyEnabled;
   }
 
-  public boolean isJobsRebornEnabled() {
+  public final boolean isJobsRebornEnabled() {
     return jobsRebornEnabled;
   }
 
-  public boolean isProjectKorraEnabled() {
+  public final boolean isProjectKorraEnabled() {
     return projectKorraEnabled;
   }
 
-  public boolean isEcoBossesEnabled() {
+  public final boolean isEcoBossesEnabled() {
     return ecoBossesEnabled;
   }
 
-  public boolean isUltimateJobsEnabled() {
+  public final boolean isUltimateJobsEnabled() {
     return ultimateJobsEnabled;
+  }
+
+  public final boolean isFloodgateEnabled() {
+    return floodgateEnabled;
+  }
+
+  public final boolean isZNPCsEnabled() {
+    return zNPCsEnabled;
   }
 
   public final MythicMobsManager getMythicMobsManager() {
@@ -506,8 +579,16 @@ public class IntegrationsManager {
     return citizensManager;
   }
 
+  public final ZNPCsManager getZNPCsManager() {
+    return zNPCsManager;
+  }
+
   public final ProjectKorraManager getProjectKorraManager() {
     return projectKorraManager;
+  }
+
+  public final FloodgateManager getFloodgateManager() {
+    return floodgateManager;
   }
 
   public final UltimateClansManager getUltimateClansManager() {

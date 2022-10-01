@@ -48,7 +48,7 @@ public class GiveItemAction extends Action {
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
       Command.Builder<CommandSender> builder,
-      ActionFor rewardFor) {
+      ActionFor actionFor) {
     manager.command(
         builder
             .argument(
@@ -83,7 +83,7 @@ public class GiveItemAction extends Action {
                   giveItemAction.setItemStackSelection(itemStackSelection);
                   giveItemAction.setNqItemAmount(itemRewardAmount);
 
-                  main.getActionManager().addAction(giveItemAction, context);
+                  main.getActionManager().addAction(giveItemAction, context, actionFor);
                 }));
   }
 

@@ -233,6 +233,13 @@ public class ActionsYMLManager {
             .set("actions." + actionIdentifier + ".displayName", action.getActionName());
       }
 
+      if (action.getExecutionDelay() != -1) {
+        action
+            .getCategory()
+            .getActionsConfig()
+            .set("actions." + actionIdentifier + ".executionDelay", action.getExecutionDelay());
+      }
+
       action.save(action.getCategory().getActionsConfig(), "actions." + actionIdentifier);
 
       saveActions(action.getCategory());

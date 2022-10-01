@@ -38,7 +38,6 @@ import org.bukkit.persistence.PersistentDataType;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
-import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
@@ -261,11 +260,7 @@ public class QuestManager {
                             final String objectiveDescription = category.getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".description", "");
                             final String objectiveTaskDescription = category.getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".taskDescription", "");
                             final NQNPC completionNPC = NQNPC.fromConfig(main, category.getQuestsConfig(), "quests." + quest.getQuestName() + ".objectives." + objectiveNumber + ".completionNPC");
-                            final String completionArmorStandUUIDString = category.getQuestsConfig().getString("quests." + quest.getQuestName() + ".objectives." + objectiveNumber + ".completionArmorStandUUID", null);
-                            if (completionArmorStandUUIDString != null) {
-                                final UUID completionArmorStandUUID = UUID.fromString(completionArmorStandUUIDString);
-                                objective.setCompletionArmorStandUUID(completionArmorStandUUID, false);
-                            }
+
 
                             objective.setDescription(objectiveDescription.replace("\\n", "\n"), false);
                             objective.setTaskDescription(objectiveTaskDescription.replace("\\n", "\n"), false);
@@ -866,76 +861,6 @@ public class QuestManager {
         final Player player = questPlayer.getPlayer();
         if (main.getConfiguration().isQuestPreviewUseGUI()) {
             main.getGuiManager().showTakeQuestsGUI(questPlayer, questsAttachedToNPC);
-            /*String[] guiSetup = {
-                    "xxxxxxxxx",
-                    "xgggggggx",
-                    "xgggggggx",
-                    "xgggggggx",
-                    "xgggggggx",
-                    "pxxxxxxxn"
-            };
-            InventoryGui gui = new InventoryGui(main.getMain(), player, main.getUtilManager().miniMessageToLegacyWithSpigotRGB(main.getLanguageManager().getString("gui.availableQuests.title", player)), guiSetup);
-            gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
-
-            int count = 0;
-            GuiElementGroup group = new GuiElementGroup('g');
-
-            for (final Quest quest : questsAttachedToNPC) {
-                final ItemStack materialToUse = quest.getTakeItem();
-
-
-                String displayName = quest.getQuestFinalName();
-
-                displayName = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.questNamePrefix", player, quest) + displayName;
-                QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer((player.getUniqueId()));
-
-                if (questPlayer != null && questPlayer.hasAcceptedQuest(quest)) {
-                    displayName += main.getLanguageManager().getString("gui.availableQuests.button.questPreview.acceptedSuffix", player, quest);
-                }
-                String description = "";
-                if (!quest.getQuestDescription().isBlank()) {
-                    description = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.questDescriptionPrefix", player, quest) + quest.getQuestDescription(main.getConfiguration().guiQuestDescriptionMaxLineLength);
-                }
-                count++;
-
-
-                group.addElement(new StaticGuiElement('e',
-                        materialToUse,
-                        count, // Display a number as the item count
-                        click -> {
-                            player.chat("/notquests preview " + quest.getQuestName());
-                            return true; // returning true will cancel the click event and stop taking the item
-
-                        },
-                        main.getUtilManager().miniMessageToLegacyWithSpigotRGB(displayName),
-                        main.getUtilManager().miniMessageToLegacyWithSpigotRGB(description),
-                        main.getUtilManager().miniMessageToLegacyWithSpigotRGB(main.getLanguageManager().getString("gui.availableQuests.button.questPreview.bottomText", player, questPlayer, quest))
-                ));
-
-            }
-
-
-            gui.addElement(group);
-
-            // Previous page
-            gui.addElement(new GuiPageElement('p', new ItemStack(Material.SPECTRAL_ARROW), GuiPageElement.PageAction.PREVIOUS, "Go to previous page (%prevpage%)"));
-
-            // Next page
-            gui.addElement(new GuiPageElement('n', new ItemStack(Material.ARROW), GuiPageElement.PageAction.NEXT, "Go to next page (%nextpage%)"));
-
-            gui.addElement(new StaticGuiElement('x',
-                    new ItemStack(Material.BLACK_STAINED_GLASS_PANE),
-                    0, // Display a number as the item count
-                    click -> {
-
-                        return true; // returning true will cancel the click event and stop taking the item
-
-                    },
-                    " "
-            ));
-
-
-            gui.show(player);*/
         } else {
             main.getLogManager().info("All quest count: <highlight>" + quests.size() + "</highlight>");
 

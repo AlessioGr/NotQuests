@@ -36,6 +36,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.conversation.interactionhandlers.SendClickableText;
+import rocks.gravili.notquests.paper.conversation.interactionhandlers.ConversationInteractionHandler;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -61,8 +63,13 @@ public class ConversationManager {
   private final Speaker playerSpeaker;
   private final HashMap<UUID, ConversationPlayer> openConversations;
 
+  private final ArrayList<SendClickableText> interactionHandlers;
+
   public ConversationManager(final NotQuests main) {
     this.main = main;
+    interactionHandlers = new ArrayList<>();
+    interactionHandlers.add(new SendClickableText(main));
+
     conversations = new ArrayList<>();
 
     openConversations = new HashMap<>();
@@ -75,6 +82,10 @@ public class ConversationManager {
 
     // playConversation(Bukkit.getPlayer("NoeX"), createTestConversation());
     loadConversationsFromConfig();
+  }
+
+  public final ArrayList<ConversationInteractionHandler> getInteractionHandlers() {
+    return new ArrayList<>(interactionHandlers);
   }
 
   public final int getMaxChatHistory() {
@@ -239,9 +250,9 @@ public class ConversationManager {
       final ArrayList<NQNPC> npcs = new ArrayList<>();
       final ConfigurationSection npcsConfigurationSection = config.getConfigurationSection("npcs");
       if(npcsConfigurationSection != null){
-        for (final String npcIDString : npcsConfigurationSection.getKeys(false)) {
+        for (final String npcIdentifyingString : npcsConfigurationSection.getKeys(false)) {
           npcs.add(
-              NQNPC.fromConfig(main, config, "npcs." + npcIDString)
+              NQNPC.fromConfig(main, config, "npcs." + npcIdentifyingString)
           );
         }
       }
@@ -300,21 +311,10 @@ public class ConversationManager {
       final String starterLines = config.getString("start", "").replace(" ", "");
       for (final String starterLine : starterLines.split(",")) {
         final String initialLine = "Lines." + starterLine;
-        final String message = config.getString(initialLine + ".text", "Missing Message");
+        final String message = config.getString(initialLine + ".text", "/skip/");
         final ArrayList<Action> actions =
             parseActionString(config.getStringList(initialLine + ".actions"));
         final boolean shouting = config.getBoolean(initialLine + ".shout", false);
-
-        // Message
-        if (message.equals("Missing Message")) {
-          main.getLogManager()
-              .warn(
-                  "Warning: couldn't find message for starter line <highlight>"
-                      + starterLine
-                      + "</highlight> of conversation <highlight>"
-                      + conversationFile.getName()
-                      + "</highlight>");
-        }
 
         // Speaker
         Speaker foundSpeaker = null;
@@ -330,8 +330,13 @@ public class ConversationManager {
         }
 
         // Construct the ConversationLine
-        ConversationLine startLine =
+        final ConversationLine startLine =
             new ConversationLine(foundSpeaker, starterLine.split("\\.")[1], message);
+
+        if(message.equals("/skip/")){
+          startLine.setSkipMessage(true);
+        }
+
         // Actions
         if (actions != null && actions.size() > 0) {
           for (Action action : actions) {
@@ -393,7 +398,7 @@ public class ConversationManager {
 
           final String initialLine = "Lines." + nextLineFullIdentifier;
 
-          final String message = config.getString(initialLine + ".text", "");
+          final String message = config.getString(initialLine + ".text", "/next/");
           final String next = config.getString(initialLine + ".next", "");
           final ArrayList<Action> actions =
               parseActionString(config.getStringList(initialLine + ".actions"));
@@ -458,6 +463,11 @@ public class ConversationManager {
 
           ConversationLine newLine =
               new ConversationLine(foundSpeaker, nextLineFullIdentifier.split("\\.")[1], message);
+
+          if(message.equals("/skip/")){
+            newLine.setSkipMessage(true);
+          }
+
           // Actions
           if (actions != null && actions.size() > 0) {
             for (Action action : actions) {
@@ -955,5 +965,54 @@ public class ConversationManager {
     }
 
     return toReturn.toString().toString();
+  }
+
+  /** Resends the chat history without ANY conversation messages */
+  public void removeOldMessages(final Player player) {
+    if (!main.getConfiguration().deletePreviousConversations) {
+      return;
+    }
+    // Send back old messages
+    ArrayList<Component> allChatHistory =
+        main.getConversationManager().getChatHistory().get(player.getUniqueId());
+
+    main.getLogManager().debug("Conversation stop stage 1");
+
+    if (allChatHistory == null) {
+      return;
+    }
+
+    ArrayList<Component> allConversationHistory =
+        main.getConversationManager()
+            .getConversationChatHistory()
+            .get(player.getUniqueId());
+    main.getLogManager().debug("Conversation stop stage 1.5");
+    if (allConversationHistory == null) {
+      return;
+    }
+    main.getLogManager().debug("Conversation stop stage 2");
+
+
+    Component collectiveComponent = Component.text("");
+    for (int i = 0; i < allChatHistory.size(); i++) {
+      Component component = allChatHistory.get(i);
+      if (component != null) {
+        // audience.sendMessage(component.append(Component.text("fg9023zf729ofz")));
+        collectiveComponent = collectiveComponent.append(component).append(Component.newline());
+      }
+    }
+    player.sendMessage(collectiveComponent);
+
+    allChatHistory.removeAll(allConversationHistory);
+    allConversationHistory.clear();
+    main.getConversationManager()
+        .getChatHistory()
+        .put(player.getUniqueId(), allChatHistory);
+    main.getConversationManager()
+        .getConversationChatHistory()
+        .put(player.getUniqueId(), allConversationHistory);
+
+    // maybe this won't send the huge, 1-component-chat-history again
+    allConversationHistory.add(collectiveComponent);
   }
 }

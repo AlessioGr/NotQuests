@@ -122,37 +122,6 @@ public abstract class Objective {
     }
   }
 
-  public final void setCompletionArmorStandUUID(
-      final UUID completionArmorStandUUID, final boolean save) {
-    this.completionArmorStandUUID = completionArmorStandUUID;
-    if (save) {
-      if (completionArmorStandUUID != null) {
-        quest
-            .getCategory()
-            .getQuestsConfig()
-            .set(
-                "quests."
-                    + quest.getQuestName()
-                    + ".objectives."
-                    + getObjectiveID()
-                    + ".completionArmorStandUUID",
-                completionArmorStandUUID.toString());
-      } else {
-        quest
-            .getCategory()
-            .getQuestsConfig()
-            .set(
-                "quests."
-                    + quest.getQuestName()
-                    + ".objectives."
-                    + getObjectiveID()
-                    + ".completionArmorStandUUID",
-                null);
-      }
-      quest.getCategory().saveQuestsConfig();
-    }
-  }
-
   public final int getObjectiveID() {
     return objectiveID;
   }
