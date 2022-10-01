@@ -85,9 +85,6 @@ chat:
         base: 'Deliver Items: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
         deliver-to-npc: '      <GRAY>Giao nó cho<WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>NPC giao hàng hiện không có sẵn!'
-        deliver-to-npc-citizens-not-found: '    <RED>Lỗi plugin: Citizens chưa tải. Hãy nói với ban quản trị.'
-        deliver-to-armorstand: '    <GRAY>Deliver it to <WHITE>%ARMORSTANDNAME%'
-        deliver-to-armorstand-not-available: '    <GRAY>Bệ Giáp hiện không có sẵn!'
       escortNPC:
         base: 'Escort <main>%NPCNAME%</main> to <main>%DESTINATIONNPCNAME%'
       fishItems:

@@ -91,9 +91,6 @@ chat:
         base: 'Dostarcz przedmioty: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
         deliver-to-npc: '      <GRAY>Dostarcz to do <WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>Dostawa NPC jest obecnie niedostępna!'
-        deliver-to-npc-citizens-not-found: '    <RED>Błąd: Nie zainstalowano wtyczki "Citizens". Skontaktuj się z administratorem.'
-        deliver-to-armorstand: '    <GRAY>Dostarcz to do <WHITE>%ARMORSTANDNAME%'
-        deliver-to-armorstand-not-available: '    <GRAY> Docelowy stojak na jest obecnie niedostępny!'
       escortNPC:
         base: 'Eskortuj <main>%NPCNAME%</main> do <main>%DESTINATIONNPCNAME%'
       fishItems:

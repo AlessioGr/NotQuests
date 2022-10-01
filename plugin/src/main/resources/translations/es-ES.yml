@@ -91,9 +91,6 @@ chat:
         base: 'Entregar Items: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
         deliver-to-npc: '      <GRAY>Entregarlo a <WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>¡El NPC al que tienes entregar no esta disponible!'
-        deliver-to-npc-citizens-not-found: '    <RED>Error: El plugin Citizens no esta instalado. Contacta a un administrador.'
-        deliver-to-armorstand: '    <GRAY>Entregarlo a <WHITE>%ARMORSTANDNAME%'
-        deliver-to-armorstand-not-available: '    <GRAY>El Soporte de Armadura no está disponible actualmente!'
       escortNPC:
         base: 'Escolta al NPC <main>%NPCNAME%</main> hacia <main>%DESTINATIONNPCNAME%'
       fishItems:
