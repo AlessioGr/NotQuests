@@ -105,6 +105,7 @@ chat:
         base: 'Atteindre un emplacement : <main>%LOCATIONNAME%'
       talkToNPC:
         base: 'Parler à <main>%NAME%'
+        npc-not-available: '    <GRAY>The target NPC is currently not available!'
       triggerCommand:
         base: 'Objectif : <main>%TRIGGERNAME%'
       killEliteMobs:
