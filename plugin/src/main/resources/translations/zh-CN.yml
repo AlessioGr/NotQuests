@@ -105,6 +105,7 @@ chat:
         base: '到达任务地点：<main>%LOCATIONNAME%'
       talkToNPC:
         base: '与 <main>%NAME% <unimportant>对话'
+        npc-not-available: '    <GRAY>The target NPC is currently not available!'
       triggerCommand:
         base: '目标：<main>%TRIGGERNAME%'
       killEliteMobs:
