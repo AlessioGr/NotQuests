@@ -919,16 +919,6 @@ public class AdminEditCommands {
                             "<main>The completionNPCID of the objective with the ID <highlight>" + objectiveID + "</highlight> is <highlight2>"
                                     + (objective.getCompletionNPC() != null ? objective.getCompletionNPC().getID() : "null" ) + "</highlight2>!"
                     ));
-                    if (objective.getCompletionArmorStandUUID() != null) {
-                        context.getSender().sendMessage(main.parse(
-                                "<main>The completionNPCUUID (for armor stands) of the objective with the ID <highlight>" + objectiveID + "</highlight> is <highlight2>"
-                                        + objective.getCompletionArmorStandUUID() + "</highlight2>!"
-                        ));
-                    } else {
-                        context.getSender().sendMessage(main.parse(
-                                "<main>The completionNPCUUID (for armor stands) of the objective with the ID <highlight>" + objectiveID + "</highlight> is <highlight2>null</highlight2>!"
-                        ));
-                    }
                 }));
         manager.command(builder.literal("completionNPC") //TODO: Generalize for NqNPCs
                 .literal("set")

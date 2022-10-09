@@ -20,7 +20,6 @@ package rocks.gravili.notquests.paper.structs.objectives;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -50,8 +49,6 @@ public abstract class Objective {
 
   private String taskDescription = "";
   private NQNPC completionNPC = null;
-  private UUID completionArmorStandUUID = null;
-
   private boolean showLocation = false;
   private Location location = null;
 
@@ -103,10 +100,6 @@ public abstract class Objective {
 
   public final NQNPC getCompletionNPC() {
     return completionNPC;
-  }
-
-  public final UUID getCompletionArmorStandUUID() {
-    return completionArmorStandUUID;
   }
 
   public final void setCompletionNPC(final NQNPC completionNPC, final boolean save) {

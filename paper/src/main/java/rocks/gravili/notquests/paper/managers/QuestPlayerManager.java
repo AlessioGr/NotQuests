@@ -27,9 +27,7 @@ import java.util.HashMap;
 import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
@@ -215,21 +213,7 @@ public class QuestPlayerManager {
                 }
                 activeObjective.setHasBeenCompleted(hasBeenCompleted);
                 if (activeObjective.getObjective().getCompletionNPC() == null) { // Complete automatically
-                  if (activeObjective.getObjective().getCompletionArmorStandUUID()
-                      != null) { // Only complete if player has talked to the completion Armor Stand
-                    if (activeObjective.hasBeenCompleted()) {
-                      activeObjective.addProgress(
-                          currentProgress,
-                          activeObjective.getObjective().getCompletionArmorStandUUID(),
-                          true);
-
-                    } else {
-                      activeObjective.addProgress(currentProgress, true);
-                    }
-                  } else {
-                    activeObjective.addProgress(currentProgress, true);
-                  }
-
+                  activeObjective.addProgress(currentProgress, true);
                 } else { // Only complete if player has talked to the completion NPC
                   if (activeObjective.hasBeenCompleted()) {
                     activeObjective.addProgress(
@@ -596,22 +580,7 @@ public class QuestPlayerManager {
                   }
                   activeObjective.setHasBeenCompleted(hasBeenCompleted);
                   if (activeObjective.getObjective().getCompletionNPC() == null) { // Complete automatically
-                    if (activeObjective.getObjective().getCompletionArmorStandUUID()
-                        != null) { // Only complete if player has talked to the completion Armor
-                                   // Stand
-                      if (activeObjective.hasBeenCompleted()) {
-                        activeObjective.addProgress(
-                            currentProgress,
-                            activeObjective.getObjective().getCompletionArmorStandUUID(),
-                            true);
-
-                      } else {
-                        activeObjective.addProgress(currentProgress, true);
-                      }
-                    } else {
-                      activeObjective.addProgress(currentProgress, true);
-                    }
-
+                    activeObjective.addProgress(currentProgress, true);
                   } else { // Only complete if player has talked to the completion NPC
                     if (activeObjective.hasBeenCompleted()) {
                       activeObjective.addProgress(

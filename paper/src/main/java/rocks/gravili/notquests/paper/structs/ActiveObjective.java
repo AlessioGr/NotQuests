@@ -19,7 +19,6 @@
 package rocks.gravili.notquests.paper.structs;
 
 
-import java.util.UUID;
 import org.bukkit.Bukkit;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.NotQuestColors;
@@ -236,28 +235,17 @@ public class ActiveObjective {
         }
     }
     public void addProgress(double progressToAdd) {
-        addProgress(progressToAdd, null, null, false);
+        addProgress(progressToAdd, null, false);
     }
     public void addProgress(double progressToAdd, boolean silent) {
-        addProgress(progressToAdd, null, null, silent);
+        addProgress(progressToAdd, null, silent);
     }
     //For Citizens NPCs
     public void addProgress(double progressToAdd, final NQNPC nqnpc) {
-        addProgress(progressToAdd, nqnpc, null, false);
-    }
-    public void addProgress(double progressToAdd, final NQNPC nqnpc, final boolean silent) {
-        addProgress(progressToAdd, nqnpc, null, silent);
-
-    }
-    //For Armor Stands
-    public void addProgress(double progressToAdd, final UUID armorStandUUID) {
-        addProgress(progressToAdd, null, armorStandUUID, false);
-    }
-    public void addProgress(double progressToAdd, final UUID armorStandUUID, final boolean silent) {
-        addProgress(progressToAdd, null, armorStandUUID, silent);
+        addProgress(progressToAdd, nqnpc, false);
     }
 
-    public void addProgress(double progressToAdd, final NQNPC nqnpc, final UUID armorStandUUID, boolean silent) {
+    public void addProgress(double progressToAdd, final NQNPC nqnpc, boolean silent) {
         if(main.getDataManager().isDisabled() || !canProgress(false)){
             return;
         }
@@ -265,13 +253,9 @@ public class ActiveObjective {
         getQuestPlayer().setTrackingObjective(this);
 
 
-        if ( (nqnpc != null && isCompleted(nqnpc)) || isCompleted(armorStandUUID)) {
+        if ( (nqnpc != null && isCompleted(nqnpc))) {
             setHasBeenCompleted(true);
-            if(armorStandUUID != null){
-                activeQuest.notifyActiveObjectiveCompleted(this, silent, armorStandUUID);
-            }else{
-                activeQuest.notifyActiveObjectiveCompleted(this, silent, nqnpc);
-            }
+            activeQuest.notifyActiveObjectiveCompleted(this, silent, nqnpc);
         }
         if(main.getConfiguration().isDebug()){
             main.getLogManager().debug("+" + progressToAdd + " progress for objective " + NotQuestColors.debugHighlightGradient + getObjective().getFinalName() + "</gradient> of quest " + NotQuestColors.debugHighlightGradient + getActiveQuest().getQuest().getQuestFinalName() + "</gradient>. Silent: " + silent);
@@ -321,15 +305,6 @@ public class ActiveObjective {
 
     }
 
-    //For Armor Stands
-    public final boolean isCompleted(final UUID armorStandUUID) {
-        if (getObjective().getCompletionArmorStandUUID() == null || getObjective().getCompletionArmorStandUUID().equals(armorStandUUID)) {
-            return canComplete() && currentProgress >= getProgressNeeded();
-        } else {
-            return false;
-        }
-
-    }
 
     public final QuestPlayer getQuestPlayer() {
         return activeQuest.getQuestPlayer();

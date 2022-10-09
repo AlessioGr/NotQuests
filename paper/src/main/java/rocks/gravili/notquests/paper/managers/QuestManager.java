@@ -1095,9 +1095,6 @@ public class QuestManager {
                 toReturn += "\n    <GRAY>To complete: Talk to NPC with ID <highlight>" + objective.getCompletionNPC().getID() + " <RED>[Currently not available]";
             }
         }
-        if (objective.getCompletionArmorStandUUID() != null) {
-            toReturn += "\n    <GRAY>To complete: Talk to <highlight>" + main.getArmorStandManager().getArmorStandName(objective.getCompletionArmorStandUUID());
-        }
         if(completed){
             return "<strikethrough>" + toReturn + "</strikethrough>";
         }else{
