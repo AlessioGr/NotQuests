@@ -20,7 +20,7 @@ package rocks.gravili.notquests.paper.structs;
 
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -50,7 +50,7 @@ public class ActiveQuest {
 
   private final Quest quest;
 
-  private final ArrayList<ActiveObjective> activeObjectives;
+  private final CopyOnWriteArrayList<ActiveObjective> activeObjectives;
   private final ArrayList<ActiveObjective> completedObjectives;
   private final ArrayList<ActiveObjective> toRemove;
   private final ArrayList<ActiveTrigger> activeTriggers;
@@ -61,7 +61,7 @@ public class ActiveQuest {
     this.main = main;
     this.quest = quest;
     this.questPlayer = questPlayer;
-    activeObjectives = new ArrayList<>();
+    activeObjectives = new CopyOnWriteArrayList<>();
     toRemove = new ArrayList<>();
     completedObjectives = new ArrayList<>();
     activeTriggers = new ArrayList<>();
@@ -89,7 +89,7 @@ public class ActiveQuest {
     return activeTriggers;
   }
 
-  public final ArrayList<ActiveObjective> getActiveObjectives() {
+  public final CopyOnWriteArrayList<ActiveObjective> getActiveObjectives() {
     return activeObjectives;
   }
 
@@ -105,22 +105,10 @@ public class ActiveQuest {
     return questPlayer;
   }
 
-  // For Citizens NPCs
-  public void notifyActiveObjectiveCompleted(
-      final ActiveObjective activeObjective, final boolean silent, final NQNPC nqNPC) {
-    notifyActiveObjectiveCompleted(activeObjective, silent, nqNPC, null);
-  }
-  // For Armor Stands
-  public void notifyActiveObjectiveCompleted(
-      final ActiveObjective activeObjective, final boolean silent, final UUID armorStandUUID) {
-    notifyActiveObjectiveCompleted(activeObjective, silent, null, armorStandUUID);
-  }
-
   public void notifyActiveObjectiveCompleted(
       final ActiveObjective activeObjective,
       final boolean silent,
-      final NQNPC nqnpc,
-      final UUID armorStandUUID) {
+      final NQNPC nqnpc) {
     if (!main.getDataManager().isCurrentlyLoading() && !questPlayer.isCurrentlyLoading()) {
       ObjectiveCompleteEvent objectiveCompleteEvent =
           new ObjectiveCompleteEvent(getQuestPlayer(), activeObjective, this);

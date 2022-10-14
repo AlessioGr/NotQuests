@@ -1084,7 +1084,6 @@ public class QuestPlayer {
                         runForEachObjective.accept(activeObjective);
                     }
                 }
-
             }
             activeQuest.removeCompletedObjectives(true);
         }
