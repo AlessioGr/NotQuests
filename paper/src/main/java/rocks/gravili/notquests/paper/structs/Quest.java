@@ -31,6 +31,7 @@ import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
+import rocks.gravili.notquests.paper.structs.objectives.ObjectiveHolder;
 import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 
 /**
@@ -43,7 +44,7 @@ import rocks.gravili.notquests.paper.structs.triggers.Trigger;
  *
  * @author Alessio Gravili
  */
-public class Quest {
+public class Quest implements ObjectiveHolder {
   private final NotQuests main;
   private final String questName;
   private final ArrayList<Action> rewards;
@@ -116,6 +117,7 @@ public class Quest {
   public final Category getCategory() {
     return category;
   }
+
 
   public void setCategory(final Category category) {
     this.category = category;
@@ -749,5 +751,25 @@ public class Quest {
 
     }
 
+  }
+
+  @Override
+  public FileConfiguration getConfig() {
+    return getCategory().getQuestsConfig();
+  }
+
+  @Override
+  public void saveConfig() {
+    getCategory().saveQuestsConfig();
+  }
+
+  @Override
+  public String getInitialConfigPath() {
+    return "quests." + getQuestName();
+  }
+
+  @Override
+  public String getName() {
+    return getQuestName();
   }
 }

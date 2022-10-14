@@ -57,7 +57,7 @@ public class TalkToNPCObjective extends Objective {
                             main.getNPCManager().handleRightClickNQNPCSelectionWithAction(
                                 (nqNPC) -> {
                                     final TalkToNPCObjective talkToNPCObjective = new TalkToNPCObjective(main);
-                                    talkToNPCObjective.setQuest(quest);
+                                    talkToNPCObjective.setObjectiveHolder(quest);
                                     talkToNPCObjective.setObjectiveID(quest.getFreeObjectiveID());
                                     talkToNPCObjective.setNPCtoTalkTo(nqNPC);
 

@@ -192,7 +192,7 @@ public class ObjectiveManager {
         context.flags().getValue(main.getCommandManager().taskDescription, "");
 
     if (quest != null) {
-      objective.setQuest(quest);
+      objective.setObjectiveHolder(quest);
       objective.setObjectiveID(quest.getFreeObjectiveID());
       if(taskDescription != null && !taskDescription.isBlank()) {
         objective.setTaskDescription(taskDescription, true);

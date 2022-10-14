@@ -242,7 +242,7 @@ public class QuestManager {
 
                             try {
                                 objective = objectiveType.getDeclaredConstructor(NotQuests.class).newInstance(main);
-                                objective.setQuest(quest);
+                                objective.setObjectiveHolder(quest);
                                 objective.setObjectiveID(objectiveID);
                                 objective.setProgressNeededExpression(progressNeededExpression);
                                 objective.setLocation(location, false);

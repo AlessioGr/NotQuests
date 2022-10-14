@@ -1409,8 +1409,8 @@ public class DataManager {
                 main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Quest: <highlight>"+ quest.getQuestName());
                 reasonWithObjects += "\n" + "  <DARK_GRAY>└─</DARK_GRAY> Quest: <highlight>"+ quest.getQuestName();
             } else if (object instanceof Objective objective) {
-                main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Objective ID: <highlight>" + objective.getObjectiveID() + "</highlight> of Quest: <highlight2>" + ((Objective) object).getQuest().getQuestName());
-                reasonWithObjects += "\n" + "  <DARK_GRAY>└─</DARK_GRAY> Objective ID: <highlight>" + objective.getObjectiveID() + "</highlight> of Quest: <highlight2>" + ((Objective) object).getQuest().getQuestName();
+                main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Objective ID: <highlight>" + objective.getObjectiveID() + "</highlight> of Quest: <highlight2>" + ((Objective) object).getObjectiveHolder().getName());
+                reasonWithObjects += "\n" + "  <DARK_GRAY>└─</DARK_GRAY> Objective ID: <highlight>" + objective.getObjectiveID() + "</highlight> of Quest: <highlight2>" + ((Objective) object).getObjectiveHolder().getName();
             } else if (object instanceof Action action) {
                 main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Action Name: <highlight>" + action.getActionName() + "</highlight> of Type: <highlight2>" + action.getActionType());
                 reasonWithObjects += "\n" + "  <DARK_GRAY>└─</DARK_GRAY> Action Name: <highlight>" + action.getActionName() + "</highlight> of Type: <highlight2>" + action.getActionType();

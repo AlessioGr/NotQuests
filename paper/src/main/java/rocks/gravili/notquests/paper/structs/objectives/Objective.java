@@ -27,7 +27,6 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
-import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
@@ -42,7 +41,7 @@ public abstract class Objective {
 
   private NumberExpression progressNeededExpression;
 
-  private Quest quest;
+  private ObjectiveHolder objectiveHolder;
   private int objectiveID = -1;
   private String objectiveDisplayName = "";
   private String objectiveDescription = "";
@@ -71,30 +70,27 @@ public abstract class Objective {
   public void setLocation(Location location, boolean save) {
     this.location = location;
     if (save) {
-      quest
-          .getCategory()
-          .getQuestsConfig()
+      objectiveHolder
+          .getConfig()
           .set(
-              "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".location",
+              objectiveHolder.getInitialConfigPath() + ".objectives." + getObjectiveID() + ".location",
               location);
-      quest.getCategory().saveQuestsConfig();
+      objectiveHolder.saveConfig();
     }
   }
 
   public void setShowLocation(boolean showLocation, boolean save) {
     this.showLocation = showLocation;
     if (save) {
-      quest
-          .getCategory()
-          .getQuestsConfig()
+      objectiveHolder
+          .getConfig()
           .set(
-              "quests."
-                  + quest.getQuestName()
+              objectiveHolder.getInitialConfigPath()
                   + ".objectives."
                   + getObjectiveID()
                   + ".showLocation",
               showLocation);
-      quest.getCategory().saveQuestsConfig();
+      objectiveHolder.saveConfig();
     }
   }
 
@@ -105,13 +101,11 @@ public abstract class Objective {
   public final void setCompletionNPC(final NQNPC completionNPC, final boolean save) {
     this.completionNPC = completionNPC;
     if (save) {
-      completionNPC.saveToConfig(quest.getCategory()
-          .getQuestsConfig(), "quests."
-          + quest.getQuestName()
+      completionNPC.saveToConfig(objectiveHolder.getConfig(), objectiveHolder.getInitialConfigPath()
           + ".objectives."
           + getObjectiveID()
           + ".completionNPCID");
-      quest.getCategory().saveQuestsConfig();
+      objectiveHolder.saveConfig();
     }
   }
 
@@ -158,12 +152,10 @@ public abstract class Objective {
     if (!dupeID) {
       rewards.add(action);
       if (save) {
-        quest
-            .getCategory()
-            .getQuestsConfig()
+        objectiveHolder
+            .getConfig()
             .set(
-                "quests."
-                    + quest.getQuestName()
+                objectiveHolder.getInitialConfigPath()
                     + ".objectives."
                     + getObjectiveID()
                     + ".rewards."
@@ -171,12 +163,10 @@ public abstract class Objective {
                     + ".actionType",
                 action.getActionType());
         if (!action.getActionName().isBlank()) {
-          quest
-              .getCategory()
-              .getQuestsConfig()
+          objectiveHolder
+              .getConfig()
               .set(
-                  "quests."
-                      + quest.getQuestName()
+                  objectiveHolder.getInitialConfigPath()
                       + ".objectives."
                       + getObjectiveID()
                       + ".rewards."
@@ -185,14 +175,13 @@ public abstract class Objective {
                   action.getActionName());
         }
         action.save(
-            quest.getCategory().getQuestsConfig(),
-            "quests."
-                + quest.getQuestName()
+            objectiveHolder.getConfig(),
+            objectiveHolder.getInitialConfigPath()
                 + ".objectives."
                 + getObjectiveID()
                 + ".rewards."
                 + action.getActionID());
-        quest.getCategory().saveQuestsConfig();
+        objectiveHolder.saveConfig();
       }
     } else {
       main.getLogManager()
@@ -209,30 +198,27 @@ public abstract class Objective {
     int rewardID = action.getActionID();
     rewards.remove(action);
     if (save) {
-      quest
-          .getCategory()
-          .getQuestsConfig()
+      objectiveHolder
+          .getConfig()
           .set(
-              "quests."
-                  + quest.getQuestName()
+              objectiveHolder.getInitialConfigPath()
                   + ".objectives."
                   + getObjectiveID()
                   + ".rewards."
                   + rewardID,
               null);
-      quest.getCategory().saveQuestsConfig();
+      objectiveHolder.saveConfig();
     }
   }
 
   public void clearRewards() {
     rewards.clear();
-    quest
-        .getCategory()
-        .getQuestsConfig()
+    objectiveHolder
+        .getConfig()
         .set(
-            "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".rewards",
+            objectiveHolder.getInitialConfigPath() + ".objectives." + getObjectiveID() + ".rewards",
             null);
-    quest.getCategory().saveQuestsConfig();
+    objectiveHolder.saveConfig();
   }
 
   public final String getDisplayName() {
@@ -252,26 +238,24 @@ public abstract class Objective {
         main.getUtilManager().replaceLegacyWithMiniMessage(newObjectiveDisplayName);
     this.objectiveDisplayName = newObjectiveDisplayName;
     if (save) {
-      quest
-          .getCategory()
-          .getQuestsConfig()
+      objectiveHolder
+          .getConfig()
           .set(
-              "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".displayName",
+              objectiveHolder.getInitialConfigPath() + ".objectives." + getObjectiveID() + ".displayName",
               newObjectiveDisplayName);
-      quest.getCategory().saveQuestsConfig();
+      objectiveHolder.saveConfig();
     }
   }
 
   public void removeDisplayName(boolean save) {
     this.objectiveDisplayName = "";
     if (save) {
-      quest
-          .getCategory()
-          .getQuestsConfig()
+      objectiveHolder
+          .getConfig()
           .set(
-              "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".displayName",
+              objectiveHolder.getInitialConfigPath() + ".objectives." + getObjectiveID() + ".displayName",
               null);
-      quest.getCategory().saveQuestsConfig();
+      objectiveHolder.saveConfig();
     }
   }
 
@@ -304,13 +288,12 @@ public abstract class Objective {
         main.getUtilManager().replaceLegacyWithMiniMessage(newObjectiveDescription);
     this.objectiveDescription = newObjectiveDescription;
     if (save) {
-      quest
-          .getCategory()
-          .getQuestsConfig()
+      objectiveHolder
+          .getConfig()
           .set(
-              "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".description",
+              objectiveHolder.getInitialConfigPath() + ".objectives." + getObjectiveID() + ".description",
               newObjectiveDescription);
-      quest.getCategory().saveQuestsConfig();
+      objectiveHolder.saveConfig();
     }
   }
 
@@ -319,48 +302,45 @@ public abstract class Objective {
         main.getUtilManager().replaceLegacyWithMiniMessage(newObjectiveTaskDescription);
     this.taskDescription = newObjectiveTaskDescription;
     if (save) {
-      quest
-          .getCategory()
-          .getQuestsConfig()
+      objectiveHolder
+          .getConfig()
           .set(
-              "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".taskDescription",
+              objectiveHolder.getInitialConfigPath() + ".objectives." + getObjectiveID() + ".taskDescription",
               newObjectiveTaskDescription);
-      quest.getCategory().saveQuestsConfig();
+      objectiveHolder.saveConfig();
     }
   }
 
   public void removeDescription(boolean save) {
     this.objectiveDescription = "";
     if (save) {
-      quest
-          .getCategory()
-          .getQuestsConfig()
+      objectiveHolder
+          .getConfig()
           .set(
-              "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".description",
+              objectiveHolder.getInitialConfigPath() + ".objectives." + getObjectiveID() + ".description",
               null);
-      quest.getCategory().saveQuestsConfig();
+      objectiveHolder.saveConfig();
     }
   }
 
   public void removeTaskDescription(boolean save) {
     this.taskDescription = "";
     if (save) {
-      quest
-          .getCategory()
-          .getQuestsConfig()
+      objectiveHolder
+          .getConfig()
           .set(
-              "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".taskDescription",
+              objectiveHolder.getInitialConfigPath() + ".objectives." + getObjectiveID() + ".taskDescription",
               null);
-      quest.getCategory().saveQuestsConfig();
+      objectiveHolder.saveConfig();
     }
   }
 
-  public final Quest getQuest() {
-    return quest;
+  public final ObjectiveHolder getObjectiveHolder() {
+    return objectiveHolder;
   }
 
-  public void setQuest(final Quest quest) {
-    this.quest = quest;
+  public void setObjectiveHolder(final ObjectiveHolder objectiveHolder) {
+    this.objectiveHolder = objectiveHolder;
   }
 
   public final String getTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective){
@@ -416,48 +396,40 @@ public abstract class Objective {
     if (!dupeID) {
       unlockConditions.add(condition);
       if (save) {
-        quest
-            .getCategory()
-            .getQuestsConfig()
+        objectiveHolder
+            .getConfig()
             .set(
-                "quests."
-                    + quest.getQuestName()
+                objectiveHolder.getInitialConfigPath()
                     + ".objectives."
                     + getObjectiveID()
                     + ".conditions."
                     + condition.getConditionID()
                     + ".conditionType",
                 condition.getConditionType());
-        quest
-            .getCategory()
-            .getQuestsConfig()
+        objectiveHolder
+            .getConfig()
             .set(
-                "quests."
-                    + quest.getQuestName()
+                objectiveHolder.getInitialConfigPath()
                     + ".objectives."
                     + getObjectiveID()
                     + ".conditions."
                     + condition.getConditionID()
                     + ".progressNeeded",
                 condition.getProgressNeeded());
-        quest
-            .getCategory()
-            .getQuestsConfig()
+        objectiveHolder
+            .getConfig()
             .set(
-                "quests."
-                    + quest.getQuestName()
+                objectiveHolder.getInitialConfigPath()
                     + ".objectives."
                     + getObjectiveID()
                     + ".conditions."
                     + condition.getConditionID()
                     + ".negated",
                 condition.isNegated());
-        quest
-            .getCategory()
-            .getQuestsConfig()
+        objectiveHolder
+            .getConfig()
             .set(
-                "quests."
-                    + quest.getQuestName()
+                objectiveHolder.getInitialConfigPath()
                     + ".objectives."
                     + getObjectiveID()
                     + ".conditions."
@@ -466,14 +438,13 @@ public abstract class Objective {
                 condition.getDescription());
 
         condition.save(
-            quest.getCategory().getQuestsConfig(),
-            "quests."
-                + quest.getQuestName()
+            objectiveHolder.getConfig(),
+            objectiveHolder.getInitialConfigPath()
                 + ".objectives."
                 + getObjectiveID()
                 + ".conditions."
                 + condition.getConditionID());
-        quest.getCategory().saveQuestsConfig();
+        objectiveHolder.saveConfig();
       }
     } else {
       main.getLogManager()
@@ -490,30 +461,27 @@ public abstract class Objective {
     int conditionID = condition.getConditionID();
     unlockConditions.remove(condition);
     if (save) {
-      quest
-          .getCategory()
-          .getQuestsConfig()
+      objectiveHolder
+          .getConfig()
           .set(
-              "quests."
-                  + quest.getQuestName()
+              objectiveHolder.getInitialConfigPath()
                   + ".objectives."
                   + getObjectiveID()
                   + ".conditions."
                   + conditionID,
               null);
-      quest.getCategory().saveQuestsConfig();
+      objectiveHolder.saveConfig();
     }
   }
 
   public void clearUnlockConditions() {
     unlockConditions.clear();
-    quest
-        .getCategory()
-        .getQuestsConfig()
+    objectiveHolder
+        .getConfig()
         .set(
-            "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions",
+            objectiveHolder.getInitialConfigPath() + ".objectives." + getObjectiveID() + ".conditions",
             null);
-    quest.getCategory().saveQuestsConfig();
+    objectiveHolder.saveConfig();
   }
 
   public final Condition getUnlockConditionFromID(int id) {
@@ -553,48 +521,40 @@ public abstract class Objective {
     if (!dupeID) {
       progressConditions.add(condition);
       if (save) {
-        quest
-            .getCategory()
-            .getQuestsConfig()
+        objectiveHolder
+            .getConfig()
             .set(
-                "quests."
-                    + quest.getQuestName()
+                objectiveHolder.getInitialConfigPath()
                     + ".objectives."
                     + getObjectiveID()
                     + ".conditionsProgress."
                     + condition.getConditionID()
                     + ".conditionType",
                 condition.getConditionType());
-        quest
-            .getCategory()
-            .getQuestsConfig()
+        objectiveHolder
+            .getConfig()
             .set(
-                "quests."
-                    + quest.getQuestName()
+                objectiveHolder.getInitialConfigPath()
                     + ".objectives."
                     + getObjectiveID()
                     + ".conditionsProgress."
                     + condition.getConditionID()
                     + ".progressNeeded",
                 condition.getProgressNeeded());
-        quest
-            .getCategory()
-            .getQuestsConfig()
+        objectiveHolder
+            .getConfig()
             .set(
-                "quests."
-                    + quest.getQuestName()
+                objectiveHolder.getInitialConfigPath()
                     + ".objectives."
                     + getObjectiveID()
                     + ".conditionsProgress."
                     + condition.getConditionID()
                     + ".negated",
                 condition.isNegated());
-        quest
-            .getCategory()
-            .getQuestsConfig()
+        objectiveHolder
+            .getConfig()
             .set(
-                "quests."
-                    + quest.getQuestName()
+                objectiveHolder.getInitialConfigPath()
                     + ".objectives."
                     + getObjectiveID()
                     + ".conditionsProgress."
@@ -602,12 +562,10 @@ public abstract class Objective {
                     + ".description",
                 condition.getDescription());
 
-        quest
-            .getCategory()
-            .getQuestsConfig()
+        objectiveHolder
+            .getConfig()
             .set(
-                "quests."
-                    + quest.getQuestName()
+                objectiveHolder.getInitialConfigPath()
                     + ".objectives."
                     + getObjectiveID()
                     + ".conditionsProgress."
@@ -616,14 +574,13 @@ public abstract class Objective {
                 condition.isObjectiveConditionSpecific_allowProgressDecreaseIfNotFulfilled());
 
         condition.save(
-            quest.getCategory().getQuestsConfig(),
-            "quests."
-                + quest.getQuestName()
+            objectiveHolder.getConfig(),
+            objectiveHolder.getInitialConfigPath()
                 + ".objectives."
                 + getObjectiveID()
                 + ".conditionsProgress."
                 + condition.getConditionID());
-        quest.getCategory().saveQuestsConfig();
+        objectiveHolder.saveConfig();
       }
     } else {
       main.getLogManager()
@@ -640,30 +597,27 @@ public abstract class Objective {
     int conditionID = condition.getConditionID();
     progressConditions.remove(condition);
     if (save) {
-      quest
-          .getCategory()
-          .getQuestsConfig()
+      objectiveHolder
+          .getConfig()
           .set(
-              "quests."
-                  + quest.getQuestName()
+              objectiveHolder.getInitialConfigPath()
                   + ".objectives."
                   + getObjectiveID()
                   + ".conditionsProgress."
                   + conditionID,
               null);
-      quest.getCategory().saveQuestsConfig();
+      objectiveHolder.saveConfig();
     }
   }
 
   public void clearProgressConditions() {
     progressConditions.clear();
-    quest
-        .getCategory()
-        .getQuestsConfig()
+    objectiveHolder
+        .getConfig()
         .set(
-            "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditionsProgress",
+            objectiveHolder.getInitialConfigPath() + ".objectives." + getObjectiveID() + ".conditionsProgress",
             null);
-    quest.getCategory().saveQuestsConfig();
+    objectiveHolder.saveConfig();
   }
 
   public final Condition getProgressConditionFromID(int id) {
@@ -703,48 +657,40 @@ public abstract class Objective {
     if (!dupeID) {
       completeConditions.add(condition);
       if (save) {
-        quest
-            .getCategory()
-            .getQuestsConfig()
+        objectiveHolder
+            .getConfig()
             .set(
-                "quests."
-                    + quest.getQuestName()
+                objectiveHolder.getInitialConfigPath()
                     + ".objectives."
                     + getObjectiveID()
                     + ".conditionsComplete."
                     + condition.getConditionID()
                     + ".conditionType",
                 condition.getConditionType());
-        quest
-            .getCategory()
-            .getQuestsConfig()
+        objectiveHolder
+            .getConfig()
             .set(
-                "quests."
-                    + quest.getQuestName()
+                objectiveHolder.getInitialConfigPath()
                     + ".objectives."
                     + getObjectiveID()
                     + ".conditionsComplete."
                     + condition.getConditionID()
                     + ".progressNeeded",
                 condition.getProgressNeeded());
-        quest
-            .getCategory()
-            .getQuestsConfig()
+        objectiveHolder
+            .getConfig()
             .set(
-                "quests."
-                    + quest.getQuestName()
+                objectiveHolder.getInitialConfigPath()
                     + ".objectives."
                     + getObjectiveID()
                     + ".conditionsComplete."
                     + condition.getConditionID()
                     + ".negated",
                 condition.isNegated());
-        quest
-            .getCategory()
-            .getQuestsConfig()
+        objectiveHolder
+            .getConfig()
             .set(
-                "quests."
-                    + quest.getQuestName()
+                objectiveHolder.getInitialConfigPath()
                     + ".objectives."
                     + getObjectiveID()
                     + ".conditionsComplete."
@@ -753,14 +699,13 @@ public abstract class Objective {
                 condition.getDescription());
 
         condition.save(
-            quest.getCategory().getQuestsConfig(),
-            "quests."
-                + quest.getQuestName()
+            objectiveHolder.getConfig(),
+            objectiveHolder.getInitialConfigPath()
                 + ".objectives."
                 + getObjectiveID()
                 + ".conditionsComplete."
                 + condition.getConditionID());
-        quest.getCategory().saveQuestsConfig();
+        objectiveHolder.saveConfig();
       }
     } else {
       main.getLogManager()
@@ -777,30 +722,27 @@ public abstract class Objective {
     int conditionID = condition.getConditionID();
     completeConditions.remove(condition);
     if (save) {
-      quest
-          .getCategory()
-          .getQuestsConfig()
+      objectiveHolder
+          .getConfig()
           .set(
-              "quests."
-                  + quest.getQuestName()
+              objectiveHolder.getInitialConfigPath()
                   + ".objectives."
                   + getObjectiveID()
                   + ".conditionsComplete."
                   + conditionID,
               null);
-      quest.getCategory().saveQuestsConfig();
+      objectiveHolder.saveConfig();
     }
   }
 
   public void clearCompleteConditions() {
     completeConditions.clear();
-    quest
-        .getCategory()
-        .getQuestsConfig()
+    objectiveHolder
+        .getConfig()
         .set(
-            "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditionsComplete",
+            objectiveHolder.getInitialConfigPath() + ".objectives." + getObjectiveID() + ".conditionsComplete",
             null);
-    quest.getCategory().saveQuestsConfig();
+    objectiveHolder.saveConfig();
   }
 
   public final Condition getCompleteConditionFromID(int id) {
