@@ -66,7 +66,15 @@ public class TagManager {
         }
     }
 
-    public void saveAllOnlinePlayerTags() {
+/**
+* Saves tags of all online players
+ * @param preventNewThreadCreation if true, the method will not create a new thread in order to make it async. This is useful if this method is called when shutting down the server, as you cannot create new threads during shut down
+*/
+    public void saveAllOnlinePlayerTags(final boolean preventNewThreadCreation) {
+        if(preventNewThreadCreation){
+            saveAllOnlinePlayerTagsAsync();
+            return;
+        }
         if (Bukkit.isPrimaryThread()) {
             Bukkit.getScheduler().runTaskAsynchronously(main.getMain(), this::saveAllOnlinePlayerTagsAsync);
         }else{

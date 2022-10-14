@@ -1447,7 +1447,7 @@ public class DataManager {
     public void saveData() {
         if (isSavingEnabled()) {
             if(!main.getConfiguration().isSavePlayerDataOnQuit()){
-                main.getTagManager().saveAllOnlinePlayerTags();
+                main.getTagManager().saveAllOnlinePlayerTags(true);
                 main.getQuestPlayerManager().savePlayerData();
             }else{
                 for(QuestPlayer questPlayer : new ArrayList<>(main.getQuestPlayerManager().getQuestPlayers())) {
