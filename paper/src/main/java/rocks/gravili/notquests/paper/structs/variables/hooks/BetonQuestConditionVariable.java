@@ -26,6 +26,8 @@ import org.betonquest.betonquest.api.config.QuestPackage;
 import org.betonquest.betonquest.config.Config;
 import org.betonquest.betonquest.exceptions.ObjectNotFoundException;
 import org.betonquest.betonquest.id.ConditionID;
+import org.betonquest.betonquest.utils.PlayerConverter;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -103,7 +105,11 @@ public class BetonQuestConditionVariable extends Variable<Boolean> {
   @Override
   public Boolean getValue(QuestPlayer questPlayer, Object... objects) {
     return questPlayer != null
-        && BetonQuest.condition(questPlayer.getUniqueId().toString(), getConditionID());
+        && BetonQuest.condition(
+            PlayerConverter.getID(questPlayer.getPlayer() != null ? questPlayer.getPlayer() : Bukkit.getOfflinePlayer(questPlayer.getUniqueId())),
+        getConditionID());
+
+
   }
 
   @Override

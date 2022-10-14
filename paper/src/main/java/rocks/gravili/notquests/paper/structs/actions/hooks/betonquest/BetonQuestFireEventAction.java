@@ -26,9 +26,12 @@ import java.util.ArrayList;
 import java.util.List;
 import org.betonquest.betonquest.BetonQuest;
 import org.betonquest.betonquest.api.config.QuestPackage;
+import org.betonquest.betonquest.api.profiles.Profile;
 import org.betonquest.betonquest.config.Config;
 import org.betonquest.betonquest.exceptions.ObjectNotFoundException;
 import org.betonquest.betonquest.id.EventID;
+import org.betonquest.betonquest.utils.PlayerConverter;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -151,7 +154,8 @@ public class BetonQuestFireEventAction extends Action {
   @Override
   public void executeInternally(final QuestPlayer questPlayer, Object... objects) {
     if (getEventID() != null) {
-      BetonQuest.event(questPlayer.getPlayer().getUniqueId().toString(), getEventID());
+      final Profile profile = PlayerConverter.getID(questPlayer.getPlayer() != null ? questPlayer.getPlayer() : Bukkit.getOfflinePlayer(questPlayer.getUniqueId()));
+      BetonQuest.event(profile, getEventID());
     }
   }
 

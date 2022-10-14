@@ -20,10 +20,9 @@ package rocks.gravili.notquests.paper.managers.integrations.betonquest.events;
 
 import org.betonquest.betonquest.Instruction;
 import org.betonquest.betonquest.api.QuestEvent;
+import org.betonquest.betonquest.api.profiles.Profile;
 import org.betonquest.betonquest.exceptions.InstructionParseException;
 import org.betonquest.betonquest.exceptions.QuestRuntimeException;
-import org.betonquest.betonquest.utils.PlayerConverter;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
@@ -70,13 +69,10 @@ public class BQQuestPointsEvent extends QuestEvent {
   }
 
   @Override
-  protected Void execute(String playerID) throws QuestRuntimeException {
-
-    final Player player = PlayerConverter.getPlayer(playerID);
-
-    if (player != null) {
+  protected Void execute(final Profile profile) throws QuestRuntimeException {
+    if (profile != null) {
       final QuestPlayer questPlayer =
-          main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+          main.getQuestPlayerManager().getQuestPlayer(profile.getProfileUUID());
       if (questPlayer != null) {
 
         if (action.equalsIgnoreCase("set")) {

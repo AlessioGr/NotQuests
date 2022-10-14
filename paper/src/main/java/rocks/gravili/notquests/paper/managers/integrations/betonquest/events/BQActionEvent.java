@@ -22,10 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 import org.betonquest.betonquest.Instruction;
 import org.betonquest.betonquest.api.QuestEvent;
+import org.betonquest.betonquest.api.profiles.Profile;
 import org.betonquest.betonquest.exceptions.InstructionParseException;
 import org.betonquest.betonquest.exceptions.QuestRuntimeException;
-import org.betonquest.betonquest.utils.PlayerConverter;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 
@@ -89,12 +88,11 @@ public class BQActionEvent extends QuestEvent {
   }
 
   @Override
-  protected Void execute(String playerID) throws QuestRuntimeException {
+  protected Void execute(final Profile profile) throws QuestRuntimeException {
 
     // execute action here
     if (action != null) {
-      final Player player = PlayerConverter.getPlayer(playerID);
-      action.execute(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()));
+      action.execute(main.getQuestPlayerManager().getOrCreateQuestPlayer(profile.getProfileUUID()));
 
     } else {
       main.getLogManager()

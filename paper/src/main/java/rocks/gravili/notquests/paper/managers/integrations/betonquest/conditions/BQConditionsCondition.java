@@ -21,11 +21,10 @@ package rocks.gravili.notquests.paper.managers.integrations.betonquest.condition
 import java.util.ArrayList;
 import java.util.List;
 import org.betonquest.betonquest.Instruction;
+import org.betonquest.betonquest.api.profiles.Profile;
 import org.betonquest.betonquest.exceptions.InstructionParseException;
 import org.betonquest.betonquest.exceptions.QuestRuntimeException;
 import org.betonquest.betonquest.id.ID;
-import org.betonquest.betonquest.utils.PlayerConverter;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 
@@ -59,12 +58,10 @@ public class BQConditionsCondition
   }
 
   @Override
-  protected Boolean execute(String playerID) throws QuestRuntimeException {
+  protected Boolean execute(final Profile profile) throws QuestRuntimeException {
     if (condition != null) {
-      final Player player = PlayerConverter.getPlayer(playerID);
-
       return condition
-          .check(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))
+          .check(main.getQuestPlayerManager().getOrCreateQuestPlayer(profile.getProfileUUID()))
           .fulfilled();
     } else {
       throw new QuestRuntimeException("Condition was not found.");
