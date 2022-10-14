@@ -109,6 +109,7 @@ public class ActiveQuest {
       final ActiveObjective activeObjective,
       final boolean silent,
       final NQNPC nqnpc) {
+    
     if (!main.getDataManager().isCurrentlyLoading() && !questPlayer.isCurrentlyLoading()) {
       ObjectiveCompleteEvent objectiveCompleteEvent =
           new ObjectiveCompleteEvent(getQuestPlayer(), activeObjective, this);
