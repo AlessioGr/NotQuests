@@ -337,7 +337,6 @@ public class AdminEditCommands {
         //qa edit questname objectives
 
       final String objectiveIDIdentifier = "Objective ID";
-      final int level = 1;
       //qa edit questname objectives edit <objectiveID> objectives
       final Command.Builder<CommandSender> objectivesBuilderLevel1 =
           objectivesBuilder
@@ -357,14 +356,8 @@ public class AdminEditCommands {
 
                             ArrayList<String> completions = new ArrayList<>();
 
-                            final ObjectiveHolder objectiveHolder;
-                            if(level == 0){
-                              objectiveHolder = context.get("quest");
-                            }else if(level == 1){
-                              objectiveHolder = context.get("Objective ID");
-                            } else {
-                              objectiveHolder = context.get("Objective ID " + level);
-                            }
+                            final ObjectiveHolder objectiveHolder = context.get("quest");
+
                             for (final Objective objective : objectiveHolder.getObjectives()) {
                               completions.add("" + objective.getObjectiveID());
                             }
@@ -373,15 +366,9 @@ public class AdminEditCommands {
                           })
                       .withParser(
                           (context, lastString) -> { // TODO: Fix this parser. It isn't run at all.
-                            final int ID = context.get((level == 0 ? "Objective ID" : "Objective ID " + (level+1)));
-                            final ObjectiveHolder objectiveHolder;
-                            if(level == 0){
-                              objectiveHolder = context.get("quest");
-                            }else if(level == 1){
-                              objectiveHolder = context.get("Objective ID");
-                            } else {
-                              objectiveHolder = context.get("Objective ID " + level);
-                            }
+                            final int ID = context.get("Objective ID");
+                            final ObjectiveHolder objectiveHolder = context.get("quest");
+
                             final Objective foundObjective = objectiveHolder.getObjectiveFromID(ID);
                             if (foundObjective == null) {
                               return ArgumentParseResult.failure(
@@ -418,14 +405,8 @@ public class AdminEditCommands {
 
                             ArrayList<String> completions = new ArrayList<>();
 
-                            final ObjectiveHolder objectiveHolder;
-                            if(level2 == 0){
-                              objectiveHolder = context.get("quest");
-                            }else if(level2 == 1){
-                              objectiveHolder = context.get("Objective ID");
-                            } else {
-                              objectiveHolder = context.get("Objective ID " + level2);
-                            }
+                            final ObjectiveHolder objectiveHolder = context.get("Objective ID");
+
                             for (final Objective objective : objectiveHolder.getObjectives()) {
                               completions.add("" + objective.getObjectiveID());
                             }
@@ -434,15 +415,10 @@ public class AdminEditCommands {
                           })
                       .withParser(
                           (context, lastString) -> { // TODO: Fix this parser. It isn't run at all.
-                            final int ID = context.get((level2 == 0 ? "Objective ID" : "Objective ID " + level2+1));
-                            final ObjectiveHolder objectiveHolder;
-                            if(level2 == 0){
-                              objectiveHolder = context.get("quest");
-                            }else if(level2 == 1){
-                              objectiveHolder = context.get("Objective ID");
-                            } else {
-                              objectiveHolder = context.get("Objective ID " + level2);
-                            }
+                            final int ID = context.get("Objective ID " + level2);
+                            final ObjectiveHolder objectiveHolder = context.get("Objective ID");
+
+
                             final Objective foundObjective = objectiveHolder.getObjectiveFromID(ID);
                             if (foundObjective == null) {
                               return ArgumentParseResult.failure(
