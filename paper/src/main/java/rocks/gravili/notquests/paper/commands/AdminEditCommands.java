@@ -1242,7 +1242,7 @@ public class AdminEditCommands {
 
 
         final Command.Builder<CommandSender> rewardsBuilder = builder.literal("rewards");
-        handleObjectiveRewards(rewardsBuilder, level); //TODO
+        handleObjectiveRewards(rewardsBuilder, level);
     }
 
 
