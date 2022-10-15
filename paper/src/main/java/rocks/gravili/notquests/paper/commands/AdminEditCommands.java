@@ -333,11 +333,12 @@ public class AdminEditCommands {
 
                 }));
 
-        final Command.Builder<CommandSender> objectivesBuilder = editBuilder.literal("objectives");
-        handleObjectives(objectivesBuilder, 0);
+        final Command.Builder<CommandSender> objectivesBuilder = editBuilder.literal("objectives", "o");
+        //qa edit questname objectives
 
       final String objectiveIDIdentifier = "Objective ID";
       final int level = 1;
+      //qa edit questname objectives edit <objectiveID> objectives
       final Command.Builder<CommandSender> objectivesBuilderLevel1 =
           objectivesBuilder
               .literal("edit")
@@ -396,7 +397,6 @@ public class AdminEditCommands {
                           }),
                   ArgumentDescription.of(objectiveIDIdentifier));
 
-        handleObjectives(objectivesBuilderLevel1, 1);
 
       final String objectiveIDIdentifier2 = "Objective ID 2";
       final int level2 = 2;
@@ -457,7 +457,10 @@ public class AdminEditCommands {
                             }
                           }),
                   ArgumentDescription.of(objectiveIDIdentifier));
-        handleObjectives(objectivesBuilderLevel2, 2);
+
+      handleObjectives(objectivesBuilder, 0);
+      handleObjectives(objectivesBuilderLevel1.literal("objectives", "o"), 1);
+      handleObjectives(objectivesBuilderLevel2.literal("objectives", "o"), 2);
 
       final Command.Builder<CommandSender> requirementsBuilder = editBuilder.literal("requirements");
         handleRequirements(requirementsBuilder);
@@ -848,6 +851,7 @@ public class AdminEditCommands {
 
     public void handleObjectives(final Command.Builder<CommandSender> builder, final int level) {
         //Add is handled individually by each objective
+        main.getLogManager().info("Handling objectives for level <highlight>" + level + "</highlight>...");
       final Command.Builder<CommandSender> predefinedProgressOrderBuilder = builder.literal("predefinedProgressOrder");
 
       manager.command(predefinedProgressOrderBuilder.literal("show")
