@@ -25,6 +25,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.managers.npc.NQNPC;
@@ -432,7 +433,7 @@ public class Quest extends ObjectiveHolder {
     category.saveQuestsConfig();
   }
 
-  public String bindToNPC(final NQNPC npc, final boolean showQuestInNPC) {
+  public String bindToNPC(@NotNull final NQNPC npc, final boolean showQuestInNPC) {
     final String result = npc.addQuestGiverNPCTrait(showQuestInNPC, this);
     if(!result.isBlank()){
       return result;

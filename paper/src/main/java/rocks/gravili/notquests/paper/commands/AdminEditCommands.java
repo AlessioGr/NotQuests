@@ -71,14 +71,10 @@ import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 public class AdminEditCommands {
     private final NotQuests main;
     private final PaperCommandManager<CommandSender> manager;
-    private final Command.Builder<CommandSender> editBuilder;
-
 
     public AdminEditCommands(final NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> editBuilder) {
         this.main = main;
         this.manager = manager;
-        this.editBuilder = editBuilder;
-
 
 
         manager.command(editBuilder.literal("acceptCooldown", "cooldown")
@@ -323,7 +319,6 @@ public class AdminEditCommands {
 
 
       final String objectiveIDIdentifier2 = "Objective ID 2";
-      final int level2 = 2;
       final Command.Builder<CommandSender> objectivesBuilderLevel2 =
           objectivesBuilderLevel1
               .literal("edit")
@@ -416,6 +411,12 @@ public class AdminEditCommands {
 
                   }else {
                     final NQNPC nqnpc = nqnpcResult.getNQNPC();
+                    if(nqnpc == null){
+                      context.getSender().sendMessage(main.parse(
+                          "<error>Error: NPC does not exist"
+                      ));
+                      return;
+                    }
                     if (!quest.getAttachedNPCsWithQuestShowing().contains(nqnpc)
                         && !quest.getAttachedNPCsWithoutQuestShowing().contains(nqnpc)) {
                       quest.bindToNPC(nqnpc, showInNPC);
@@ -648,16 +649,12 @@ public class AdminEditCommands {
         manager.command(builder.literal("clear")
                 .senderType(Player.class)
                 .meta(CommandMeta.DESCRIPTION, "This command is not done yet.")
-                .handler((context) -> {
-                    context.getSender().sendMessage(main.parse("<error>Sorry, this command is not done yet! I'll add it in future versions."));
-                }));
+                .handler((context) -> context.getSender().sendMessage(main.parse("<error>Sorry, this command is not done yet! I'll add it in future versions."))));
 
         manager.command(builder.literal("list")
                 .senderType(Player.class)
                 .meta(CommandMeta.DESCRIPTION, "This command is not done yet.")
-                .handler((context) -> {
-                    context.getSender().sendMessage(main.parse("<error>Sorry, this command is not done yet! I'll add it in future versions."));
-                }));
+                .handler((context) -> context.getSender().sendMessage(main.parse("<error>Sorry, this command is not done yet! I'll add it in future versions."))));
 
 
         manager.command(builder.literal("remove")
@@ -990,7 +987,7 @@ public class AdminEditCommands {
 
                       context.getSender().sendMessage(main.parse(
                           "<success>The completionNPC of the objective with the ID <highlight>" + objective.getObjectiveID()
-                              + "</highlight> has been set to the NPC with the ID <highlight2>" + completionNPCResult.getNQNPC().getID() + "</highlight2>!"
+                              + "</highlight> has been set to the NPC with the ID <highlight2>" + (completionNPCResult.getNQNPC() != null ? completionNPCResult.getNQNPC().getID() : "null") + "</highlight2>!"
                       ));
                     }
                 }));
