@@ -100,9 +100,7 @@ public class CompletedObjectiveCondition extends Condition {
                   (context) -> {
                     final Quest quest = context.get("quest");
 
-                    final int objectiveID = context.get("Objective ID");
-                    final Objective objective = quest.getObjectiveFromID(objectiveID);
-                    assert objective != null; // Shouldn't be null
+                    final Objective objective = context.get("Objective ID");
 
                     final int dependingObjectiveID = context.get("Depending Objective ID");
                     final Objective dependingObjective =

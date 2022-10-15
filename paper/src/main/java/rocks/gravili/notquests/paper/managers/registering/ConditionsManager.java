@@ -254,8 +254,7 @@ public class ConditionsManager {
         final Quest quest = context.getOrDefault("quest", null);
         Objective objectiveOfQuest = null;
         if (quest != null && context.contains("Objective ID")) {
-            final int objectiveID = context.get("Objective ID");
-            objectiveOfQuest = quest.getObjectiveFromID(objectiveID);
+            objectiveOfQuest = context.get("Objective ID");
         }
 
         final String conditionIdentifier = context.getOrDefault("Condition Identifier", "");

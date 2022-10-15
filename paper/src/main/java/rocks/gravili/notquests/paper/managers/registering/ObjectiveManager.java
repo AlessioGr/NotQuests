@@ -20,21 +20,17 @@ package rocks.gravili.notquests.paper.managers.registering;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
-import cloud.commandframework.arguments.parser.ArgumentParseResult;
-import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.structs.Quest;
+import rocks.gravili.notquests.paper.commands.arguments.ObjectiveSelector;
 import rocks.gravili.notquests.paper.structs.objectives.BreakBlocksObjective;
 import rocks.gravili.notquests.paper.structs.objectives.BreedObjective;
 import rocks.gravili.notquests.paper.structs.objectives.CollectItemsObjective;
@@ -174,46 +170,7 @@ public class ObjectiveManager {
           objectivesBuilder
               .literal("edit")
               .argument(
-                  IntegerArgument.<CommandSender>newBuilder( objectiveIDIdentifier )
-                      .withMin(1)
-                      .withSuggestionsProvider(
-                          (context, lastString) -> {
-                            final List<String> allArgs = context.getRawInput();
-                            main.getUtilManager()
-                                .sendFancyCommandCompletion(
-                                    context.getSender(),
-                                    allArgs.toArray(new String[0]),
-                                    objectiveIDIdentifier,
-                                    "[...]");
-
-                            ArrayList<String> completions = new ArrayList<>();
-
-                            final ObjectiveHolder objectiveHolder = context.get("quest");
-
-                            for (final Objective objective2 : objectiveHolder.getObjectives()) {
-                              completions.add("" + objective2.getObjectiveID());
-                            }
-
-                            return completions;
-                          })
-                      .withParser(
-                          (context, lastString) -> { // TODO: Fix this parser. It isn't run at all.
-                            final int ID = context.get("Objective ID");
-                            final ObjectiveHolder objectiveHolder = context.get("quest");
-
-                            final Objective foundObjective = objectiveHolder.getObjectiveFromID(ID);
-                            if (foundObjective == null) {
-                              return ArgumentParseResult.failure(
-                                  new IllegalArgumentException(
-                                      "Objective with the ID '"
-                                          + ID
-                                          + "' does not belong to Quest '"
-                                          + objectiveHolder.getName()
-                                          + "'!"));
-                            } else {
-                              return ArgumentParseResult.success(ID);
-                            }
-                          }),
+                  ObjectiveSelector.<CommandSender>newBuilder(objectiveIDIdentifier, main, 0).build(),
                   ArgumentDescription.of(objectiveIDIdentifier));
 
 
@@ -241,53 +198,8 @@ public class ObjectiveManager {
           objectivesBuilder2
               .literal("edit")
               .argument(
-                  IntegerArgument.<CommandSender>newBuilder( objectiveIDIdentifier2 )
-                      .withMin(1)
-                      .withSuggestionsProvider(
-                          (context, lastString) -> {
-                            final List<String> allArgs = context.getRawInput();
-                            main.getUtilManager()
-                                .sendFancyCommandCompletion(
-                                    context.getSender(),
-                                    allArgs.toArray(new String[0]),
-                                    objectiveIDIdentifier2,
-                                    "[...]");
-
-                            ArrayList<String> completions = new ArrayList<>();
-
-                            final ObjectiveHolder prevPbjectiveHolder = context.get("quest");
-
-                            final ObjectiveHolder objectiveHolder = prevPbjectiveHolder.getObjectiveFromID(context.get("Objective ID"));
-
-                            for (final Objective objective2 : objectiveHolder.getObjectives()) {
-                              completions.add("" + objective2.getObjectiveID());
-                            }
-
-                            return completions;
-                          })
-                      .withParser(
-                          (context, lastString) -> { // TODO: Fix this parser. It isn't run at all.
-                            final int ID = context.get("Objective ID 2");
-
-                            final ObjectiveHolder prevObjectiveHolder = context.get("quest");
-
-                            final ObjectiveHolder objectiveHolder = prevObjectiveHolder.getObjectiveFromID(context.get("Objective ID"));
-
-
-                            final Objective foundObjective = objectiveHolder.getObjectiveFromID(ID);
-                            if (foundObjective == null) {
-                              return ArgumentParseResult.failure(
-                                  new IllegalArgumentException(
-                                      "Objective with the ID '"
-                                          + ID
-                                          + "' does not belong to Quest '"
-                                          + objectiveHolder.getName()
-                                          + "'!"));
-                            } else {
-                              return ArgumentParseResult.success(ID);
-                            }
-                          }),
-                  ArgumentDescription.of(objectiveIDIdentifier));
+                  ObjectiveSelector.<CommandSender>newBuilder(objectiveIDIdentifier2, main, 1).build(),
+                  ArgumentDescription.of(objectiveIDIdentifier2));
 
 
       final Command.Builder<CommandSender> adminEditAddObjectiveCommandBuilderLevel2 =
@@ -341,25 +253,23 @@ public class ObjectiveManager {
     final String taskDescription =
     context.flags().getValue(main.getCommandManager().taskDescription, "");
 
-    if (objectiveHolder != null) {
-      objective.setObjectiveHolder(objectiveHolder);
-      objective.setObjectiveID(objectiveHolder.getFreeObjectiveID());
-      if(taskDescription != null && !taskDescription.isBlank()) {
-        objective.setTaskDescription(taskDescription, true);
-      }
-
-      context
-          .getSender()
-          .sendMessage(
-              main.parse(
-                  "<success>"
-                      + getObjectiveType(objective.getClass())
-                      + " Objective successfully added to Quest <highlight>"
-                      + objectiveHolder.getName()
-                      + "</highlight>!"));
-
-      objectiveHolder.addObjective(objective, true);
+    objective.setObjectiveHolder(objectiveHolder);
+    objective.setObjectiveID(objectiveHolder.getFreeObjectiveID());
+    if(taskDescription != null && !taskDescription.isBlank()) {
+      objective.setTaskDescription(taskDescription, true);
     }
+
+    context
+        .getSender()
+        .sendMessage(
+            main.parse(
+                "<success>"
+                    + getObjectiveType(objective.getClass())
+                    + " Objective successfully added to Quest <highlight>"
+                    + objectiveHolder.getName()
+                    + "</highlight>!"));
+
+    objectiveHolder.addObjective(objective, true);
   }
 
   public void updateVariableObjectives() {
