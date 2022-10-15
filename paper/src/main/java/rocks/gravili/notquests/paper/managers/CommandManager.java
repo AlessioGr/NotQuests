@@ -847,4 +847,14 @@ public class CommandManager {
     }
     return objectiveHolder;
   }
+
+  public final Objective getObjectiveFromContextAndLevel(final CommandContext<CommandSender> context, final int level){
+    final Objective objective;
+    if(level == 0){
+      objective = context.get("Objective ID");
+    }else {
+      objective = context.get("Objective ID " + level);
+    }
+    return objective;
+  }
 }

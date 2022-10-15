@@ -66,7 +66,7 @@ public class CompletedObjectiveCondition extends Condition {
 
                             final Quest quest = context.get("quest");
                             for (final Objective objective : quest.getObjectives()) {
-                              if (objective.getObjectiveID() != (int) context.get("Objective ID")) {
+                              if (objective.getObjectiveID() != ((Objective)context.get("Objective ID")).getObjectiveID() ) { //TODO: Support nested objectives
                                 completions.add("" + objective.getObjectiveID());
                               }
                             }
@@ -100,7 +100,7 @@ public class CompletedObjectiveCondition extends Condition {
                   (context) -> {
                     final Quest quest = context.get("quest");
 
-                    final Objective objective = context.get("Objective ID");
+                    final Objective objective = context.get("Objective ID"); //TODO: Support nested objectives
 
                     final int dependingObjectiveID = context.get("Depending Objective ID");
                     final Objective dependingObjective =
