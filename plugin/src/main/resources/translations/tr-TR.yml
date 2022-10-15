@@ -105,6 +105,7 @@ chat:
         base: 'Ulaşma Yeri: <main>%LOCATIONNAME%'
       talkToNPC:
         base: '<main>%NAME% ile konuşun'
+        npc-not-available: '    <GRAY>Hedef NPC şu anda mevcut değil!'
       triggerCommand:
         base: 'Hedef: <main>%TRIGGERNAME%'
       killEliteMobs:
