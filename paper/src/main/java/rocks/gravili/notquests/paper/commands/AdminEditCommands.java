@@ -836,14 +836,9 @@ public class AdminEditCommands {
       manager.command(predefinedProgressOrderBuilder.literal("show")
           .meta(CommandMeta.DESCRIPTION, "Shows the current predefined order in which the objectives need to be progressed for your quest.")
           .handler((context) -> {
-            final ObjectiveHolder objectiveHolder;
-            if(level == 0){
-              objectiveHolder = context.get("quest");
-            }else if(level == 1){
-              objectiveHolder = context.get("Objective ID");
-            } else {
-              objectiveHolder = context.get("Objective ID " + level);
-            }
+            final ObjectiveHolder objectiveHolder = main.getCommandManager().getObjectiveHolderFromContextAndLevel(context, level);
+
+
             context.getSender().sendMessage(Component.empty());
 
             final String predefinedProgressOrderString = objectiveHolder.getPredefinedProgressOrder() != null ? (objectiveHolder.getPredefinedProgressOrder().getReadableString())
@@ -860,14 +855,9 @@ public class AdminEditCommands {
               .literal("none")
           .meta(CommandMeta.DESCRIPTION, "Sets a predefined order in which the objectives need to be progressed for your quest.")
           .handler((context) -> {
-            final ObjectiveHolder objectiveHolder;
-            if(level == 0){
-              objectiveHolder = context.get("quest");
-            }else if(level == 1){
-              objectiveHolder = context.get("Objective ID");
-            } else {
-              objectiveHolder = context.get("Objective ID " + level);
-            }
+            final ObjectiveHolder objectiveHolder = main.getCommandManager().getObjectiveHolderFromContextAndLevel(context, level);
+
+
             objectiveHolder.setPredefinedProgressOrder(null, true);
             context.getSender().sendMessage(Component.empty());
             context.getSender().sendMessage(main.parse(
@@ -880,14 +870,9 @@ public class AdminEditCommands {
           .literal("firstToLast")
           .meta(CommandMeta.DESCRIPTION, "Sets a predefined order in which the objectives need to be progressed for your quest.")
           .handler((context) -> {
-            final ObjectiveHolder objectiveHolder;
-            if(level == 0){
-              objectiveHolder = context.get("quest");
-            }else if(level == 1){
-              objectiveHolder = context.get("Objective ID");
-            } else {
-              objectiveHolder = context.get("Objective ID " + level);
-            }
+            final ObjectiveHolder objectiveHolder = main.getCommandManager().getObjectiveHolderFromContextAndLevel(context, level);
+
+
             objectiveHolder.setPredefinedProgressOrder(PredefinedProgressOrder.firstToLast(), true);
             context.getSender().sendMessage(Component.empty());
             context.getSender().sendMessage(main.parse(
@@ -900,14 +885,8 @@ public class AdminEditCommands {
           .literal("lastToFirst")
           .meta(CommandMeta.DESCRIPTION, "Sets a predefined order in which the objectives need to be progressed for your quest.")
           .handler((context) -> {
-            final ObjectiveHolder objectiveHolder;
-            if(level == 0){
-              objectiveHolder = context.get("quest");
-            }else if(level == 1){
-              objectiveHolder = context.get("Objective ID");
-            } else {
-              objectiveHolder = context.get("Objective ID " + level);
-            }
+            final ObjectiveHolder objectiveHolder = main.getCommandManager().getObjectiveHolderFromContextAndLevel(context, level);
+
             objectiveHolder.setPredefinedProgressOrder(PredefinedProgressOrder.lastToFirst(), true);
             context.getSender().sendMessage(Component.empty());
             context.getSender().sendMessage(main.parse(
@@ -923,14 +902,9 @@ public class AdminEditCommands {
                 final List<String> allArgs = context.getRawInput();
                 main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "<Enter custom order (numbers of objective IDs separated by space)>", "");
                 ArrayList<String> completions = new ArrayList<>();
-                final ObjectiveHolder objectiveHolder;
-                if(level == 0){
-                  objectiveHolder = context.get("quest");
-                }else if(level == 1){
-                  objectiveHolder = context.get("Objective ID");
-                } else {
-                  objectiveHolder = context.get("Objective ID " + level);
-                }
+                final ObjectiveHolder objectiveHolder = main.getCommandManager().getObjectiveHolderFromContextAndLevel(context, level);
+
+
 
                 for(final Objective objective : objectiveHolder.getObjectives()){
                   completions.add(objective.getObjectiveID()+"");
@@ -941,14 +915,9 @@ public class AdminEditCommands {
           ), ArgumentDescription.of("Custom order. Example: 2 1 3 4 5 6 7 9 8"))
           .meta(CommandMeta.DESCRIPTION, "Sets a predefined order in which the objectives need to be progressed for your quest.")
           .handler((context) -> {
-            final ObjectiveHolder objectiveHolder;
-            if(level == 0){
-              objectiveHolder = context.get("quest");
-            }else if(level == 1){
-              objectiveHolder = context.get("Objective ID");
-            } else {
-              objectiveHolder = context.get("Objective ID " + level);
-            }
+            final ObjectiveHolder objectiveHolder = main.getCommandManager().getObjectiveHolderFromContextAndLevel(context, level);
+
+
             final String[] order = context.get("order");
             final String orderString = String.join(" ", order);
             final ArrayList<String> orderParsed = new ArrayList<>();
@@ -965,14 +934,9 @@ public class AdminEditCommands {
         manager.command(builder.literal("clear")
                 .meta(CommandMeta.DESCRIPTION, "Removes all objectives from a Quest.")
                 .handler((context) -> {
-                  final ObjectiveHolder objectiveHolder;
-                  if(level == 0){
-                    objectiveHolder = context.get("quest");
-                  }else if(level == 1){
-                    objectiveHolder = context.get("Objective ID");
-                  } else {
-                    objectiveHolder = context.get("Objective ID " + level);
-                  }
+                  final ObjectiveHolder objectiveHolder = main.getCommandManager().getObjectiveHolderFromContextAndLevel(context, level);
+
+
                   objectiveHolder.clearObjectives();
                     context.getSender().sendMessage(Component.empty());
                     context.getSender().sendMessage(main.parse(
@@ -983,15 +947,10 @@ public class AdminEditCommands {
         manager.command(builder.literal("list")
                 .meta(CommandMeta.DESCRIPTION, "Lists all objectives of a Quest.")
                 .handler((context) -> {
-                  final ObjectiveHolder objectiveHolder;
-                  if(level == 0){
-                    objectiveHolder = context.get("quest");
-                  }else if(level == 1){
-                    objectiveHolder = context.get("Objective ID");
-                  } else {
-                    objectiveHolder = context.get("Objective ID " + level);
-                  }
-                    context.getSender().sendMessage(Component.empty());
+                  final ObjectiveHolder objectiveHolder = main.getCommandManager().getObjectiveHolderFromContextAndLevel(context, level);
+
+
+                  context.getSender().sendMessage(Component.empty());
                     context.getSender().sendMessage(main.parse("<highlight>Objectives for Quest <highlight2>" + objectiveHolder.getName() + "</highlight2>:"));
                     main.getQuestManager().sendObjectivesAdmin(context.getSender(), objectiveHolder);
                 }));
@@ -1021,14 +980,9 @@ public class AdminEditCommands {
 
                             ArrayList<String> completions = new ArrayList<>();
 
-                            final ObjectiveHolder objectiveHolder;
-                            if(level == 0){
-                              objectiveHolder = context.get("quest");
-                            }else if(level == 1){
-                              objectiveHolder = context.get("Objective ID");
-                            } else {
-                              objectiveHolder = context.get("Objective ID " + level);
-                            }
+                            final ObjectiveHolder objectiveHolder = main.getCommandManager().getObjectiveHolderFromContextAndLevel(context, level);
+
+
                             for (final Objective objective : objectiveHolder.getObjectives()) {
                               completions.add("" + objective.getObjectiveID());
                             }
@@ -1038,14 +992,9 @@ public class AdminEditCommands {
                       .withParser(
                           (context, lastString) -> { // TODO: Fix this parser. It isn't run at all.
                             final int ID = context.get((level == 0 ? "Objective ID" : "Objective ID " + (level+1)));
-                            final ObjectiveHolder objectiveHolder;
-                            if(level == 0){
-                              objectiveHolder = context.get("quest");
-                            }else if(level == 1){
-                              objectiveHolder = context.get("Objective ID");
-                            } else {
-                              objectiveHolder = context.get("Objective ID " + level);
-                            }
+                            final ObjectiveHolder objectiveHolder = main.getCommandManager().getObjectiveHolderFromContextAndLevel(context, level);
+
+
                             final Objective foundObjective = objectiveHolder.getObjectiveFromID(ID);
                             if (foundObjective == null) {
                               return ArgumentParseResult.failure(
@@ -1069,15 +1018,6 @@ public class AdminEditCommands {
 
     public void handleEditObjectives(final Command.Builder<CommandSender> builder, final int level) {
 
-        final String objectiveHolderIdentifier;
-        if(level == 0){
-          objectiveHolderIdentifier = "quest";
-        }else if(level == 1){
-          objectiveHolderIdentifier = "Objective ID";
-        } else {
-          objectiveHolderIdentifier = "Objective ID " + level;
-        }
-
         final String objectiveIDIdentifier;
         if(level == 0){
           objectiveIDIdentifier = "Objective ID";
@@ -1085,15 +1025,17 @@ public class AdminEditCommands {
           objectiveIDIdentifier = "Objective ID " + (level+1);
         }
 
-      main.getLogManager().info("Handling EDIT objectives for level <highlight>" + level + "</highlight>... objectiveHolderIdentifier: " + objectiveHolderIdentifier + " , objectiveIDIdentifier: " + objectiveIDIdentifier);
+      main.getLogManager().info("Handling EDIT objectives for level <highlight>" + level + "</highlight>... objectiveIDIdentifier: " + objectiveIDIdentifier);
 
 
       manager.command(builder.literal("location")
                 .literal("enable")
                 .meta(CommandMeta.DESCRIPTION, "Shows the location to the player.")
                 .handler((context) -> {
-                    final ObjectiveHolder objectiveHolder = context.get(objectiveHolderIdentifier);
-                    final int objectiveID = context.get(objectiveIDIdentifier);
+                  final ObjectiveHolder objectiveHolder = main.getCommandManager().getObjectiveHolderFromContextAndLevel(context, level);
+
+
+                  final int objectiveID = context.get(objectiveIDIdentifier);
                     final Objective objective = objectiveHolder.getObjectiveFromID(objectiveID);
                     assert objective != null; //Shouldn't be null
 
@@ -1108,7 +1050,8 @@ public class AdminEditCommands {
                 .literal("disables")
                 .meta(CommandMeta.DESCRIPTION, "Disables showing the location to the player.")
                 .handler((context) -> {
-                  final ObjectiveHolder objectiveHolder = context.get(objectiveHolderIdentifier);
+                  final ObjectiveHolder objectiveHolder = main.getCommandManager().getObjectiveHolderFromContextAndLevel(context, level);
+
                   final int objectiveID = context.get(objectiveIDIdentifier);
                   final Objective objective = objectiveHolder.getObjectiveFromID(objectiveID);
                   assert objective != null; //Shouldn't be null
@@ -1138,7 +1081,8 @@ public class AdminEditCommands {
                 .argument(IntegerArgument.newBuilder("z"), ArgumentDescription.of("Z coordinate"))
                 .meta(CommandMeta.DESCRIPTION, "Disables showing the location to the player.")
                 .handler((context) -> {
-                  final ObjectiveHolder objectiveHolder = context.get(objectiveHolderIdentifier);
+                  final ObjectiveHolder objectiveHolder = main.getCommandManager().getObjectiveHolderFromContextAndLevel(context, level);
+
                   final int objectiveID = context.get(objectiveIDIdentifier);
                   final Objective objective = objectiveHolder.getObjectiveFromID(objectiveID);
                   assert objective != null; //Shouldn't be null
@@ -1159,7 +1103,8 @@ public class AdminEditCommands {
                 .literal("show", "view")
                 .meta(CommandMeta.DESCRIPTION, "Shows the completionNPC of an objective.")
                 .handler((context) -> {
-                  final ObjectiveHolder objectiveHolder = context.get(objectiveHolderIdentifier);
+                  final ObjectiveHolder objectiveHolder = main.getCommandManager().getObjectiveHolderFromContextAndLevel(context, level);
+
                   final int objectiveID = context.get(objectiveIDIdentifier);
                   final Objective objective = objectiveHolder.getObjectiveFromID(objectiveID);
                   assert objective != null; //Shouldn't be null
@@ -1174,7 +1119,8 @@ public class AdminEditCommands {
                 .argument(NQNPCSelector.of("Completion NPC", main, true, true), ArgumentDescription.of("Completion NPC"))
                 .meta(CommandMeta.DESCRIPTION, "Sets the completionNPC of an objective.")
                 .handler((context) -> {
-                  final ObjectiveHolder objectiveHolder = context.get(objectiveHolderIdentifier);
+                  final ObjectiveHolder objectiveHolder = main.getCommandManager().getObjectiveHolderFromContextAndLevel(context, level);
+
                   final int objectiveID = context.get(objectiveIDIdentifier);
                   final Objective objective = objectiveHolder.getObjectiveFromID(objectiveID);
                   assert objective != null; //Shouldn't be null
@@ -1222,20 +1168,20 @@ public class AdminEditCommands {
           .literal("conditions")
           .literal("unlock");
 
-      handleEditObjectivesUnlockConditions(editObjectiveConditionsUnlockBuilder);
+      //handleEditObjectivesUnlockConditions(editObjectiveConditionsUnlockBuilder);
       //TODO
 
       final Command.Builder<CommandSender> editObjectiveConditionsProgressBuilder = builder
           .literal("conditions")
           .literal("progress");
 
-      handleEditObjectivesProgressConditions(editObjectiveConditionsProgressBuilder);
+      //handleEditObjectivesProgressConditions(editObjectiveConditionsProgressBuilder);
       //TODO
       final Command.Builder<CommandSender> editObjectiveConditionsCompleteBuilder = builder
           .literal("conditions")
           .literal("complete");
 
-      handleEditObjectivesCompleteConditions(editObjectiveConditionsCompleteBuilder);
+      //handleEditObjectivesCompleteConditions(editObjectiveConditionsCompleteBuilder);
       //TODO
 
 
@@ -1244,7 +1190,8 @@ public class AdminEditCommands {
                 .literal("show")
                 .meta(CommandMeta.DESCRIPTION, "Shows current objective description.")
                 .handler((context) -> {
-                  final ObjectiveHolder objectiveHolder = context.get(objectiveHolderIdentifier);
+                  final ObjectiveHolder objectiveHolder = main.getCommandManager().getObjectiveHolderFromContextAndLevel(context, level);
+
                   final int objectiveID = context.get(objectiveIDIdentifier);
                   final Objective objective = objectiveHolder.getObjectiveFromID(objectiveID);
                   assert objective != null; //Shouldn't be null
@@ -1258,7 +1205,8 @@ public class AdminEditCommands {
                 .literal("remove")
                 .meta(CommandMeta.DESCRIPTION, "Removes current objective description.")
                 .handler((context) -> {
-                  final ObjectiveHolder objectiveHolder = context.get(objectiveHolderIdentifier);
+                  final ObjectiveHolder objectiveHolder = main.getCommandManager().getObjectiveHolderFromContextAndLevel(context, level);
+
                   final int objectiveID = context.get(objectiveIDIdentifier);
                   final Objective objective = objectiveHolder.getObjectiveFromID(objectiveID);
                   assert objective != null; //Shouldn't be null
@@ -1274,7 +1222,8 @@ public class AdminEditCommands {
           .literal("show")
           .meta(CommandMeta.DESCRIPTION, "Shows current objective task description.")
           .handler((context) -> {
-            final ObjectiveHolder objectiveHolder = context.get(objectiveHolderIdentifier);
+            final ObjectiveHolder objectiveHolder = main.getCommandManager().getObjectiveHolderFromContextAndLevel(context, level);
+
             final int objectiveID = context.get(objectiveIDIdentifier);
             final Objective objective = objectiveHolder.getObjectiveFromID(objectiveID);
             assert objective != null; //Shouldn't be null
@@ -1288,7 +1237,8 @@ public class AdminEditCommands {
           .literal("remove")
           .meta(CommandMeta.DESCRIPTION, "Removes current objective task description.")
           .handler((context) -> {
-            final ObjectiveHolder objectiveHolder = context.get(objectiveHolderIdentifier);
+            final ObjectiveHolder objectiveHolder = main.getCommandManager().getObjectiveHolderFromContextAndLevel(context, level);
+
             final int objectiveID = context.get(objectiveIDIdentifier);
             final Objective objective = objectiveHolder.getObjectiveFromID(objectiveID);
             assert objective != null; //Shouldn't be null
@@ -1307,7 +1257,8 @@ public class AdminEditCommands {
                     .build(), ArgumentDescription.of("Objective description"))
                 .meta(CommandMeta.DESCRIPTION, "Sets current objective description.")
                 .handler((context) -> {
-                  final ObjectiveHolder objectiveHolder = context.get(objectiveHolderIdentifier);
+                  final ObjectiveHolder objectiveHolder = main.getCommandManager().getObjectiveHolderFromContextAndLevel(context, level);
+
                   final int objectiveID = context.get(objectiveIDIdentifier);
                   final Objective objective = objectiveHolder.getObjectiveFromID(objectiveID);
                   assert objective != null; //Shouldn't be null
@@ -1327,7 +1278,8 @@ public class AdminEditCommands {
               .build(), ArgumentDescription.of("Objective task description"))
           .meta(CommandMeta.DESCRIPTION, "Sets current objective task description.")
           .handler((context) -> {
-            final ObjectiveHolder objectiveHolder = context.get(objectiveHolderIdentifier);
+            final ObjectiveHolder objectiveHolder = main.getCommandManager().getObjectiveHolderFromContextAndLevel(context, level);
+
             final int objectiveID = context.get(objectiveIDIdentifier);
             final Objective objective = objectiveHolder.getObjectiveFromID(objectiveID);
             assert objective != null; //Shouldn't be null
@@ -1345,7 +1297,8 @@ public class AdminEditCommands {
                 .literal("show")
                 .meta(CommandMeta.DESCRIPTION, "Shows current objective displayname.")
                 .handler((context) -> {
-                  final ObjectiveHolder objectiveHolder = context.get(objectiveHolderIdentifier);
+                  final ObjectiveHolder objectiveHolder = main.getCommandManager().getObjectiveHolderFromContextAndLevel(context, level);
+
                   final int objectiveID = context.get(objectiveIDIdentifier);
                   final Objective objective = objectiveHolder.getObjectiveFromID(objectiveID);
                   assert objective != null; //Shouldn't be null
@@ -1359,7 +1312,8 @@ public class AdminEditCommands {
                 .literal("remove")
                 .meta(CommandMeta.DESCRIPTION, "Removes current objective displayname.")
                 .handler((context) -> {
-                  final ObjectiveHolder objectiveHolder = context.get(objectiveHolderIdentifier);
+                  final ObjectiveHolder objectiveHolder = main.getCommandManager().getObjectiveHolderFromContextAndLevel(context, level);
+
                   final int objectiveID = context.get(objectiveIDIdentifier);
                   final Objective objective = objectiveHolder.getObjectiveFromID(objectiveID);
                   assert objective != null; //Shouldn't be null
@@ -1403,7 +1357,8 @@ public class AdminEditCommands {
                 ), ArgumentDescription.of("Objective displayname"))
                 .meta(CommandMeta.DESCRIPTION, "Sets current objective displayname.")
                 .handler((context) -> {
-                  final ObjectiveHolder objectiveHolder = context.get(objectiveHolderIdentifier);
+                  final ObjectiveHolder objectiveHolder = main.getCommandManager().getObjectiveHolderFromContextAndLevel(context, level);
+
                   final int objectiveID = context.get(objectiveIDIdentifier);
                   final Objective objective = objectiveHolder.getObjectiveFromID(objectiveID);
                   assert objective != null; //Shouldn't be null
@@ -1420,7 +1375,8 @@ public class AdminEditCommands {
         manager.command(builder.literal("info")
                 .meta(CommandMeta.DESCRIPTION, "Shows everything there is to know about this objective.")
                 .handler((context) -> {
-                  final ObjectiveHolder objectiveHolder = context.get(objectiveHolderIdentifier);
+                  final ObjectiveHolder objectiveHolder = main.getCommandManager().getObjectiveHolderFromContextAndLevel(context, level);
+
                   final int objectiveID = context.get(objectiveIDIdentifier);
                   final Objective objective = objectiveHolder.getObjectiveFromID(objectiveID);
                   assert objective != null; //Shouldn't be null
@@ -1511,7 +1467,8 @@ public class AdminEditCommands {
         manager.command(builder.literal("remove", "delete")
                 .meta(CommandMeta.DESCRIPTION, "Removes the objective from the Quest.")
                 .handler((context) -> {
-                  final ObjectiveHolder objectiveHolder = context.get(objectiveHolderIdentifier);
+                  final ObjectiveHolder objectiveHolder = main.getCommandManager().getObjectiveHolderFromContextAndLevel(context, level);
+
                   final int objectiveID = context.get(objectiveIDIdentifier);
                   final Objective objective = objectiveHolder.getObjectiveFromID(objectiveID);
                   assert objective != null; //Shouldn't be null
@@ -1525,7 +1482,7 @@ public class AdminEditCommands {
 
 
         final Command.Builder<CommandSender> rewardsBuilder = builder.literal("rewards");
-        handleObjectiveRewards(rewardsBuilder); //TODO
+      //handleObjectiveRewards(rewardsBuilder); //TODO
     }
 
 

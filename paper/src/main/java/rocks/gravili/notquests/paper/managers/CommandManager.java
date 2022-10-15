@@ -32,6 +32,7 @@ import cloud.commandframework.arguments.standard.StringArrayArgument;
 import cloud.commandframework.brigadier.CloudBrigadierManager;
 import cloud.commandframework.bukkit.CloudBukkitCapabilities;
 import cloud.commandframework.bukkit.parsers.WorldArgument;
+import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.exceptions.ArgumentParseException;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
 import cloud.commandframework.meta.CommandMeta;
@@ -77,6 +78,7 @@ import rocks.gravili.notquests.paper.conversation.ConversationManager;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
+import rocks.gravili.notquests.paper.structs.objectives.ObjectiveHolder;
 
 public class CommandManager {
   private final NotQuests main;
@@ -871,5 +873,23 @@ public class CommandManager {
 
   public final Command.Builder<CommandSender> getUserCommandBuilder() {
     return userCommandBuilder;
+  }
+
+  //TODO: In order to scale, I need an ObjectiveArgument
+  public final ObjectiveHolder getObjectiveHolderFromContextAndLevel(final CommandContext<CommandSender> context, final int level){
+    final ObjectiveHolder objectiveHolder;
+    if(level == 0){
+      objectiveHolder = context.get("quest");
+    }else if(level == 1){
+      objectiveHolder = ((ObjectiveHolder) context.get("quest")).getObjectiveFromID(context.get("Objective ID"));
+    } else if(level == 2){
+      final ObjectiveHolder previous = ((ObjectiveHolder) context.get("quest")).getObjectiveFromID(context.get("Objective ID"));
+      objectiveHolder = previous.getObjectiveFromID(context.get("Objective ID 2"));
+    } else {
+      final ObjectiveHolder previousprevious = ((ObjectiveHolder) context.get("quest")).getObjectiveFromID(context.get("Objective ID"));
+      final ObjectiveHolder previouspreviousprevious = previousprevious.getObjectiveFromID(context.get("Objective ID 2"));
+      objectiveHolder = previouspreviousprevious.getObjectiveFromID(context.get("Objective ID 3"));
+    }
+    return objectiveHolder;
   }
 }

@@ -152,8 +152,22 @@ public class ObjectiveManager {
           objective.getMethod(
               "handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class, int.class);
 
+      //Level 0
+      final Command.Builder<CommandSender> objectivesBuilder = main.getCommandManager().getAdminEditCommandBuilder().literal("objectives", "o");
+      final Command.Builder<CommandSender> adminEditAddObjectiveCommandBuilder =
+          objectivesBuilder.literal("add");
 
-      final Command.Builder<CommandSender> objectivesBuilder = main.getCommandManager().getAdminEditCommandBuilder().literal("objectives", "");
+      commandHandler.invoke(
+          objective,
+          main,
+          main.getCommandManager().getPaperCommandManager(),
+          adminEditAddObjectiveCommandBuilder
+              .literal(identifier)
+              .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " objective")
+              .flag(main.getCommandManager().taskDescription),
+          0);
+
+      //Level 1
       final String objectiveIDIdentifier = "Objective ID";
       final int level = 1;
       final Command.Builder<CommandSender> objectivesBuilderLevel1 =
@@ -174,14 +188,8 @@ public class ObjectiveManager {
 
                             ArrayList<String> completions = new ArrayList<>();
 
-                            final ObjectiveHolder objectiveHolder;
-                            if(level == 0){
-                              objectiveHolder = context.get("quest");
-                            }else if(level == 1){
-                              objectiveHolder = context.get("Objective ID");
-                            } else {
-                              objectiveHolder = context.get("Objective ID " + level);
-                            }
+                            final ObjectiveHolder objectiveHolder = context.get("quest");
+
                             for (final Objective objective2 : objectiveHolder.getObjectives()) {
                               completions.add("" + objective2.getObjectiveID());
                             }
@@ -190,15 +198,9 @@ public class ObjectiveManager {
                           })
                       .withParser(
                           (context, lastString) -> { // TODO: Fix this parser. It isn't run at all.
-                            final int ID = context.get((level == 0 ? "Objective ID" : "Objective ID " + (level+1)));
-                            final ObjectiveHolder objectiveHolder;
-                            if(level == 0){
-                              objectiveHolder = context.get("quest");
-                            }else if(level == 1){
-                              objectiveHolder = context.get("Objective ID");
-                            } else {
-                              objectiveHolder = context.get("Objective ID " + level);
-                            }
+                            final int ID = context.get("Objective ID");
+                            final ObjectiveHolder objectiveHolder = context.get("quest");
+
                             final Objective foundObjective = objectiveHolder.getObjectiveFromID(ID);
                             if (foundObjective == null) {
                               return ArgumentParseResult.failure(
@@ -213,19 +215,7 @@ public class ObjectiveManager {
                             }
                           }),
                   ArgumentDescription.of(objectiveIDIdentifier));
-      final Command.Builder<CommandSender> adminEditAddObjectiveCommandBuilder =
-          objectivesBuilder.literal("add");
-      //Level 0
 
-      commandHandler.invoke(
-          objective,
-          main,
-          main.getCommandManager().getPaperCommandManager(),
-          adminEditAddObjectiveCommandBuilder
-              .literal(identifier)
-              .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " objective")
-              .flag(main.getCommandManager().taskDescription),
-          0);
 
 
       final Command.Builder<CommandSender> adminEditAddObjectiveCommandBuilderLevel1 =
@@ -265,14 +255,10 @@ public class ObjectiveManager {
 
                             ArrayList<String> completions = new ArrayList<>();
 
-                            final ObjectiveHolder objectiveHolder;
-                            if(level2 == 0){
-                              objectiveHolder = context.get("quest");
-                            }else if(level2 == 1){
-                              objectiveHolder = context.get("Objective ID");
-                            } else {
-                              objectiveHolder = context.get("Objective ID " + level2);
-                            }
+                            final ObjectiveHolder prevPbjectiveHolder = context.get("quest");
+
+                            final ObjectiveHolder objectiveHolder = prevPbjectiveHolder.getObjectiveFromID(context.get("Objective ID"));
+
                             for (final Objective objective2 : objectiveHolder.getObjectives()) {
                               completions.add("" + objective2.getObjectiveID());
                             }
@@ -281,15 +267,13 @@ public class ObjectiveManager {
                           })
                       .withParser(
                           (context, lastString) -> { // TODO: Fix this parser. It isn't run at all.
-                            final int ID = context.get((level2 == 0 ? "Objective ID" : "Objective ID " + level2+1));
-                            final ObjectiveHolder objectiveHolder;
-                            if(level2 == 0){
-                              objectiveHolder = context.get("quest");
-                            }else if(level2 == 1){
-                              objectiveHolder = context.get("Objective ID");
-                            } else {
-                              objectiveHolder = context.get("Objective ID " + level2);
-                            }
+                            final int ID = context.get("Objective ID 2");
+
+                            final ObjectiveHolder prevObjectiveHolder = context.get("quest");
+
+                            final ObjectiveHolder objectiveHolder = prevObjectiveHolder.getObjectiveFromID(context.get("Objective ID"));
+
+
                             final Objective foundObjective = objectiveHolder.getObjectiveFromID(ID);
                             if (foundObjective == null) {
                               return ArgumentParseResult.failure(
@@ -352,18 +336,10 @@ public class ObjectiveManager {
 
   public void addObjective(Objective objective, CommandContext<CommandSender> context, int level) {
 
-    final String objectiveHolderIdentifier;
-    if(level == 0){
-      objectiveHolderIdentifier = "quest";
-    }else if(level == 1){
-      objectiveHolderIdentifier = "Objective ID";
-    }else{
-      objectiveHolderIdentifier = "Objective ID " + level;
-    }
-    final ObjectiveHolder objectiveHolder = context.getOrDefault(objectiveHolderIdentifier, null);
 
+    final ObjectiveHolder objectiveHolder = main.getCommandManager().getObjectiveHolderFromContextAndLevel(context, level);
     final String taskDescription =
-        context.flags().getValue(main.getCommandManager().taskDescription, "");
+    context.flags().getValue(main.getCommandManager().taskDescription, "");
 
     if (objectiveHolder != null) {
       objective.setObjectiveHolder(objectiveHolder);
