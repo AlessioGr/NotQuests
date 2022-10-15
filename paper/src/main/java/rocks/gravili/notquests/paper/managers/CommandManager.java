@@ -853,7 +853,7 @@ public class CommandManager {
     if(level == 0){
       objective = context.get("Objective ID");
     }else {
-      objective = context.get("Objective ID " + level);
+      objective = context.get("Objective ID " + (level+1));
     }
     return objective;
   }
