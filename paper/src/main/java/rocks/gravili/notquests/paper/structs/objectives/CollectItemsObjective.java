@@ -44,7 +44,8 @@ public class CollectItemsObjective extends Objective {
   public static void handleCommands(
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
-      Command.Builder<CommandSender> addObjectiveBuilder) {
+      Command.Builder<CommandSender> addObjectiveBuilder,
+      final int level) {
     manager.command(
         addObjectiveBuilder
             .argument(
@@ -73,7 +74,7 @@ public class CollectItemsObjective extends Objective {
                   collectItemsObjective.setProgressNeededExpression(amountExpression);
                   collectItemsObjective.setDeductIfItemIsDropped(deductIfItemIsDropped);
 
-                  main.getObjectiveManager().addObjective(collectItemsObjective, context);
+                  main.getObjectiveManager().addObjective(collectItemsObjective, context, level);
                 }));
   }
 

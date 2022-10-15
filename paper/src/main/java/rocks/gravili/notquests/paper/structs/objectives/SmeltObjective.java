@@ -43,7 +43,8 @@ public class SmeltObjective extends Objective {
   public static void handleCommands(
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
-      Command.Builder<CommandSender> addObjectiveBuilder) {
+      Command.Builder<CommandSender> addObjectiveBuilder,
+      final int level) {
     manager.command(
         addObjectiveBuilder
             .argument(
@@ -65,7 +66,7 @@ public class SmeltObjective extends Objective {
 
                   smeltObjective.setProgressNeededExpression(amountExpression);
 
-                  main.getObjectiveManager().addObjective(smeltObjective, context);
+                  main.getObjectiveManager().addObjective(smeltObjective, context, level);
                 }));
   }
 

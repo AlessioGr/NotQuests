@@ -58,6 +58,7 @@ import rocks.gravili.notquests.paper.structs.conditions.ListCondition;
 import rocks.gravili.notquests.paper.structs.conditions.NumberCondition;
 import rocks.gravili.notquests.paper.structs.conditions.StringCondition;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
+import rocks.gravili.notquests.paper.structs.objectives.ObjectiveHolder;
 import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 
 
@@ -1109,7 +1110,7 @@ public class QuestManager {
     }
 
 
-    public void sendObjectivesAdmin(final CommandSender sender, final Quest quest) {
+    public void sendObjectivesAdmin(final CommandSender sender, final ObjectiveHolder quest) {
 
         for (final Objective objective : quest.getObjectives()) {
 

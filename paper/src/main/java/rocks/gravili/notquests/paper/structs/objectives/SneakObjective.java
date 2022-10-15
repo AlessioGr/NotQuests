@@ -39,7 +39,8 @@ public class SneakObjective extends Objective {
   public static void handleCommands(
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
-      Command.Builder<CommandSender> addObjectiveBuilder) {
+      Command.Builder<CommandSender> addObjectiveBuilder,
+      final int level) {
     manager.command(
         addObjectiveBuilder
             .argument(
@@ -52,7 +53,7 @@ public class SneakObjective extends Objective {
                   SneakObjective sneakObjective = new SneakObjective(main);
                   sneakObjective.setProgressNeededExpression(amountExpression);
 
-                  main.getObjectiveManager().addObjective(sneakObjective, context);
+                  main.getObjectiveManager().addObjective(sneakObjective, context, level);
                 }));
   }
 

@@ -40,7 +40,8 @@ public class NumberVariableObjective extends Objective { // TODO: Not done yet
   public static void handleCommands(
       final NotQuests main,
       final PaperCommandManager<CommandSender> manager,
-      final Command.Builder<CommandSender> addObjectiveBuilder) {
+      final Command.Builder<CommandSender> addObjectiveBuilder,
+      final int level) {
 
     for (final String variableString : main.getVariablesManager().getVariableIdentifiers()) {
 
@@ -136,7 +137,7 @@ public class NumberVariableObjective extends Objective { // TODO: Not done yet
                     numberVariableObjective.setAdditionalBooleanArguments(additionalBooleanArguments);
 
 
-                    main.getObjectiveManager().addObjective(numberVariableObjective, context);
+                    main.getObjectiveManager().addObjective(numberVariableObjective, context, level);
                   }));
     }
   }

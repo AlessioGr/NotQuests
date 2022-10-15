@@ -46,7 +46,8 @@ public class TownyReachResidentCountObjective extends Objective {
   public static void handleCommands(
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
-      Command.Builder<CommandSender> addObjectiveBuilder) {
+      Command.Builder<CommandSender> addObjectiveBuilder,
+      final int level) {
     if (!main.getIntegrationsManager().isTownyEnabled()) {
       return;
     }
@@ -75,7 +76,7 @@ public class TownyReachResidentCountObjective extends Objective {
                       countPreviousResidents);
 
                   main.getObjectiveManager()
-                      .addObjective(townyReachResidentCountObjective, context);
+                      .addObjective(townyReachResidentCountObjective, context, level);
                 }));
   }
 

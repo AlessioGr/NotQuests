@@ -27,11 +27,12 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
+import rocks.gravili.notquests.paper.structs.PredefinedProgressOrder;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 
-public abstract class Objective {
+public abstract class Objective extends ObjectiveHolder{
   protected final NotQuests main;
   private final ArrayList<Condition> unlockConditions;
   private final ArrayList<Condition> progressConditions;
@@ -762,4 +763,111 @@ public abstract class Objective {
     }
     return getCompleteConditions().size() + 1;
   }
+
+
+
+  //For ObjectiveHolder interface:
+  @Override
+  public FileConfiguration getConfig() {
+    return getObjectiveHolder().getConfig();
+  }
+
+  @Override
+  public void saveConfig() {
+    getObjectiveHolder().saveConfig();
+  }
+
+  @Override
+  public String getInitialConfigPath() {
+    return getObjectiveHolder().getInitialConfigPath() + ".objectives." + getObjectiveID();
+  }
+
+  @Override
+  public String getName() {
+    return getFinalName();
+  }
+
+  @Override
+  public void setPredefinedProgressOrder(final PredefinedProgressOrder predefinedProgressOrder, final boolean save) {
+    super.predefinedProgressOrder = predefinedProgressOrder;
+    if (save) {
+      if(predefinedProgressOrder != null) {
+        predefinedProgressOrder.saveToConfiguration(getObjectiveHolder().getConfig(),   objectiveHolder.getInitialConfigPath() + ".objectives." + getObjectiveID()
+            + ".predefinedProgressOrder");
+      }else{
+        getObjectiveHolder().getConfig()
+            .set(
+                objectiveHolder.getInitialConfigPath() + ".objectives." + getObjectiveID() + ".predefinedProgressOrder",
+                null);
+      }
+      getObjectiveHolder().saveConfig();
+    }
+  }
+
+  @Override
+  public void clearObjectives() {
+    super.getObjectives().clear();
+    getObjectiveHolder().getConfig().set(getObjectiveHolder().getInitialConfigPath() + ".objectives." + getObjectiveID() + ".objectives", null);
+    getObjectiveHolder().saveConfig();
+  }
+
+  @Override
+  public final Objective getObjectiveFromID(final int objectiveID) {
+    for (final Objective objective : super.getObjectives()) {
+      if (objective.getObjectiveID() == objectiveID) {
+        return objective;
+      }
+    }
+    return null;
+  }
+
+  @Override
+  public void removeObjective(final Objective objective) {
+    getObjectiveHolder().getConfig()
+        .set(getObjectiveHolder().getInitialConfigPath() + ".objectives." + getObjectiveID() + ".objectives." + objective.getObjectiveID(), null);
+    getObjectiveHolder().saveConfig();
+    super.getObjectives().remove(objective);
+  }
+
+
+  public void addObjective(Objective objective, boolean save) {
+    boolean dupeID = false;
+    for (Objective objective1 : super.getObjectives()) {
+      if (objective.getObjectiveID() == objective1.getObjectiveID()) {
+        dupeID = true;
+        break;
+      }
+    }
+    if (!dupeID) {
+      super.getObjectives().add(objective);
+      if (save) {
+        getObjectiveHolder().getConfig()
+            .set(
+                getObjectiveHolder().getInitialConfigPath() + ".objectives." + getObjectiveID() + ".objectives."
+                    + objective.getObjectiveID()
+                    + ".objectiveType",
+                main.getObjectiveManager().getObjectiveType(objective.getClass()));
+        getObjectiveHolder().getConfig()
+            .set(
+                getObjectiveHolder().getInitialConfigPath() + ".objectives." + getObjectiveID() + ".objectives."
+                    + objective.getObjectiveID()
+                    + ".progressNeededExpression",
+                objective.getProgressNeededExpression().getRawExpression());
+
+        objective.save(
+            getObjectiveHolder().getConfig(),
+            getObjectiveHolder().getInitialConfigPath() + ".objectives." + getObjectiveID() + ".objectives." + objective.getObjectiveID());
+        getObjectiveHolder().saveConfig();
+      }
+    } else {
+      main.getLogManager()
+          .warn(
+              "ERROR: Tried to add objective to quest <highlight>"
+                  + getFinalName()
+                  + "</highlight> with the ID <highlight>"
+                  + objective.getObjectiveID()
+                  + "</highlight> but the ID was a DUPLICATE!");
+    }
+  }
+
 }

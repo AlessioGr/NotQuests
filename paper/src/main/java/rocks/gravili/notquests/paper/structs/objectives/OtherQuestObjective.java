@@ -43,7 +43,8 @@ public class OtherQuestObjective extends Objective {
   public static void handleCommands(
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
-      Command.Builder<CommandSender> addObjectiveBuilder) {
+      Command.Builder<CommandSender> addObjectiveBuilder,
+      final int level) {
     manager.command(
         addObjectiveBuilder
             .argument(
@@ -71,7 +72,7 @@ public class OtherQuestObjective extends Objective {
                   otherQuestObjective.setCountPreviousCompletions(countPreviouslyCompletedQuests);
                   otherQuestObjective.setProgressNeededExpression(amountExpression);
 
-                  main.getObjectiveManager().addObjective(otherQuestObjective, context);
+                  main.getObjectiveManager().addObjective(otherQuestObjective, context, level);
                 }));
   }
 

@@ -51,7 +51,8 @@ public class BetonQuestObjectiveStateChangeObjective extends Objective {
   public static void handleCommands(
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
-      Command.Builder<CommandSender> addObjectiveBuilder) {
+      Command.Builder<CommandSender> addObjectiveBuilder,
+      final int level) {
     manager.command(
         addObjectiveBuilder
             .argument(
@@ -177,7 +178,7 @@ public class BetonQuestObjectiveStateChangeObjective extends Objective {
                   betonQuestObjectiveStateChangeObjective.setObjectiveState(objectiveState);
 
                   main.getObjectiveManager()
-                      .addObjective(betonQuestObjectiveStateChangeObjective, context);
+                      .addObjective(betonQuestObjectiveStateChangeObjective, context, level);
                 }));
   }
 

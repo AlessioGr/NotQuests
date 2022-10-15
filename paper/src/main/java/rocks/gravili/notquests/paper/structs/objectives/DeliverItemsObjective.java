@@ -51,7 +51,8 @@ public class DeliverItemsObjective extends Objective {
         super(main);
     }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder,
+        final int level) {
         manager.command(addObjectiveBuilder
                 .argument(ItemStackSelectionArgument.of("materials", main), ArgumentDescription.of("Material of the item which needs to be delivered"))
                 .argument(NumberVariableValueArgument.newBuilder("amount", main, null), ArgumentDescription.of("Amount of items which need to be delivered"))
@@ -76,7 +77,7 @@ public class DeliverItemsObjective extends Objective {
                                     deliverItemsObjective.setProgressNeededExpression(amountToDeliverExpression);
                                     deliverItemsObjective.setRecipientNPC(nqNPC);
 
-                                    main.getObjectiveManager().addObjective(deliverItemsObjective, context);
+                                    main.getObjectiveManager().addObjective(deliverItemsObjective, context, level);
                                 },
                                 player,
                                 "<success>You have been given an item with which you can add the DeliverItems Objective to an NPC by rightclicking the NPC. Check your inventory!",
@@ -97,7 +98,7 @@ public class DeliverItemsObjective extends Objective {
                         deliverItemsObjective.setProgressNeededExpression(amountToDeliverExpression);
                         deliverItemsObjective.setRecipientNPC(nqNPC);
 
-                        main.getObjectiveManager().addObjective(deliverItemsObjective, context);
+                        main.getObjectiveManager().addObjective(deliverItemsObjective, context, level);
                     }
 
                 }));

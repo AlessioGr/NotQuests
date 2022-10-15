@@ -43,7 +43,8 @@ public class ConsumeItemsObjective extends Objective {
   public static void handleCommands(
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
-      Command.Builder<CommandSender> addObjectiveBuilder) {
+      Command.Builder<CommandSender> addObjectiveBuilder,
+      final int level) {
     manager.command(
         addObjectiveBuilder
             .argument(
@@ -63,7 +64,7 @@ public class ConsumeItemsObjective extends Objective {
 
                   consumeItemsObjective.setProgressNeededExpression(amountExpression);
 
-                  main.getObjectiveManager().addObjective(consumeItemsObjective, context);
+                  main.getObjectiveManager().addObjective(consumeItemsObjective, context, level);
                 }));
   }
 

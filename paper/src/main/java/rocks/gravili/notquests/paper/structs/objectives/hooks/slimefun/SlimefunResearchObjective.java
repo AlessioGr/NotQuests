@@ -39,7 +39,8 @@ public class SlimefunResearchObjective extends Objective {
   public static void handleCommands(
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
-      Command.Builder<CommandSender> addObjectiveBuilder) {
+      Command.Builder<CommandSender> addObjectiveBuilder,
+      final int level) {
     if (!main.getIntegrationsManager().isSlimefunEnabled()) {
       return;
     }
@@ -55,7 +56,7 @@ public class SlimefunResearchObjective extends Objective {
                       new SlimefunResearchObjective(main);
                   slimefunResearchobjective.setProgressNeededExpression(context.get("amount"));
 
-                  main.getObjectiveManager().addObjective(slimefunResearchobjective, context);
+                  main.getObjectiveManager().addObjective(slimefunResearchobjective, context, level);
                 }));
   }
 

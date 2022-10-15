@@ -18,14 +18,19 @@
 
 package rocks.gravili.notquests.paper.managers.registering;
 
+import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
+import cloud.commandframework.arguments.parser.ArgumentParseResult;
+import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -43,6 +48,7 @@ import rocks.gravili.notquests.paper.structs.objectives.JumpObjective;
 import rocks.gravili.notquests.paper.structs.objectives.KillMobsObjective;
 import rocks.gravili.notquests.paper.structs.objectives.NumberVariableObjective;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
+import rocks.gravili.notquests.paper.structs.objectives.ObjectiveHolder;
 import rocks.gravili.notquests.paper.structs.objectives.OpenBuriedTreasureObjective;
 import rocks.gravili.notquests.paper.structs.objectives.OtherQuestObjective;
 import rocks.gravili.notquests.paper.structs.objectives.PlaceBlocksObjective;
@@ -144,16 +150,176 @@ public class ObjectiveManager {
     try {
       Method commandHandler =
           objective.getMethod(
-              "handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class);
+              "handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class, int.class);
+
+
+      final Command.Builder<CommandSender> objectivesBuilder = main.getCommandManager().getAdminEditCommandBuilder().literal("objectives", "");
+      final String objectiveIDIdentifier = "Objective ID";
+      final int level = 1;
+      final Command.Builder<CommandSender> objectivesBuilderLevel1 =
+          objectivesBuilder
+              .literal("edit")
+              .argument(
+                  IntegerArgument.<CommandSender>newBuilder( objectiveIDIdentifier )
+                      .withMin(1)
+                      .withSuggestionsProvider(
+                          (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            main.getUtilManager()
+                                .sendFancyCommandCompletion(
+                                    context.getSender(),
+                                    allArgs.toArray(new String[0]),
+                                    objectiveIDIdentifier,
+                                    "[...]");
+
+                            ArrayList<String> completions = new ArrayList<>();
+
+                            final ObjectiveHolder objectiveHolder;
+                            if(level == 0){
+                              objectiveHolder = context.get("quest");
+                            }else if(level == 1){
+                              objectiveHolder = context.get("Objective ID");
+                            } else {
+                              objectiveHolder = context.get("Objective ID " + level);
+                            }
+                            for (final Objective objective2 : objectiveHolder.getObjectives()) {
+                              completions.add("" + objective2.getObjectiveID());
+                            }
+
+                            return completions;
+                          })
+                      .withParser(
+                          (context, lastString) -> { // TODO: Fix this parser. It isn't run at all.
+                            final int ID = context.get((level == 0 ? "Objective ID" : "Objective ID " + level+1));
+                            final ObjectiveHolder objectiveHolder;
+                            if(level == 0){
+                              objectiveHolder = context.get("quest");
+                            }else if(level == 1){
+                              objectiveHolder = context.get("Objective ID");
+                            } else {
+                              objectiveHolder = context.get("Objective ID " + level);
+                            }
+                            final Objective foundObjective = objectiveHolder.getObjectiveFromID(ID);
+                            if (foundObjective == null) {
+                              return ArgumentParseResult.failure(
+                                  new IllegalArgumentException(
+                                      "Objective with the ID '"
+                                          + ID
+                                          + "' does not belong to Quest '"
+                                          + objectiveHolder.getName()
+                                          + "'!"));
+                            } else {
+                              return ArgumentParseResult.success(ID);
+                            }
+                          }),
+                  ArgumentDescription.of(objectiveIDIdentifier));
+      final Command.Builder<CommandSender> adminEditAddObjectiveCommandBuilder =
+          objectivesBuilder.literal("add");
+      //Level 0
+
       commandHandler.invoke(
           objective,
           main,
           main.getCommandManager().getPaperCommandManager(),
-          main.getCommandManager()
-              .getAdminEditAddObjectiveCommandBuilder()
+          adminEditAddObjectiveCommandBuilder
               .literal(identifier)
               .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " objective")
-              .flag(main.getCommandManager().taskDescription));
+              .flag(main.getCommandManager().taskDescription),
+          0);
+
+
+      final Command.Builder<CommandSender> adminEditAddObjectiveCommandBuilderLevel1 =
+          objectivesBuilderLevel1.literal("objectives", "o").literal("add");
+
+      //Level 1
+      commandHandler.invoke(
+          objective,
+          main,
+          main.getCommandManager().getPaperCommandManager(),
+          adminEditAddObjectiveCommandBuilderLevel1
+              .literal(identifier)
+              .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " objective")
+              .flag(main.getCommandManager().taskDescription),
+          1);
+
+
+
+      final Command.Builder<CommandSender> objectivesBuilder2 = objectivesBuilderLevel1.literal("objectives", "");
+      final String objectiveIDIdentifier2 = "Objective ID 2";
+      final int level2 = 2;
+      final Command.Builder<CommandSender> objectivesBuilderLevel2 =
+          objectivesBuilder2
+              .literal("edit")
+              .argument(
+                  IntegerArgument.<CommandSender>newBuilder( objectiveIDIdentifier2 )
+                      .withMin(1)
+                      .withSuggestionsProvider(
+                          (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            main.getUtilManager()
+                                .sendFancyCommandCompletion(
+                                    context.getSender(),
+                                    allArgs.toArray(new String[0]),
+                                    objectiveIDIdentifier2,
+                                    "[...]");
+
+                            ArrayList<String> completions = new ArrayList<>();
+
+                            final ObjectiveHolder objectiveHolder;
+                            if(level2 == 0){
+                              objectiveHolder = context.get("quest");
+                            }else if(level2 == 1){
+                              objectiveHolder = context.get("Objective ID");
+                            } else {
+                              objectiveHolder = context.get("Objective ID " + level2);
+                            }
+                            for (final Objective objective2 : objectiveHolder.getObjectives()) {
+                              completions.add("" + objective2.getObjectiveID());
+                            }
+
+                            return completions;
+                          })
+                      .withParser(
+                          (context, lastString) -> { // TODO: Fix this parser. It isn't run at all.
+                            final int ID = context.get((level2 == 0 ? "Objective ID" : "Objective ID " + level2+1));
+                            final ObjectiveHolder objectiveHolder;
+                            if(level2 == 0){
+                              objectiveHolder = context.get("quest");
+                            }else if(level2 == 1){
+                              objectiveHolder = context.get("Objective ID");
+                            } else {
+                              objectiveHolder = context.get("Objective ID " + level2);
+                            }
+                            final Objective foundObjective = objectiveHolder.getObjectiveFromID(ID);
+                            if (foundObjective == null) {
+                              return ArgumentParseResult.failure(
+                                  new IllegalArgumentException(
+                                      "Objective with the ID '"
+                                          + ID
+                                          + "' does not belong to Quest '"
+                                          + objectiveHolder.getName()
+                                          + "'!"));
+                            } else {
+                              return ArgumentParseResult.success(ID);
+                            }
+                          }),
+                  ArgumentDescription.of(objectiveIDIdentifier));
+
+
+      final Command.Builder<CommandSender> adminEditAddObjectiveCommandBuilderLevel2 =
+          objectivesBuilderLevel2.literal("objectives", "o").literal("add");
+
+      //Level 2
+      commandHandler.invoke(
+          objective,
+          main,
+          main.getCommandManager().getPaperCommandManager(),
+          adminEditAddObjectiveCommandBuilderLevel2
+              .literal(identifier)
+              .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " objective")
+              .flag(main.getCommandManager().taskDescription),
+          2);
+
     } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
       e.printStackTrace();
     }
@@ -184,16 +350,24 @@ public class ObjectiveManager {
     return objectives.keySet();
   }
 
-  public void addObjective(Objective objective, CommandContext<CommandSender> context) {
+  public void addObjective(Objective objective, CommandContext<CommandSender> context, int level) {
 
-    final Quest quest = context.getOrDefault("quest", null);
+    final String objectiveHolderIdentifier;
+    if(level == 0){
+      objectiveHolderIdentifier = "quest";
+    }else if(level == 1){
+      objectiveHolderIdentifier = "Objective ID";
+    }else{
+      objectiveHolderIdentifier = "Objective ID " + level;
+    }
+    final ObjectiveHolder objectiveHolder = context.getOrDefault(objectiveHolderIdentifier, null);
 
     final String taskDescription =
         context.flags().getValue(main.getCommandManager().taskDescription, "");
 
-    if (quest != null) {
-      objective.setObjectiveHolder(quest);
-      objective.setObjectiveID(quest.getFreeObjectiveID());
+    if (objectiveHolder != null) {
+      objective.setObjectiveHolder(objectiveHolder);
+      objective.setObjectiveID(objectiveHolder.getFreeObjectiveID());
       if(taskDescription != null && !taskDescription.isBlank()) {
         objective.setTaskDescription(taskDescription, true);
       }
@@ -205,10 +379,10 @@ public class ObjectiveManager {
                   "<success>"
                       + getObjectiveType(objective.getClass())
                       + " Objective successfully added to Quest <highlight>"
-                      + quest.getQuestName()
+                      + objectiveHolder.getName()
                       + "</highlight>!"));
 
-      quest.addObjective(objective, true);
+      objectiveHolder.addObjective(objective, true);
     }
   }
 

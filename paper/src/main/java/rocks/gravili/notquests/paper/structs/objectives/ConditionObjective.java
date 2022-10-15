@@ -41,7 +41,8 @@ public class ConditionObjective extends Objective {
   public static void handleCommands(
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
-      Command.Builder<CommandSender> addObjectiveBuilder) {
+      Command.Builder<CommandSender> addObjectiveBuilder,
+      final int level) {
     manager.command(
         addObjectiveBuilder
             .argument(
@@ -63,7 +64,7 @@ public class ConditionObjective extends Objective {
                   conditionObjective.setCheckOnlyWhenCorrespondingVariableValueChanged(
                       checkOnlyWhenCorrespondingVariableValueChanged);
 
-                  main.getObjectiveManager().addObjective(conditionObjective, context);
+                  main.getObjectiveManager().addObjective(conditionObjective, context, level);
                 }));
   }
 

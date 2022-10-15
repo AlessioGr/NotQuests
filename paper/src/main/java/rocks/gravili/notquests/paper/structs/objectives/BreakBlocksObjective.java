@@ -43,7 +43,8 @@ public class BreakBlocksObjective extends Objective {
   public static void handleCommands(
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
-      Command.Builder<CommandSender> addObjectiveBuilder) {
+      Command.Builder<CommandSender> addObjectiveBuilder,
+      final int level) {
     manager.command(
         addObjectiveBuilder
             .argument(
@@ -72,7 +73,7 @@ public class BreakBlocksObjective extends Objective {
                   breakBlocksObjective.setProgressNeededExpression(amountExpression);
                   breakBlocksObjective.setDeductIfBlockIsPlaced(deductIfBlockIsPlaced);
 
-                  main.getObjectiveManager().addObjective(breakBlocksObjective, context);
+                  main.getObjectiveManager().addObjective(breakBlocksObjective, context, level);
                 }));
   }
 

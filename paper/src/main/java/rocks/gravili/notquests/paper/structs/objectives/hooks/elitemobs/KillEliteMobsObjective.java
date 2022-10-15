@@ -52,7 +52,8 @@ public class KillEliteMobsObjective extends Objective {
   public static void handleCommands(
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
-      Command.Builder<CommandSender> addObjectiveBuilder) {
+      Command.Builder<CommandSender> addObjectiveBuilder,
+      final int level) {
     if (!main.getIntegrationsManager().isEliteMobsEnabled()) {
       return;
     }
@@ -234,7 +235,7 @@ public class KillEliteMobsObjective extends Objective {
                   killEliteMobsObjective.setSpawnReason(spawnReasonString);
                   killEliteMobsObjective.setMinimumDamagePercentage(minimumDamagePercentageInt);
 
-                  main.getObjectiveManager().addObjective(killEliteMobsObjective, context);
+                  main.getObjectiveManager().addObjective(killEliteMobsObjective, context, level);
                 }));
   }
 

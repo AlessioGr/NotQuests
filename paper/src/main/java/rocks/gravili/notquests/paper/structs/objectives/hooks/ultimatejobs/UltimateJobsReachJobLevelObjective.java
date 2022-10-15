@@ -49,7 +49,8 @@ public class UltimateJobsReachJobLevelObjective extends Objective {
   public static void handleCommands(
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
-      Command.Builder<CommandSender> addObjectiveBuilder) {
+      Command.Builder<CommandSender> addObjectiveBuilder,
+      final int level) {
     if (!main.getIntegrationsManager().isUltimateJobsEnabled()) {
       return;
     }
@@ -101,7 +102,7 @@ public class UltimateJobsReachJobLevelObjective extends Objective {
                   ultimateJobsReachJobLevelObjective.setJobID(jobID);
 
                   main.getObjectiveManager()
-                      .addObjective(ultimateJobsReachJobLevelObjective, context);
+                      .addObjective(ultimateJobsReachJobLevelObjective, context, level);
                 }));
   }
 

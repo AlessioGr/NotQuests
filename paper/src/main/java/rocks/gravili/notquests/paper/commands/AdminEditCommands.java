@@ -63,6 +63,7 @@ import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
+import rocks.gravili.notquests.paper.structs.objectives.ObjectiveHolder;
 import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 
 
@@ -333,8 +334,132 @@ public class AdminEditCommands {
                 }));
 
         final Command.Builder<CommandSender> objectivesBuilder = editBuilder.literal("objectives");
-        handleObjectives(objectivesBuilder);
-        final Command.Builder<CommandSender> requirementsBuilder = editBuilder.literal("requirements");
+        handleObjectives(objectivesBuilder, 0);
+
+      final String objectiveIDIdentifier = "Objective ID";
+      final int level = 1;
+      final Command.Builder<CommandSender> objectivesBuilderLevel1 =
+          objectivesBuilder
+              .literal("edit")
+              .argument(
+                  IntegerArgument.<CommandSender>newBuilder( objectiveIDIdentifier )
+                      .withMin(1)
+                      .withSuggestionsProvider(
+                          (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            main.getUtilManager()
+                                .sendFancyCommandCompletion(
+                                    context.getSender(),
+                                    allArgs.toArray(new String[0]),
+                                    objectiveIDIdentifier,
+                                    "[...]");
+
+                            ArrayList<String> completions = new ArrayList<>();
+
+                            final ObjectiveHolder objectiveHolder;
+                            if(level == 0){
+                              objectiveHolder = context.get("quest");
+                            }else if(level == 1){
+                              objectiveHolder = context.get("Objective ID");
+                            } else {
+                              objectiveHolder = context.get("Objective ID " + level);
+                            }
+                            for (final Objective objective : objectiveHolder.getObjectives()) {
+                              completions.add("" + objective.getObjectiveID());
+                            }
+
+                            return completions;
+                          })
+                      .withParser(
+                          (context, lastString) -> { // TODO: Fix this parser. It isn't run at all.
+                            final int ID = context.get((level == 0 ? "Objective ID" : "Objective ID " + level+1));
+                            final ObjectiveHolder objectiveHolder;
+                            if(level == 0){
+                              objectiveHolder = context.get("quest");
+                            }else if(level == 1){
+                              objectiveHolder = context.get("Objective ID");
+                            } else {
+                              objectiveHolder = context.get("Objective ID " + level);
+                            }
+                            final Objective foundObjective = objectiveHolder.getObjectiveFromID(ID);
+                            if (foundObjective == null) {
+                              return ArgumentParseResult.failure(
+                                  new IllegalArgumentException(
+                                      "Objective with the ID '"
+                                          + ID
+                                          + "' does not belong to Quest '"
+                                          + objectiveHolder.getName()
+                                          + "'!"));
+                            } else {
+                              return ArgumentParseResult.success(ID);
+                            }
+                          }),
+                  ArgumentDescription.of(objectiveIDIdentifier));
+
+        handleObjectives(objectivesBuilderLevel1, 1);
+
+      final String objectiveIDIdentifier2 = "Objective ID 2";
+      final int level2 = 2;
+      final Command.Builder<CommandSender> objectivesBuilderLevel2 =
+          objectivesBuilderLevel1
+              .literal("edit")
+              .argument(
+                  IntegerArgument.<CommandSender>newBuilder( objectiveIDIdentifier2 )
+                      .withMin(1)
+                      .withSuggestionsProvider(
+                          (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            main.getUtilManager()
+                                .sendFancyCommandCompletion(
+                                    context.getSender(),
+                                    allArgs.toArray(new String[0]),
+                                    objectiveIDIdentifier2,
+                                    "[...]");
+
+                            ArrayList<String> completions = new ArrayList<>();
+
+                            final ObjectiveHolder objectiveHolder;
+                            if(level2 == 0){
+                              objectiveHolder = context.get("quest");
+                            }else if(level2 == 1){
+                              objectiveHolder = context.get("Objective ID");
+                            } else {
+                              objectiveHolder = context.get("Objective ID " + level2);
+                            }
+                            for (final Objective objective : objectiveHolder.getObjectives()) {
+                              completions.add("" + objective.getObjectiveID());
+                            }
+
+                            return completions;
+                          })
+                      .withParser(
+                          (context, lastString) -> { // TODO: Fix this parser. It isn't run at all.
+                            final int ID = context.get((level2 == 0 ? "Objective ID" : "Objective ID " + level2+1));
+                            final ObjectiveHolder objectiveHolder;
+                            if(level2 == 0){
+                              objectiveHolder = context.get("quest");
+                            }else if(level2 == 1){
+                              objectiveHolder = context.get("Objective ID");
+                            } else {
+                              objectiveHolder = context.get("Objective ID " + level2);
+                            }
+                            final Objective foundObjective = objectiveHolder.getObjectiveFromID(ID);
+                            if (foundObjective == null) {
+                              return ArgumentParseResult.failure(
+                                  new IllegalArgumentException(
+                                      "Objective with the ID '"
+                                          + ID
+                                          + "' does not belong to Quest '"
+                                          + objectiveHolder.getName()
+                                          + "'!"));
+                            } else {
+                              return ArgumentParseResult.success(ID);
+                            }
+                          }),
+                  ArgumentDescription.of(objectiveIDIdentifier));
+        handleObjectives(objectivesBuilderLevel2, 2);
+
+      final Command.Builder<CommandSender> requirementsBuilder = editBuilder.literal("requirements");
         handleRequirements(requirementsBuilder);
         final Command.Builder<CommandSender> rewardsBuilder = editBuilder.literal("rewards");
         handleRewards(rewardsBuilder);
@@ -721,22 +846,29 @@ public class AdminEditCommands {
                 }));
     }
 
-    public void handleObjectives(final Command.Builder<CommandSender> builder) {
+    public void handleObjectives(final Command.Builder<CommandSender> builder, final int level) {
         //Add is handled individually by each objective
       final Command.Builder<CommandSender> predefinedProgressOrderBuilder = builder.literal("predefinedProgressOrder");
 
       manager.command(predefinedProgressOrderBuilder.literal("show")
           .meta(CommandMeta.DESCRIPTION, "Shows the current predefined order in which the objectives need to be progressed for your quest.")
           .handler((context) -> {
-            final Quest quest = context.get("quest");
+            final ObjectiveHolder objectiveHolder;
+            if(level == 0){
+              objectiveHolder = context.get("quest");
+            }else if(level == 1){
+              objectiveHolder = context.get("Objective ID");
+            } else {
+              objectiveHolder = context.get("Objective ID " + level);
+            }
             context.getSender().sendMessage(Component.empty());
 
-            final String predefinedProgressOrderString = quest.getPredefinedProgressOrder() != null ? (quest.getPredefinedProgressOrder().getReadableString())
+            final String predefinedProgressOrderString = objectiveHolder.getPredefinedProgressOrder() != null ? (objectiveHolder.getPredefinedProgressOrder().getReadableString())
                 : "None"
                 ;
 
             context.getSender().sendMessage(main.parse(
-                "<success>Current predefined progress order of Quest <highlight>" + quest.getQuestName()
+                "<success>Current predefined progress order of Quest <highlight>" + objectiveHolder.getName()
                     + "</highlight>: <highlight2>" + predefinedProgressOrderString
             ));
           }));
@@ -745,11 +877,18 @@ public class AdminEditCommands {
               .literal("none")
           .meta(CommandMeta.DESCRIPTION, "Sets a predefined order in which the objectives need to be progressed for your quest.")
           .handler((context) -> {
-            final Quest quest = context.get("quest");
-            quest.setPredefinedProgressOrder(null, true);
+            final ObjectiveHolder objectiveHolder;
+            if(level == 0){
+              objectiveHolder = context.get("quest");
+            }else if(level == 1){
+              objectiveHolder = context.get("Objective ID");
+            } else {
+              objectiveHolder = context.get("Objective ID " + level);
+            }
+            objectiveHolder.setPredefinedProgressOrder(null, true);
             context.getSender().sendMessage(Component.empty());
             context.getSender().sendMessage(main.parse(
-                "<success>Predefined progress order of Quest <highlight>" + quest.getQuestName()
+                "<success>Predefined progress order of Quest <highlight>" + objectiveHolder.getName()
                     + "</highlight> have been removed!"
             ));
           }));
@@ -758,11 +897,18 @@ public class AdminEditCommands {
           .literal("firstToLast")
           .meta(CommandMeta.DESCRIPTION, "Sets a predefined order in which the objectives need to be progressed for your quest.")
           .handler((context) -> {
-            final Quest quest = context.get("quest");
-            quest.setPredefinedProgressOrder(PredefinedProgressOrder.firstToLast(), true);
+            final ObjectiveHolder objectiveHolder;
+            if(level == 0){
+              objectiveHolder = context.get("quest");
+            }else if(level == 1){
+              objectiveHolder = context.get("Objective ID");
+            } else {
+              objectiveHolder = context.get("Objective ID " + level);
+            }
+            objectiveHolder.setPredefinedProgressOrder(PredefinedProgressOrder.firstToLast(), true);
             context.getSender().sendMessage(Component.empty());
             context.getSender().sendMessage(main.parse(
-                "<success>Predefined progress order of Quest <highlight>" + quest.getQuestName()
+                "<success>Predefined progress order of Quest <highlight>" + objectiveHolder.getName()
                     + "</highlight> have been set to first to last!"
             ));
           }));
@@ -771,11 +917,18 @@ public class AdminEditCommands {
           .literal("lastToFirst")
           .meta(CommandMeta.DESCRIPTION, "Sets a predefined order in which the objectives need to be progressed for your quest.")
           .handler((context) -> {
-            final Quest quest = context.get("quest");
-            quest.setPredefinedProgressOrder(PredefinedProgressOrder.lastToFirst(), true);
+            final ObjectiveHolder objectiveHolder;
+            if(level == 0){
+              objectiveHolder = context.get("quest");
+            }else if(level == 1){
+              objectiveHolder = context.get("Objective ID");
+            } else {
+              objectiveHolder = context.get("Objective ID " + level);
+            }
+            objectiveHolder.setPredefinedProgressOrder(PredefinedProgressOrder.lastToFirst(), true);
             context.getSender().sendMessage(Component.empty());
             context.getSender().sendMessage(main.parse(
-                "<success>Predefined progress order of Quest <highlight>" + quest.getQuestName()
+                "<success>Predefined progress order of Quest <highlight>" + objectiveHolder.getName()
                     + "</highlight> have been set to last to first!"
             ));
           }));
@@ -787,9 +940,16 @@ public class AdminEditCommands {
                 final List<String> allArgs = context.getRawInput();
                 main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "<Enter custom order (numbers of objective IDs separated by space)>", "");
                 ArrayList<String> completions = new ArrayList<>();
-                final Quest quest = context.get("quest");
+                final ObjectiveHolder objectiveHolder;
+                if(level == 0){
+                  objectiveHolder = context.get("quest");
+                }else if(level == 1){
+                  objectiveHolder = context.get("Objective ID");
+                } else {
+                  objectiveHolder = context.get("Objective ID " + level);
+                }
 
-                for(final Objective objective : quest.getObjectives()){
+                for(final Objective objective : objectiveHolder.getObjectives()){
                   completions.add(objective.getObjectiveID()+"");
                 }
 
@@ -798,16 +958,23 @@ public class AdminEditCommands {
           ), ArgumentDescription.of("Custom order. Example: 2 1 3 4 5 6 7 9 8"))
           .meta(CommandMeta.DESCRIPTION, "Sets a predefined order in which the objectives need to be progressed for your quest.")
           .handler((context) -> {
-            final Quest quest = context.get("quest");
+            final ObjectiveHolder objectiveHolder;
+            if(level == 0){
+              objectiveHolder = context.get("quest");
+            }else if(level == 1){
+              objectiveHolder = context.get("Objective ID");
+            } else {
+              objectiveHolder = context.get("Objective ID " + level);
+            }
             final String[] order = context.get("order");
             final String orderString = String.join(" ", order);
             final ArrayList<String> orderParsed = new ArrayList<>();
             Collections.addAll(orderParsed, order);
 
-            quest.setPredefinedProgressOrder(PredefinedProgressOrder.custom(orderParsed), true);
+            objectiveHolder.setPredefinedProgressOrder(PredefinedProgressOrder.custom(orderParsed), true);
             context.getSender().sendMessage(Component.empty());
             context.getSender().sendMessage(main.parse(
-                "<success>Predefined progress order of Quest <highlight>" + quest.getQuestName()
+                "<success>Predefined progress order of Quest <highlight>" + objectiveHolder.getName()
                     + "</highlight> have been set to custom with this order: " + orderString
             ));
           }));
@@ -815,37 +982,128 @@ public class AdminEditCommands {
         manager.command(builder.literal("clear")
                 .meta(CommandMeta.DESCRIPTION, "Removes all objectives from a Quest.")
                 .handler((context) -> {
-                    final Quest quest = context.get("quest");
-                    quest.clearObjectives();
+                  final ObjectiveHolder objectiveHolder;
+                  if(level == 0){
+                    objectiveHolder = context.get("quest");
+                  }else if(level == 1){
+                    objectiveHolder = context.get("Objective ID");
+                  } else {
+                    objectiveHolder = context.get("Objective ID " + level);
+                  }
+                  objectiveHolder.clearObjectives();
                     context.getSender().sendMessage(Component.empty());
                     context.getSender().sendMessage(main.parse(
-                            "<success>All objectives of Quest <highlight>" + quest.getQuestName()
+                            "<success>All objectives of Quest <highlight>" + objectiveHolder.getName()
                                     + "</highlight> have been removed!"
                     ));
                 }));
         manager.command(builder.literal("list")
                 .meta(CommandMeta.DESCRIPTION, "Lists all objectives of a Quest.")
                 .handler((context) -> {
-                    final Quest quest = context.get("quest");
+                  final ObjectiveHolder objectiveHolder;
+                  if(level == 0){
+                    objectiveHolder = context.get("quest");
+                  }else if(level == 1){
+                    objectiveHolder = context.get("Objective ID");
+                  } else {
+                    objectiveHolder = context.get("Objective ID " + level);
+                  }
                     context.getSender().sendMessage(Component.empty());
-                    context.getSender().sendMessage(main.parse("<highlight>Objectives for Quest <highlight2>" + quest.getQuestName() + "</highlight2>:"));
-                    main.getQuestManager().sendObjectivesAdmin(context.getSender(), quest);
+                    context.getSender().sendMessage(main.parse("<highlight>Objectives for Quest <highlight2>" + objectiveHolder.getName() + "</highlight2>:"));
+                    main.getQuestManager().sendObjectivesAdmin(context.getSender(), objectiveHolder);
                 }));
 
 
-        handleEditObjectives(main.getCommandManager().getAdminEditObjectivesBuilder());
+        final String objectiveIDIdentifier = (level == 0 ? "Objective ID" : "Objective ID " + level);
+        final Command.Builder<CommandSender> adminEditObjectivesBuilderWithLevels =
+          builder
+              .literal("edit")
+              .argument(
+                  IntegerArgument.<CommandSender>newBuilder( objectiveIDIdentifier )
+                      .withMin(1)
+                      .withSuggestionsProvider(
+                          (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            main.getUtilManager()
+                                .sendFancyCommandCompletion(
+                                    context.getSender(),
+                                    allArgs.toArray(new String[0]),
+                                    objectiveIDIdentifier,
+                                    "[...]");
+
+                            ArrayList<String> completions = new ArrayList<>();
+
+                            final ObjectiveHolder objectiveHolder;
+                            if(level == 0){
+                              objectiveHolder = context.get("quest");
+                            }else if(level == 1){
+                              objectiveHolder = context.get("Objective ID");
+                            } else {
+                              objectiveHolder = context.get("Objective ID " + level);
+                            }
+                            for (final Objective objective : objectiveHolder.getObjectives()) {
+                              completions.add("" + objective.getObjectiveID());
+                            }
+
+                            return completions;
+                          })
+                      .withParser(
+                          (context, lastString) -> { // TODO: Fix this parser. It isn't run at all.
+                            final int ID = context.get((level == 0 ? "Objective ID" : "Objective ID " + level+1));
+                            final ObjectiveHolder objectiveHolder;
+                            if(level == 0){
+                              objectiveHolder = context.get("quest");
+                            }else if(level == 1){
+                              objectiveHolder = context.get("Objective ID");
+                            } else {
+                              objectiveHolder = context.get("Objective ID " + level);
+                            }
+                            final Objective foundObjective = objectiveHolder.getObjectiveFromID(ID);
+                            if (foundObjective == null) {
+                              return ArgumentParseResult.failure(
+                                  new IllegalArgumentException(
+                                      "Objective with the ID '"
+                                          + ID
+                                          + "' does not belong to Quest '"
+                                          + objectiveHolder.getName()
+                                          + "'!"));
+                            } else {
+                              return ArgumentParseResult.success(ID);
+                            }
+                          }),
+                  ArgumentDescription.of(objectiveIDIdentifier));
+
+
+      handleEditObjectives(adminEditObjectivesBuilderWithLevels, level);
 
 
     }
 
-    public void handleEditObjectives(final Command.Builder<CommandSender> builder) {
-        manager.command(builder.literal("location")
+    public void handleEditObjectives(final Command.Builder<CommandSender> builder, final int level) {
+
+        final String objectiveHolderIdentifier;
+        if(level == 0){
+          objectiveHolderIdentifier = "quest";
+        }else if(level == 1){
+          objectiveHolderIdentifier = "Objective ID";
+        } else {
+          objectiveHolderIdentifier = "Objective ID " + level;
+        }
+
+        final String objectiveIDIdentifier;
+        if(level == 0){
+          objectiveIDIdentifier = "Objective ID";
+        }else {
+          objectiveIDIdentifier = "Objective ID " + level;
+        }
+
+      manager.command(builder.literal("location")
                 .literal("enable")
                 .meta(CommandMeta.DESCRIPTION, "Shows the location to the player.")
                 .handler((context) -> {
-                    final Quest quest = context.get("quest");
-                    final int objectiveID = context.get("Objective ID");
-                    final Objective objective = quest.getObjectiveFromID(objectiveID);
+                    final ObjectiveHolder objectiveHolder = context.get(objectiveHolderIdentifier);
+                    final int objectiveID = context.get(objectiveIDIdentifier);
+                    final Objective objective = objectiveHolder.getObjectiveFromID(objectiveID);
                     assert objective != null; //Shouldn't be null
 
                     objective.setShowLocation(true, true);
@@ -859,10 +1117,10 @@ public class AdminEditCommands {
                 .literal("disables")
                 .meta(CommandMeta.DESCRIPTION, "Disables showing the location to the player.")
                 .handler((context) -> {
-                    final Quest quest = context.get("quest");
-                    final int objectiveID = context.get("Objective ID");
-                    final Objective objective = quest.getObjectiveFromID(objectiveID);
-                    assert objective != null; //Shouldn't be null
+                  final ObjectiveHolder objectiveHolder = context.get(objectiveHolderIdentifier);
+                  final int objectiveID = context.get(objectiveIDIdentifier);
+                  final Objective objective = objectiveHolder.getObjectiveFromID(objectiveID);
+                  assert objective != null; //Shouldn't be null
 
                     objective.setShowLocation(false, true);
 
@@ -889,10 +1147,10 @@ public class AdminEditCommands {
                 .argument(IntegerArgument.newBuilder("z"), ArgumentDescription.of("Z coordinate"))
                 .meta(CommandMeta.DESCRIPTION, "Disables showing the location to the player.")
                 .handler((context) -> {
-                    final Quest quest = context.get("quest");
-                    final int objectiveID = context.get("Objective ID");
-                    final Objective objective = quest.getObjectiveFromID(objectiveID);
-                    assert objective != null; //Shouldn't be null
+                  final ObjectiveHolder objectiveHolder = context.get(objectiveHolderIdentifier);
+                  final int objectiveID = context.get(objectiveIDIdentifier);
+                  final Objective objective = objectiveHolder.getObjectiveFromID(objectiveID);
+                  assert objective != null; //Shouldn't be null
 
                     final World world = context.get("world");
                     final Vector coordinates = new Vector(context.get("x"), context.get("y"), context.get("z"));
@@ -910,10 +1168,10 @@ public class AdminEditCommands {
                 .literal("show", "view")
                 .meta(CommandMeta.DESCRIPTION, "Shows the completionNPC of an objective.")
                 .handler((context) -> {
-                    final Quest quest = context.get("quest");
-                    final int objectiveID = context.get("Objective ID");
-                    final Objective objective = quest.getObjectiveFromID(objectiveID);
-                    assert objective != null; //Shouldn't be null
+                  final ObjectiveHolder objectiveHolder = context.get(objectiveHolderIdentifier);
+                  final int objectiveID = context.get(objectiveIDIdentifier);
+                  final Objective objective = objectiveHolder.getObjectiveFromID(objectiveID);
+                  assert objective != null; //Shouldn't be null
 
                     context.getSender().sendMessage(main.parse(
                             "<main>The completionNPCID of the objective with the ID <highlight>" + objectiveID + "</highlight> is <highlight2>"
@@ -925,10 +1183,10 @@ public class AdminEditCommands {
                 .argument(NQNPCSelector.of("Completion NPC", main, true, true), ArgumentDescription.of("Completion NPC"))
                 .meta(CommandMeta.DESCRIPTION, "Sets the completionNPC of an objective.")
                 .handler((context) -> {
-                    final Quest quest = context.get("quest");
-                    final int objectiveID = context.get("Objective ID");
-                    final Objective objective = quest.getObjectiveFromID(objectiveID);
-                    assert objective != null; //Shouldn't be null
+                  final ObjectiveHolder objectiveHolder = context.get(objectiveHolderIdentifier);
+                  final int objectiveID = context.get(objectiveIDIdentifier);
+                  final Objective objective = objectiveHolder.getObjectiveFromID(objectiveID);
+                  assert objective != null; //Shouldn't be null
 
                     final NQNPCResult completionNPCResult = context.get("Completion NPC");
 
@@ -950,8 +1208,8 @@ public class AdminEditCommands {
                             },
                             player,
                             "<success>You have been given an item with which you can add the completionNPC of this Objective to an NPC. Check your inventory!",
-                            "<LIGHT_PURPLE>Set completionNPC of Quest <highlight>" + quest.getQuestName() + "</highlight> to this NPC",
-                            "<WHITE>Right-click an NPC to set it as the completionNPC of Quest <highlight>" + quest.getQuestName() + "</highlight> and ObjectiveID <highlight>" + objectiveID + "</highlight>."
+                            "<LIGHT_PURPLE>Set completionNPC of Quest <highlight>" + objectiveHolder.getName() + "</highlight> to this NPC",
+                            "<WHITE>Right-click an NPC to set it as the completionNPC of Quest <highlight>" + objectiveHolder.getName() + "</highlight> and ObjectiveID <highlight>" + objectiveID + "</highlight>."
                         );
 
                       } else {
@@ -974,20 +1232,20 @@ public class AdminEditCommands {
           .literal("unlock");
 
       handleEditObjectivesUnlockConditions(editObjectiveConditionsUnlockBuilder);
-
+      //TODO
 
       final Command.Builder<CommandSender> editObjectiveConditionsProgressBuilder = builder
           .literal("conditions")
           .literal("progress");
 
       handleEditObjectivesProgressConditions(editObjectiveConditionsProgressBuilder);
-
+      //TODO
       final Command.Builder<CommandSender> editObjectiveConditionsCompleteBuilder = builder
           .literal("conditions")
           .literal("complete");
 
       handleEditObjectivesCompleteConditions(editObjectiveConditionsCompleteBuilder);
-
+      //TODO
 
 
 
@@ -995,10 +1253,10 @@ public class AdminEditCommands {
                 .literal("show")
                 .meta(CommandMeta.DESCRIPTION, "Shows current objective description.")
                 .handler((context) -> {
-                    final Quest quest = context.get("quest");
-                    final int objectiveID = context.get("Objective ID");
-                    final Objective objective = quest.getObjectiveFromID(objectiveID);
-                    assert objective != null; //Shouldn't be null
+                  final ObjectiveHolder objectiveHolder = context.get(objectiveHolderIdentifier);
+                  final int objectiveID = context.get(objectiveIDIdentifier);
+                  final Objective objective = objectiveHolder.getObjectiveFromID(objectiveID);
+                  assert objective != null; //Shouldn't be null
 
                     context.getSender().sendMessage(main.parse(
                             "<main>Current description of objective with ID <highlight>" + objectiveID + "</highlight>: <highlight2>"
@@ -1009,10 +1267,10 @@ public class AdminEditCommands {
                 .literal("remove")
                 .meta(CommandMeta.DESCRIPTION, "Removes current objective description.")
                 .handler((context) -> {
-                    final Quest quest = context.get("quest");
-                    final int objectiveID = context.get("Objective ID");
-                    final Objective objective = quest.getObjectiveFromID(objectiveID);
-                    assert objective != null; //Shouldn't be null
+                  final ObjectiveHolder objectiveHolder = context.get(objectiveHolderIdentifier);
+                  final int objectiveID = context.get(objectiveIDIdentifier);
+                  final Objective objective = objectiveHolder.getObjectiveFromID(objectiveID);
+                  assert objective != null; //Shouldn't be null
 
                     objective.removeDescription(true);
                     context.getSender().sendMessage(main.parse(
@@ -1025,9 +1283,9 @@ public class AdminEditCommands {
           .literal("show")
           .meta(CommandMeta.DESCRIPTION, "Shows current objective task description.")
           .handler((context) -> {
-            final Quest quest = context.get("quest");
-            final int objectiveID = context.get("Objective ID");
-            final Objective objective = quest.getObjectiveFromID(objectiveID);
+            final ObjectiveHolder objectiveHolder = context.get(objectiveHolderIdentifier);
+            final int objectiveID = context.get(objectiveIDIdentifier);
+            final Objective objective = objectiveHolder.getObjectiveFromID(objectiveID);
             assert objective != null; //Shouldn't be null
 
             context.getSender().sendMessage(main.parse(
@@ -1039,9 +1297,9 @@ public class AdminEditCommands {
           .literal("remove")
           .meta(CommandMeta.DESCRIPTION, "Removes current objective task description.")
           .handler((context) -> {
-            final Quest quest = context.get("quest");
-            final int objectiveID = context.get("Objective ID");
-            final Objective objective = quest.getObjectiveFromID(objectiveID);
+            final ObjectiveHolder objectiveHolder = context.get(objectiveHolderIdentifier);
+            final int objectiveID = context.get(objectiveIDIdentifier);
+            final Objective objective = objectiveHolder.getObjectiveFromID(objectiveID);
             assert objective != null; //Shouldn't be null
 
             objective.removeTaskDescription(true);
@@ -1058,10 +1316,10 @@ public class AdminEditCommands {
                     .build(), ArgumentDescription.of("Objective description"))
                 .meta(CommandMeta.DESCRIPTION, "Sets current objective description.")
                 .handler((context) -> {
-                    final Quest quest = context.get("quest");
-                    final int objectiveID = context.get("Objective ID");
-                    final Objective objective = quest.getObjectiveFromID(objectiveID);
-                    assert objective != null; //Shouldn't be null
+                  final ObjectiveHolder objectiveHolder = context.get(objectiveHolderIdentifier);
+                  final int objectiveID = context.get(objectiveIDIdentifier);
+                  final Objective objective = objectiveHolder.getObjectiveFromID(objectiveID);
+                  assert objective != null; //Shouldn't be null
 
                     final String description = String.join(" ", (String[]) context.get("Objective Description"));
                     objective.setDescription(description, true);
@@ -1078,9 +1336,9 @@ public class AdminEditCommands {
               .build(), ArgumentDescription.of("Objective task description"))
           .meta(CommandMeta.DESCRIPTION, "Sets current objective task description.")
           .handler((context) -> {
-            final Quest quest = context.get("quest");
-            final int objectiveID = context.get("Objective ID");
-            final Objective objective = quest.getObjectiveFromID(objectiveID);
+            final ObjectiveHolder objectiveHolder = context.get(objectiveHolderIdentifier);
+            final int objectiveID = context.get(objectiveIDIdentifier);
+            final Objective objective = objectiveHolder.getObjectiveFromID(objectiveID);
             assert objective != null; //Shouldn't be null
 
             final String taskDescription = String.join(" ", (String[]) context.get("Task Description"));
@@ -1096,10 +1354,10 @@ public class AdminEditCommands {
                 .literal("show")
                 .meta(CommandMeta.DESCRIPTION, "Shows current objective displayname.")
                 .handler((context) -> {
-                    final Quest quest = context.get("quest");
-                    final int objectiveID = context.get("Objective ID");
-                    final Objective objective = quest.getObjectiveFromID(objectiveID);
-                    assert objective != null; //Shouldn't be null
+                  final ObjectiveHolder objectiveHolder = context.get(objectiveHolderIdentifier);
+                  final int objectiveID = context.get(objectiveIDIdentifier);
+                  final Objective objective = objectiveHolder.getObjectiveFromID(objectiveID);
+                  assert objective != null; //Shouldn't be null
 
                     context.getSender().sendMessage(main.parse(
                             "<main>Current displayname of objective with ID <highlight>" + objectiveID + "</highlight>: <highlight2>"
@@ -1110,10 +1368,10 @@ public class AdminEditCommands {
                 .literal("remove")
                 .meta(CommandMeta.DESCRIPTION, "Removes current objective displayname.")
                 .handler((context) -> {
-                    final Quest quest = context.get("quest");
-                    final int objectiveID = context.get("Objective ID");
-                    final Objective objective = quest.getObjectiveFromID(objectiveID);
-                    assert objective != null; //Shouldn't be null
+                  final ObjectiveHolder objectiveHolder = context.get(objectiveHolderIdentifier);
+                  final int objectiveID = context.get(objectiveIDIdentifier);
+                  final Objective objective = objectiveHolder.getObjectiveFromID(objectiveID);
+                  assert objective != null; //Shouldn't be null
 
                     objective.removeDisplayName(true);
                     context.getSender().sendMessage(main.parse(
@@ -1154,10 +1412,10 @@ public class AdminEditCommands {
                 ), ArgumentDescription.of("Objective displayname"))
                 .meta(CommandMeta.DESCRIPTION, "Sets current objective displayname.")
                 .handler((context) -> {
-                    final Quest quest = context.get("quest");
-                    final int objectiveID = context.get("Objective ID");
-                    final Objective objective = quest.getObjectiveFromID(objectiveID);
-                    assert objective != null; //Shouldn't be null
+                  final ObjectiveHolder objectiveHolder = context.get(objectiveHolderIdentifier);
+                  final int objectiveID = context.get(objectiveIDIdentifier);
+                  final Objective objective = objectiveHolder.getObjectiveFromID(objectiveID);
+                  assert objective != null; //Shouldn't be null
 
                     final String description = String.join(" ", (String[]) context.get("Objective Displayname"));
                     objective.setDisplayName(description, true);
@@ -1171,15 +1429,15 @@ public class AdminEditCommands {
         manager.command(builder.literal("info")
                 .meta(CommandMeta.DESCRIPTION, "Shows everything there is to know about this objective.")
                 .handler((context) -> {
-                    final Quest quest = context.get("quest");
-                    final int objectiveID = context.get("Objective ID");
-                    final Objective objective = quest.getObjectiveFromID(objectiveID);
-                    assert objective != null; //Shouldn't be null
+                  final ObjectiveHolder objectiveHolder = context.get(objectiveHolderIdentifier);
+                  final int objectiveID = context.get(objectiveIDIdentifier);
+                  final Objective objective = objectiveHolder.getObjectiveFromID(objectiveID);
+                  assert objective != null; //Shouldn't be null
 
                     context.getSender().sendMessage(Component.empty());
                     context.getSender().sendMessage(main.parse(
                             "<highlight>Information of objective with the ID <highlight2>" + objectiveID
-                                    + "</highlight2> from Quest <highlight2>" + quest.getQuestName() + "</highlight2>:"
+                                    + "</highlight2> from Quest <highlight2>" + objectiveHolder.getName() + "</highlight2>:"
                     ));
                     context.getSender().sendMessage(main.parse(
                             "<highlight>Objective Type: <main>" + main.getObjectiveManager().getObjectiveType(objective.getClass())
@@ -1262,21 +1520,21 @@ public class AdminEditCommands {
         manager.command(builder.literal("remove", "delete")
                 .meta(CommandMeta.DESCRIPTION, "Removes the objective from the Quest.")
                 .handler((context) -> {
-                    final Quest quest = context.get("quest");
-                    final int objectiveID = context.get("Objective ID");
-                    final Objective objective = quest.getObjectiveFromID(objectiveID);
-                    assert objective != null; //Shouldn't be null
+                  final ObjectiveHolder objectiveHolder = context.get(objectiveHolderIdentifier);
+                  final int objectiveID = context.get(objectiveIDIdentifier);
+                  final Objective objective = objectiveHolder.getObjectiveFromID(objectiveID);
+                  assert objective != null; //Shouldn't be null
 
-                    quest.removeObjective(objective);
+                    objectiveHolder.removeObjective(objective);
                     context.getSender().sendMessage(main.parse(
                             "<success>Objective with the ID <highlight>" + objectiveID + "</highlight> has been successfully removed from Quest <highlight2>"
-                                    + quest.getQuestName() + "</highlight2>!"
+                                    + objectiveHolder.getName() + "</highlight2>!"
                     ));
                 }));
 
 
         final Command.Builder<CommandSender> rewardsBuilder = builder.literal("rewards");
-        handleObjectiveRewards(rewardsBuilder);
+        handleObjectiveRewards(rewardsBuilder); //TODO
     }
 
 

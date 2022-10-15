@@ -45,7 +45,8 @@ public class TriggerCommandObjective extends Objective {
   public static void handleCommands(
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
-      Command.Builder<CommandSender> addObjectiveBuilder) {
+      Command.Builder<CommandSender> addObjectiveBuilder,
+      final int level) {
     manager.command(
         addObjectiveBuilder
             .senderType(Player.class)
@@ -83,7 +84,7 @@ public class TriggerCommandObjective extends Objective {
                   triggerCommandObjective.setProgressNeededExpression(amountExpression);
                   triggerCommandObjective.setTriggerName(triggerName);
 
-                  main.getObjectiveManager().addObjective(triggerCommandObjective, context);
+                  main.getObjectiveManager().addObjective(triggerCommandObjective, context, level);
                 }));
   }
 
