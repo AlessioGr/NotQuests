@@ -190,7 +190,7 @@ public class ObjectiveManager {
                           })
                       .withParser(
                           (context, lastString) -> { // TODO: Fix this parser. It isn't run at all.
-                            final int ID = context.get((level == 0 ? "Objective ID" : "Objective ID " + level+1));
+                            final int ID = context.get((level == 0 ? "Objective ID" : "Objective ID " + (level+1)));
                             final ObjectiveHolder objectiveHolder;
                             if(level == 0){
                               objectiveHolder = context.get("quest");

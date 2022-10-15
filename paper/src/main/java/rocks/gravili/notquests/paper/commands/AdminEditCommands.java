@@ -373,7 +373,7 @@ public class AdminEditCommands {
                           })
                       .withParser(
                           (context, lastString) -> { // TODO: Fix this parser. It isn't run at all.
-                            final int ID = context.get((level == 0 ? "Objective ID" : "Objective ID " + level+1));
+                            final int ID = context.get((level == 0 ? "Objective ID" : "Objective ID " + (level+1)));
                             final ObjectiveHolder objectiveHolder;
                             if(level == 0){
                               objectiveHolder = context.get("quest");
@@ -395,7 +395,7 @@ public class AdminEditCommands {
                               return ArgumentParseResult.success(ID);
                             }
                           }),
-                  ArgumentDescription.of(objectiveIDIdentifier));
+                  ArgumentDescription.of(objectiveIDIdentifier)).literal("objectives", "o");
 
 
       final String objectiveIDIdentifier2 = "Objective ID 2";
@@ -456,11 +456,11 @@ public class AdminEditCommands {
                               return ArgumentParseResult.success(ID);
                             }
                           }),
-                  ArgumentDescription.of(objectiveIDIdentifier));
+                  ArgumentDescription.of(objectiveIDIdentifier)).literal("objectives", "o");
 
       handleObjectives(objectivesBuilder, 0);
-      handleObjectives(objectivesBuilderLevel1.literal("objectives", "o"), 1);
-      handleObjectives(objectivesBuilderLevel2.literal("objectives", "o"), 2);
+      handleObjectives(objectivesBuilderLevel1, 1);
+      handleObjectives(objectivesBuilderLevel2, 2);
 
       final Command.Builder<CommandSender> requirementsBuilder = editBuilder.literal("requirements");
         handleRequirements(requirementsBuilder);
@@ -851,7 +851,10 @@ public class AdminEditCommands {
 
     public void handleObjectives(final Command.Builder<CommandSender> builder, final int level) {
         //Add is handled individually by each objective
-        main.getLogManager().info("Handling objectives for level <highlight>" + level + "</highlight>...");
+
+      //Builder: qa edit questname objectives edit <objectiveID> objectives
+
+      main.getLogManager().info("Handling objectives for level <highlight>" + level + "</highlight>...");
       final Command.Builder<CommandSender> predefinedProgressOrderBuilder = builder.literal("predefinedProgressOrder");
 
       manager.command(predefinedProgressOrderBuilder.literal("show")
@@ -1018,8 +1021,13 @@ public class AdminEditCommands {
                 }));
 
 
-        final String objectiveIDIdentifier = (level == 0 ? "Objective ID" : "Objective ID " + level);
-        final Command.Builder<CommandSender> adminEditObjectivesBuilderWithLevels =
+        final String objectiveIDIdentifier = (level == 0 ? "Objective ID" : "Objective ID " + (level+1));
+
+      //Builder: qa edit questname objectives edit <Objective ID> objectives
+
+      //adminEditObjectivesBuilderWithLevels: qa edit questname objectives edit <Objective ID> objectives edit <Objective ID 2>
+
+      final Command.Builder<CommandSender> adminEditObjectivesBuilderWithLevels =
           builder
               .literal("edit")
               .argument(
@@ -1053,7 +1061,7 @@ public class AdminEditCommands {
                           })
                       .withParser(
                           (context, lastString) -> { // TODO: Fix this parser. It isn't run at all.
-                            final int ID = context.get((level == 0 ? "Objective ID" : "Objective ID " + level+1));
+                            final int ID = context.get((level == 0 ? "Objective ID" : "Objective ID " + (level+1)));
                             final ObjectiveHolder objectiveHolder;
                             if(level == 0){
                               objectiveHolder = context.get("quest");
@@ -1098,8 +1106,11 @@ public class AdminEditCommands {
         if(level == 0){
           objectiveIDIdentifier = "Objective ID";
         }else {
-          objectiveIDIdentifier = "Objective ID " + level;
+          objectiveIDIdentifier = "Objective ID " + (level+1);
         }
+
+      main.getLogManager().info("Handling EDIT objectives for level <highlight>" + level + "</highlight>... objectiveHolderIdentifier: " + objectiveHolderIdentifier + " , objectiveIDIdentifier: " + objectiveIDIdentifier);
+
 
       manager.command(builder.literal("location")
                 .literal("enable")
