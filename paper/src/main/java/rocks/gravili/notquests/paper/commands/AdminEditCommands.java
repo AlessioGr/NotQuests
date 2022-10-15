@@ -802,8 +802,6 @@ public class AdminEditCommands {
                 ArrayList<String> completions = new ArrayList<>();
                 final ObjectiveHolder objectiveHolder = main.getCommandManager().getObjectiveHolderFromContextAndLevel(context, level);
 
-
-
                 for(final Objective objective : objectiveHolder.getObjectives()){
                   completions.add(objective.getObjectiveID()+"");
                 }
@@ -814,7 +812,6 @@ public class AdminEditCommands {
           .meta(CommandMeta.DESCRIPTION, "Sets a predefined order in which the objectives need to be progressed for your quest.")
           .handler((context) -> {
             final ObjectiveHolder objectiveHolder = main.getCommandManager().getObjectiveHolderFromContextAndLevel(context, level);
-
 
             final String[] order = context.get("order");
             final String orderString = String.join(" ", order);
@@ -834,7 +831,6 @@ public class AdminEditCommands {
                 .handler((context) -> {
                   final ObjectiveHolder objectiveHolder = main.getCommandManager().getObjectiveHolderFromContextAndLevel(context, level);
 
-
                   objectiveHolder.clearObjectives();
                     context.getSender().sendMessage(Component.empty());
                     context.getSender().sendMessage(main.parse(
@@ -846,7 +842,6 @@ public class AdminEditCommands {
                 .meta(CommandMeta.DESCRIPTION, "Lists all objectives of a Quest.")
                 .handler((context) -> {
                   final ObjectiveHolder objectiveHolder = main.getCommandManager().getObjectiveHolderFromContextAndLevel(context, level);
-
 
                   context.getSender().sendMessage(Component.empty());
                     context.getSender().sendMessage(main.parse("<highlight>Objectives for Quest <highlight2>" + objectiveHolder.getName() + "</highlight2>:"));
@@ -954,12 +949,11 @@ public class AdminEditCommands {
                                     + (objective.getCompletionNPC() != null ? objective.getCompletionNPC().getID() : "null" ) + "</highlight2>!"
                     ));
                 }));
-        manager.command(builder.literal("completionNPC") //TODO: Generalize for NqNPCs
+        manager.command(builder.literal("completionNPC")
                 .literal("set")
                 .argument(NQNPCSelector.of("Completion NPC", main, true, true), ArgumentDescription.of("Completion NPC"))
                 .meta(CommandMeta.DESCRIPTION, "Sets the completionNPC of an objective.")
                 .handler((context) -> {
-                  final ObjectiveHolder objectiveHolder = main.getCommandManager().getObjectiveHolderFromContextAndLevel(context, level);
 
                   final Objective objective = main.getCommandManager().getObjectiveFromContextAndLevel(context, level);
 
@@ -983,8 +977,8 @@ public class AdminEditCommands {
                             },
                             player,
                             "<success>You have been given an item with which you can add the completionNPC of this Objective to an NPC. Check your inventory!",
-                            "<LIGHT_PURPLE>Set completionNPC of Quest <highlight>" + objectiveHolder.getName() + "</highlight> to this NPC",
-                            "<WHITE>Right-click an NPC to set it as the completionNPC of Quest <highlight>" + objectiveHolder.getName() + "</highlight> and ObjectiveID <highlight>" + objective.getObjectiveID() + "</highlight>."
+                            "<LIGHT_PURPLE>Set completionNPC of Quest <highlight>" + objective.getObjectiveHolder().getName() + "</highlight> to this NPC",
+                            "<WHITE>Right-click an NPC to set it as the completionNPC of Quest <highlight>" +  objective.getObjectiveHolder().getName() + "</highlight> and ObjectiveID <highlight>" + objective.getObjectiveID() + "</highlight>."
                         );
 
                       } else {
