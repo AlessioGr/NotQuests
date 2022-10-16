@@ -81,7 +81,7 @@ public class SendMessageAction extends Action {
             main.parse(
                 main.getUtilManager()
                     .applyPlaceholders(
-                        getMessageToSend(), questPlayer.getPlayer(), getQuest(), objects)));
+                        getMessageToSend(), questPlayer.getPlayer(), getObjectiveHolder(), objects)));
   }
 
   @Override

@@ -265,7 +265,7 @@ public class ConditionsManager {
 
 
         if (quest != null) {
-            condition.setQuest(quest);
+            condition.setObjectiveHolder(quest);
             condition.setCategory(quest.getCategory());
             if (objectiveOfQuest != null) {//Objective Condition
                 condition.setObjective(objectiveOfQuest);

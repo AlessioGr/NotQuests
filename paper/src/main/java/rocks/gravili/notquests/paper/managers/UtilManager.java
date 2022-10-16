@@ -46,6 +46,7 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.NotQuestColors;
 import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.Quest;
+import rocks.gravili.notquests.paper.structs.objectives.ObjectiveHolder;
 
 public class UtilManager {
     private final static int CENTER_PX = 154;
@@ -524,18 +525,18 @@ public class UtilManager {
     public final String applyPlaceholders(final String message, final Object... objects) {
         String toReturn = message;
 
-        Quest quest = null;
+        ObjectiveHolder objectiveHolder = null;
         Player player = null;
         for (final Object object : objects) {
             if (player == null && object instanceof Player foundPlayer) {
                 player = foundPlayer;
-            } else if (quest == null && object instanceof Quest foundQuest) {
-                quest = foundQuest;
+            } else if (objectiveHolder == null && object instanceof ObjectiveHolder objectiveHolder2) {
+                objectiveHolder = objectiveHolder2;
             }
         }
 
-        if(quest != null){
-            toReturn = toReturn.replace("{QUEST}", "" + quest.getQuestName());
+        if(objectiveHolder != null){
+            toReturn = toReturn.replace("{QUEST}", "" + objectiveHolder.getName());
         }
 
         if(player != null){

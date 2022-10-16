@@ -30,6 +30,7 @@ import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -69,6 +70,256 @@ public class QuestManager {
     private final ArrayList<Quest> quests;
 
     private final ArrayList<UUID> debugEnabledPlayers;
+
+
+    private void loadObjectiveConditionsAndRewards(ObjectiveHolder objectiveHolder, final Category category) {
+        main.getLogManager().debug("Loading objective conditions and rewards...");
+        for (final Objective objective : objectiveHolder.getObjectives()) { //TODO: Add objective name to error or debug messages to discern from normal requirement loading
+            final ConfigurationSection objectiveConditionsUnlockConfigurationSection = objectiveHolder.getConfig().getConfigurationSection(objectiveHolder.getInitialConfigPath() + ".objectives." + objective.getObjectiveID() + ".conditions.");
+            final ConfigurationSection objectiveConditionsProgressConfigurationSection = objectiveHolder.getConfig().getConfigurationSection(objectiveHolder.getInitialConfigPath() + ".objectives." + objective.getObjectiveID() + ".conditionsProgress.");
+            final ConfigurationSection objectiveConditionsCompleteConfigurationSection = objectiveHolder.getConfig().getConfigurationSection(objectiveHolder.getInitialConfigPath() + ".objectives." + objective.getObjectiveID() + ".conditionsComplete.");
+
+            if (objectiveConditionsUnlockConfigurationSection != null) {
+                for (final String objectiveConditionNumber : objectiveConditionsUnlockConfigurationSection.getKeys(false)) {
+                    final int conditionID;
+                    try {
+                        conditionID = Integer.parseInt(objectiveConditionNumber);
+                    } catch (java.lang.NumberFormatException ex) {
+                        main.getDataManager().disablePluginAndSaving("Error parsing loaded unlock condition ID <highlight>" + objectiveConditionNumber + "</highlight>.", objectiveHolder, objective, category, ex);
+                        return;
+                    }
+
+                    if (conditionID <= 0) {
+                        main.getDataManager().disablePluginAndSaving("Error loading unlock condition with the ID <highlight>" + objectiveConditionNumber + "</highlight>. The condition ID needs to be bigger than 0. However, it's currently <highlight2>" + conditionID, objectiveHolder, category, objective);
+                        return;
+                    }
+
+                    final Condition condition;
+
+                    try{
+                        condition = Condition.loadConditionFromConfig(
+                            main,
+                            objectiveHolder.getInitialConfigPath()+ ".objectives." + (objective.getObjectiveID()) + ".conditions." + objectiveConditionNumber,
+                            objectiveHolder.getConfig(),
+                            category,
+                            null,
+                            conditionID,
+                            objectiveHolder,
+                            objective);
+                    }catch (final Exception e){
+                        main.getDataManager().disablePluginAndSaving("Error creating unlock condition with ID <highlight>" + objectiveConditionNumber + "</highlight>. Error: " + e.getMessage(), objectiveHolder, objective, category, e);
+                        return;
+                    }
+
+                    objective.addUnlockCondition(condition, false);
+
+                }
+            }
+            if (objectiveConditionsProgressConfigurationSection != null) {
+                for (final String objectiveConditionNumber : objectiveConditionsProgressConfigurationSection.getKeys(false)) {
+                    final int conditionID;
+                    try {
+                        conditionID = Integer.parseInt(objectiveConditionNumber);
+                    } catch (java.lang.NumberFormatException ex) {
+                        main.getDataManager().disablePluginAndSaving("Error parsing loaded progress condition ID <highlight>" + objectiveConditionNumber + "</highlight>.", objectiveHolder, objective, category, ex);
+                        return;
+                    }
+
+                    if (conditionID <= 0) {
+                        main.getDataManager().disablePluginAndSaving("Error loading progress condition with the ID <highlight>" + objectiveConditionNumber + "</highlight>. The condition ID needs to be bigger than 0. However, it's currently <highlight2>" + conditionID, objectiveHolder, category, objective);
+                        return;
+                    }
+
+                    final Condition condition;
+
+                    try{
+                        condition = Condition.loadConditionFromConfig(
+                            main,
+                            objectiveHolder.getInitialConfigPath()+ ".objectives." + (objective.getObjectiveID()) + ".conditionsProgress." + objectiveConditionNumber,
+                            objectiveHolder.getConfig(),
+                            category,
+                            null,
+                            conditionID,
+                            objectiveHolder,
+                            objective);
+                    }catch (final Exception e){
+                        main.getDataManager().disablePluginAndSaving("Error creating progress condition with ID <highlight>" + objectiveConditionNumber + "</highlight>. Error: " + e.getMessage(), objectiveHolder, objective, category, e);
+                        return;
+                    }
+
+                    objective.addProgressCondition(condition, false);
+
+                }
+            }
+            if (objectiveConditionsCompleteConfigurationSection != null) {
+                for (final String objectiveConditionNumber : objectiveConditionsCompleteConfigurationSection.getKeys(false)) {
+                    final int conditionID;
+                    try {
+                        conditionID = Integer.parseInt(objectiveConditionNumber);
+                    } catch (java.lang.NumberFormatException ex) {
+                        main.getDataManager().disablePluginAndSaving("Error parsing loaded complete condition ID <highlight>" + objectiveConditionNumber + "</highlight>.", objectiveHolder, objective, category, ex);
+                        return;
+                    }
+
+                    if (conditionID <= 0) {
+                        main.getDataManager().disablePluginAndSaving("Error loading complete condition with the ID <highlight>" + objectiveConditionNumber + "</highlight>. The condition ID needs to be bigger than 0. However, it's currently <highlight2>" + conditionID, objectiveHolder, objective, category);
+                        return;
+                    }
+
+                    final Condition condition;
+
+                    try{
+                        condition = Condition.loadConditionFromConfig(
+                            main,
+                            objectiveHolder.getInitialConfigPath() + ".objectives." + (objective.getObjectiveID()) + ".conditionsComplete." + objectiveConditionNumber,
+                            objectiveHolder.getConfig(),
+                            category,
+                            null,
+                            conditionID,
+                            objectiveHolder,
+                            objective);
+                    }catch (final Exception e){
+                        main.getDataManager().disablePluginAndSaving("Error creating complete condition with ID <highlight>" + objectiveConditionNumber + "</highlight>. Error: " + e.getMessage(), objectiveHolder, objective, e, category);
+                        return;
+                    }
+
+                    objective.addCompleteCondition(condition, false);
+
+                }
+            }
+
+            final String initialObjectiveRewardsPath = objectiveHolder.getInitialConfigPath() + ".objectives." + objective.getObjectiveID() + ".rewards.";
+            final ConfigurationSection objectiveRewardsConfigurationSection = objectiveHolder.getConfig().getConfigurationSection(initialObjectiveRewardsPath);
+            if (objectiveRewardsConfigurationSection != null) {
+                for (final String objectiveRewardNumber : objectiveRewardsConfigurationSection.getKeys(false)) {
+                    final int rewardID;
+                    try {
+                        rewardID = Integer.parseInt(objectiveRewardNumber);
+                    } catch (java.lang.NumberFormatException ex) {
+                        main.getDataManager().disablePluginAndSaving("Error parsing loaded objective reward ID <highlight>" + objectiveRewardNumber + "</highlight>.", objectiveHolder, objective, ex, category);
+                        return;
+                    }
+
+                    if (rewardID <= 0) {
+                        main.getDataManager().disablePluginAndSaving("Error loading Objective reward <highlight>" + objectiveRewardNumber + "</highlight>. The reward ID needs to be bigger than 0. However, it's currently <highlight2>" + rewardID, objectiveHolder, objective, category);
+                        return;
+                    }
+
+                    final Action action;
+
+                    try{
+                        action = Action.loadActionFromConfig(
+                            main,
+                            initialObjectiveRewardsPath + rewardID,
+                            objectiveHolder.getConfig(),
+                            category,
+                            null,
+                            rewardID,
+                            objectiveHolder,
+                            objective);
+                    }catch (final Exception e){
+                        main.getDataManager().disablePluginAndSaving("Error parsing objective reward action with ID <highlight>" + objectiveRewardNumber + "</highlight>. Error: " + e.getMessage(), objectiveHolder, objective, category, e);
+                        return;
+                    }
+                    objective.addReward(action, false);
+
+                }
+            }
+            loadObjectiveConditionsAndRewards(objective, category);
+        }
+    }
+
+
+    private void loadObjectives(final ObjectiveHolder objectiveHolder, final String initialPath /* quests." + questName + ".objectives */, final Category category) {
+        final ConfigurationSection objectivesConfigurationSection = objectiveHolder.getConfig().getConfigurationSection(initialPath);
+        if(objectivesConfigurationSection == null) {
+            return;
+        }
+        for (final String objectiveNumber : objectivesConfigurationSection.getKeys(false)) {
+            final ConfigurationSection config = objectivesConfigurationSection.getConfigurationSection(objectiveNumber);
+
+            if(config == null){
+                continue;
+            }
+
+            final String objectiveTypeString = config.getString( "objectiveType", "");
+
+            final Class<? extends Objective> objectiveType = main.getObjectiveManager().getObjectiveClass(objectiveTypeString);
+
+            if (objectiveType == null) {
+                main.getDataManager().disablePluginAndSaving("Error parsing objective Type of objective with ID <highlight>" + objectiveNumber + "</highlight>. Objective type: <highlight2>" + objectiveTypeString, objectiveHolder, category);
+                return;
+            }
+
+            final String progressNeededExpression;
+            //Convert old progressNeeded to progressNeededExpression
+            if(config.contains("progressNeeded")){
+                progressNeededExpression = ""+config.getInt("progressNeeded", 1);
+                config.set("progressNeeded", null);
+                config.set("progressNeededExpression", progressNeededExpression);
+                objectiveHolder.saveConfig();
+            }else {
+                progressNeededExpression = config.getString("progressNeededExpression", "1");
+            }
+
+            main.getLogManager().debug("ProgressNeededExpression: " + progressNeededExpression);
+
+            final Location location = config.getLocation("location", null);
+            final boolean showLocation = config.getBoolean("showLocation", false);
+
+            final int objectiveID;
+            try {
+                objectiveID = Integer.parseInt(objectiveNumber);
+            } catch (NumberFormatException ex) {
+                main.getDataManager().disablePluginAndSaving("Error parsing loaded objective ID <highlight>" + objectiveNumber + "</highlight>.", objectiveHolder, category, ex);
+                return;
+            }
+
+            if (objectiveID <= 0) {
+                main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading quests objective data (2). Objective ID: <highlight>" + objectiveNumber + "</higlight> Reason: Invalid objective ID - it needs to be bigger than 0: " + objectiveID, category, objectiveHolder);
+                return;
+            }
+
+            final Objective objective;
+
+            try {
+                objective = objectiveType.getDeclaredConstructor(NotQuests.class).newInstance(main);
+                objective.setObjectiveHolder(objectiveHolder);
+                objective.setObjectiveID(objectiveID);
+                objective.setProgressNeededExpression(progressNeededExpression);
+                objective.setLocation(location, false);
+                objective.setShowLocation(showLocation, false);
+
+                objective.load(objectiveHolder.getConfig(), initialPath + "." + objectiveNumber);
+
+            } catch (Exception ex) {
+                main.getDataManager().disablePluginAndSaving("Error parsing objective Type of objective with ID <highlight>" + objectiveNumber + "</highlight>. Objective type: <highlight2>" + objectiveTypeString, objectiveHolder, category, ex);
+                return;
+            }
+
+
+            final String objectiveDisplayName = config.getString("displayName", "");
+            final String objectiveDescription = config.getString("description", "");
+            final String objectiveTaskDescription = config.getString("taskDescription", "");
+            final NQNPC completionNPC = NQNPC.fromConfig(main, objectiveHolder.getConfig(), initialPath + "."+ objectiveNumber + ".completionNPC");
+
+
+            objective.setDescription(objectiveDescription.replace("\\n", "\n"), false);
+            objective.setTaskDescription(objectiveTaskDescription.replace("\\n", "\n"), false);
+            objective.setDisplayName(objectiveDisplayName.replace("\\n", "\n"), false);
+
+
+            objective.setCompletionNPC(completionNPC, false);
+            objectiveHolder.addObjective(objective, false);
+
+            //Sub-Objectives
+            if(config.isString("objectives")){
+                loadObjectives(objective, initialPath + "." + objectiveNumber + ".objectives", category);
+            }
+        }
+    }
+
+
 
 
     public QuestManager(NotQuests main) {
@@ -196,83 +447,8 @@ public class QuestManager {
                     );
 
                     //Objectives:
-                    final ConfigurationSection objectivesConfigurationSection = category.getQuestsConfig().getConfigurationSection("quests." + questName + ".objectives");
-                    if (objectivesConfigurationSection != null) {
-                        for (final String objectiveNumber : objectivesConfigurationSection.getKeys(false)) {
-                            final String objectiveTypeString = category.getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".objectiveType", "");
+                    loadObjectives(quest, "quests." + questName + ".objectives", category);
 
-                            final Class<? extends Objective> objectiveType = main.getObjectiveManager().getObjectiveClass(objectiveTypeString);
-
-                            if (objectiveType == null) {
-                                main.getDataManager().disablePluginAndSaving("Error parsing objective Type of objective with ID <highlight>" + objectiveNumber + "</highlight>. Objective type: <highlight2>" + objectiveTypeString, quest, category);
-                                return;
-                            }
-
-                            final String progressNeededExpression;
-                            //Convert old progressNeeded to progressNeededExpression
-                            if(category.getQuestsConfig().contains("quests." + questName + ".objectives." + objectiveNumber + ".progressNeeded")){
-                                progressNeededExpression = ""+category.getQuestsConfig().getInt("quests." + questName + ".objectives." + objectiveNumber + ".progressNeeded", 1);
-                                category.getQuestsConfig().set("quests." + questName + ".objectives." + objectiveNumber + ".progressNeeded", null);
-                                category.getQuestsConfig().set("quests." + questName + ".objectives." + objectiveNumber + ".progressNeededExpression", progressNeededExpression);
-                                category.saveQuestsConfig();
-                            }else {
-                                progressNeededExpression = category.getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".progressNeededExpression", "1");
-                            }
-
-                            main.getLogManager().debug("ProgressNeededExpression: " + progressNeededExpression);
-
-                            final Location location = category.getQuestsConfig().getLocation("quests." + questName + ".objectives." + objectiveNumber + ".location", null);
-                            final boolean showLocation = category.getQuestsConfig().getBoolean("quests." + questName + ".objectives." + objectiveNumber + ".showLocation", false);
-
-
-                            final int objectiveID;
-                            try {
-                                objectiveID = Integer.parseInt(objectiveNumber);
-                            } catch (java.lang.NumberFormatException ex) {
-                                main.getDataManager().disablePluginAndSaving("Error parsing loaded objective ID <highlight>" + objectiveNumber + "</highlight>.", quest, category, ex);
-                                return;
-                            }
-
-                            if (objectiveID <= 0) {
-                                main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading quests objective data (2). Objective ID: <highlight>" + objectiveNumber + "</higlight> Reason: Invalid objective ID - it needs to be bigger than 0: " + objectiveID, category, quest);
-                                return;
-                            }
-
-
-                            final Objective objective;
-
-                            try {
-                                objective = objectiveType.getDeclaredConstructor(NotQuests.class).newInstance(main);
-                                objective.setObjectiveHolder(quest);
-                                objective.setObjectiveID(objectiveID);
-                                objective.setProgressNeededExpression(progressNeededExpression);
-                                objective.setLocation(location, false);
-                                objective.setShowLocation(showLocation, false);
-
-                                objective.load(category.getQuestsConfig(), "quests." + questName + ".objectives." + objectiveNumber);
-
-                            } catch (Exception ex) {
-                                main.getDataManager().disablePluginAndSaving("Error parsing objective Type of objective with ID <highlight>" + objectiveNumber + "</highlight>. Objective type: <highlight2>" + objectiveTypeString, quest, category, ex);
-                                return;
-                            }
-
-
-                            final String objectiveDisplayName = category.getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".displayName", "");
-                            final String objectiveDescription = category.getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".description", "");
-                            final String objectiveTaskDescription = category.getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".taskDescription", "");
-                            final NQNPC completionNPC = NQNPC.fromConfig(main, category.getQuestsConfig(), "quests." + quest.getQuestName() + ".objectives." + objectiveNumber + ".completionNPC");
-
-
-                            objective.setDescription(objectiveDescription.replace("\\n", "\n"), false);
-                            objective.setTaskDescription(objectiveTaskDescription.replace("\\n", "\n"), false);
-                            objective.setDisplayName(objectiveDisplayName.replace("\\n", "\n"), false);
-
-
-                            objective.setCompletionNPC(completionNPC, false);
-                            quest.addObjective(objective, false);
-
-                        }
-                    }
 
                     //Quest Requirements:
                     final ConfigurationSection requirementsConfigurationSection = category.getQuestsConfig().getConfigurationSection("quests." + questName + ".requirements");
@@ -432,159 +608,7 @@ public class QuestManager {
 
 
                     //Objective Conditions and Rewards
-                    main.getLogManager().debug("Loading objective conditions and rewards...");
-                    for (final Objective objective : quest.getObjectives()) { //TODO: Add objective name to error or debug messages to discern from normal requirement loading
-                        final ConfigurationSection objectiveConditionsUnlockConfigurationSection = category.getQuestsConfig().getConfigurationSection("quests." + quest.getQuestName() + ".objectives." + objective.getObjectiveID() + ".conditions.");
-                        final ConfigurationSection objectiveConditionsProgressConfigurationSection = category.getQuestsConfig().getConfigurationSection("quests." + quest.getQuestName() + ".objectives." + objective.getObjectiveID() + ".conditionsProgress.");
-                        final ConfigurationSection objectiveConditionsCompleteConfigurationSection = category.getQuestsConfig().getConfigurationSection("quests." + quest.getQuestName() + ".objectives." + objective.getObjectiveID() + ".conditionsComplete.");
-
-                        if (objectiveConditionsUnlockConfigurationSection != null) {
-                            for (final String objectiveConditionNumber : objectiveConditionsUnlockConfigurationSection.getKeys(false)) {
-                                final int conditionID;
-                                try {
-                                    conditionID = Integer.parseInt(objectiveConditionNumber);
-                                } catch (java.lang.NumberFormatException ex) {
-                                    main.getDataManager().disablePluginAndSaving("Error parsing loaded unlock condition ID <highlight>" + objectiveConditionNumber + "</highlight>.", quest, objective, ex);
-                                    return;
-                                }
-
-                                if (conditionID <= 0) {
-                                    main.getDataManager().disablePluginAndSaving("Error loading unlock condition with the ID <highlight>" + objectiveConditionNumber + "</highlight>. The condition ID needs to be bigger than 0. However, it's currently <highlight2>" + conditionID, quest, objective);
-                                    return;
-                                }
-
-                                final Condition condition;
-
-                                try{
-                                    condition = Condition.loadConditionFromConfig(
-                                        main,
-                                        "quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditions." + objectiveConditionNumber,
-                                        category.getQuestsConfig(),
-                                        category,
-                                        null,
-                                        conditionID,
-                                        quest,
-                                        objective);
-                                }catch (final Exception e){
-                                    main.getDataManager().disablePluginAndSaving("Error creating unlock condition with ID <highlight>" + objectiveConditionNumber + "</highlight>. Error: " + e.getMessage(), quest, objective, e);
-                                    return;
-                                }
-
-                                objective.addUnlockCondition(condition, false);
-
-                            }
-                        }
-                        if (objectiveConditionsProgressConfigurationSection != null) {
-                            for (final String objectiveConditionNumber : objectiveConditionsProgressConfigurationSection.getKeys(false)) {
-                                final int conditionID;
-                                try {
-                                    conditionID = Integer.parseInt(objectiveConditionNumber);
-                                } catch (java.lang.NumberFormatException ex) {
-                                    main.getDataManager().disablePluginAndSaving("Error parsing loaded progress condition ID <highlight>" + objectiveConditionNumber + "</highlight>.", quest, objective, ex);
-                                    return;
-                                }
-
-                                if (conditionID <= 0) {
-                                    main.getDataManager().disablePluginAndSaving("Error loading progress condition with the ID <highlight>" + objectiveConditionNumber + "</highlight>. The condition ID needs to be bigger than 0. However, it's currently <highlight2>" + conditionID, quest, objective);
-                                    return;
-                                }
-
-                                final Condition condition;
-
-                                try{
-                                    condition = Condition.loadConditionFromConfig(
-                                        main,
-                                        "quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditionsProgress." + objectiveConditionNumber,
-                                        category.getQuestsConfig(),
-                                        category,
-                                        null,
-                                        conditionID,
-                                        quest,
-                                        objective);
-                                }catch (final Exception e){
-                                    main.getDataManager().disablePluginAndSaving("Error creating progress condition with ID <highlight>" + objectiveConditionNumber + "</highlight>. Error: " + e.getMessage(), quest, objective, e);
-                                    return;
-                                }
-
-                                objective.addProgressCondition(condition, false);
-
-                            }
-                        }
-                        if (objectiveConditionsCompleteConfigurationSection != null) {
-                            for (final String objectiveConditionNumber : objectiveConditionsCompleteConfigurationSection.getKeys(false)) {
-                                final int conditionID;
-                                try {
-                                    conditionID = Integer.parseInt(objectiveConditionNumber);
-                                } catch (java.lang.NumberFormatException ex) {
-                                    main.getDataManager().disablePluginAndSaving("Error parsing loaded complete condition ID <highlight>" + objectiveConditionNumber + "</highlight>.", quest, objective, ex);
-                                    return;
-                                }
-
-                                if (conditionID <= 0) {
-                                    main.getDataManager().disablePluginAndSaving("Error loading complete condition with the ID <highlight>" + objectiveConditionNumber + "</highlight>. The condition ID needs to be bigger than 0. However, it's currently <highlight2>" + conditionID, quest, objective);
-                                    return;
-                                }
-
-                                final Condition condition;
-
-                                try{
-                                    condition = Condition.loadConditionFromConfig(
-                                        main,
-                                        "quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditionsComplete." + objectiveConditionNumber,
-                                        category.getQuestsConfig(),
-                                        category,
-                                        null,
-                                        conditionID,
-                                        quest,
-                                        objective);
-                                }catch (final Exception e){
-                                    main.getDataManager().disablePluginAndSaving("Error creating complete condition with ID <highlight>" + objectiveConditionNumber + "</highlight>. Error: " + e.getMessage(), quest, objective, e);
-                                    return;
-                                }
-
-                                objective.addCompleteCondition(condition, false);
-
-                            }
-                        }
-
-                        final String initialObjectiveRewardsPath = "quests." + quest.getQuestName() + ".objectives." + objective.getObjectiveID() + ".rewards.";
-                        final ConfigurationSection objectiveRewardsConfigurationSection = category.getQuestsConfig().getConfigurationSection(initialObjectiveRewardsPath);
-                        if (objectiveRewardsConfigurationSection != null) {
-                            for (final String objectiveRewardNumber : objectiveRewardsConfigurationSection.getKeys(false)) {
-                                final int rewardID;
-                                try {
-                                    rewardID = Integer.parseInt(objectiveRewardNumber);
-                                } catch (java.lang.NumberFormatException ex) {
-                                    main.getDataManager().disablePluginAndSaving("Error parsing loaded objective reward ID <highlight>" + objectiveRewardNumber + "</highlight>.", quest, objective, ex);
-                                    return;
-                                }
-
-                                if (rewardID <= 0) {
-                                    main.getDataManager().disablePluginAndSaving("Error loading Objective reward <highlight>" + objectiveRewardNumber + "</highlight>. The reward ID needs to be bigger than 0. However, it's currently <highlight2>" + rewardID, quest, objective);
-                                    return;
-                                }
-
-                                final Action action;
-
-                                try{
-                                    action = Action.loadActionFromConfig(
-                                        main,
-                                        initialObjectiveRewardsPath + rewardID,
-                                        category.getQuestsConfig(),
-                                        category,
-                                        null,
-                                        rewardID,
-                                        quest,
-                                        objective);
-                                }catch (final Exception e){
-                                    main.getDataManager().disablePluginAndSaving("Error parsing objective reward action with ID <highlight>" + objectiveRewardNumber + "</highlight>. Error: " + e.getMessage(), quest, objective, category, e);
-                                    return;
-                                }
-                                objective.addReward(action, false);
-
-                            }
-                        }
-                    }
+                    loadObjectiveConditionsAndRewards(quest, category);
 
 
                     //TakeItem:
@@ -600,6 +624,8 @@ public class QuestManager {
 
 
     }
+
+
 
 
     public final ArrayList<Quest> getAllQuestsAttachedToArmorstand(final ArmorStand armorstand) {

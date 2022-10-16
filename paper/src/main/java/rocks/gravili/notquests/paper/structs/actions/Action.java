@@ -25,17 +25,17 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
-import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
+import rocks.gravili.notquests.paper.structs.objectives.ObjectiveHolder;
 
 public abstract class Action {
 
   protected final NotQuests main;
   private final ArrayList<Condition> conditions;
   private String actionName = "";
-  private Quest quest;
+  private ObjectiveHolder objectiveHolder;
   private Objective objective;
   private Category category;
   private int actionID = -1;
@@ -81,12 +81,12 @@ public abstract class Action {
     this.actionName = "";
   }
 
-  public final Quest getQuest() {
-    return quest;
+  public final ObjectiveHolder getObjectiveHolder() {
+    return objectiveHolder;
   }
 
-  public void setQuest(final Quest quest) {
-    this.quest = quest;
+  public void setObjectiveHolder(final ObjectiveHolder objectiveHolder) {
+    this.objectiveHolder = objectiveHolder;
   }
 
   public final Objective getObjective() {
@@ -200,8 +200,8 @@ public abstract class Action {
         + "actionName='"
         + actionName
         + '\''
-        + ", quest="
-        + quest
+        + ", objectiveHolder="
+        + objectiveHolder
         + ", objective="
         + objective
         + ", conditions="
@@ -213,7 +213,7 @@ public abstract class Action {
         + '}';
   }
 
-  public static Action loadActionFromConfig(final NotQuests main, final String initialPath, final FileConfiguration config, final Category category, final @Nullable String actionName, final int actionID, final @Nullable Quest quest, final @Nullable Objective objective)
+  public static Action loadActionFromConfig(final NotQuests main, final String initialPath, final FileConfiguration config, final Category category, final @Nullable String actionName, final int actionID, final @Nullable ObjectiveHolder objectiveHolder, final @Nullable Objective objective)
       throws Exception {
 
     final String actionTypeString =
@@ -235,8 +235,8 @@ public abstract class Action {
     if(actionName != null){
       action.setActionName(actionName);
     }
-    if(quest != null){
-      action.setQuest(quest);
+    if(objectiveHolder != null){
+      action.setObjectiveHolder(objectiveHolder);
     }
     if(objective != null){
       action.setObjective(objective);

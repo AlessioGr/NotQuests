@@ -83,7 +83,7 @@ public class BroadcastMessageAction extends Action {
                     getMessageToBroadcast(),
                     questPlayer.getPlayer(),
                     questPlayer,
-                    getQuest(),
+                    getObjectiveHolder(),
                     objects)));
   }
 

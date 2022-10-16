@@ -273,7 +273,7 @@ public class ActionManager {
     }
 
     if (quest != null) {
-      action.setQuest(quest);
+      action.setObjectiveHolder(quest);
       action.setCategory(quest.getCategory());
       if (objectiveOfQuest != null) { // Objective Reward
         action.setObjective(objectiveOfQuest);

@@ -53,6 +53,7 @@ import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
+import rocks.gravili.notquests.paper.structs.objectives.ObjectiveHolder;
 
 
 /**
@@ -1411,7 +1412,10 @@ public class DataManager {
             } else if (object instanceof Objective objective) {
                 main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Objective ID: <highlight>" + objective.getObjectiveID() + "</highlight> of Quest: <highlight2>" + ((Objective) object).getObjectiveHolder().getName());
                 reasonWithObjects += "\n" + "  <DARK_GRAY>└─</DARK_GRAY> Objective ID: <highlight>" + objective.getObjectiveID() + "</highlight> of Quest: <highlight2>" + ((Objective) object).getObjectiveHolder().getName();
-            } else if (object instanceof Action action) {
+            } else if (object instanceof ObjectiveHolder objectiveHolder) {
+                main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Objective Holder: <highlight>"+ objectiveHolder.getName());
+                reasonWithObjects += "\n" + "  <DARK_GRAY>└─</DARK_GRAY> Objective Holder: <highlight>"+ objectiveHolder.getName();
+            }  else if (object instanceof Action action) {
                 main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Action Name: <highlight>" + action.getActionName() + "</highlight> of Type: <highlight2>" + action.getActionType());
                 reasonWithObjects += "\n" + "  <DARK_GRAY>└─</DARK_GRAY> Action Name: <highlight>" + action.getActionName() + "</highlight> of Type: <highlight2>" + action.getActionType();
             } else if (object instanceof Category category) {

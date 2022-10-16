@@ -32,6 +32,7 @@ import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
+import rocks.gravili.notquests.paper.structs.objectives.ObjectiveHolder;
 
 public class CompletedObjectiveCondition extends Condition {
 
@@ -135,7 +136,7 @@ public class CompletedObjectiveCondition extends Condition {
   }
 
   public final Objective getObjectiveToComplete() {
-    return getQuest().getObjectiveFromID(getObjectiveToCompleteID());
+    return getObjectiveHolder().getObjectiveFromID(getObjectiveToCompleteID());
   }
 
   @Override
@@ -145,20 +146,26 @@ public class CompletedObjectiveCondition extends Condition {
       return "<RED>Error: Cannot find objective you have to complete first.";
     }
 
-    final Quest quest = getQuest();
-    if (quest == null) {
+    final ObjectiveHolder objectiveHolder = getObjectiveHolder();
+    if (objectiveHolder == null) {
       return "<RED>Error: Cannot find current quest.";
     }
 
-    ActiveQuest activeQuest = questPlayer.getActiveQuest(quest);
-    if (activeQuest == null) {
-      return "<RED>Error: Cannot find current active quest.";
+    //TODO: Support nested objectives
+    if(objectiveHolder instanceof final Quest quest){
+      ActiveQuest activeQuest = questPlayer.getActiveQuest(quest);
+      if (activeQuest == null) {
+        return "<RED>Error: Cannot find current active quest.";
+      }
+
+      if (activeQuest.getActiveObjectiveFromID(getObjectiveToCompleteID()) != null) {
+        return "<YELLOW>Finish the following objective first: <highlight>"
+            + objectiveToComplete.getFinalName();
+      }
+    }else {
+      return "objectiveHolder is no Quest";
     }
 
-    if (activeQuest.getActiveObjectiveFromID(getObjectiveToCompleteID()) != null) {
-      return "<YELLOW>Finish the following objective first: <highlight>"
-          + objectiveToComplete.getFinalName();
-    }
     return "";
   }
 
