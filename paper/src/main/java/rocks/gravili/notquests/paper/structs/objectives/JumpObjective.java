@@ -81,7 +81,7 @@ public class JumpObjective extends Objective {
                 ""
                     + (activeObjective != null
                         ? activeObjective.getProgressNeeded()
-                        : getProgressNeededExpression())));
+                        : getProgressNeededExpression().getRawExpression())));
   }
 
   @Override
