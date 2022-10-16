@@ -231,9 +231,6 @@ public class QuestManager {
 
 
     private void loadObjectives(final ObjectiveHolder objectiveHolder, final String initialPath /* quests." + questName + ".objectives */, final Category category) {
-        main.getLogManager().severe("loadObjectives() initialPath: " + initialPath);
-        main.getLogManager().severe("loadObjectives() objectiveHolder name: " + objectiveHolder.getName());
-
         final ConfigurationSection objectivesConfigurationSection = objectiveHolder.getConfig().getConfigurationSection(initialPath);
         if(objectivesConfigurationSection == null) {
             return;
@@ -317,7 +314,6 @@ public class QuestManager {
 
             //Sub-Objectives
             if(config.contains("objectives")){
-                main.getLogManager().warn("Found objectives!");
                 loadObjectives(objective, initialPath + "." + objectiveNumber + ".objectives", category);
             }
         }
