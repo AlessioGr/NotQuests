@@ -278,7 +278,7 @@ public class ActiveObjective {
         }
 
         //Setting the first argument to true only checks for progress decrease. If the "--allowProgressDecreaseIfNotFulfilled" flag is set for that condition, it would be skipped
-        if(canProgress(true)) {
+        if(!canProgress(true)) {
             return;
         }
 

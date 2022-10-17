@@ -756,11 +756,15 @@ public class QuestEvents implements Listener {
                 return;
             }
             questPlayer.queueObjectiveCheck(activeObjective -> {
+                questPlayer.sendDebugMessage("Checking for BreakBlocksObjective.");
                 if (activeObjective.getObjective() instanceof final BreakBlocksObjective breakBlocksObjective) {
                     final ItemStackSelection itemStackSelection = breakBlocksObjective.getItemStackSelection();
+                    questPlayer.sendDebugMessage("Found BreakBlocksObjective.");
 
                     if (itemStackSelection.checkIfIsIncluded(e.getBlock().getType())) {
+                        questPlayer.sendDebugMessage("Found right block.");
                         if (breakBlocksObjective.isDeductIfBlockPlaced()) {
+                            questPlayer.sendDebugMessage("Deducting from BreakBlocksObjective!");
                             activeObjective.removeProgress(1, false);
                         }
                     }
