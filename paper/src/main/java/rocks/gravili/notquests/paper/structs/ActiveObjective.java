@@ -20,6 +20,7 @@ package rocks.gravili.notquests.paper.structs;
 
 
 import org.bukkit.Bukkit;
+import org.jetbrains.annotations.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.NotQuestColors;
 import rocks.gravili.notquests.paper.events.notquests.ObjectiveUnlockEvent;
@@ -253,7 +254,9 @@ public class ActiveObjective {
         getQuestPlayer().setTrackingObjective(this);
 
 
-        if ( (nqnpc != null && isCompleted(nqnpc))) {
+        if ( (isCompleted(nqnpc))) {
+            getQuestPlayer().sendDebugMessage("Objective completed: " + NotQuestColors.debugHighlightGradient + getObjective().getFinalName() + "</gradient> of quest " + NotQuestColors.debugHighlightGradient + getActiveQuest().getQuest().getQuestFinalName() + "</gradient>. Silent: " + silent);
+
             setHasBeenCompleted(true);
             activeQuest.notifyActiveObjectiveCompleted(this, silent, nqnpc);
         }
@@ -296,7 +299,7 @@ public class ActiveObjective {
     }
 
     //For Citizens NPCs
-    public final boolean isCompleted(final NQNPC nqnpc) {
+    public final boolean isCompleted(@Nullable final NQNPC nqnpc) {
         if (getObjective().getCompletionNPC() == null || getObjective().getCompletionNPC().equals(nqnpc)) {
             return canComplete() && currentProgress >= getProgressNeeded();
         } else {
