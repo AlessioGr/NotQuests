@@ -63,7 +63,7 @@ public class SendClickableText implements
         main.parse(toSendString)
             .clickEvent(
                 ClickEvent.runCommand(
-                    "/notquests continueConversation " + optionMessage))
+                    "/notquestshidden continueConversation " + optionMessage))
             .hoverEvent(
                 HoverEvent.showText(
                     main.parse(

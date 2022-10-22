@@ -1105,8 +1105,8 @@ public class QuestEvents implements Listener {
                 if (!player.hasPermission("notquests.use")) {
                     return;
                 }
-                if (e.getMessage().startsWith("/notquests continueConversation ")) {
-                    handleConversation(player, e.getMessage().split("/notquests continueConversation ")[1]);
+                if (e.getMessage().startsWith("/notquestshidden continueConversation ")) {
+                    handleConversation(player, e.getMessage().split("/notquestshidden continueConversation ")[1]);
                     e.setCancelled(true);
                 }
             }
