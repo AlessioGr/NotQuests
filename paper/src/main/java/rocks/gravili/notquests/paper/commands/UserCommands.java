@@ -20,10 +20,13 @@ package rocks.gravili.notquests.paper.commands;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
+import cloud.commandframework.arguments.standard.StringArrayArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -40,6 +43,8 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.ActiveQuestSelector;
 import rocks.gravili.notquests.paper.commands.arguments.CategorySelector;
 import rocks.gravili.notquests.paper.commands.arguments.QuestSelector;
+import rocks.gravili.notquests.paper.conversation.ConversationLine;
+import rocks.gravili.notquests.paper.conversation.ConversationPlayer;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
@@ -644,6 +649,66 @@ public class UserCommands {
                             main.parse(
                                 main.getLanguageManager()
                                     .getString("chat.no-quests-accepted", player)));
+                  }
+                }));
+
+    manager.command(
+        builder
+            .literal("continueConversation")
+            .senderType(Player.class)
+            .argument(StringArrayArgument.of("optionMessage",
+                (context, lastString) -> {
+                  final List<String> allArgs = context.getRawInput();
+                  main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "<Enter option message to continue conversation>", "");
+                  ArrayList<String> completions = new ArrayList<>();
+
+                  if( main.getConversationManager() == null){
+                    return completions;
+                  }
+
+                  final Player player = (Player) context.getSender();
+                  final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                  if(questPlayer == null){
+                    return completions;
+                  }
+                  final ConversationPlayer openConversationPlayer = main.getConversationManager().getOpenConversation(questPlayer.getUniqueId());
+                  if(openConversationPlayer == null){
+                    return completions;
+                  }
+
+                  for(final ConversationLine currentPlayerLine : openConversationPlayer.getCurrentPlayerLines()){
+                    completions.add(currentPlayerLine.getMessage());
+                  }
+
+                  return completions;
+                }
+            ), ArgumentDescription.of("Option message to continue conversation"))
+            .meta(CommandMeta.DESCRIPTION, "Selects an answer for the currently open conversation")
+            .handler(
+                (context) -> {
+                  if(main.getConversationManager() == null){
+                    return;
+                  }
+                  final Player player = (Player) context.getSender();
+                  QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+
+                  if(questPlayer != null){
+                    final ConversationPlayer conversationPlayer = main.getConversationManager().getOpenConversation(player.getUniqueId());
+                    if(conversationPlayer != null){
+                      final String optionMessage = context.get("optionMessage");
+
+                      for(final ConversationLine currentPlayerLine : conversationPlayer.getCurrentPlayerLines()){
+                        if(currentPlayerLine.getMessage().equals(optionMessage)){
+                          conversationPlayer.chooseOption(currentPlayerLine);
+                          return;
+                        }
+                      }
+                    }else{
+                      questPlayer.sendDebugMessage("Tried to choose conversation option, but the conversationPlayer was not found! Active conversationPlayers count: <highlight>" + main.getConversationManager().getOpenConversations().size());
+                      questPlayer.sendDebugMessage("All active conversationPlayers: <highlight>" + main.getConversationManager().getOpenConversations().toString());
+                      questPlayer.sendDebugMessage("Current QuestPlayer Object: <highlight>" + questPlayer);
+                      questPlayer.sendDebugMessage("Current QuestPlayer: <highlight>" + questPlayer.getPlayer().getName());
+                    }
                   }
                 }));
   }

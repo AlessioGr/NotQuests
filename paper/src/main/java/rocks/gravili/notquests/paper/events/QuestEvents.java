@@ -1095,24 +1095,6 @@ public class QuestEvents implements Listener {
     }
 
 
-    @EventHandler
-    public void playerCommandPreprocessEvent(PlayerCommandPreprocessEvent e) {
-        if(main.getConversationManager() != null){
-            final Player player = e.getPlayer();
-
-            final ConversationPlayer conversationPlayer = main.getConversationManager().getOpenConversation(player.getUniqueId());
-            if(conversationPlayer != null){
-                if (!player.hasPermission("notquests.use")) {
-                    return;
-                }
-                if (e.getMessage().startsWith("/notquestshidden continueConversation ")) {
-                    handleConversation(player, e.getMessage().split("/notquestshidden continueConversation ")[1]);
-                    e.setCancelled(true);
-                }
-            }
-        }
-    }
-
     private final boolean handleConversation(final Player player, final int optionNumber) {
         if(main.getConversationManager() == null){
             return false;
@@ -1141,32 +1123,6 @@ public class QuestEvents implements Listener {
         }
         return false;
     }
-    private final boolean handleConversation(final Player player, final String option) {
-        if(main.getConversationManager() == null){
-            return false;
-        }
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-        if (main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId()) == null) {
-            return false;
-        }
-        //Check if the player has an open conversation
-        final ConversationPlayer conversationPlayer = main.getConversationManager().getOpenConversation(player.getUniqueId());
-        if (conversationPlayer != null) {
-            for(final ConversationLine currentPlayerLine : conversationPlayer.getCurrentPlayerLines()){
-                if(currentPlayerLine.getMessage().equals(option)){
-                    conversationPlayer.chooseOption(currentPlayerLine);
-                    return true;
-                }
-            }
-        } else {
-            questPlayer.sendDebugMessage("Tried to choose conversation option, but the conversationPlayer was not found! Active conversationPlayers count: <highlight>" + main.getConversationManager().getOpenConversations().size());
-            questPlayer.sendDebugMessage("All active conversationPlayers: <highlight>" + main.getConversationManager().getOpenConversations().toString());
-            questPlayer.sendDebugMessage("Current QuestPlayer Object: <highlight>" + questPlayer);
-            questPlayer.sendDebugMessage("Current QuestPlayer: <highlight>" + questPlayer.getPlayer().getName());
-        }
-        return false;
-    }
-
 
     @EventHandler
     public void onPlayerSneak(final PlayerToggleSneakEvent e) {
