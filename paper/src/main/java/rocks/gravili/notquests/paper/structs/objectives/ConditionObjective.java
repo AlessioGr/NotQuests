@@ -131,7 +131,7 @@ public class ConditionObjective extends Objective {
               "Error: Cannot load Condition <highlight>"
                   + conditionName
                   + "</highlight> of Condition Objective for Quest <highlight2>"
-                  + getObjectiveHolder().getName()
+                  + getObjectiveHolder().getIdentifier()
                   + "</highlight>, because the condition does not exist.");
     }
     checkOnlyWhenCorrespondingVariableValueChanged =

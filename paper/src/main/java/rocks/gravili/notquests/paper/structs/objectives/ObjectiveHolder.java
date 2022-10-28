@@ -8,6 +8,8 @@ public abstract class ObjectiveHolder {
   protected PredefinedProgressOrder predefinedProgressOrder;
   private final ArrayList<Objective> objectives;
 
+  private String objectiveHolderDescription;
+
   public ObjectiveHolder(){
     objectives = new ArrayList<>();
   }
@@ -37,7 +39,7 @@ public abstract class ObjectiveHolder {
 
   public abstract String getInitialConfigPath();
 
-  public abstract String getName();
+  public abstract String getIdentifier();
 
   public abstract void saveConfig();
 
@@ -49,5 +51,16 @@ public abstract class ObjectiveHolder {
 
 
   public abstract void addObjective(Objective objective, boolean save);
+
+  public abstract String getDisplayNameOrIdentifier();
+
+  public String getObjectiveHolderDescription(){
+    return objectiveHolderDescription;
+  }
+
+  public void setObjectiveHolderDescription(final String objectiveHolderDescription){
+    this.objectiveHolderDescription = objectiveHolderDescription;
+  }
+
 
 }

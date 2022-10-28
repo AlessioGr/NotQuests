@@ -62,7 +62,7 @@ public class BQStartQuestEvent extends QuestEvent {
 
     boolean foundQuest = false;
     for (Quest quest : main.getQuestManager().getAllQuests()) {
-      if (quest.getQuestName().equalsIgnoreCase(questName)) {
+      if (quest.getIdentifier() .equalsIgnoreCase(questName)) {
         foundQuest = true;
         this.quest = quest;
         break;

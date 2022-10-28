@@ -53,7 +53,7 @@ public class FailQuestAction extends Action {
                   final Quest foundQuest = context.get("quest to fail");
 
                   FailQuestAction failQuestAction = new FailQuestAction(main);
-                  failQuestAction.setQuestToFailName(foundQuest.getQuestName());
+                  failQuestAction.setQuestToFailName(foundQuest.getIdentifier() );
 
                   main.getActionManager().addAction(failQuestAction, context, actionFor);
                 }));

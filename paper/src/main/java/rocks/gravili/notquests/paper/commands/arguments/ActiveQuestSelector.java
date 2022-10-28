@@ -82,7 +82,7 @@ public class ActiveQuestSelector<C> extends CommandArgument<C, ActiveQuest> {
       final NotQuests main,
       final String questContext) {
     return ActiveQuestSelector.<C>newBuilder(name, main, questContext)
-        .asOptionalWithDefault(activeQuest.getQuest().getQuestName())
+        .asOptionalWithDefault(activeQuest.getQuest().getIdentifier())
         .build();
   }
 
@@ -141,7 +141,7 @@ public class ActiveQuestSelector<C> extends CommandArgument<C, ActiveQuest> {
       if (questPlayer != null) {
         for (Quest quest : main.getQuestManager().getAllQuests()) {
           if (questPlayer.hasAcceptedQuest(quest)) {
-            questNames.add(quest.getQuestName());
+            questNames.add(quest.getIdentifier() );
           }
         }
       }

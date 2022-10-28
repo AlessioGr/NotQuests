@@ -51,7 +51,7 @@ public class BQAbortQuestEvent extends QuestEvent {
 
     boolean foundQuest = false;
     for (Quest quest : main.getQuestManager().getAllQuests()) {
-      if (quest.getQuestName().equalsIgnoreCase(questName)) {
+      if (quest.getIdentifier() .equalsIgnoreCase(questName)) {
         foundQuest = true;
         this.quest = quest;
         break;
@@ -75,7 +75,7 @@ public class BQAbortQuestEvent extends QuestEvent {
 
           ActiveQuest activeQuestToRemove = null;
           for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-            if (activeQuest.getQuest().getQuestName().equalsIgnoreCase(quest.getQuestName())) {
+            if (activeQuest.getQuest().getIdentifier().equalsIgnoreCase(quest.getIdentifier() )) {
               activeQuestToRemove = activeQuest;
               break;
             }

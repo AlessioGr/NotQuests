@@ -89,7 +89,7 @@ public class CompletedObjectiveCondition extends Condition {
                                       "Objective with the ID '"
                                           + ID
                                           + "' does not belong to Quest '"
-                                          + quest.getQuestName()
+                                          + quest.getIdentifier() 
                                           + "'!"));
                             } else {
                               return ArgumentParseResult.success(ID);
@@ -160,7 +160,7 @@ public class CompletedObjectiveCondition extends Condition {
 
       if (activeQuest.getActiveObjectiveFromID(getObjectiveToCompleteID()) != null) {
         return "<YELLOW>Finish the following objective first: <highlight>"
-            + objectiveToComplete.getFinalName();
+            + objectiveToComplete.getDisplayNameOrIdentifier();
       }
     }else {
       return "objectiveHolder is no Quest";
@@ -173,7 +173,7 @@ public class CompletedObjectiveCondition extends Condition {
   public String getConditionDescriptionInternally(QuestPlayer questPlayer, Object... objects) {
     final Objective otherObjective = getObjectiveToComplete();
     if (otherObjective != null) {
-      return "<GRAY>-- Finish Objective first: " + otherObjective.getFinalName();
+      return "<GRAY>-- Finish Objective first: " + otherObjective.getDisplayNameOrIdentifier();
     } else {
       return "<GRAY>-- Finish otherObjective first: " + getObjectiveToCompleteID();
     }

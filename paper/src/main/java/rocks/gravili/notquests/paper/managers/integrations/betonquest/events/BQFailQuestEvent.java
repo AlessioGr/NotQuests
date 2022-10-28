@@ -51,7 +51,7 @@ public class BQFailQuestEvent extends QuestEvent {
 
     boolean foundQuest = false;
     for (Quest quest : main.getQuestManager().getAllQuests()) {
-      if (quest.getQuestName().equalsIgnoreCase(questName)) {
+      if (quest.getIdentifier() .equalsIgnoreCase(questName)) {
         foundQuest = true;
         this.quest = quest;
         break;
@@ -75,7 +75,7 @@ public class BQFailQuestEvent extends QuestEvent {
         if (questPlayer != null) {
           ActiveQuest questToFail = null;
           for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-            if (activeQuest.getQuest().getQuestName().equalsIgnoreCase(this.quest.getQuestName())) {
+            if (activeQuest.getQuestIdentifier().equalsIgnoreCase(this.quest.getIdentifier() )) {
               questToFail = activeQuest;
               break;
             }

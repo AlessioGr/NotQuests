@@ -115,7 +115,7 @@ public abstract class Trigger {
               "Trigger: Executing action "
                   + action.getActionName()
                   + " for Quest "
-                  + activeQuest.getQuest().getQuestName());
+                  + activeQuest.getQuest().getIdentifier());
       if (quest != null) {
         main.getActionManager()
             .executeActionWithConditions(action, activeQuest.getQuestPlayer(), null, true, quest);

@@ -83,7 +83,7 @@ public class DeliverItemsObjective extends Objective {
                                 "<success>You have been given an item with which you can add the DeliverItems Objective to an NPC by rightclicking the NPC. Check your inventory!",
                                 "<LIGHT_PURPLE>Add DeliverItems Objective to NPC",
                                 "<WHITE>Right-click an NPC to add the following objective to it:",
-                                "<YELLOW>DeliverItems <WHITE>Objective of Quest <highlight>" + quest.getQuestName() + "</highlight>."
+                                "<YELLOW>DeliverItems <WHITE>Objective of Quest <highlight>" + quest.getIdentifier()  + "</highlight>."
                             );
 
                         } else {

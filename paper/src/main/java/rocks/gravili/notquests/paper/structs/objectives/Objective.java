@@ -45,7 +45,6 @@ public abstract class Objective extends ObjectiveHolder{
   private ObjectiveHolder objectiveHolder;
   private int objectiveID = -1;
   private String objectiveDisplayName = "";
-  private String objectiveDescription = "";
 
   private String taskDescription = "";
   private NQNPC completionNPC = null;
@@ -226,7 +225,8 @@ public abstract class Objective extends ObjectiveHolder{
     return objectiveDisplayName;
   }
 
-  public final String getFinalName() {
+  @Override
+  public final String getDisplayNameOrIdentifier() {
     if (!objectiveDisplayName.isBlank()) {
       return getDisplayName();
     } else {
@@ -260,9 +260,6 @@ public abstract class Objective extends ObjectiveHolder{
     }
   }
 
-  public final String getDescription() { // MiniMessage
-    return objectiveDescription;
-  }
 
   public final String getTaskDescriptionProvided() { // MiniMessage
     return taskDescription;
@@ -276,18 +273,18 @@ public abstract class Objective extends ObjectiveHolder{
    * @param maxLengthPerLine how long the description can be per-line
    * @return the description of the objective with proper line-breaks
    */
-  public final String getDescription(final int maxLengthPerLine) {
-    return main.getUtilManager().wrapText(getDescription(), maxLengthPerLine);
+  public final String getObjectiveHolderDescription(final int maxLengthPerLine) {
+    return main.getUtilManager().wrapText(getObjectiveHolderDescription(), maxLengthPerLine);
   }
 
   public final List<String> getDescriptionLines(final int maxLengthPerLine) {
-    return main.getUtilManager().wrapTextToList(getDescription(), maxLengthPerLine);
+    return main.getUtilManager().wrapTextToList(getObjectiveHolderDescription(), maxLengthPerLine);
   }
 
   public void setDescription(String newObjectiveDescription, boolean save) {
     newObjectiveDescription =
         main.getUtilManager().replaceLegacyWithMiniMessage(newObjectiveDescription);
-    this.objectiveDescription = newObjectiveDescription;
+    setObjectiveHolderDescription(newObjectiveDescription);
     if (save) {
       objectiveHolder
           .getConfig()
@@ -313,7 +310,7 @@ public abstract class Objective extends ObjectiveHolder{
   }
 
   public void removeDescription(boolean save) {
-    this.objectiveDescription = "";
+    setObjectiveHolderDescription("");
     if (save) {
       objectiveHolder
           .getConfig()
@@ -783,8 +780,8 @@ public abstract class Objective extends ObjectiveHolder{
   }
 
   @Override
-  public String getName() {
-    return getFinalName();
+  public String getIdentifier() {
+    return getDisplayNameOrIdentifier();
   }
 
   @Override
@@ -863,11 +860,13 @@ public abstract class Objective extends ObjectiveHolder{
       main.getLogManager()
           .warn(
               "ERROR: Tried to add objective to quest <highlight>"
-                  + getFinalName()
+                  + getDisplayNameOrIdentifier()
                   + "</highlight> with the ID <highlight>"
                   + objective.getObjectiveID()
                   + "</highlight> but the ID was a DUPLICATE!");
     }
   }
+
+
 
 }

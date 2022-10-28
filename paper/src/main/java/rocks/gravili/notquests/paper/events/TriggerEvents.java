@@ -91,28 +91,30 @@ public class TriggerEvents implements Listener {
 
   @EventHandler(priority = EventPriority.MONITOR)
   private void onObjectiveComplete(ObjectiveCompleteEvent e) {
+    if(e.getActiveObjectiveHolder() instanceof final ActiveQuest activeQuest){
+      for (final ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
+        if (activeTrigger.getTrigger().getTriggerType().equals("COMPLETE")) { // Complete the quest
+          if (activeTrigger.getTrigger().getApplyOn() >= 1) { // Objective and not Quest
+            if (e.getActiveObjective().getObjectiveID() == activeTrigger.getTrigger().getApplyOn()) {
 
-    for (final ActiveTrigger activeTrigger : e.getActiveQuest().getActiveTriggers()) {
-      if (activeTrigger.getTrigger().getTriggerType().equals("COMPLETE")) { // Complete the quest
-        if (activeTrigger.getTrigger().getApplyOn() >= 1) { // Objective and not Quest
-          if (e.getActiveObjective().getObjectiveID() == activeTrigger.getTrigger().getApplyOn()) {
-
-            if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
-              activeTrigger.addAndCheckTrigger(e.getActiveQuest());
-            } else {
-              final Player player = Bukkit.getPlayer(e.getQuestPlayer().getUniqueId());
-              if (player != null
-                  && player
-                      .getWorld()
-                      .getName()
-                      .equalsIgnoreCase(activeTrigger.getTrigger().getWorldName())) {
-                activeTrigger.addAndCheckTrigger(e.getActiveQuest());
+              if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
+                activeTrigger.addAndCheckTrigger(activeQuest);
+              } else {
+                final Player player = Bukkit.getPlayer(e.getQuestPlayer().getUniqueId());
+                if (player != null
+                    && player
+                    .getWorld()
+                    .getName()
+                    .equalsIgnoreCase(activeTrigger.getTrigger().getWorldName())) {
+                  activeTrigger.addAndCheckTrigger(activeQuest);
+                }
               }
             }
           }
         }
       }
     }
+
   }
 
   @EventHandler(priority = EventPriority.MONITOR)
@@ -175,27 +177,30 @@ public class TriggerEvents implements Listener {
   @EventHandler(priority = EventPriority.MONITOR)
   private void onObjectiveUnlock(ObjectiveUnlockEvent e) {
     if (e.isTriggerAcceptQuestTrigger()) {
-      for (final ActiveTrigger activeTrigger : e.getActiveQuest().getActiveTriggers()) {
-        if (activeTrigger.getTrigger().getTriggerType().equals("BEGIN")) { // Start the quest
-          if (activeTrigger.getTrigger().getApplyOn() >= 1) { // Objective and not Quest
-            if (e.getActiveObjective().getObjectiveID()
-                == activeTrigger.getTrigger().getApplyOn()) {
-              if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
-                activeTrigger.addAndCheckTrigger(e.getActiveQuest());
-              } else {
-                final Player player = Bukkit.getPlayer(e.getQuestPlayer().getUniqueId());
-                if (player != null
-                    && player
-                        .getWorld()
-                        .getName()
-                        .equalsIgnoreCase(activeTrigger.getTrigger().getWorldName())) {
-                  activeTrigger.addAndCheckTrigger(e.getActiveQuest());
+      if(e.getActiveObjectiveHolder() instanceof final ActiveQuest activeQuest){
+        for (final ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
+          if (activeTrigger.getTrigger().getTriggerType().equals("BEGIN")) { // Start the quest
+            if (activeTrigger.getTrigger().getApplyOn() >= 1) { // Objective and not Quest
+              if (e.getActiveObjective().getObjectiveID()
+                  == activeTrigger.getTrigger().getApplyOn()) {
+                if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
+                  activeTrigger.addAndCheckTrigger(activeQuest);
+                } else {
+                  final Player player = Bukkit.getPlayer(e.getQuestPlayer().getUniqueId());
+                  if (player != null
+                      && player
+                      .getWorld()
+                      .getName()
+                      .equalsIgnoreCase(activeTrigger.getTrigger().getWorldName())) {
+                    activeTrigger.addAndCheckTrigger(activeQuest);
+                  }
                 }
               }
             }
           }
         }
       }
+
     }
   }
 }

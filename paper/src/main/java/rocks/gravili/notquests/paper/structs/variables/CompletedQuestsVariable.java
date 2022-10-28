@@ -39,7 +39,7 @@ public class CompletedQuestsVariable extends Variable<String[]> {
 
     completedQuests =
         questPlayer.getCompletedQuests().stream()
-            .map(CompletedQuest::getQuestName)
+            .map(CompletedQuest::getQuestIdentifier)
             .toArray(String[]::new);
 
     return completedQuests;
@@ -54,7 +54,7 @@ public class CompletedQuestsVariable extends Variable<String[]> {
     for (CompletedQuest completedQuest : questPlayer.getCompletedQuests()) {
       boolean foundQuest = false;
       for (int i = 0; i < newValue.length; i++) {
-        if (newValue[i].equalsIgnoreCase(completedQuest.getQuestName())) {
+        if (newValue[i].equalsIgnoreCase(completedQuest.getQuestIdentifier() )) {
           foundQuest = true;
           break;
         }
@@ -77,7 +77,7 @@ public class CompletedQuestsVariable extends Variable<String[]> {
   @Override
   public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
     return main.getQuestManager().getAllQuests().stream()
-        .map(quest -> quest.getQuestName())
+        .map(quest -> quest.getIdentifier() )
         .toList();
   }
 

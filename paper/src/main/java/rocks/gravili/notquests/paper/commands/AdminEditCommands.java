@@ -88,7 +88,7 @@ public class AdminEditCommands {
 
                     quest.setAcceptCooldown(cooldownInMinutes);
                     context.getSender().sendMessage(main.parse(
-                            "<success>Cooldown for Quest <highlight>" + quest.getQuestName() + "</highlight> has been set to <highlight2>"
+                            "<success>Cooldown for Quest <highlight>" + quest.getIdentifier() + "</highlight> has been set to <highlight2>"
                                     + durationCooldown.toDaysPart() + " days, " + durationCooldown.toHoursPart() + " hours, " + durationCooldown.toMinutesPart() + " minutes" + "</highlight2>!"
                     ));
                 }));
@@ -100,7 +100,7 @@ public class AdminEditCommands {
                     final Quest quest = context.get("quest");
                     quest.setAcceptCooldown(-1);
                     context.getSender().sendMessage(main.parse(
-                            "<success>Cooldown for Quest <highlight>" + quest.getQuestName() + "</highlight> has been set to <highlight2>disabled</highlight2>!"
+                            "<success>Cooldown for Quest <highlight>" + quest.getIdentifier() + "</highlight> has been set to <highlight2>disabled</highlight2>!"
                     ));
                 }));
 
@@ -117,8 +117,8 @@ public class AdminEditCommands {
                     final Quest quest = context.get("quest");
 
                     context.getSender().sendMessage(main.parse(
-                            "<main>Current description of Quest <highlight>" + quest.getQuestName() + "</highlight>: <highlight2>"
-                                    + quest.getQuestDescription()
+                            "<main>Current description of Quest <highlight>" + quest.getIdentifier() + "</highlight>: <highlight2>"
+                                    + quest.getObjectiveHolderDescription()
                     ));
                 }));
         manager.command(editBuilder.literal("description")
@@ -129,7 +129,7 @@ public class AdminEditCommands {
 
                     quest.removeQuestDescription(true);
                     context.getSender().sendMessage(main.parse("<success>Description successfully removed from quest <highlight>"
-                            + quest.getQuestName() + "</highlight>!"
+                            + quest.getIdentifier() + "</highlight>!"
                     ));
                 }));
 
@@ -170,8 +170,8 @@ public class AdminEditCommands {
 
                     quest.setQuestDescription(description, true);
                     context.getSender().sendMessage(main.parse("<success>Description successfully added to quest <highlight>"
-                            + quest.getQuestName() + "</highlight>! New description: <highlight2>"
-                            + quest.getQuestDescription()
+                            + quest.getIdentifier() + "</highlight>! New description: <highlight2>"
+                            + quest.getObjectiveHolderDescription()
                     ));
                 }));
 
@@ -182,7 +182,7 @@ public class AdminEditCommands {
                     final Quest quest = context.get("quest");
 
                     context.getSender().sendMessage(main.parse(
-                            "<main>Current display name of Quest <highlight>" + quest.getQuestName() + "</highlight>: <highlight2>"
+                            "<main>Current display name of Quest <highlight>" + quest.getIdentifier() + "</highlight>: <highlight2>"
                                     + quest.getQuestDisplayName()
                     ));
                 }));
@@ -195,7 +195,7 @@ public class AdminEditCommands {
 
                     quest.removeQuestDisplayName(true);
                     context.getSender().sendMessage(main.parse("<success>Display name successfully removed from quest <highlight>"
-                            + quest.getQuestName() + "</highlight>!"
+                            + quest.getIdentifier() + "</highlight>!"
                     ));
                 }));
 
@@ -210,7 +210,7 @@ public class AdminEditCommands {
 
                     quest.setQuestDisplayName(displayName, true);
                     context.getSender().sendMessage(main.parse("<success>Display name successfully added to quest <highlight>"
-                            + quest.getQuestName() + "</highlight>! New display name: <highlight2>"
+                            + quest.getIdentifier() + "</highlight>! New display name: <highlight2>"
                             + quest.getQuestDisplayName()
                     ));
                 }));
@@ -229,13 +229,13 @@ public class AdminEditCommands {
                     if (maxAccepts > 0) {
                         quest.setMaxAccepts(maxAccepts);
                         context.getSender().sendMessage(main.parse(
-                                "<success>Maximum amount of accepts for Quest <highlight>" + quest.getQuestName() + "</highlight> has been set to <highlight2>"
+                                "<success>Maximum amount of accepts for Quest <highlight>" + quest.getIdentifier() + "</highlight> has been set to <highlight2>"
                                         + maxAccepts + "</highlight2>!"
                         ));
                     } else {
                         quest.setMaxAccepts(-1);
                         context.getSender().sendMessage(main.parse(
-                                "<success>Maximum amount of accepts for Quest <highlight>" + quest.getQuestName() + "</highlight> has been set to <highlight2>"
+                                "<success>Maximum amount of accepts for Quest <highlight>" + quest.getIdentifier() + "</highlight> has been set to <highlight2>"
                                         + "unlimited (default)</highlight2>!"
                         ));
                     }
@@ -253,12 +253,12 @@ public class AdminEditCommands {
                     if (takeEnabled) {
                         context.getSender().sendMessage(main.parse(
                                  "<success>Quest taking (/notquests take) for the Quest <highlight>"
-                                        + quest.getQuestName() + "</highlight> has been set to <highlight2>enabled</highlight2>!"
+                                        + quest.getIdentifier() + "</highlight> has been set to <highlight2>enabled</highlight2>!"
                         ));
                     } else {
                         context.getSender().sendMessage(main.parse(
                                 "<success>Quest taking (/notquests take) for the Quest <highlight>"
-                                        + quest.getQuestName() + "</highlight> has been set to <highlight2>disabled</highlight2>!"
+                                        + quest.getIdentifier() + "</highlight> has been set to <highlight2>disabled</highlight2>!"
                         ));
                     }
                 }));
@@ -297,7 +297,7 @@ public class AdminEditCommands {
 
                     quest.setTakeItem(takeItem);
                     context.getSender().sendMessage(main.parse(
-                            "<success>Take Item Material for Quest <highlight>" + quest.getQuestName()
+                            "<success>Take Item Material for Quest <highlight>" + quest.getIdentifier()
                                     + "</highlight> has been set to <highlight2>" + takeItem.getType().name() + "</highlight2>!"
                     ));
 
@@ -381,7 +381,7 @@ public class AdminEditCommands {
                                   .sendMessage(
                                       main.parse(
                                           "<success>Quest <highlight>"
-                                              + quest.getQuestName()
+                                              + quest.getIdentifier()
                                               + "</highlight> has been bound to the NPC with the ID <highlight2>"
                                               + nqnpc.getID().toString()
                                               + "</highlight2>! Showing Quest: <highlight>"
@@ -393,7 +393,7 @@ public class AdminEditCommands {
                                   .sendMessage(
                                       main.parse(
                                           "<warn>Quest <highlight>"
-                                              + quest.getQuestName()
+                                              + quest.getIdentifier()
                                               + "</highlight> has already been bound to the NPC with the ID <highlight2>"
                                               + nqnpc.getID().toString()
                                               + "</highlight2>!"));
@@ -401,8 +401,8 @@ public class AdminEditCommands {
                           },
                           player,
                           "<success>You have been given an item with which you can attach the NPC to a Quest by rightclicking the NPC. Check your inventory!",
-                          "<LIGHT_PURPLE>Attach Quest <highlight>" + quest.getQuestName() + "</highlight> to this NPC",
-                          "<WHITE>Right-click an NPC to attach it to the Quest <highlight>" + quest.getQuestName() + "</highlight> and ObjectiveID."
+                          "<LIGHT_PURPLE>Attach Quest <highlight>" + quest.getIdentifier() + "</highlight> to this NPC",
+                          "<WHITE>Right-click an NPC to attach it to the Quest <highlight>" + quest.getIdentifier() + "</highlight> and ObjectiveID."
                       );
 
                     } else {
@@ -425,7 +425,7 @@ public class AdminEditCommands {
                           .sendMessage(
                               main.parse(
                                   "<success>Quest <highlight>"
-                                      + quest.getQuestName()
+                                      + quest.getIdentifier()
                                       + "</highlight> has been bound to the NPC with the ID <highlight2>"
                                       + nqnpc.getID().toString()
                                       + "</highlight2>! Showing Quest: <highlight>"
@@ -437,7 +437,7 @@ public class AdminEditCommands {
                           .sendMessage(
                               main.parse(
                                   "<warn>Quest <highlight>"
-                                      + quest.getQuestName()
+                                      + quest.getIdentifier()
                                       + "</highlight> has already been bound to the NPC with the ID <highlight2>"
                                       + nqnpc.getID().toString()
                                       + "</highlight2>!"));
@@ -459,7 +459,7 @@ public class AdminEditCommands {
                       .sendMessage(
                           main.parse(
                               "<success>All NPCs of Quest <highlight>"
-                                  + quest.getQuestName()
+                                  + quest.getIdentifier()
                                   + "</highlight> have been removed!"));
                 }));
 
@@ -476,7 +476,7 @@ public class AdminEditCommands {
                       .sendMessage(
                           main.parse(
                               "<highlight>NPCs bound to quest <highlight2>"
-                                  + quest.getQuestName()
+                                  + quest.getIdentifier()
                                   + "</highlight2> with Quest showing:"));
                   int counter = 1;
                   for (final NQNPC nqNPC : quest.getAttachedNPCsWithQuestShowing()) {
@@ -496,7 +496,7 @@ public class AdminEditCommands {
                       .sendMessage(
                           main.parse(
                               "<highlight>NPCs bound to quest <highlight2>"
-                                  + quest.getQuestName()
+                                  + quest.getIdentifier()
                                   + "</highlight2> without Quest showing:"));
                   for (final NQNPC nqNPC : quest.getAttachedNPCsWithoutQuestShowing()) {
                     context
@@ -520,7 +520,7 @@ public class AdminEditCommands {
                     final Quest quest = context.get("quest");
 
                     context.getSender().sendMessage(main.parse(
-                            "<main>Category for Quest <highlight>" + quest.getQuestName() + "</highlight>: <highlight2>"
+                            "<main>Category for Quest <highlight>" + quest.getIdentifier() + "</highlight>: <highlight2>"
                                     + quest.getCategory().getCategoryFullName() + "</highlight2>."
                     ));
                 }));
@@ -533,14 +533,14 @@ public class AdminEditCommands {
                     final Category category = context.get("category");
                     if(quest.getCategory().getCategoryFullName().equalsIgnoreCase(category.getCategoryFullName())){
                         context.getSender().sendMessage(main.parse(
-                                "<error> Error: The quest <highlight>" + quest.getQuestName() + "</highlight> already has the category <highlight2>" + quest.getCategory().getCategoryFullName() + "</highlight2>."
+                                "<error> Error: The quest <highlight>" + quest.getIdentifier() + "</highlight> already has the category <highlight2>" + quest.getCategory().getCategoryFullName() + "</highlight2>."
                         ));
                         return;
                     }
 
 
                     context.getSender().sendMessage(main.parse(
-                            "<success>Category for Quest <highlight>" + quest.getQuestName() + "</highlight> has successfully been changed from <highlight2>"
+                            "<success>Category for Quest <highlight>" + quest.getIdentifier() + "</highlight> has successfully been changed from <highlight2>"
                                     + quest.getCategory().getCategoryFullName() + "</highlight2> to <highlight2>" + category.getCategoryFullName() + "</highlight2>!"
                     ));
 
@@ -620,23 +620,23 @@ public class AdminEditCommands {
                     if (showInArmorStand) {
                         itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 0);
                         itemMeta.displayName(main.parse(
-                                "<GOLD>Add showing Quest <highlight>" + quest.getQuestName() + "</highlight> to Armor Stand"
+                                "<GOLD>Add showing Quest <highlight>" + quest.getIdentifier() + "</highlight> to Armor Stand"
                         ));
                         lore.add(main.parse(
-                                "<WHITE>Hit an armor stand to add the showing Quest <highlight>" + quest.getQuestName() + "</highlight> to it."
+                                "<WHITE>Hit an armor stand to add the showing Quest <highlight>" + quest.getIdentifier() + "</highlight> to it."
                         ));
 
                     } else {
                         itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 1);
                         itemMeta.displayName(main.parse(
-                                "<GOLD>Add non-showing Quest </highlight>" + quest.getQuestName() + "</highlight> to Armor Stand"
+                                "<GOLD>Add non-showing Quest </highlight>" + quest.getIdentifier() + "</highlight> to Armor Stand"
                         ));
                         lore.add(main.parse(
-                                "<WHITE>Hit an armor stand to add the non-showing Quest <highlight>" + quest.getQuestName() + "</highlight> to it."
+                                "<WHITE>Hit an armor stand to add the non-showing Quest <highlight>" + quest.getIdentifier() + "</highlight> to it."
                         ));
 
                     }
-                    itemMeta.getPersistentDataContainer().set(QuestNameKey, PersistentDataType.STRING, quest.getQuestName());
+                    itemMeta.getPersistentDataContainer().set(QuestNameKey, PersistentDataType.STRING, quest.getIdentifier());
                     itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
 
@@ -687,27 +687,27 @@ public class AdminEditCommands {
                     if (showInArmorStand) {
                         itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 2);
                         itemMeta.displayName(main.parse(
-                                "<RED>Remove showing Quest <highlight>" + quest.getQuestName() + "</highlight> from Armor Stand"
+                                "<RED>Remove showing Quest <highlight>" + quest.getIdentifier() + "</highlight> from Armor Stand"
                         ));
 
                         lore.add(main.parse(
-                                "<WHITE>Hit an armor stand to remove the showing Quest <highlight>" + quest.getQuestName() + "</highlight> from it."
+                                "<WHITE>Hit an armor stand to remove the showing Quest <highlight>" + quest.getIdentifier() + "</highlight> from it."
                         ));
 
                     } else {
                         itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 3);
 
                         itemMeta.displayName(main.parse(
-                                "<RED>Remove non-showing Quest <highlight>" + quest.getQuestName() + "</highlight> from Armor Stand"
+                                "<RED>Remove non-showing Quest <highlight>" + quest.getIdentifier() + "</highlight> from Armor Stand"
                         ));
 
                         lore.add(main.parse(
-                                "<WHITE>Hit an armor stand to remove the non-showing Quest <highlight>" + quest.getQuestName() + "</highlight> from it."
+                                "<WHITE>Hit an armor stand to remove the non-showing Quest <highlight>" + quest.getIdentifier() + "</highlight> from it."
                         ));
                     }
                     itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
-                    itemMeta.getPersistentDataContainer().set(QuestNameKey, PersistentDataType.STRING, quest.getQuestName());
+                    itemMeta.getPersistentDataContainer().set(QuestNameKey, PersistentDataType.STRING, quest.getIdentifier());
 
 
                     itemMeta.lore(lore);
@@ -741,7 +741,7 @@ public class AdminEditCommands {
                 ;
 
             context.getSender().sendMessage(main.parse(
-                "<success>Current predefined progress order of Quest <highlight>" + objectiveHolder.getName()
+                "<success>Current predefined progress order of Quest <highlight>" + objectiveHolder.getIdentifier()
                     + "</highlight>: <highlight2>" + predefinedProgressOrderString
             ));
           }));
@@ -756,7 +756,7 @@ public class AdminEditCommands {
             objectiveHolder.setPredefinedProgressOrder(null, true);
             context.getSender().sendMessage(Component.empty());
             context.getSender().sendMessage(main.parse(
-                "<success>Predefined progress order of Quest <highlight>" + objectiveHolder.getName()
+                "<success>Predefined progress order of Quest <highlight>" + objectiveHolder.getIdentifier()
                     + "</highlight> have been removed!"
             ));
           }));
@@ -771,7 +771,7 @@ public class AdminEditCommands {
             objectiveHolder.setPredefinedProgressOrder(PredefinedProgressOrder.firstToLast(), true);
             context.getSender().sendMessage(Component.empty());
             context.getSender().sendMessage(main.parse(
-                "<success>Predefined progress order of Quest <highlight>" + objectiveHolder.getName()
+                "<success>Predefined progress order of Quest <highlight>" + objectiveHolder.getIdentifier()
                     + "</highlight> have been set to first to last!"
             ));
           }));
@@ -785,7 +785,7 @@ public class AdminEditCommands {
             objectiveHolder.setPredefinedProgressOrder(PredefinedProgressOrder.lastToFirst(), true);
             context.getSender().sendMessage(Component.empty());
             context.getSender().sendMessage(main.parse(
-                "<success>Predefined progress order of Quest <highlight>" + objectiveHolder.getName()
+                "<success>Predefined progress order of Quest <highlight>" + objectiveHolder.getIdentifier()
                     + "</highlight> have been set to last to first!"
             ));
           }));
@@ -818,7 +818,7 @@ public class AdminEditCommands {
             objectiveHolder.setPredefinedProgressOrder(PredefinedProgressOrder.custom(orderParsed), true);
             context.getSender().sendMessage(Component.empty());
             context.getSender().sendMessage(main.parse(
-                "<success>Predefined progress order of Quest <highlight>" + objectiveHolder.getName()
+                "<success>Predefined progress order of Quest <highlight>" + objectiveHolder.getIdentifier()
                     + "</highlight> have been set to custom with this order: " + orderString
             ));
           }));
@@ -831,7 +831,7 @@ public class AdminEditCommands {
                   objectiveHolder.clearObjectives();
                     context.getSender().sendMessage(Component.empty());
                     context.getSender().sendMessage(main.parse(
-                            "<success>All objectives of Quest <highlight>" + objectiveHolder.getName()
+                            "<success>All objectives of Quest <highlight>" + objectiveHolder.getIdentifier()
                                     + "</highlight> have been removed!"
                     ));
                 }));
@@ -841,7 +841,7 @@ public class AdminEditCommands {
                   final ObjectiveHolder objectiveHolder = main.getCommandManager().getObjectiveHolderFromContextAndLevel(context, level);
 
                   context.getSender().sendMessage(Component.empty());
-                    context.getSender().sendMessage(main.parse("<highlight>Objectives for Quest <highlight2>" + objectiveHolder.getName() + "</highlight2>:"));
+                    context.getSender().sendMessage(main.parse("<highlight>Objectives for Quest <highlight2>" + objectiveHolder.getIdentifier() + "</highlight2>:"));
                     main.getQuestManager().sendObjectivesAdmin(context.getSender(), objectiveHolder);
                 }));
 
@@ -974,8 +974,8 @@ public class AdminEditCommands {
                             },
                             player,
                             "<success>You have been given an item with which you can add the completionNPC of this Objective to an NPC. Check your inventory!",
-                            "<LIGHT_PURPLE>Set completionNPC of Quest <highlight>" + objective.getObjectiveHolder().getName() + "</highlight> to this NPC",
-                            "<WHITE>Right-click an NPC to set it as the completionNPC of Quest <highlight>" +  objective.getObjectiveHolder().getName() + "</highlight> and ObjectiveID <highlight>" + objective.getObjectiveID() + "</highlight>."
+                            "<LIGHT_PURPLE>Set completionNPC of Quest <highlight>" + objective.getObjectiveHolder().getIdentifier() + "</highlight> to this NPC",
+                            "<WHITE>Right-click an NPC to set it as the completionNPC of Quest <highlight>" +  objective.getObjectiveHolder().getIdentifier() + "</highlight> and ObjectiveID <highlight>" + objective.getObjectiveID() + "</highlight>."
                         );
 
                       } else {
@@ -1021,7 +1021,7 @@ public class AdminEditCommands {
 
                   context.getSender().sendMessage(main.parse(
                             "<main>Current description of objective with ID <highlight>" + objective.getObjectiveID() + "</highlight>: <highlight2>"
-                                    + objective.getDescription()
+                                    + objective.getObjectiveHolderDescription()
                     ));
                 }));
         manager.command(builder.literal("description")
@@ -1033,7 +1033,7 @@ public class AdminEditCommands {
                   objective.removeDescription(true);
                     context.getSender().sendMessage(main.parse(
                             "<main>Description successfully removed from objective with ID <highlight>" + objective.getObjectiveID() + "</highlight>! New description: <highlight2>"
-                                    + objective.getDescription()
+                                    + objective.getObjectiveHolderDescription()
                     ));
                 }));
 
@@ -1074,7 +1074,7 @@ public class AdminEditCommands {
                     objective.setDescription(description, true);
                     context.getSender().sendMessage(main.parse(
                             "<main>Description successfully added to objective with ID <highlight>" + objective.getObjectiveID() + "</highlight>! New description: <highlight2>"
-                                    + objective.getDescription()
+                                    + objective.getObjectiveHolderDescription()
                     ));
                 }));
 
@@ -1116,7 +1116,7 @@ public class AdminEditCommands {
                   objective.removeDisplayName(true);
                     context.getSender().sendMessage(main.parse(
                             "<main>Displayname successfully removed from objective with ID <highlight>" + objective.getObjectiveID() + "</highlight>! New displayname: <highlight2>"
-                                    + objective.getDescription()
+                                    + objective.getObjectiveHolderDescription()
                     ));
                 }));
 
@@ -1145,7 +1145,7 @@ public class AdminEditCommands {
                   context.getSender().sendMessage(Component.empty());
                     context.getSender().sendMessage(main.parse(
                             "<highlight>Information of objective with the ID <highlight2>" + objective.getObjectiveID()
-                                    + "</highlight2> from Quest <highlight2>" + objective.getObjectiveHolder().getName() + "</highlight2>:"
+                                    + "</highlight2> from Quest <highlight2>" + objective.getObjectiveHolder().getIdentifier() + "</highlight2>:"
                     ));
                     context.getSender().sendMessage(main.parse(
                             "<highlight>Objective Type: <main>" + main.getObjectiveManager().getObjectiveType(objective.getClass())
@@ -1160,7 +1160,7 @@ public class AdminEditCommands {
                             "<highlight>Objective DisplayName: <main>" + objective.getDisplayName()
                     ));
                     context.getSender().sendMessage(main.parse(
-                            "<highlight>Objective Description: <main>" + objective.getDescription()
+                            "<highlight>Objective Description: <main>" + objective.getObjectiveHolderDescription()
                     ));
 
                     {
@@ -1233,7 +1233,7 @@ public class AdminEditCommands {
                    objective.getObjectiveHolder().removeObjective(objective);
                     context.getSender().sendMessage(main.parse(
                             "<success>Objective with the ID <highlight>" + objective.getObjectiveID() + "</highlight> has been successfully removed from Quest <highlight2>"
-                                    + objective.getObjectiveHolder().getName()) + "</highlight2>!"
+                                    + objective.getObjectiveHolder().getIdentifier()) + "</highlight2>!"
                     );
                 }));
 
@@ -1252,7 +1252,7 @@ public class AdminEditCommands {
                 .handler((context) -> {
                     final Quest quest = context.get("quest");
 
-                    context.getSender().sendMessage(main.parse("<highlight>Requirements for Quest <highlight2>" + quest.getQuestName() + "</highlight2>:"));
+                    context.getSender().sendMessage(main.parse("<highlight>Requirements for Quest <highlight2>" + quest.getIdentifier() + "</highlight2>:"));
                     for (final Condition condition : quest.getRequirements()) {
                         context.getSender().sendMessage(main.parse("<highlight>" + condition.getConditionID() + ".</highlight> <main>" + condition.getConditionType()));
                         if(context.getSender() instanceof Player player){
@@ -1269,7 +1269,7 @@ public class AdminEditCommands {
                     final Quest quest = context.get("quest");
 
                     quest.clearRequirements();
-                    context.getSender().sendMessage(main.parse("<main>All requirements of Quest <highlight>" + quest.getQuestName() + "</highlight> have been removed!"));
+                    context.getSender().sendMessage(main.parse("<main>All requirements of Quest <highlight>" + quest.getIdentifier() + "</highlight> have been removed!"));
                 }));
 
         final Command.Builder<CommandSender> editQuestRequirementsBuilder = builder.literal("edit")
@@ -1305,7 +1305,7 @@ public class AdminEditCommands {
                     quest.removeRequirement(condition);
 
 
-                    context.getSender().sendMessage(main.parse("<main>The requirement with the ID <highlight>" + conditionID + "</highlight> of Quest <highlight2>" + quest.getQuestName() + "</highlight2> has been removed!"));
+                    context.getSender().sendMessage(main.parse("<main>The requirement with the ID <highlight>" + conditionID + "</highlight> of Quest <highlight2>" + quest.getIdentifier() + "</highlight2> has been removed!"));
                 }));
 
 
@@ -1328,11 +1328,11 @@ public class AdminEditCommands {
 
                     condition.setDescription(description);
 
-                    quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".requirements." + conditionID + ".description", description);
+                    quest.getCategory().getQuestsConfig().set("quests." + quest.getIdentifier() + ".requirements." + conditionID + ".description", description);
                     quest.getCategory().saveQuestsConfig();
 
                     context.getSender().sendMessage(main.parse("<success>Description successfully added to condition with ID <highlight>" + conditionID + "</highlight> of quest <highlight2>"
-                            + quest.getQuestName() + "</highlight2>! New description: <highlight2>"
+                            + quest.getIdentifier() + "</highlight2>! New description: <highlight2>"
                             + condition.getDescription()
                     ));
                 }));
@@ -1360,11 +1360,11 @@ public class AdminEditCommands {
 
             condition.setHidden(hiddenExpression);
 
-            quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".requirements." + conditionID + ".hiddenStatusExpression", hiddenStatusExpression);
+            quest.getCategory().getQuestsConfig().set("quests." + quest.getIdentifier() + ".requirements." + conditionID + ".hiddenStatusExpression", hiddenStatusExpression);
             quest.getCategory().saveQuestsConfig();
 
             context.getSender().sendMessage(main.parse("<success>Hidden status successfully added to condition with ID <highlight>" + conditionID + "</highlight> of quest <highlight2>"
-                + quest.getQuestName() + "</highlight2>! New hidden status: <highlight2>"
+                + quest.getIdentifier() + "</highlight2>! New hidden status: <highlight2>"
                 + condition.getHiddenExpression()
             ));
           }));
@@ -1385,12 +1385,12 @@ public class AdminEditCommands {
 
                     condition.removeDescription();
 
-                    quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".requirements." + conditionID + ".description", "");
+                    quest.getCategory().getQuestsConfig().set("quests." + quest.getIdentifier() + ".requirements." + conditionID + ".description", "");
                     quest.getCategory().saveQuestsConfig();
 
 
                     context.getSender().sendMessage(main.parse("<success>Description successfully removed from condition with ID <highlight>" + conditionID + "</highlight> of quest <highlight2>"
-                            + quest.getQuestName() + "</highlight2>! New description: <highlight2>"
+                            + quest.getIdentifier() + "</highlight2>! New description: <highlight2>"
                             + condition.getDescription()
                     ));
                 }));
@@ -1410,7 +1410,7 @@ public class AdminEditCommands {
                     }
 
                     context.getSender().sendMessage(main.parse("<main>Description of condition with ID <highlight>" + conditionID + "</highlight> of quest <highlight2>"
-                            + quest.getQuestName() + "</highlight2>:\n"
+                            + quest.getIdentifier() + "</highlight2>:\n"
                             + condition.getDescription()
                     ));
                 }));
@@ -2012,7 +2012,7 @@ public class AdminEditCommands {
                 .handler((context) -> {
                     final Quest quest = context.get("quest");
 
-                    context.getSender().sendMessage(main.parse("<highlight>Rewards for Quest <highlight2>" + quest.getQuestName() + "</highlight2>:"));
+                    context.getSender().sendMessage(main.parse("<highlight>Rewards for Quest <highlight2>" + quest.getIdentifier() + "</highlight2>:"));
                     for (final Action action : quest.getRewards()) {
                         context.getSender().sendMessage(main.parse("<highlight>" + action.getActionID() + ".</highlight> <main>" + action.getActionType()));
                         if(context.getSender() instanceof Player player){
@@ -2030,7 +2030,7 @@ public class AdminEditCommands {
                     final Quest quest = context.get("quest");
 
                     quest.clearRewards();
-                    context.getSender().sendMessage(main.parse("<success>All rewards of Quest <highlight>" + quest.getQuestName() + "</highlight> have been removed!"));
+                    context.getSender().sendMessage(main.parse("<success>All rewards of Quest <highlight>" + quest.getIdentifier() + "</highlight> have been removed!"));
                 }));
 
 
@@ -2054,7 +2054,7 @@ public class AdminEditCommands {
                             final Quest quest = context.get("quest");
                             final Action foundReward = quest.getRewards().get(ID - 1);
                             if (foundReward == null) {
-                                return ArgumentParseResult.failure(new IllegalArgumentException("Reward with the ID '" + ID + "' does not belong to Quest '" + quest.getQuestName() + "'!"));
+                                return ArgumentParseResult.failure(new IllegalArgumentException("Reward with the ID '" + ID + "' does not belong to Quest '" + quest.getIdentifier() + "'!"));
                             } else {
                                 return ArgumentParseResult.success(ID);
                             }
@@ -2071,7 +2071,7 @@ public class AdminEditCommands {
                 .handler((context) -> {
                     final Objective objective = main.getCommandManager().getObjectiveFromContextAndLevel(context, level);
 
-                    context.getSender().sendMessage(main.parse("<highlight>Rewards for Objective with ID <highlight2>" + objective.getObjectiveID() + "</highlight2> of Quest <highlight2>" + objective.getObjectiveHolder().getName() + "</highlight2>:"));
+                    context.getSender().sendMessage(main.parse("<highlight>Rewards for Objective with ID <highlight2>" + objective.getObjectiveID() + "</highlight2> of Quest <highlight2>" + objective.getObjectiveHolder().getIdentifier() + "</highlight2>:"));
                     for (final Action action : objective.getRewards()) {
                         context.getSender().sendMessage(main.parse("<highlight>" + action.getActionID() + ".</highlight> <main>" + action.getActionType()));
                         if(context.getSender() instanceof Player player){
@@ -2088,7 +2088,7 @@ public class AdminEditCommands {
                     final Objective objective = main.getCommandManager().getObjectiveFromContextAndLevel(context, level);
 
                     objective.clearRewards();
-                    context.getSender().sendMessage(main.parse("<success>All rewards of Objective with ID <highlight>" + objective.getObjectiveID() + "</highlight> of Quest <highlight2>" + objective.getObjectiveHolder().getName()+ "</highlight2> have been removed!"));
+                    context.getSender().sendMessage(main.parse("<success>All rewards of Objective with ID <highlight>" + objective.getObjectiveID() + "</highlight> of Quest <highlight2>" + objective.getObjectiveHolder().getIdentifier()+ "</highlight2> have been removed!"));
                 }));
 
 
@@ -2114,7 +2114,7 @@ public class AdminEditCommands {
 
                             final Action foundReward = objective.getRewardFromID(ID);
                             if (foundReward == null) {
-                                return ArgumentParseResult.failure(new IllegalArgumentException("Reward with the ID '" + ID + "' does not belong to Objective with ID " + objective.getObjectiveID() + " of Quest '" + objective.getObjectiveHolder().getName() + "'!"));
+                                return ArgumentParseResult.failure(new IllegalArgumentException("Reward with the ID '" + ID + "' does not belong to Objective with ID " + objective.getObjectiveID() + " of Quest '" + objective.getObjectiveHolder().getIdentifier() + "'!"));
                             } else {
                                 return ArgumentParseResult.success(ID);
                             }
@@ -2140,7 +2140,7 @@ public class AdminEditCommands {
                     }
 
                     context.getSender().sendMessage(main.parse(
-                            "<main>Reward <highlight>" + ID + "</highlight> for Objective with ID <highlight2>" + objective.getObjectiveID() + "</highlight2> of Quest <highlight2>" + objective.getObjectiveHolder().getName() + "</highlight2>:"
+                            "<main>Reward <highlight>" + ID + "</highlight> for Objective with ID <highlight2>" + objective.getObjectiveID() + "</highlight2> of Quest <highlight2>" + objective.getObjectiveHolder().getIdentifier() + "</highlight2>:"
                     ));
 
                     if(context.getSender() instanceof Player player){
@@ -2173,7 +2173,7 @@ public class AdminEditCommands {
                     objective.removeReward(foundReward, true);
                     context.getSender().sendMessage(main.parse(
                             "<success>The reward with the ID <highlight>" + ID + "</highlight> has been removed from the Objective with ID <highlight2>" + objective.getObjectiveID() + "</highlight2> of Quest <highlight2>"
-                                    + objective.getObjectiveHolder().getName()+ "</highlight2>!"
+                                    + objective.getObjectiveHolder().getIdentifier()+ "</highlight2>!"
                     ));
                 }));
 
@@ -2272,7 +2272,7 @@ public class AdminEditCommands {
                     }
 
                     context.getSender().sendMessage(main.parse(
-                            "<main>Reward <highlight>" + ID + "</highlight> for Quest <highlight2>" + quest.getQuestName() + "</highlight2>:"
+                            "<main>Reward <highlight>" + ID + "</highlight> for Quest <highlight2>" + quest.getIdentifier() + "</highlight2>:"
                     ));
 
                     if(context.getSender() instanceof Player player){
@@ -2304,7 +2304,7 @@ public class AdminEditCommands {
                     quest.removeReward(foundReward);
                     context.getSender().sendMessage(main.parse(
                             "<success>The reward with the ID <highlight>" + ID + "</highlight> has been removed from the Quest <highlight2>"
-                                    + quest.getQuestName() + "</highlight2>!"
+                                    + quest.getIdentifier() + "</highlight2>!"
                     ));
                 }));
 
@@ -2348,7 +2348,7 @@ public class AdminEditCommands {
                         return;
                     }
                     foundReward.removeActionName();
-                    foundReward.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + ID + ".displayName", null);
+                    foundReward.getCategory().getQuestsConfig().set("quests." + quest.getIdentifier() + ".rewards." + ID + ".displayName", null);
                     foundReward.getCategory().saveQuestsConfig();
                     context.getSender().sendMessage(main.parse(
                             "<success>Display Name of reward with the ID <highlight>" + ID + "</highlight> has been removed successfully."
@@ -2375,7 +2375,7 @@ public class AdminEditCommands {
 
 
                     foundReward.setActionName(displayName);
-                    foundReward.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + ID + ".displayName", foundReward.getActionName());
+                    foundReward.getCategory().getQuestsConfig().set("quests." + quest.getIdentifier() + ".rewards." + ID + ".displayName", foundReward.getActionName());
                     foundReward.getCategory().saveQuestsConfig();
                     context.getSender().sendMessage(main.parse(
                             "<success>Display Name successfully added to reward with ID <highlight>" + ID + "</highlight>! New display name: <highlight2>"
@@ -2393,7 +2393,7 @@ public class AdminEditCommands {
 
                     quest.clearTriggers();
                     context.getSender().sendMessage(main.parse(
-                            "<success>All Triggers of Quest <highlight>" + quest.getQuestName() + "</highlight> have been removed!"
+                            "<success>All Triggers of Quest <highlight>" + quest.getIdentifier() + "</highlight> have been removed!"
                     ));
 
                 }));
@@ -2404,7 +2404,7 @@ public class AdminEditCommands {
                     final Quest quest = context.get("quest");
 
 
-                    context.getSender().sendMessage(main.parse("<highlight>Triggers for Quest <highlight2>" + quest.getQuestName() + "</highlight2>:"));
+                    context.getSender().sendMessage(main.parse("<highlight>Triggers for Quest <highlight2>" + quest.getIdentifier() + "</highlight2>:"));
 
                     for (Trigger trigger : quest.getTriggers()) {
                         context.getSender().sendMessage(main.parse("<highlight>" + trigger.getTriggerID() + ".</highlight> Type: <main>" + trigger.getTriggerType()));
@@ -2463,7 +2463,7 @@ public class AdminEditCommands {
                             final Quest quest = context.get("quest");
                             final Trigger foundTrigger = quest.getTriggerFromID(ID);
                             if (foundTrigger == null) {
-                                return ArgumentParseResult.failure(new IllegalArgumentException("Trigger with the ID '" + ID + "' does not belong to Quest '" + quest.getQuestName() + "'!"));
+                                return ArgumentParseResult.failure(new IllegalArgumentException("Trigger with the ID '" + ID + "' does not belong to Quest '" + quest.getIdentifier() + "'!"));
                             } else {
                                 return ArgumentParseResult.success(ID);
                             }

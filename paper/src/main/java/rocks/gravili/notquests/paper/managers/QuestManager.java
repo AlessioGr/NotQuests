@@ -30,7 +30,6 @@ import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -374,7 +373,7 @@ public class QuestManager {
 
     public final Quest getQuest(String questName) {
         for (Quest quest : quests) {
-            if (quest.getQuestName().equalsIgnoreCase(questName)) {
+            if (quest.getIdentifier().equalsIgnoreCase(questName)) {
                 return quest;
             }
         }
@@ -805,7 +804,7 @@ public class QuestManager {
                         materialToUse,
                         count, // Display a number as the item count
                         click -> {
-                            player.chat("/notquests preview " + quest.getQuestName());
+                            player.chat("/notquests preview " + quest.getIdentifier() );
                             return true; // returning true will cancel the click event and stop taking the item
 
                         },
@@ -850,10 +849,10 @@ public class QuestManager {
             for (Quest quest : questsAttachedToNPC) {
 
                 Component acceptComponent = main.parse("<GREEN>**[CHOOSE]")
-                        .clickEvent(ClickEvent.runCommand("/nquests preview " + quest.getQuestName()))
-                        .hoverEvent(HoverEvent.showText(main.parse("<GREEN>Click to preview/choose the quest <highlight>" + quest.getQuestFinalName())));
+                        .clickEvent(ClickEvent.runCommand("/nquests preview " + quest.getIdentifier()))
+                        .hoverEvent(HoverEvent.showText(main.parse("<GREEN>Click to preview/choose the quest <highlight>" + quest.getDisplayNameOrIdentifier())));
 
-                Component component = main.parse("<YELLOW>" + counter + ". <highlight>" + quest.getQuestFinalName() + " ")
+                Component component = main.parse("<YELLOW>" + counter + ". <highlight>" + quest.getDisplayNameOrIdentifier() + " ")
                         .append(acceptComponent);
 
                 player.sendMessage(component);
@@ -900,10 +899,10 @@ public class QuestManager {
             for (final Quest quest : questsAttachedToNPC) {
 
                 Component acceptComponent = main.parse("<GREEN>**[CHOOSE]")
-                        .clickEvent(ClickEvent.runCommand("/nquests preview " + quest.getQuestName()))
-                        .hoverEvent(HoverEvent.showText(main.parse("<GREEN>Click to preview/choose the quest <highlight>" + quest.getQuestFinalName())));
+                        .clickEvent(ClickEvent.runCommand("/nquests preview " + quest.getIdentifier()))
+                        .hoverEvent(HoverEvent.showText(main.parse("<GREEN>Click to preview/choose the quest <highlight>" + quest.getDisplayNameOrIdentifier())));
 
-                Component component = main.parse("<YELLOW>" + counter + ". <highlight>" + quest.getQuestFinalName() + " ")
+                Component component = main.parse("<YELLOW>" + counter + ". <highlight>" + quest.getDisplayNameOrIdentifier() + " ")
                         .append(acceptComponent);
 
                 player.sendMessage(component);
@@ -1036,13 +1035,13 @@ public class QuestManager {
         player.sendMessage(Component.empty());
         player.sendMessage(main.parse("<GRAY>-----------------------------------"));
         player.sendMessage(main.parse(
-                "<BLUE>Quest Preview for Quest <highlight>" + quest.getQuestFinalName() + "</highlight>:"
+                "<BLUE>Quest Preview for Quest <highlight>" + quest.getDisplayNameOrIdentifier() + "</highlight>:"
         ));
 
 
-        if (quest.getQuestDescription().length() >= 1) {
+        if (quest.getObjectiveHolderDescription().length() >= 1) {
             player.sendMessage(main.parse(
-                    "<YELLOW>Quest description: <GRAY>" + quest.getQuestDescription()
+                    "<YELLOW>Quest description: <GRAY>" + quest.getObjectiveHolderDescription()
             ));
         } else {
             player.sendMessage(main.parse(
@@ -1066,8 +1065,8 @@ public class QuestManager {
         ));
 
         Component acceptComponent = main.parse("<GREEN>**[ACCEPT THIS QUEST]")
-                .clickEvent(ClickEvent.runCommand("/nquests take " + quest.getQuestName()))
-                .hoverEvent(HoverEvent.showText(main.parse("<GREEN>Click to accept the Quest <highlight>" + quest.getQuestFinalName())));
+                .clickEvent(ClickEvent.runCommand("/nquests take " + quest.getIdentifier()))
+                .hoverEvent(HoverEvent.showText(main.parse("<GREEN>Click to accept the Quest <highlight>" + quest.getDisplayNameOrIdentifier())));
 
         player.sendMessage(Component.empty());
         player.sendMessage(acceptComponent);
@@ -1086,11 +1085,11 @@ public class QuestManager {
 
         for (ActiveObjective activeObjective : activeQuest.getCompletedObjectives()) {
 
-            final String objectiveDescription = activeObjective.getObjective().getDescription();
+            final String objectiveDescription = activeObjective.getObjective().getObjectiveHolderDescription();
 
 
             player.sendMessage(main.parse(
-                    "<strikethrough><GRAY>" + activeObjective.getObjective().getObjectiveID() + ". " + activeObjective.getObjective().getFinalName() + ":" + "</strikethrough>"
+                    "<strikethrough><GRAY>" + activeObjective.getObjective().getObjectiveID() + ". " + activeObjective.getObjective().getDisplayNameOrIdentifier() + ":" + "</strikethrough>"
             ));
 
             player.sendMessage(main.parse(
@@ -1140,9 +1139,9 @@ public class QuestManager {
 
         for (final Objective objective : quest.getObjectives()) {
 
-            final String objectiveDescription = objective.getDescription();
+            final String objectiveDescription = objective.getObjectiveHolderDescription();
             sender.sendMessage(main.parse(
-                    "<highlight>" + objective.getObjectiveID() + ".</highlight> <main>" + objective.getFinalName()
+                    "<highlight>" + objective.getObjectiveID() + ".</highlight> <main>" + objective.getDisplayNameOrIdentifier()
             ));
 
 
@@ -1230,15 +1229,15 @@ public class QuestManager {
     public void sendActiveObjective(final QuestPlayer questPlayer, ActiveObjective activeObjective) {
         final Player player = questPlayer.getPlayer();
         if (activeObjective.isUnlocked()) {
-            final String objectiveDescription = activeObjective.getObjective().getDescription();
+            final String objectiveDescription = activeObjective.getObjective().getObjectiveHolderDescription();
             player.sendMessage(main.parse(
-                    main.getLanguageManager().getString("chat.objectives.counter", player, activeObjective.getActiveQuest(), activeObjective)
+                    main.getLanguageManager().getString("chat.objectives.counter", player, activeObjective.getActiveObjectiveHolder(), activeObjective)
             ));
 
             if (!objectiveDescription.isBlank()) {
                 player.sendMessage(main.parse(
-                        main.getLanguageManager().getString("chat.objectives.description", player, activeObjective.getActiveQuest(), activeObjective)
-                                .replace("%OBJECTIVEDESCRIPTION%", activeObjective.getObjective().getDescription())
+                        main.getLanguageManager().getString("chat.objectives.description", player, activeObjective.getActiveObjectiveHolder(), activeObjective)
+                                .replace("%OBJECTIVEDESCRIPTION%", activeObjective.getObjective().getObjectiveHolderDescription())
                 ));
             }
 
@@ -1247,7 +1246,7 @@ public class QuestManager {
             ));
 
             player.sendMessage(main.parse(
-                    main.getLanguageManager().getString("chat.objectives.progress", player, activeObjective.getActiveQuest(), activeObjective)
+                    main.getLanguageManager().getString("chat.objectives.progress", player, activeObjective.getActiveObjectiveHolder(), activeObjective)
             ));
         } else {
             player.sendMessage(main.parse(
@@ -1283,7 +1282,7 @@ public class QuestManager {
         //TODO: Only applicable for Citizens or not?
         for (NQNPC npc : getAllNPCsAttachedToQuest(quest)) {
             if (npc == null || npc.getEntity() == null) {
-                main.getLogManager().warn("A quest has an invalid npc attached to it, which should be removed. Report it to an admin. Quest name: <highlight>" + quest.getQuestName() + "</highlight>");
+                main.getLogManager().warn("A quest has an invalid npc attached to it, which should be removed. Report it to an admin. Quest name: <highlight>" + quest.getIdentifier() + "</highlight>");
                 continue;
             }
             final Location npcLocation = npc.getEntity().getLocation();

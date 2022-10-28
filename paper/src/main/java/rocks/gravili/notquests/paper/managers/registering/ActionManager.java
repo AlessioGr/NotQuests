@@ -291,7 +291,7 @@ public class ActionManager {
                     "<success>"
                         + getActionType(action.getClass())
                         + " Reward successfully added to Objective <highlight>"
-                        + objectiveOfQuest.getFinalName()
+                        + objectiveOfQuest.getDisplayNameOrIdentifier()
                         + "</highlight>!"));
       } else { // Quest Reward
         action.setActionID(quest.getFreeRewardID());
@@ -304,7 +304,7 @@ public class ActionManager {
                     "<success>"
                         + getActionType(action.getClass())
                         + " Reward successfully added to Quest <highlight>"
-                        + quest.getQuestName()
+                        + quest.getIdentifier()
                         + "</highlight>!"));
       }
     } else {

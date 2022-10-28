@@ -244,7 +244,7 @@ public class ArmorStandEvents implements Listener {
                                 ));
                             } else {
                                 player.sendMessage(main.parse(
-                                        "<error>Error: Objective with the ID <highlight>"+ objectiveID + "</highlight> was not found for quest <highlight2>" + quest.getQuestName() + "</highlight2>!"
+                                        "<error>Error: Objective with the ID <highlight>"+ objectiveID + "</highlight> was not found for quest <highlight2>" + quest.getIdentifier()  + "</highlight2>!"
                                 ));
                             }
                         } else {

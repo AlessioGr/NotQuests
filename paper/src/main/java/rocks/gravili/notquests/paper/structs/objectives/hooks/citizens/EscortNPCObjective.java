@@ -211,7 +211,7 @@ public class EscortNPCObjective extends Objective { //TODO: Add support for othe
     if (main.getIntegrationsManager().isCitizensEnabled()) {
       main.getIntegrationsManager()
           .getCitizensManager()
-          .handleEscortNPCObjectiveForActiveObjective(this, activeObjective.getActiveQuest());
+          .handleEscortNPCObjectiveForActiveObjective(this, activeObjective.getActiveObjectiveHolder());
     }
   }
 

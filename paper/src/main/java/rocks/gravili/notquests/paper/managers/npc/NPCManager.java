@@ -149,12 +149,12 @@ public class NPCManager {
               if (nqNPC != null) {
                 final boolean questShowing = category.getQuestsConfig().getBoolean("quests." + questName + ".npcs." + npcIdentifyingString + ".questShowing", true);
                 // call the callback with the result
-                main.getLogManager().info("Attaching Quest with the name <highlight>" + quest.getQuestName() + "</highlight> to NPC with the ID <highlight>" + nqNPC.getID() + " </highlight>and name <highlight>" + nqNPC.getName());
+                main.getLogManager().info("Attaching Quest with the name <highlight>" + quest.getIdentifier() + "</highlight> to NPC with the ID <highlight>" + nqNPC.getID() + " </highlight>and name <highlight>" + nqNPC.getName());
                 quest.removeNPC(nqNPC);
                 quest.bindToNPC(nqNPC, questShowing);
               } else {
                 main.getLogManager().warn("Error attaching npc with ID <highlight>" + category.getQuestsConfig().getInt("quests." + questName + ".npcs." + npcIdentifyingString + ".npcID")
-                    + "</highlight> to quest <highlight>" + quest.getQuestName() + "</highlight> - NPC not found.");
+                    + "</highlight> to quest <highlight>" + quest.getIdentifier() + "</highlight> - NPC not found.");
               }
             } else {
               main.getLogManager().warn("Error: quests data is null");

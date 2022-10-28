@@ -71,7 +71,7 @@ public class ObjectiveSelector<C> extends CommandArgument<C, Objective> {
       final NotQuests main,
       int level
   ) {
-    return ObjectiveSelector.<C>newBuilder(name, main, level).asOptionalWithDefault(objective.getName()).build();
+    return ObjectiveSelector.<C>newBuilder(name, main, level).asOptionalWithDefault(objective.getIdentifier()).build();
   }
 
   public int getLevel() {

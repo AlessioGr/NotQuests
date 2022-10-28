@@ -68,7 +68,7 @@ public class OtherQuestObjective extends Objective {
 
                   OtherQuestObjective otherQuestObjective = new OtherQuestObjective(main);
 
-                  otherQuestObjective.setOtherQuestName(otherQuest.getQuestName());
+                  otherQuestObjective.setOtherQuestName(otherQuest.getIdentifier() );
                   otherQuestObjective.setCountPreviousCompletions(countPreviouslyCompletedQuests);
                   otherQuestObjective.setProgressNeededExpression(amountExpression);
 
@@ -84,7 +84,7 @@ public class OtherQuestObjective extends Objective {
             "chat.objectives.taskDescription.otherQuest.base",
             questPlayer,
             activeObjective,
-            Map.of("%OTHERQUESTNAME%", getOtherQuest().getQuestName()));
+            Map.of("%OTHERQUESTNAME%", getOtherQuest().getIdentifier()));
   }
 
   @Override

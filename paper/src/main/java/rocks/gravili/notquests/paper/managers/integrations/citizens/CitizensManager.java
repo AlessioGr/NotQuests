@@ -18,13 +18,8 @@
 
 package rocks.gravili.notquests.paper.managers.integrations.citizens;
 
-import cloud.commandframework.ArgumentDescription;
-import cloud.commandframework.Command;
-import cloud.commandframework.arguments.standard.IntegerArgument;
-import cloud.commandframework.meta.CommandMeta;
-import cloud.commandframework.paper.PaperCommandManager;
+
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
 import net.citizensnpcs.api.CitizensAPI;
@@ -36,16 +31,13 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.ConversationSelector;
-import rocks.gravili.notquests.paper.commands.arguments.NQNPCSelector;
 import rocks.gravili.notquests.paper.conversation.Conversation;
 import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.managers.npc.NQNPCID;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
-import rocks.gravili.notquests.paper.structs.ActiveQuest;
+import rocks.gravili.notquests.paper.structs.ActiveObjectiveHolder;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.objectives.hooks.citizens.EscortNPCObjective;
 
@@ -176,7 +168,7 @@ public class CitizensManager {
   }
 
   public void handleEscortNPCObjectiveForActiveObjective(
-      final EscortNPCObjective escortNPCObjective, final ActiveQuest activeQuest) {
+      final EscortNPCObjective escortNPCObjective, final ActiveObjectiveHolder activeObjectiveHolder) {
     final int npcToEscortID = escortNPCObjective.getNpcToEscortID();
     final int destinationNPCID = escortNPCObjective.getNpcToEscortToID();
     final NPC npcToEscort = CitizensAPI.getNPCRegistry().getById(npcToEscortID);
@@ -197,7 +189,7 @@ public class CitizensManager {
                     FollowTrait followTrait = new FollowTrait();
                     npcToEscort.addTrait(followTrait);
                     handleEscortNPCObjectiveForActiveObjectiveSynchronous(
-                        npcToEscort, destinationNPC, followTrait, activeQuest, escortNPCObjective);
+                        npcToEscort, destinationNPC, followTrait, activeObjectiveHolder, escortNPCObjective);
                   });
         } else {
           final FollowTrait finalFollowerTrait = followerTrait;
@@ -209,7 +201,7 @@ public class CitizensManager {
                         npcToEscort,
                         destinationNPC,
                         finalFollowerTrait,
-                        activeQuest,
+                        activeObjectiveHolder,
                         escortNPCObjective);
                   });
         }
@@ -219,12 +211,12 @@ public class CitizensManager {
           npcToEscort.addTrait(followerTrait);
         }
         handleEscortNPCObjectiveForActiveObjectiveSynchronous(
-            npcToEscort, destinationNPC, followerTrait, activeQuest, escortNPCObjective);
+            npcToEscort, destinationNPC, followerTrait, activeObjectiveHolder, escortNPCObjective);
       }
 
     } else {
       if (destinationNPC == null) {
-        final Player player = Bukkit.getPlayer(activeQuest.getQuestPlayer().getUniqueId());
+        final Player player = Bukkit.getPlayer(activeObjectiveHolder.getQuestPlayer().getUniqueId());
         if (player != null) {
           player.sendMessage(
               Component.text("The Destination NPC does not exist. Please consult an admin."));
@@ -236,7 +228,7 @@ public class CitizensManager {
                     + "</highlight> was not found!");
       }
       if (npcToEscort == null) {
-        final Player player = Bukkit.getPlayer(activeQuest.getQuestPlayer().getUniqueId());
+        final Player player = Bukkit.getPlayer(activeObjectiveHolder.getQuestPlayer().getUniqueId());
         if (player != null) {
           player.sendMessage(
               Component.text(
@@ -255,9 +247,9 @@ public class CitizensManager {
       final NPC npcToEscort,
       final NPC destinationNPC,
       final FollowTrait followerTrait,
-      final ActiveQuest activeQuest,
+      final ActiveObjectiveHolder activeObjectiveHolder,
       final EscortNPCObjective escortNPCObjective) {
-    final Player player = Bukkit.getPlayer(activeQuest.getQuestPlayer().getUniqueId());
+    final Player player = Bukkit.getPlayer(activeObjectiveHolder.getQuestPlayer().getUniqueId());
     if (player != null) {
       final Location spawnLocation =
           escortNPCObjective.getSpawnLocation() != null
@@ -296,7 +288,7 @@ public class CitizensManager {
       main.getLogManager()
           .warn(
               "Error: The escort objective could not be started, because the player with the UUID <highlight>"
-                  + activeQuest.getQuestPlayer().getUniqueId()
+                  + activeObjectiveHolder.getQuestPlayer().getUniqueId()
                   + "</highlight> was not found!");
     }
   }
@@ -349,7 +341,7 @@ public class CitizensManager {
         //TODO: Remove debug shit or improve performance
         final ArrayList<String> attachedQuestNames = new ArrayList<>();
         for (final Quest attachedQuest : main.getQuestManager().getAllQuestsAttachedToNPC(nqnpc)) {
-          attachedQuestNames.add(attachedQuest.getQuestName());
+          attachedQuestNames.add(attachedQuest.getIdentifier());
         }
         main.getLogManager().info("  NPC with the ID: <highlight>" + npc.getId() + "</highlight> is not bugged, because it has the following quests attached: <highlight>" + attachedQuestNames + "</highlight>");
 

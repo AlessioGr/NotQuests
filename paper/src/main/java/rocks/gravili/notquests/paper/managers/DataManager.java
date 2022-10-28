@@ -1407,14 +1407,14 @@ public class DataManager {
                 throwable.printStackTrace(pw);
                 reasonWithObjects += "\n" + "Error message:" + "\n" + sw.toString();
             } else if (object instanceof Quest quest) {
-                main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Quest: <highlight>"+ quest.getQuestName());
-                reasonWithObjects += "\n" + "  <DARK_GRAY>└─</DARK_GRAY> Quest: <highlight>"+ quest.getQuestName();
+                main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Quest: <highlight>"+ quest.getIdentifier());
+                reasonWithObjects += "\n" + "  <DARK_GRAY>└─</DARK_GRAY> Quest: <highlight>"+ quest.getIdentifier();
             } else if (object instanceof Objective objective) {
-                main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Objective ID: <highlight>" + objective.getObjectiveID() + "</highlight> of Quest: <highlight2>" + ((Objective) object).getObjectiveHolder().getName());
-                reasonWithObjects += "\n" + "  <DARK_GRAY>└─</DARK_GRAY> Objective ID: <highlight>" + objective.getObjectiveID() + "</highlight> of Quest: <highlight2>" + ((Objective) object).getObjectiveHolder().getName();
+                main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Objective ID: <highlight>" + objective.getObjectiveID() + "</highlight> of Quest: <highlight2>" + ((Objective) object).getObjectiveHolder().getIdentifier());
+                reasonWithObjects += "\n" + "  <DARK_GRAY>└─</DARK_GRAY> Objective ID: <highlight>" + objective.getObjectiveID() + "</highlight> of Quest: <highlight2>" + ((Objective) object).getObjectiveHolder().getIdentifier();
             } else if (object instanceof ObjectiveHolder objectiveHolder) {
-                main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Objective Holder: <highlight>"+ objectiveHolder.getName());
-                reasonWithObjects += "\n" + "  <DARK_GRAY>└─</DARK_GRAY> Objective Holder: <highlight>"+ objectiveHolder.getName();
+                main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Objective Holder: <highlight>"+ objectiveHolder.getIdentifier());
+                reasonWithObjects += "\n" + "  <DARK_GRAY>└─</DARK_GRAY> Objective Holder: <highlight>"+ objectiveHolder.getIdentifier();
             }  else if (object instanceof Action action) {
                 main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Action Name: <highlight>" + action.getActionName() + "</highlight> of Type: <highlight2>" + action.getActionType());
                 reasonWithObjects += "\n" + "  <DARK_GRAY>└─</DARK_GRAY> Action Name: <highlight>" + action.getActionName() + "</highlight> of Type: <highlight2>" + action.getActionType();

@@ -45,7 +45,6 @@ import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.NotQuestColors;
 import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
-import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.objectives.ObjectiveHolder;
 
 public class UtilManager {
@@ -536,7 +535,7 @@ public class UtilManager {
         }
 
         if(objectiveHolder != null){
-            toReturn = toReturn.replace("{QUEST}", "" + objectiveHolder.getName());
+            toReturn = toReturn.replace("{QUEST}", "" + objectiveHolder.getIdentifier());
         }
 
         if(player != null){

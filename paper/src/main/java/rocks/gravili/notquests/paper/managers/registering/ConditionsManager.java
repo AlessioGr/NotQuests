@@ -279,7 +279,7 @@ public class ConditionsManager {
 
                     context.getSender().sendMessage(main.parse(
                         "<success>" + getConditionType(condition.getClass()) + " Condition successfully added to Objective <highlight>"
-                            + objectiveOfQuest.getFinalName() + "</highlight>!"));
+                            + objectiveOfQuest.getDisplayNameOrIdentifier() + "</highlight>!"));
 
                 } else if(conditionFor == ConditionFor.OBJECTIVECOMPLETE){
                     condition.setConditionID(objectiveOfQuest.getFreeCompleteConditionID());
@@ -288,7 +288,7 @@ public class ConditionsManager {
 
                     context.getSender().sendMessage(main.parse(
                         "<success>" + getConditionType(condition.getClass()) + " Complete Condition successfully added to Objective <highlight>"
-                            + objectiveOfQuest.getFinalName() + "</highlight>!"));
+                            + objectiveOfQuest.getDisplayNameOrIdentifier() + "</highlight>!"));
 
                 } else {
                     condition.setConditionID(objectiveOfQuest.getFreeUnlockConditionID());
@@ -297,7 +297,7 @@ public class ConditionsManager {
 
                     context.getSender().sendMessage(main.parse(
                         "<success>" + getConditionType(condition.getClass()) + " Unlock Condition successfully added to Objective <highlight>"
-                            + objectiveOfQuest.getFinalName() + "</highlight>!"));
+                            + objectiveOfQuest.getDisplayNameOrIdentifier() + "</highlight>!"));
                 }
             } else { //Quest Requirement
                 condition.setConditionID(quest.getFreeRequirementID());
@@ -305,7 +305,7 @@ public class ConditionsManager {
 
                 context.getSender().sendMessage(main.parse(
                         "<success>" + getConditionType(condition.getClass()) + " Requirement successfully added to Quest <highlight>"
-                                + quest.getQuestName() + "</highlight>!"
+                                + quest.getIdentifier() + "</highlight>!"
                 ));
             }
         } else {

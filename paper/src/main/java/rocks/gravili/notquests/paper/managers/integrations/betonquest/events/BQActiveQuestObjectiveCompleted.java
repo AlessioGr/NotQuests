@@ -52,7 +52,7 @@ public class BQActiveQuestObjectiveCompleted extends Condition {
 
     boolean foundQuest = false;
     for (Quest quest : main.getQuestManager().getAllQuests()) {
-      if (quest.getQuestName().equalsIgnoreCase(questName)) {
+      if (quest.getIdentifier() .equalsIgnoreCase(questName)) {
         foundQuest = true;
         this.quest = quest;
         break;
@@ -81,7 +81,7 @@ public class BQActiveQuestObjectiveCompleted extends Condition {
         if (questPlayer != null) {
 
           for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-            if (activeQuest.getQuest().getQuestName().equalsIgnoreCase(quest.getQuestName())) {
+            if (activeQuest.getQuest().getIdentifier().equalsIgnoreCase(quest.getIdentifier() )) {
               for (final ActiveObjective objective : activeQuest.getCompletedObjectives()) {
                 if (objective.getObjectiveID() == objectiveID) {
                   return true;

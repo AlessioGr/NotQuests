@@ -61,7 +61,7 @@ public class ActiveTrigger {
               "Trigger: Triggering trigger "
                   + trigger.getTriggerType()
                   + " for Quest "
-                  + activeQuest.getQuest().getQuestName());
+                  + activeQuest.getQuest().getIdentifier());
       trigger.trigger(activeQuest);
     }
   }

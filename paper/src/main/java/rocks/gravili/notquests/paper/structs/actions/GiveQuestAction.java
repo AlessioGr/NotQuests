@@ -61,7 +61,7 @@ public class GiveQuestAction extends Action {
                   final boolean forceGive = context.flags().isPresent("forceGive");
 
                   GiveQuestAction giveQuestAction = new GiveQuestAction(main);
-                  giveQuestAction.setQuestToGiveName(foundQuest.getQuestName());
+                  giveQuestAction.setQuestToGiveName(foundQuest.getIdentifier() );
                   giveQuestAction.setForceGive(forceGive);
 
                   main.getActionManager().addAction(giveQuestAction, context, actionFor);

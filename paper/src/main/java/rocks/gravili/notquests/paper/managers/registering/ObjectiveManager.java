@@ -266,7 +266,7 @@ public class ObjectiveManager {
                 "<success>"
                     + getObjectiveType(objective.getClass())
                     + " Objective successfully added to Quest <highlight>"
-                    + objectiveHolder.getName()
+                    + objectiveHolder.getIdentifier()
                     + "</highlight>!"));
 
     objectiveHolder.addObjective(objective, true);

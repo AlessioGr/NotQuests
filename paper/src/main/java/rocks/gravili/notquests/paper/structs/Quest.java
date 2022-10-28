@@ -58,7 +58,6 @@ public class Quest extends ObjectiveHolder {
   private int maxAccepts = -1; // -1 or smaller => unlimited accepts
   private long acceptCooldown = -1; // Cooldown in minute. -1 or smaller => no cooldown.
   private boolean takeEnabled = true;
-  private String description = "";
   private String displayName = "";
   private ItemStack takeItem = new ItemStack(Material.BOOK);
   private Category category;
@@ -98,9 +97,6 @@ public class Quest extends ObjectiveHolder {
     this.category = category;
   }
 
-  public final String getQuestName() {
-    return questName;
-  }
 
   public final ArrayList<Action> getRewards() {
     return rewards;
@@ -207,7 +203,7 @@ public class Quest extends ObjectiveHolder {
       main.getLogManager()
           .warn(
               "ERROR: Tried to add requirement to quest <highlight>"
-                  + getQuestName()
+                  + getIdentifier()
                   + "</highlight> with the ID <highlight>"
                   + condition.getConditionID()
                   + "</highlight> but the ID was a DUPLICATE!");
@@ -246,7 +242,7 @@ public class Quest extends ObjectiveHolder {
       main.getLogManager()
           .warn(
               "ERROR: Tried to add reward to quest <highlight>"
-                  + getQuestName()
+                  + getIdentifier()
                   + "</highlight> with the ID <highlight>"
                   + action.getActionID()
                   + "</highlight> but the ID was a DUPLICATE!");
@@ -304,7 +300,7 @@ public class Quest extends ObjectiveHolder {
       main.getLogManager()
           .warn(
               "ERROR: Tried to add trigger to quest <highlight>"
-                  + getQuestName()
+                  + getIdentifier()
                   + "</highlight> with the ID <highlight>"
                   + trigger.getTriggerID()
                   + "</highlight> but the ID was a DUPLICATE!");
@@ -343,14 +339,11 @@ public class Quest extends ObjectiveHolder {
     category.saveQuestsConfig();
   }
 
-  public final String getQuestDescription() {
-    return description;
-  }
 
   public void setQuestDescription(String newQuestDescription, boolean save) {
     newQuestDescription = main.getUtilManager().replaceLegacyWithMiniMessage(newQuestDescription);
 
-    this.description = newQuestDescription;
+    this.setObjectiveHolderDescription(newQuestDescription);
     if (save) {
       category.getQuestsConfig().set("quests." + questName + ".description", newQuestDescription);
       category.saveQuestsConfig();
@@ -358,7 +351,7 @@ public class Quest extends ObjectiveHolder {
   }
 
   public void removeQuestDescription(boolean save) {
-    this.description = "";
+    setObjectiveHolderDescription("");
     if (save) {
       category.getQuestsConfig().set("quests." + questName + ".description", null);
       category.saveQuestsConfig();
@@ -366,11 +359,11 @@ public class Quest extends ObjectiveHolder {
   }
 
   public final String getQuestDescription(final int maxLengthPerLine) {
-    return main.getUtilManager().wrapText(description, maxLengthPerLine);
+    return main.getUtilManager().wrapText(getObjectiveHolderDescription(), maxLengthPerLine);
   }
 
   public final List<String> getQuestDescriptionList(final int maxLengthPerLine) {
-    return main.getUtilManager().wrapTextToList(description, maxLengthPerLine);
+    return main.getUtilManager().wrapTextToList(getObjectiveHolderDescription(), maxLengthPerLine);
   }
 
   public final String getQuestDisplayName() {
@@ -382,7 +375,8 @@ public class Quest extends ObjectiveHolder {
    *
    * @return either the displayname or the quest name
    */
-  public final String getQuestFinalName() {
+  @Override
+  public final String getDisplayNameOrIdentifier() {
     if (!displayName.isBlank()) {
       return getQuestDisplayName();
     } else {
@@ -601,7 +595,7 @@ public class Quest extends ObjectiveHolder {
             for(final Quest otherQuest : category.getQuests()){
               if(counter < ourIndex){
                 if(!questPlayer.hasCompletedQuest(otherQuest)){
-                  return "Quest " + otherQuest.getQuestFinalName() + " needs to be completed first";
+                  return "Quest " + otherQuest.getDisplayNameOrIdentifier() + " needs to be completed first";
                 }
               }
               counter++;
@@ -611,7 +605,7 @@ public class Quest extends ObjectiveHolder {
             for(final Quest otherQuest : category.getQuests()){
               if(counter > ourIndex){
                 if(!questPlayer.hasCompletedQuest(otherQuest)){
-                  return "Quest " + otherQuest.getQuestFinalName() + " needs to be completed first";
+                  return "Quest " + otherQuest.getDisplayNameOrIdentifier() + " needs to be completed first";
                 }
               }
               counter++;
@@ -668,12 +662,12 @@ public class Quest extends ObjectiveHolder {
 
   @Override
   public String getInitialConfigPath() {
-    return "quests." + getQuestName();
+    return "quests." + getIdentifier();
   }
 
   @Override
-  public String getName() {
-    return getQuestName();
+  public String getIdentifier() {
+    return this.questName;
   }
 
   @Override
@@ -761,7 +755,7 @@ public class Quest extends ObjectiveHolder {
       main.getLogManager()
           .warn(
               "ERROR: Tried to add objective to quest <highlight>"
-                  + getQuestName()
+                  + getIdentifier()
                   + "</highlight> with the ID <highlight>"
                   + objective.getObjectiveID()
                   + "</highlight> but the ID was a DUPLICATE!");

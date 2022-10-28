@@ -68,7 +68,7 @@ public class TalkToNPCObjective extends Objective {
                                 "<success>You have been given an item with which you can add the TalkToNPC Objective to an NPC by rightclicking the NPC. Check your inventory!",
                                 "<LIGHT_PURPLE>Add TalkToNPC Objective to NPC",
                                 "<WHITE>Right-click an NPC to add the following objective to it:",
-                                "<YELLOW>TalkToNPC <WHITE>Objective of Quest <highlight>" + quest.getQuestName() + "</highlight>."
+                                "<YELLOW>TalkToNPC <WHITE>Objective of Quest <highlight>" + quest.getIdentifier()  + "</highlight>."
                             );
 
                         } else {

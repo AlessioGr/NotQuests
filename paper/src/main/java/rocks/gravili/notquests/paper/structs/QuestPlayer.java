@@ -50,7 +50,6 @@ import rocks.gravili.notquests.paper.structs.conditions.Condition.ConditionResul
 import rocks.gravili.notquests.paper.structs.objectives.ConditionObjective;
 import rocks.gravili.notquests.paper.structs.objectives.NumberVariableObjective;
 import rocks.gravili.notquests.paper.structs.objectives.OtherQuestObjective;
-import rocks.gravili.notquests.paper.structs.objectives.RunCommandObjective;
 import rocks.gravili.notquests.paper.structs.triggers.ActiveTrigger;
 
 /**
@@ -468,7 +467,7 @@ public class QuestPlayer {
                         player.playSound(player.getLocation(), Sound.ENTITY_EVOKER_PREPARE_SUMMON, SoundCategory.MASTER, 100, 2);
 
 
-                        if (!quest.getQuest().getQuestDescription().isBlank()) {
+                        if (!quest.getQuest().getObjectiveHolderDescription().isBlank()) {
                             main.sendMessage(player, main.getLanguageManager().getString("chat.quest-description", player, quest));
                         } else {
                             main.sendMessage(player, main.getLanguageManager().getString("chat.missing-quest-description", player));
@@ -585,7 +584,7 @@ public class QuestPlayer {
         if (main.getDataManager().isDisabled()) {
             return;
         }
-        sendDebugMessage("QuestPlayer.giveReward(). Quest: " + quest.getQuestName());
+        sendDebugMessage("QuestPlayer.giveReward(). Quest: " + quest.getIdentifier());
 
 
         final Player player = getPlayer();
@@ -874,7 +873,7 @@ public class QuestPlayer {
 
     public final boolean hasAcceptedQuest(final Quest quest) {
         for (final ActiveQuest activeQuest : activeQuests) {
-            if (activeQuest.getQuestName().equalsIgnoreCase(quest.getQuestName())) {
+            if (activeQuest.getQuestIdentifier().equalsIgnoreCase(quest.getIdentifier())) {
                 return true;
             }
         }
@@ -883,7 +882,7 @@ public class QuestPlayer {
 
     public final boolean hasCompletedQuest(final Quest quest) {
         for (final CompletedQuest completedQuest : completedQuests) {
-            if (completedQuest.getQuestName().equalsIgnoreCase(quest.getQuestName())) {
+            if (completedQuest.getQuestIdentifier() .equalsIgnoreCase(quest.getIdentifier())) {
                 return true;
             }
         }
@@ -892,7 +891,7 @@ public class QuestPlayer {
 
     public final boolean hasCompletedQuest(final String questName) {
         for (final CompletedQuest completedQuest : completedQuests) {
-            if (completedQuest.getQuestName().equalsIgnoreCase(questName)) {
+            if (completedQuest.getQuestIdentifier() .equalsIgnoreCase(questName)) {
                 return true;
             }
         }
@@ -931,11 +930,11 @@ public class QuestPlayer {
         if (main.getConfiguration().isVisualObjectiveTrackingShowProgressInActionBar()) {
             if (activeObjective.getProgressNeeded() == 1) {
                 getPlayer().sendActionBar(main.parse(
-                        main.getLanguageManager().getString("objective-tracking.actionbar-progress-update.only-one-max-progress", getPlayer(), this, activeObjective, activeObjective.getActiveQuest())
+                        main.getLanguageManager().getString("objective-tracking.actionbar-progress-update.only-one-max-progress", getPlayer(), this, activeObjective, activeObjective.getActiveObjectiveHolder())
                 ));
             } else {
                 getPlayer().sendActionBar(main.parse(
-                        main.getLanguageManager().getString("objective-tracking.actionbar-progress-update.default", getPlayer(), this, activeObjective, activeObjective.getActiveQuest())
+                        main.getLanguageManager().getString("objective-tracking.actionbar-progress-update.default", getPlayer(), this, activeObjective, activeObjective.getActiveObjectiveHolder())
                 ));
             }
         }
@@ -958,11 +957,11 @@ public class QuestPlayer {
 
             final String languageString = activeObjective.getProgressNeeded() == 1 ? "objective-tracking.bossbar-progress-update.only-one-max-progress" : "objective-tracking.bossbar-progress-update.default";
             if (bossBar != null) {
-                bossBar.name(main.getLanguageManager().getComponent(languageString, getPlayer(), this, activeObjective, activeObjective.getActiveQuest()));
+                bossBar.name(main.getLanguageManager().getComponent(languageString, getPlayer(), this, activeObjective, activeObjective.getActiveObjectiveHolder()));
                 bossBar.progress(progress);
                 lastBossBarActiveTimeInSeconds = 0;
             } else {
-                bossBar = BossBar.bossBar(main.getLanguageManager().getComponent(languageString, getPlayer(), this, activeObjective, activeObjective.getActiveQuest()),
+                bossBar = BossBar.bossBar(main.getLanguageManager().getComponent(languageString, getPlayer(), this, activeObjective, activeObjective.getActiveObjectiveHolder()),
                         progress, BossBar.Color.BLUE, BossBar.Overlay.PROGRESS);
                 player.showBossBar(bossBar);
                 lastBossBarActiveTimeInSeconds = 0;

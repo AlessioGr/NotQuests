@@ -556,7 +556,7 @@ public class UserCommands {
                                   "<GREEN>"
                                       + counter
                                       + ". <YELLOW>"
-                                      + activeQuest.getQuest().getQuestFinalName()));
+                                      + activeQuest.getQuest().getDisplayNameOrIdentifier()));
                       counter += 1;
                     }
 
@@ -689,7 +689,7 @@ public class UserCommands {
                         .sendMessage(
                             main.parse(
                                 "<GREEN>Completed Objectives for Quest <highlight>"
-                                    + activeQuest.getQuest().getQuestFinalName()
+                                    + activeQuest.getQuest().getDisplayNameOrIdentifier()
                                     + "<YELLOW>:"));
                     main.getQuestManager()
                         .sendCompletedObjectivesAndProgress(questPlayer, activeQuest);
@@ -698,7 +698,7 @@ public class UserCommands {
                         .sendMessage(
                             main.parse(
                                 "<GREEN>Active Objectives for Quest <highlight>"
-                                    + activeQuest.getQuest().getQuestFinalName()
+                                    + activeQuest.getQuest().getDisplayNameOrIdentifier()
                                     + "<YELLOW>:"));
                     main.getQuestManager()
                         .sendActiveObjectivesAndProgress(questPlayer, activeQuest);

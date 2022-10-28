@@ -147,7 +147,7 @@ public class TriggerManager {
                   "<success>"
                       + getTriggerType(trigger.getClass())
                       + " Trigger successfully added to Quest <highlight>"
-                      + quest.getQuestName()
+                      + quest.getIdentifier()
                       + "</highlight>!"));
     }
   }

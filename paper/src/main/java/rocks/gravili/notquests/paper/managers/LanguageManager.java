@@ -45,10 +45,12 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
+import rocks.gravili.notquests.paper.structs.ActiveObjectiveHolder;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
+import rocks.gravili.notquests.paper.structs.objectives.ObjectiveHolder;
 import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 
 public class LanguageManager {
@@ -435,31 +437,41 @@ public class LanguageManager {
             //main.getLogManager().severe("Object: " + internalPlaceholderObject.toString());
             if (internalPlaceholderObject instanceof final ActiveQuest activeQuest) {
                 // main.getLogManager().info("Quest placeholders...");
-                internalPlaceholderReplacements.put("%QUESTNAME%", () -> activeQuest.getQuest().getQuestFinalName());
-                internalPlaceholderReplacements.put("%QUESTDESCRIPTION%", () -> activeQuest.getQuest().getQuestDescription());
+                internalPlaceholderReplacements.put("%QUESTNAME%", () -> activeQuest.getQuest().getDisplayNameOrIdentifier());
+                internalPlaceholderReplacements.put("%QUESTDESCRIPTION%", () -> activeQuest.getQuest().getObjectiveHolderDescription());
                 internalPlaceholderReplacements.put("%COMPLETEDOBJECTIVESCOUNT%", () -> "" + activeQuest.getCompletedObjectives().size());
                 internalPlaceholderReplacements.put("%ALLOBJECTIVESCOUNT%", () -> "" + activeQuest.getQuest().getObjectives().size());
+            }else if (internalPlaceholderObject instanceof final ActiveObjectiveHolder activeObjectiveHolder) {
+                // main.getLogManager().info("Quest placeholders...");
+                internalPlaceholderReplacements.put("%QUESTNAME%", () -> activeObjectiveHolder.getObjectiveHolder().getDisplayNameOrIdentifier());
+                internalPlaceholderReplacements.put("%QUESTDESCRIPTION%", () -> activeObjectiveHolder.getObjectiveHolder().getObjectiveHolderDescription());
+                internalPlaceholderReplacements.put("%COMPLETEDOBJECTIVESCOUNT%", () -> "" + activeObjectiveHolder.getCompletedObjectives().size());
+                internalPlaceholderReplacements.put("%ALLOBJECTIVESCOUNT%", () -> "" + activeObjectiveHolder.getObjectiveHolder().getObjectives().size());
             } else if (internalPlaceholderObject instanceof final Quest quest) {
                 //main.getLogManager().info("Applying Quest placeholders...");
-                internalPlaceholderReplacements.put("%QUESTNAME%", quest::getQuestFinalName);
-                internalPlaceholderReplacements.put("%QUESTDESCRIPTION%", quest::getQuestDescription);
+                internalPlaceholderReplacements.put("%QUESTNAME%", quest::getDisplayNameOrIdentifier);
+                internalPlaceholderReplacements.put("%QUESTDESCRIPTION%", quest::getObjectiveHolderDescription);
                 foundQuest = quest;
+            }  else if (internalPlaceholderObject instanceof final Objective objective) {
+                //main.getLogManager().info("Applying Objective placeholders...");
+                internalPlaceholderReplacements.put("%OBJECTIVEID%", () -> "" + objective.getObjectiveID());
+                internalPlaceholderReplacements.put("%OBJECTIVENAME%", () -> "" + objective.getDisplayNameOrIdentifier());
+            } else if (internalPlaceholderObject instanceof final ObjectiveHolder objectiveHolder) {
+                //main.getLogManager().info("Applying Quest placeholders...");
+                internalPlaceholderReplacements.put("%QUESTNAME%", objectiveHolder::getDisplayNameOrIdentifier);
+                internalPlaceholderReplacements.put("%QUESTDESCRIPTION%", objectiveHolder::getObjectiveHolderDescription);
             } else if (internalPlaceholderObject instanceof final ActiveObjective activeObjective) {
 
                 //main.getLogManager().info("Applying ActiveObjective placeholders...");
                 internalPlaceholderReplacements.put("%OBJECTIVEID%", () -> "" + activeObjective.getObjective().getObjectiveID());
                 internalPlaceholderReplacements.put("%ACTIVEOBJECTIVEID%", () -> "" + activeObjective.getObjective().getObjectiveID());
-                internalPlaceholderReplacements.put("%OBJECTIVENAME%", () -> "" + activeObjective.getObjective().getFinalName());
+                internalPlaceholderReplacements.put("%OBJECTIVENAME%", () -> "" + activeObjective.getObjective().getDisplayNameOrIdentifier());
                 internalPlaceholderReplacements.put("%ACTIVEOBJECTIVEPROGRESS%", () -> String.format("%.2f", activeObjective.getCurrentProgress()));
                 internalPlaceholderReplacements.put("%OBJECTIVEPROGRESSNEEDED%", () -> String.format("%.2f", activeObjective.getProgressNeeded()));
                 internalPlaceholderReplacements.put("%OBJECTIVEPROGRESSPERCENTAGE%", () -> "" + (int) ((float) ((float) activeObjective.getCurrentProgress() / (float) activeObjective.getProgressNeeded()) * 100));
                 internalPlaceholderReplacements.put("%OBJECTIVETASKDESCRIPTION%", () -> main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), false, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), activeObjective));
                 internalPlaceholderReplacements.put("%COMPLETEDOBJECTIVETASKDESCRIPTION%", () -> main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), true, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), activeObjective));
-                internalPlaceholderReplacements.put("%OBJECTIVEDESCRIPTION%", () -> activeObjective.getObjective().getDescription());
-            } else if (internalPlaceholderObject instanceof final Objective objective) {
-                //main.getLogManager().info("Applying Objective placeholders...");
-                internalPlaceholderReplacements.put("%OBJECTIVEID%", () -> "" + objective.getObjectiveID());
-                internalPlaceholderReplacements.put("%OBJECTIVENAME%", () -> "" + objective.getFinalName());
+                internalPlaceholderReplacements.put("%OBJECTIVEDESCRIPTION%", () -> activeObjective.getObjective().getObjectiveHolderDescription());
             } else if (internalPlaceholderObject instanceof final Trigger trigger) {
                 //main.getLogManager().log(Level.INFO, "Applying Trigger placeholders...");
             } else if (internalPlaceholderObject instanceof final QuestPlayer questPlayer) {

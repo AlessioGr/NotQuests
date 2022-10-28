@@ -152,15 +152,15 @@ public class UpdateManager {
   public void convertObjectiveDependenciesToNewObjectiveConditions(final Quest quest) {
 
       for (final Objective objective : quest.getObjectives()) {
-          final ConfigurationSection objectiveDependenciesConfigurationSection = main.getDataManager().getQuestsConfig().getConfigurationSection("quests." + quest.getQuestName() + ".objectives." + objective.getObjectiveID() + ".dependantObjectives.");
+          final ConfigurationSection objectiveDependenciesConfigurationSection = main.getDataManager().getQuestsConfig().getConfigurationSection("quests." + quest.getIdentifier()  + ".objectives." + objective.getObjectiveID() + ".dependantObjectives.");
           if (objectiveDependenciesConfigurationSection != null) {
               main.getLogManager().info("Converting old objective dependencies to objective conditions...");
               for (String objectiveDependencyNumber : objectiveDependenciesConfigurationSection.getKeys(false)) {
                   //Get old stuff
-                  int dependantObjectiveID = main.getDataManager().getQuestsConfig().getInt("quests." + quest.getQuestName() + ".objectives." + (objective.getObjectiveID()) + ".dependantObjectives." + objectiveDependencyNumber + ".objectiveID", objective.getObjectiveID());
+                  int dependantObjectiveID = main.getDataManager().getQuestsConfig().getInt("quests." + quest.getIdentifier()  + ".objectives." + (objective.getObjectiveID()) + ".dependantObjectives." + objectiveDependencyNumber + ".objectiveID", objective.getObjectiveID());
 
                   //Delete old stuff
-                  main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + objective.getObjectiveID() + ".dependantObjectives", null);
+                  main.getDataManager().getQuestsConfig().set("quests." + quest.getIdentifier()  + ".objectives." + objective.getObjectiveID() + ".dependantObjectives", null);
 
                   //Create new stuff with old stuff
                   CompletedObjectiveCondition completedObjectiveCondition = new CompletedObjectiveCondition(main);

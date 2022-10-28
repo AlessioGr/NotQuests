@@ -130,7 +130,7 @@ public class AdminCommands {
                             ArrayList<String> completions = new ArrayList<>();
 
                             for (Quest quest : main.getQuestManager().getAllQuests()) {
-                                completions.add(quest.getQuestName());
+                                completions.add(quest.getIdentifier());
                             }
                             return completions;
                         }
@@ -193,7 +193,7 @@ public class AdminCommands {
                             context.getSender().sendMessage(main.parse("<main>Active quests of player <highlight>" + player.getName() + "</highlight> <green>(online)</green>:"));
                             int counter = 1;
                             for (ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                                context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + activeQuest.getQuest().getQuestName()));
+                                context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + activeQuest.getQuest().getIdentifier()));
                                 counter += 1;
                             }
                             context.getSender().sendMessage(main.parse("<unimportant>Total active quests: <highlight2>" + (counter - 1) + "</highlight2>."));
@@ -207,7 +207,7 @@ public class AdminCommands {
                             context.getSender().sendMessage(main.parse("<main>Active quests of player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red>:"));
                             int counter = 1;
                             for (ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                                context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + activeQuest.getQuest().getQuestName()));
+                                context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + activeQuest.getQuest().getIdentifier()));
                                 counter += 1;
                             }
                             context.getSender().sendMessage(main.parse("<unimportant>Total active quests: <highlight2>" + (counter - 1) + "</highlight2>."));
@@ -231,7 +231,7 @@ public class AdminCommands {
                             int counter = 1;
                             for (CompletedQuest completedQuest : questPlayer.getCompletedQuests()) {
                                 resultDate.setTime(completedQuest.getTimeCompleted());
-                                context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <highlight2>" + completedQuest.getQuest().getQuestName()
+                                context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <highlight2>" + completedQuest.getQuest().getIdentifier()
                                         + "</highlight2> <main>Completed: </main><highlight2>" + resultDate + "</highlight2>"
                                 ));
                                 counter += 1;
@@ -249,7 +249,7 @@ public class AdminCommands {
                             int counter = 1;
                             for (CompletedQuest completedQuest : questPlayer.getCompletedQuests()) {
                                 resultDate.setTime(completedQuest.getTimeCompleted());
-                                context.getSender().sendMessage(main.parse("<main><highlight>" + counter + ".</highlight> <highlight2>" + completedQuest.getQuest().getQuestName()
+                                context.getSender().sendMessage(main.parse("<main><highlight>" + counter + ".</highlight> <highlight2>" + completedQuest.getQuest().getIdentifier()
                                         + "</highlight2> Completed: <highlight2>" + resultDate + "</highlight2>"
                                 ));
                                 counter += 1;
@@ -302,7 +302,7 @@ public class AdminCommands {
                         if (questPlayer != null) {
                             questPlayer.failQuest(activeQuest);
                             context.getSender().sendMessage(main.parse(
-                                    "<main>The active quest <highlight>" + activeQuest.getQuest().getQuestName() + "</highlight> has been failed for player <highlight2>" + player.getName() + "</highlight2>!"
+                                    "<main>The active quest <highlight>" + activeQuest.getQuest().getIdentifier() + "</highlight> has been failed for player <highlight2>" + player.getName() + "</highlight2>!"
                             ));
 
                         } else {
@@ -331,7 +331,7 @@ public class AdminCommands {
                         if (questPlayer != null) {
                             questPlayer.forceActiveQuestCompleted(activeQuest);
                             context.getSender().sendMessage(main.parse(
-                                    "<success>The active quest <highlight>" + activeQuest.getQuest().getQuestName() + "</highlight> has been completed for player <highlight2>" + player.getName() + "</highlight2>!"
+                                    "<success>The active quest <highlight>" + activeQuest.getQuest().getIdentifier() + "</highlight> has been completed for player <highlight2>" + player.getName() + "</highlight2>!"
                             ));
 
                         } else {
@@ -393,7 +393,7 @@ public class AdminCommands {
                     int counter = 1;
                     context.getSender().sendMessage(main.parse("<highlight>" + "All Quests:"));
                     for (final Quest quest : main.getQuestManager().getAllQuests()) {
-                        context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> " + "<main>" + quest.getQuestName()));
+                        context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> " + "<main>" + quest.getIdentifier()));
                         counter += 1;
                     }
 
@@ -882,7 +882,7 @@ public class AdminCommands {
                 final Category category = context.get("category");
 
                 for(final Quest quest : category.getQuests()){
-                  completions.add(quest.getQuestName()+"");
+                  completions.add(quest.getIdentifier()+"");
                 }
 
                 return completions;
@@ -2064,13 +2064,13 @@ public class AdminCommands {
 
                 if (activeQuest != null) {
                     sender.sendMessage(main.parse(
-                            "<main>Completed Objectives for Quest <highlight>" + activeQuest.getQuest().getQuestName() + "</highlight> of player <highlight2>"
+                            "<main>Completed Objectives for Quest <highlight>" + activeQuest.getQuest().getIdentifier() + "</highlight> of player <highlight2>"
                                     + playerName + "</highlight2> <green>(online)</green>:"
                     ));
                     main.getQuestManager().sendCompletedObjectivesAndProgress(questPlayer, activeQuest);
 
                     sender.sendMessage(main.parse(
-                            "<main>>Active Objectives for Quest <highlight>" + activeQuest.getQuest().getQuestName() + "</highlight> of player <highlight2>"
+                            "<main>>Active Objectives for Quest <highlight>" + activeQuest.getQuest().getIdentifier() + "</highlight> of player <highlight2>"
                                     + playerName + "</highlight2> <green>(online)</green>:"
                     ));
                     main.getQuestManager().sendActiveObjectivesAndProgress(questPlayer, activeQuest);
@@ -2083,7 +2083,7 @@ public class AdminCommands {
                     sender.sendMessage(main.parse("<main>Active quests of player <highlight>" + player.getName() + "</highlight> <green>(online)</green>:"));
                     int counter = 1;
                     for (ActiveQuest activeQuest1 : questPlayer.getActiveQuests()) {
-                        sender.sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + activeQuest1.getQuest().getQuestName()));
+                        sender.sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + activeQuest1.getQuest().getIdentifier()));
                         counter += 1;
                     }
                     sender.sendMessage(main.parse("<unimportant>Total active quests: <highlight2>" + (counter - 1) + "</highlight2>."));
@@ -2105,13 +2105,13 @@ public class AdminCommands {
                 if (activeQuest != null) {
 
                     sender.sendMessage(main.parse(
-                            "<main>Completed Objectives for Quest <highlight>" + activeQuest.getQuest().getQuestName() + "</highlight> of player <highlight2>"
+                            "<main>Completed Objectives for Quest <highlight>" + activeQuest.getQuest().getIdentifier() + "</highlight> of player <highlight2>"
                                     + playerName + "</highlight2> <red>(offline)</red>:"
                     ));
                     main.getQuestManager().sendCompletedObjectivesAndProgress(questPlayer, activeQuest);
 
                     sender.sendMessage(main.parse(
-                            "<main>Active Objectives for Quest <highlight>" + activeQuest.getQuest().getQuestName() + "</highlight> of player <highlight2>"
+                            "<main>Active Objectives for Quest <highlight>" + activeQuest.getQuest().getIdentifier() + "</highlight> of player <highlight2>"
                                     + playerName + "</highlight2> <red>(offline)</red>:"
                     ));
                     main.getQuestManager().sendActiveObjectivesAndProgress(questPlayer, activeQuest);
@@ -2124,7 +2124,7 @@ public class AdminCommands {
                     sender.sendMessage(main.parse( "<main>Active quests of player <highlight>" + offlinePlayer.getName() + "</highlight> <green>(online)</green>:"));
                     int counter = 1;
                     for (ActiveQuest activeQuest1 : questPlayer.getActiveQuests()) {
-                        sender.sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + activeQuest1.getQuest().getQuestName()));
+                        sender.sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + activeQuest1.getQuest().getIdentifier()));
                         counter += 1;
                     }
 
