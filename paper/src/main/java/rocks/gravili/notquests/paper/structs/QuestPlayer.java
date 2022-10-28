@@ -948,8 +948,12 @@ public class QuestPlayer {
                     lastBossBarActiveTimeInSeconds = 0;
                 }
                 return; //Hide bossbar once it reached 100%
-            }else if(progress < 0.0f){
+            }
+
+            if(progress < 0.0f){
                 progress = 0;
+            }else if(progress > 1.0f){
+                progress = 1.0f;
             }
 
             final String languageString = activeObjective.getProgressNeeded() == 1 ? "objective-tracking.bossbar-progress-update.only-one-max-progress" : "objective-tracking.bossbar-progress-update.default";
