@@ -61,10 +61,12 @@ chat:
     speaker-line-format: '%SPEAKERCOLOR%[%SPEAKER%] <GRAY>%MESSAGE%'
     answer-option-line-format: ' <main>%OPTIONNUMBER%. <gray>%MESSAGE%'
   objectives:
-    counter: '<highlight>%OBJECTIVEID%.</highlight> <main>%OBJECTIVENAME%:'
+    counter: '<highlight>%OBJECTIVEIDWITHSUBID%.</highlight> <main>%OBJECTIVENAME%:'
+    counterForObjectiveObjective: '<highlight>%OBJECTIVEIDWITHSUBID%.</highlight> <main>%OBJECTIVEHOLDERNAME%:'
+    subObjectivePrefixAppend: '    '
     hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[UKRYTE]
-    description: '   <highlight>Opis: <main>%OBJECTIVEDESCRIPTION%'
-    progress: '   <highlight>Postęp: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
+    description: '    <veryUnimportant>└─ <unimportant>Description: <main>%OBJECTIVEDESCRIPTION%'
+    progress: '    <veryUnimportant>└─ <unimportant>Progress: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
     successfully-completed: |2
 
       <CENTER><success>[Ukończono Cel]
@@ -117,6 +119,8 @@ chat:
         base: '%INTERACTTYPE% Lokalizacja: <main>%COORDINATES% <main>w świecie %WORLDNAME%'
       jump:
         base: 'Skocz <main>%AMOUNTOFJUMPS%</main> razy'
+      objective:
+        base: '%OBJECTIVEHOLDERNAME%'
       sneak:
         base: 'Skradaj się <main>%AMOUNTOFSNEAKS%</main> razy'
       smelt:
