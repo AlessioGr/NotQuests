@@ -35,13 +35,6 @@ public class ObjectiveObjective extends Objective {
               .argument(
                   MiniMessageStringSelector.<CommandSender>newBuilder("Objective Holder Name", main)
                       .withPlaceholders()
-                      .withSuggestionsProvider(
-                          (context, lastString) -> {
-                            final ArrayList<String> completions = new ArrayList<>();
-                            completions.add(
-                                "<Enter Name>");
-                            return completions;
-                          })
                       .quoted().build(),
                   ArgumentDescription.of("Objective Holder Name"))
               .handler(

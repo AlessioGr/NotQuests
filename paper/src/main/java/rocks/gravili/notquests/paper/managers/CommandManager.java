@@ -202,13 +202,6 @@ public class CommandManager {
             .withArgument(
                 MiniMessageStringSelector.<CommandSender>newBuilder("Task Description", main)
                     .withPlaceholders()
-                    .withSuggestionsProvider(
-                        (context, lastString) -> {
-                          final ArrayList<String> completions = new ArrayList<>();
-                          completions.add(
-                              "<Enter task description (put between \" \" if you want to use spaces)>");
-                          return completions;
-                        })
                     .quoted().build())
             .withDescription(ArgumentDescription.of("Custom description of the task"))
             .build();
@@ -397,6 +390,10 @@ public class CommandManager {
 
         cloudBrigadierManager.registerMapping(
             new TypeToken<CommandSelector.CommandParser<CommandSender>>() {},
+            builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
+
+        cloudBrigadierManager.registerMapping(
+            new TypeToken<MiniMessageStringSelector.MiniMessageStringParser<CommandSender>>() {},
             builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
 
         cloudBrigadierManager.registerMapping(

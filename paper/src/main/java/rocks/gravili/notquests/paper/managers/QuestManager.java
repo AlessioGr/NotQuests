@@ -61,6 +61,7 @@ import rocks.gravili.notquests.paper.structs.conditions.NumberCondition;
 import rocks.gravili.notquests.paper.structs.conditions.StringCondition;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 import rocks.gravili.notquests.paper.structs.objectives.ObjectiveHolder;
+import rocks.gravili.notquests.paper.structs.objectives.ObjectiveObjective;
 import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 
 
@@ -1133,6 +1134,9 @@ public class QuestManager {
 
     public void sendActiveObjectivesAndProgress(final QuestPlayer questPlayer, final ActiveObjectiveHolder activeObjectiveHolder, final int level) {
         for (ActiveObjective activeObjective : activeObjectiveHolder.getActiveObjectives()) {
+            if(activeObjective.isCompleted(null)){
+                continue;
+            }
             sendActiveObjective(questPlayer, activeObjective, level);
             if(!activeObjective.getActiveObjectives().isEmpty()){
                 sendActiveObjectivesAndProgress(questPlayer, activeObjective, level+1);
@@ -1250,6 +1254,23 @@ public class QuestManager {
         }
 
         if (activeObjective.isUnlocked()) {
+            if(activeObjective.getObjective() instanceof final ObjectiveObjective objectiveObjective){
+                final String objectiveDescription = activeObjective.getObjective().getObjectiveHolderDescription();
+                player.sendMessage(main.parse(
+                    prefix+main.getLanguageManager().getString("chat.objectives.counterForObjectiveObjective", player, activeObjective.getActiveObjectiveHolder(), activeObjective,
+                        Map.of(
+                            "%OBJECTIVEIDWITHSUBID%", counterWithSubId,
+                            "%OBJECTIVEHOLDERNAME%", objectiveObjective.getObjectiveHolderName()
+                            )
+                    )
+                ));
+                if (!objectiveDescription.isBlank()) {
+                    player.sendMessage(main.parse(
+                        prefix+main.getLanguageManager().getString("chat.objectives.description", player, activeObjective.getActiveObjectiveHolder(), activeObjective))
+                    );
+                }
+                return;
+            }
             final String objectiveDescription = activeObjective.getObjective().getObjectiveHolderDescription();
             player.sendMessage(main.parse(
                 prefix+main.getLanguageManager().getString("chat.objectives.counter", player, activeObjective.getActiveObjectiveHolder(), activeObjective,
