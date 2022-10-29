@@ -186,6 +186,12 @@ public class ActiveObjective extends ActiveObjectiveHolder {
     public final boolean canProgress(final boolean checkForProgressDecrease) {
         getQuestPlayer().sendDebugMessage("Checking if objective can progress...");
 
+
+        //Make it so it cannot progress if sub-objectives aren't completed! //TODO: Maybe make this configurable
+        if(!getActiveObjectives().isEmpty()){
+            return false;
+        }
+
         for (final Condition condition : objective.getProgressConditions()){
             if(checkForProgressDecrease && condition.isObjectiveConditionSpecific_allowProgressDecreaseIfNotFulfilled()) {
                 continue;
