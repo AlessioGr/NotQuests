@@ -62,6 +62,7 @@ chat:
     answer-option-line-format: ' <main>%OPTIONNUMBER%. <gray>%MESSAGE%'
   objectives:
     counter: '<highlight>%OBJECTIVEIDWITHSUBID%.</highlight> <main>%OBJECTIVENAME%:'
+    subObjectivePrefixAppend: '   '
     hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[HIDDEN]
     description: '   <highlight>Description: <main>%OBJECTIVEDESCRIPTION%'
     progress: '   <highlight>Progress: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
@@ -117,6 +118,8 @@ chat:
         base: '%INTERACTTYPE% Location: <main>%COORDINATES% <main>in world %WORLDNAME%'
       jump:
         base: 'Jump <main>%AMOUNTOFJUMPS%</main> times'
+      objective:
+        base: '%OBJECTIVEHOLDERNAME%'
       sneak:
         base: 'Sneak <main>%AMOUNTOFSNEAKS%</main> times'
       smelt:

@@ -139,12 +139,13 @@ public class UtilManager {
             final String key = entry.getKey();
             final Supplier<String> valueSupplier = entry.getValue();
 
-            //main.getLogManager().info("Replacing key: " + key + " and value: " + value);
 
             int start = sb.indexOf(key, 0);
 
             if(start > -1){
                 final String value = valueSupplier.get();
+                //main.getLogManager().info("   Replacing key: " + key + " and value: " + value);
+
                 while (start > -1) {
                     int end = start + key.length();
                     int nextSearchStart = start + value.length();

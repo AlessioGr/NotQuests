@@ -13,6 +13,7 @@ import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 import rocks.gravili.notquests.paper.structs.objectives.ObjectiveHolder;
+import rocks.gravili.notquests.paper.structs.objectives.ObjectiveObjective;
 
 public abstract class ActiveObjectiveHolder {
   private final CopyOnWriteArrayList<ActiveObjective> activeObjectives;
@@ -191,6 +192,14 @@ public abstract class ActiveObjectiveHolder {
                         activeObjective)
                     + "<RESET>"
                     + fullRewardString);
+          }
+        }
+      }
+
+      if(this instanceof final ActiveObjective activeObjective1){
+        if(!activeObjective1.isCompleted() && activeObjective1.getObjective() instanceof ObjectiveObjective){
+          if(getActiveObjectives().isEmpty()){
+            activeObjective1.setProgress(activeObjective1.getProgressNeeded(), false);
           }
         }
       }

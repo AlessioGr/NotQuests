@@ -8,7 +8,7 @@ public abstract class ObjectiveHolder {
   protected PredefinedProgressOrder predefinedProgressOrder;
   private final ArrayList<Objective> objectives;
 
-  private String objectiveHolderDescription;
+  private String objectiveHolderDescription = "";
 
   public ObjectiveHolder(){
     objectives = new ArrayList<>();

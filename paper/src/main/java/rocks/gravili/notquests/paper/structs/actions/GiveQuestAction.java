@@ -97,7 +97,7 @@ public class GiveQuestAction extends Action {
     if (!isForceGive()) {
       main.getQuestPlayerManager().acceptQuest(questPlayer, foundQuest, true, true);
     } else {
-      main.getQuestPlayerManager().forceAcceptQuest(questPlayer.getUniqueId(), foundQuest);
+      main.getQuestPlayerManager().forceAcceptQuestSilent(questPlayer.getUniqueId(), foundQuest);
     }
   }
 

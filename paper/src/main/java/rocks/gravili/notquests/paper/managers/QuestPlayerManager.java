@@ -135,7 +135,7 @@ public class QuestPlayerManager {
         if (quest != null) {
           final ActiveQuest activeQuest = new ActiveQuest(main, quest, questPlayer);
           activeQuests.add(activeQuest);
-          questPlayer.forceAddActiveQuest(
+          questPlayer.forceAddActiveQuestSilent(
               activeQuest, false); // Run begin/accept trigger when plugin reloads if true
 
         } else {
@@ -500,7 +500,7 @@ public class QuestPlayerManager {
           if (quest != null) {
             final ActiveQuest activeQuest = new ActiveQuest(main, quest, questPlayer);
             activeQuests.add(activeQuest);
-            questPlayer.forceAddActiveQuest(
+            questPlayer.forceAddActiveQuestSilent(
                 activeQuest, false); // Run begin/accept trigger when plugin reloads if true
 
           } else {
@@ -799,5 +799,12 @@ public class QuestPlayerManager {
     final QuestPlayer questPlayer = getOrCreateQuestPlayer(uuid);
 
     return questPlayer.forceAddActiveQuest(new ActiveQuest(main, quest, questPlayer), true);
+  }
+
+  public void forceAcceptQuestSilent(
+      final UUID uuid, final Quest quest) { // Ignores max amount limit, cooldown and requirements
+    final QuestPlayer questPlayer = getOrCreateQuestPlayer(uuid);
+
+    questPlayer.forceAddActiveQuestSilent(new ActiveQuest(main, quest, questPlayer), true);
   }
 }

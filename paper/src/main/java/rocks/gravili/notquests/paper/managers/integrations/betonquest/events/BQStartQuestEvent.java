@@ -84,7 +84,7 @@ public class BQStartQuestEvent extends QuestEvent {
         if (!forced) {
           main.getQuestPlayerManager().acceptQuest(main.getQuestPlayerManager().getOrCreateQuestPlayer(profile.getProfileUUID()), quest, triggers, !silent);
         } else {
-          main.getQuestPlayerManager().forceAcceptQuest(profile.getProfileUUID(), quest);
+          main.getQuestPlayerManager().forceAcceptQuestSilent(profile.getProfileUUID(), quest);
         }
       }
 

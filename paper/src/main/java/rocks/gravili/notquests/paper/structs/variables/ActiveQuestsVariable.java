@@ -67,7 +67,7 @@ public class ActiveQuestsVariable extends Variable<String[]> {
     for (int i = 0; i < newValue.length; i++) {
       Quest quest = main.getQuestManager().getQuest(newValue[i]);
       if (quest != null && !questPlayer.hasAcceptedQuest(quest)) {
-        main.getQuestPlayerManager().forceAcceptQuest(questPlayer.getUniqueId(), quest);
+        main.getQuestPlayerManager().forceAcceptQuestSilent(questPlayer.getUniqueId(), quest);
       }
     }
 

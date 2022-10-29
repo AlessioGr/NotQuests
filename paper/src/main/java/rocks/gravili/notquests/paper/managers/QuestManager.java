@@ -1237,11 +1237,15 @@ public class QuestManager {
         final Player player = questPlayer.getPlayer();
 
         String prefix = "";
-        String counterWithSubId = ""+activeObjective.getObjectiveID();
+        ActiveObjective lastActiveObjective = activeObjective;
+
+        String counterWithSubId = ""+lastActiveObjective.getObjectiveID();
+        final String prefixAppend = main.getLanguageManager().getString("chat.objectives.subObjectivePrefixAppend", questPlayer, activeObjective.getObjectiveHolder(), activeObjective);
         for(int i = 0; i < level; i++){
-            prefix += "   ";
-            if(activeObjective.getActiveObjectiveHolder() instanceof final ActiveObjective parentActiveObjective){
-                counterWithSubId = parentActiveObjective.getObjectiveID() + "."+counterWithSubId;
+            prefix += prefixAppend;
+            if(lastActiveObjective.getActiveObjectiveHolder() instanceof final ActiveObjective parentActiveObjective){
+                lastActiveObjective = parentActiveObjective;
+                counterWithSubId = lastActiveObjective.getObjectiveID() + "."+counterWithSubId;
             }
         }
 
@@ -1268,7 +1272,7 @@ public class QuestManager {
             ));
         } else {
             player.sendMessage(main.parse(
-                prefix+main.getLanguageManager().getString("chat.objectives.hidden", player, activeObjective, activeObjective)
+                prefix+main.getLanguageManager().getString("chat.objectives.hidden", player, activeObjective.getActiveObjectiveHolder(), activeObjective)
             ));
         }
 

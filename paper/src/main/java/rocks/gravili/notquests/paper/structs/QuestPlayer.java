@@ -546,6 +546,14 @@ public class QuestPlayer {
 
     }
 
+    public void forceAddActiveQuestSilent(final ActiveQuest activeQuest, final boolean triggerAcceptQuestTrigger) { //ignores max amount, cooldown and requirements
+        for (ActiveQuest activeQuest1 : activeQuests) {
+            if (activeQuest1.getQuest().getIdentifier().equals(activeQuest.getQuest().getIdentifier())) {
+                return;
+            }
+        }
+        finishAddingQuest(activeQuest, triggerAcceptQuestTrigger, false);
+    }
     public String forceAddActiveQuest(final ActiveQuest quest, final boolean triggerAcceptQuestTrigger) { //ignores max amount, cooldown and requirements
         for (ActiveQuest activeQuest : activeQuests) {
             if (activeQuest.getQuest().equals(quest.getQuest())) {
@@ -958,11 +966,11 @@ public class QuestPlayer {
 
             final String languageString = activeObjective.getProgressNeeded() == 1 ? "objective-tracking.bossbar-progress-update.only-one-max-progress" : "objective-tracking.bossbar-progress-update.default";
             if (bossBar != null) {
-                bossBar.name(main.getLanguageManager().getComponent(languageString, getPlayer(), this, activeObjective, activeObjective.getActiveObjectiveHolder()));
+                bossBar.name(main.getLanguageManager().getComponent(languageString, getPlayer(), this, activeObjective.getActiveObjectiveHolder(), activeObjective));
                 bossBar.progress(progress);
                 lastBossBarActiveTimeInSeconds = 0;
             } else {
-                bossBar = BossBar.bossBar(main.getLanguageManager().getComponent(languageString, getPlayer(), this, activeObjective, activeObjective.getActiveObjectiveHolder()),
+                bossBar = BossBar.bossBar(main.getLanguageManager().getComponent(languageString, getPlayer(), this, activeObjective.getActiveObjectiveHolder(), activeObjective ),
                         progress, BossBar.Color.BLUE, BossBar.Overlay.PROGRESS);
                 player.showBossBar(bossBar);
                 lastBossBarActiveTimeInSeconds = 0;

@@ -45,6 +45,7 @@ import rocks.gravili.notquests.paper.structs.objectives.KillMobsObjective;
 import rocks.gravili.notquests.paper.structs.objectives.NumberVariableObjective;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 import rocks.gravili.notquests.paper.structs.objectives.ObjectiveHolder;
+import rocks.gravili.notquests.paper.structs.objectives.ObjectiveObjective;
 import rocks.gravili.notquests.paper.structs.objectives.OpenBuriedTreasureObjective;
 import rocks.gravili.notquests.paper.structs.objectives.OtherQuestObjective;
 import rocks.gravili.notquests.paper.structs.objectives.PlaceBlocksObjective;
@@ -105,6 +106,7 @@ public class ObjectiveManager {
     registerObjective("SmeltItems", SmeltObjective.class);
     registerObjective("OpenBuriedTreasure", OpenBuriedTreasureObjective.class);
     registerObjective("ShearSheep", ShearSheepObjective.class);
+    registerObjective("Objective", ObjectiveObjective.class);
 
     registerObjective("NumberVariable", NumberVariableObjective.class); //Special
 

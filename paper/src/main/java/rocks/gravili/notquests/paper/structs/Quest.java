@@ -377,7 +377,7 @@ public class Quest extends ObjectiveHolder {
    */
   @Override
   public final String getDisplayNameOrIdentifier() {
-    if (!displayName.isBlank()) {
+    if (!getQuestDisplayName().isBlank()) {
       return getQuestDisplayName();
     } else {
       return questName;
