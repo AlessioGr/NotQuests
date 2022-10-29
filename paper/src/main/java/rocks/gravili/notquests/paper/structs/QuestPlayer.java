@@ -1076,6 +1076,21 @@ public class QuestPlayer {
         }
         queuedObjectivesToCheck.add(runForEachObjective);
     }
+
+    public void checkForActiveObjective(final ActiveObjective activeObjective){
+        if(!activeObjective.isUnlocked()){
+            return;
+        }
+        for(final Consumer<ActiveObjective> runForEachObjective : queuedObjectivesToCheck){
+            runForEachObjective.accept(activeObjective);
+        }
+        if(!activeObjective.getActiveObjectives().isEmpty()){
+            for(final ActiveObjective childActiveObjective : activeObjective.getActiveObjectives()){
+                checkForActiveObjective(childActiveObjective);
+            }
+            activeObjective.removeCompletedObjectives(true);
+        }
+    }
     public void checkQueuedObjectives(){
         if(queuedObjectivesToCheck.isEmpty()){
             return;
@@ -1083,11 +1098,8 @@ public class QuestPlayer {
         sendDebugMessage("Checking queued objectives...");
         for (final ActiveQuest activeQuest : getActiveQuests()) {
             for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                if (activeObjective.isUnlocked()) {
-                    for(final Consumer<ActiveObjective> runForEachObjective : queuedObjectivesToCheck){
-                        runForEachObjective.accept(activeObjective);
-                    }
-                }
+                checkForActiveObjective(activeObjective);
+
             }
             activeQuest.removeCompletedObjectives(true);
         }
