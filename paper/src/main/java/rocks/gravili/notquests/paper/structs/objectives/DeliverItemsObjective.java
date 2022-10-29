@@ -132,7 +132,7 @@ public class DeliverItemsObjective extends Objective {
     public String getTaskDescriptionInternal(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
         String toReturn;
         toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.base", questPlayer, activeObjective, Map.of(
-                "%ITEMTODELIVERTYPE%", getItemStackSelection().getAllMaterialsListed(),
+                "%ITEMTODELIVERTYPE%", getItemStackSelection().getAllMaterialsListedTranslated("main"),
                 "%ITEMTODELIVERNAME%", "",
                 "%(%", "",
                 "%)%", ""

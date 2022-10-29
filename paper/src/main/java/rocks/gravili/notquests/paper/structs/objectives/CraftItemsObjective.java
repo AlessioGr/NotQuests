@@ -96,7 +96,7 @@ public class CraftItemsObjective extends Objective {
             questPlayer,
             activeObjective,
             Map.of(
-                "%ITEMTOCRAFTTYPE%", getItemStackSelection().getAllMaterialsListed(),
+                "%ITEMTOCRAFTTYPE%", getItemStackSelection().getAllMaterialsListedTranslated("main"),
                 "%ITEMTOCRAFTNAME%", "",
                 "%(%", "",
                 "%)%", ""));

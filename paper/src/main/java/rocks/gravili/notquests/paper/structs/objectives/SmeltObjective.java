@@ -100,7 +100,7 @@ public class SmeltObjective extends Objective {
             questPlayer,
             activeObjective,
             Map.of(
-                "%ITEMTOSMELTTYPE%", getItemStackSelection().getAllMaterialsListed(),
+                "%ITEMTOSMELTTYPE%", getItemStackSelection().getAllMaterialsListedTranslated("main"),
                 "%ITEMTOSMELTNAME%", "",
                 "%(%", "",
                 "%)%", ""));

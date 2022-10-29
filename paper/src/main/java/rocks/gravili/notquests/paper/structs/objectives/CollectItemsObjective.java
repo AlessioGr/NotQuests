@@ -95,7 +95,7 @@ public class CollectItemsObjective extends Objective {
             questPlayer,
             activeObjective,
             Map.of(
-                "%ITEMTOCOLLECTTYPE%", getItemStackSelection().getAllMaterialsListed(),
+                "%ITEMTOCOLLECTTYPE%", getItemStackSelection().getAllMaterialsListedTranslated("main"),
                 "%ITEMTOCOLLECTNAME%", "",
                 "%(%", "",
                 "%)%", ""));

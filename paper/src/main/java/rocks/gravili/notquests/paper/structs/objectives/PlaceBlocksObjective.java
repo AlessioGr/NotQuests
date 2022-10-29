@@ -95,7 +95,7 @@ public class PlaceBlocksObjective extends Objective {
             "chat.objectives.taskDescription.placeBlocks.base",
             questPlayer,
             activeObjective,
-            Map.of("%BLOCKTOPLACE%", getItemStackSelection().getAllMaterialsListed()));
+            Map.of("%BLOCKTOPLACE%", getItemStackSelection().getAllMaterialsListedTranslated("main")));
   }
 
   public void setDeductIfBlockIsBroken(final boolean deductIfBlockIsBroken) {

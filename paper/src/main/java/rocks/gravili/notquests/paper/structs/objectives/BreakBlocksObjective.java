@@ -88,22 +88,12 @@ public class BreakBlocksObjective extends Objective {
   @Override
   public String getTaskDescriptionInternal(
       final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
-    /*String translatedMaterialName;
-    try {
-        translatedMaterialName = "<lang:" + Material.valueOf(getBlockToBreakMaterial().toUpperCase(Locale.ROOT)).translationKey() + ">";
-    } catch (Exception ignored) {
-        translatedMaterialName = getBlockToBreakMaterial();
-    }*/
-
-    // TODO: translatedMaterialName doesnt work in gradients yet. Wait until minimessage fixed that
-    // bug
-
     return main.getLanguageManager()
         .getString(
             "chat.objectives.taskDescription.breakBlocks.base",
             questPlayer,
             activeObjective,
-            Map.of("%BLOCKTOBREAK%", getItemStackSelection().getAllMaterialsListed()));
+            Map.of("%BLOCKTOBREAK%", getItemStackSelection().getAllMaterialsListedTranslated("main")));
   }
 
   public void setDeductIfBlockIsPlaced(final boolean deductIfBlockIsPlaced) {

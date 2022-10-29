@@ -67,7 +67,7 @@ public class FishItemsObjective extends Objective {
             questPlayer,
             activeObjective,
             Map.of(
-                "%ITEMTOFISHTYPE%", getItemStackSelection().getAllMaterialsListed(),
+                "%ITEMTOFISHTYPE%", getItemStackSelection().getAllMaterialsListedTranslated("main"),
                 "%ITEMTOFISHNAME%", "",
                 "%(%", "",
                 "%)%", ""));

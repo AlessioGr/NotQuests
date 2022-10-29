@@ -96,7 +96,7 @@ public class ConsumeItemsObjective extends Objective {
             questPlayer,
             activeObjective,
             Map.of(
-                "%ITEMTOCONSUMETYPE%", getItemStackSelection().getAllMaterialsListed(),
+                "%ITEMTOCONSUMETYPE%", getItemStackSelection().getAllMaterialsListedTranslated("main"),
                 "%ITEMTOCONSUMENAME%", "",
                 "%(%", "",
                 "%)%", ""));

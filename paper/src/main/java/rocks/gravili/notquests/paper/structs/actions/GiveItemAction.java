@@ -132,7 +132,7 @@ public class GiveItemAction extends Action {
 
   @Override
   public String getActionDescription(final QuestPlayer questPlayer, final Object... objects) {
-    return "Item: " + getItemStackSelection().getAllMaterialsListed();
+    return "Item: " + getItemStackSelection().getAllMaterialsListedTranslated("main");
   }
 
   @Override
