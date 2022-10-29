@@ -1233,8 +1233,8 @@ public class AdminEditCommands {
                    objective.getObjectiveHolder().removeObjective(objective);
                     context.getSender().sendMessage(main.parse(
                             "<success>Objective with the ID <highlight>" + objective.getObjectiveID() + "</highlight> has been successfully removed from Quest <highlight2>"
-                                    + objective.getObjectiveHolder().getIdentifier()) + "</highlight2>!"
-                    );
+                                    + objective.getObjectiveHolder().getIdentifier() + "</highlight2>!"
+                        ));
                 }));
 
 
