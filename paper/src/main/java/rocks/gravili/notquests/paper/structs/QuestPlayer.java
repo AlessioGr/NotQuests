@@ -633,11 +633,12 @@ public class QuestPlayer {
     }
 
     public void sendDebugMessage(final String message) {
+        if (!main.getQuestManager().isDebugEnabledPlayer(this.uuid)) {
+            return;
+        }
         final Player player = getPlayer();
         if (player != null) {
-            if (main.getQuestManager().isDebugEnabledPlayer(getUniqueId())) {
-                player.sendMessage(main.parse(NotQuestColors.debugTitleGradient + "[NotQuests Debug]</gradient> " + NotQuestColors.debugGradient + message + "</gradient>"));
-            }
+            player.sendMessage(main.parse(NotQuestColors.debugTitleGradient + "[NotQuests Debug]</gradient> " + NotQuestColors.debugGradient + message + "</gradient>"));
 
         }
     }

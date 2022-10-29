@@ -40,7 +40,7 @@ import rocks.gravili.notquests.paper.structs.objectives.OtherQuestObjective;
  *
  * @author Alessio Gravili
  */
-public class ActiveObjective {
+public class ActiveObjective extends ActiveObjectiveHolder {
     private final NotQuests main;
     private final Objective objective;
     private final ActiveObjectiveHolder activeObjectiveHolder;
@@ -52,6 +52,8 @@ public class ActiveObjective {
     private double progressNeeded;
 
     public ActiveObjective(final NotQuests main, final int objectiveID, final Objective objective, final ActiveObjectiveHolder activeObjectiveHolder) {
+        super(main, activeObjectiveHolder.getQuestPlayer(), activeObjectiveHolder.getObjectiveHolder());
+
         this.main = main;
         this.objectiveID = objectiveID;
         this.objective = objective;
@@ -298,21 +300,15 @@ public class ActiveObjective {
 
     }
 
-    //For Citizens NPCs
     public final boolean isCompleted(@Nullable final NQNPC nqnpc) {
         if (getObjective().getCompletionNPC() == null || getObjective().getCompletionNPC().equals(nqnpc)) {
-            return canComplete() && currentProgress >= getProgressNeeded();
+            return canComplete() && currentProgress >= getProgressNeeded() && super.isCompleted();
         } else {
             return false;
         }
 
     }
 
-
-
-    public final QuestPlayer getQuestPlayer(){
-        return getActiveObjectiveHolder().getQuestPlayer();
-    }
     public final ActiveObjectiveHolder getActiveObjectiveHolder() {
         return activeObjectiveHolder;
     }

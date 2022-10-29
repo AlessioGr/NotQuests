@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import org.bukkit.Bukkit;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.events.notquests.QuestFailEvent;
-import rocks.gravili.notquests.paper.structs.objectives.Objective;
 import rocks.gravili.notquests.paper.structs.objectives.hooks.citizens.EscortNPCObjective;
 import rocks.gravili.notquests.paper.structs.triggers.ActiveTrigger;
 import rocks.gravili.notquests.paper.structs.triggers.Trigger;
