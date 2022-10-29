@@ -96,6 +96,17 @@ public abstract class ActiveObjectiveHolder {
     if (activeObjectives.isEmpty() && this instanceof ActiveQuest activeQuest) {
       questPlayer.notifyActiveQuestCompleted(activeQuest);
     }
+
+    if(this instanceof final ActiveObjective activeObjective1){
+      if(!activeObjective1.isCompleted(null) && activeObjective1.getObjective() instanceof ObjectiveObjective){
+        if(activeObjective1.isCompleted()){
+          activeObjective1.setProgress(activeObjective1.getProgressNeeded(), false);
+          activeObjective1.getActiveObjectiveHolder().removeCompletedObjectives(notifyPlayer);
+          activeObjective1.getQuestPlayer().removeCompletedQuests();
+        }
+
+      }
+    }
   }
 
   public void notifyActiveObjectiveCompleted(
@@ -195,14 +206,6 @@ public abstract class ActiveObjectiveHolder {
           }
         }
       }
-
-      if(this instanceof final ActiveObjective activeObjective1){
-        if(!activeObjective1.isCompleted() && activeObjective1.getObjective() instanceof ObjectiveObjective){
-          if(getActiveObjectives().isEmpty()){
-            activeObjective1.setProgress(activeObjective1.getProgressNeeded(), false);
-          }
-        }
-      }
     }
 
     completedObjectives.add(activeObjective);
@@ -211,6 +214,8 @@ public abstract class ActiveObjectiveHolder {
     // to remove all its contests also from the activeObjectives lists
     // (Without a concurrentmodificationexception)
     toRemove.add(activeObjective);
+
+
   }
 
   public void updateObjectivesUnlocked(

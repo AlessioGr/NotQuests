@@ -70,9 +70,9 @@ public class ObjectiveObjective extends Objective {
         final boolean unlockedDuringPluginStartupQuestLoadingProcess) {
       if(activeObjective.getActiveObjectives().isEmpty()){
         activeObjective.setProgress(activeObjective.getProgressNeeded(), false);
+        activeObjective.getActiveObjectiveHolder().removeCompletedObjectives(!unlockedDuringPluginStartupQuestLoadingProcess);
+        activeObjective.getQuestPlayer().removeCompletedQuests();
       }
-      activeObjective.getActiveObjectiveHolder().removeCompletedObjectives(!unlockedDuringPluginStartupQuestLoadingProcess);
-      activeObjective.getQuestPlayer().removeCompletedQuests();
     }
 
     @Override
