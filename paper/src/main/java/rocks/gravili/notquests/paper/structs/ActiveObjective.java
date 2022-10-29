@@ -178,6 +178,9 @@ public class ActiveObjective extends ActiveObjectiveHolder {
         //If it didn't return; and reaches this, it means all conditions are met!
         getQuestPlayer().sendDebugMessage("Active objective " + objective.getDisplayNameOrIdentifier() + " has been set to unlocked!");
         setUnlocked(true, notifyPlayer, triggerAcceptQuestTrigger);
+
+        updateObjectivesUnlocked(notifyPlayer, triggerAcceptQuestTrigger);
+
     }
 
     public final boolean canProgress(final boolean checkForProgressDecrease) {
