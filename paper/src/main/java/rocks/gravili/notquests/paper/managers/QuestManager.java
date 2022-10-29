@@ -19,6 +19,7 @@
 package rocks.gravili.notquests.paper.managers;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
@@ -1236,21 +1237,26 @@ public class QuestManager {
         final Player player = questPlayer.getPlayer();
 
         String prefix = "";
+        String counterWithSubId = ""+activeObjective.getObjectiveID();
         for(int i = 0; i < level; i++){
             prefix += "   ";
+            if(activeObjective.getActiveObjectiveHolder() instanceof final ActiveObjective parentActiveObjective){
+                counterWithSubId = parentActiveObjective.getObjectiveID() + "."+counterWithSubId;
+            }
         }
 
         if (activeObjective.isUnlocked()) {
             final String objectiveDescription = activeObjective.getObjective().getObjectiveHolderDescription();
             player.sendMessage(main.parse(
-                prefix+main.getLanguageManager().getString("chat.objectives.counter", player, activeObjective.getActiveObjectiveHolder(), activeObjective)
+                prefix+main.getLanguageManager().getString("chat.objectives.counter", player, activeObjective.getActiveObjectiveHolder(), activeObjective,
+                    Map.of("%OBJECTIVEIDWITHSUBID%", counterWithSubId)
+                )
             ));
 
             if (!objectiveDescription.isBlank()) {
                 player.sendMessage(main.parse(
-                    prefix+main.getLanguageManager().getString("chat.objectives.description", player, activeObjective.getActiveObjectiveHolder(), activeObjective)
-                                .replace("%OBJECTIVEDESCRIPTION%", activeObjective.getObjective().getObjectiveHolderDescription())
-                ));
+                    prefix+main.getLanguageManager().getString("chat.objectives.description", player, activeObjective.getActiveObjectiveHolder(), activeObjective))
+                );
             }
 
             player.sendMessage(main.parse(

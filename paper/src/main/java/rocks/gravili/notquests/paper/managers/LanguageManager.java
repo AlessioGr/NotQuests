@@ -437,41 +437,41 @@ public class LanguageManager {
             //main.getLogManager().severe("Object: " + internalPlaceholderObject.toString());
             if (internalPlaceholderObject instanceof final ActiveQuest activeQuest) {
                 // main.getLogManager().info("Quest placeholders...");
-                internalPlaceholderReplacements.put("%QUESTNAME%", () -> activeQuest.getQuest().getDisplayNameOrIdentifier());
-                internalPlaceholderReplacements.put("%QUESTDESCRIPTION%", () -> activeQuest.getQuest().getObjectiveHolderDescription());
-                internalPlaceholderReplacements.put("%COMPLETEDOBJECTIVESCOUNT%", () -> "" + activeQuest.getCompletedObjectives().size());
-                internalPlaceholderReplacements.put("%ALLOBJECTIVESCOUNT%", () -> "" + activeQuest.getQuest().getObjectives().size());
+                internalPlaceholderReplacements.putIfAbsent("%QUESTNAME%", () -> activeQuest.getQuest().getDisplayNameOrIdentifier());
+                internalPlaceholderReplacements.putIfAbsent("%QUESTDESCRIPTION%", () -> activeQuest.getQuest().getObjectiveHolderDescription());
+                internalPlaceholderReplacements.putIfAbsent("%COMPLETEDOBJECTIVESCOUNT%", () -> "" + activeQuest.getCompletedObjectives().size());
+                internalPlaceholderReplacements.putIfAbsent("%ALLOBJECTIVESCOUNT%", () -> "" + activeQuest.getQuest().getObjectives().size());
             } else if (internalPlaceholderObject instanceof final ActiveObjective activeObjective) {
 
                 //main.getLogManager().info("Applying ActiveObjective placeholders...");
-                internalPlaceholderReplacements.put("%OBJECTIVEID%", () -> "" + activeObjective.getObjective().getObjectiveID());
-                internalPlaceholderReplacements.put("%ACTIVEOBJECTIVEID%", () -> "" + activeObjective.getObjective().getObjectiveID());
-                internalPlaceholderReplacements.put("%OBJECTIVENAME%", () -> "" + activeObjective.getObjective().getDisplayNameOrIdentifier());
-                internalPlaceholderReplacements.put("%ACTIVEOBJECTIVEPROGRESS%", () -> String.format("%.2f", activeObjective.getCurrentProgress()));
-                internalPlaceholderReplacements.put("%OBJECTIVEPROGRESSNEEDED%", () -> String.format("%.2f", activeObjective.getProgressNeeded()));
-                internalPlaceholderReplacements.put("%OBJECTIVEPROGRESSPERCENTAGE%", () -> "" + (int) ((float) ((float) activeObjective.getCurrentProgress() / (float) activeObjective.getProgressNeeded()) * 100));
-                internalPlaceholderReplacements.put("%OBJECTIVETASKDESCRIPTION%", () -> main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), false, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), activeObjective));
-                internalPlaceholderReplacements.put("%COMPLETEDOBJECTIVETASKDESCRIPTION%", () -> main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), true, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), activeObjective));
-                internalPlaceholderReplacements.put("%OBJECTIVEDESCRIPTION%", () -> activeObjective.getObjective().getObjectiveHolderDescription());
+                internalPlaceholderReplacements.putIfAbsent("%OBJECTIVEID%", () -> "" + activeObjective.getObjective().getObjectiveID());
+                internalPlaceholderReplacements.putIfAbsent("%ACTIVEOBJECTIVEID%", () -> "" + activeObjective.getObjective().getObjectiveID());
+                internalPlaceholderReplacements.putIfAbsent("%OBJECTIVENAME%", () -> "" + activeObjective.getObjective().getDisplayNameOrIdentifier());
+                internalPlaceholderReplacements.putIfAbsent("%ACTIVEOBJECTIVEPROGRESS%", () -> String.format("%.2f", activeObjective.getCurrentProgress()));
+                internalPlaceholderReplacements.putIfAbsent("%OBJECTIVEPROGRESSNEEDED%", () -> String.format("%.2f", activeObjective.getProgressNeeded()));
+                internalPlaceholderReplacements.putIfAbsent("%OBJECTIVEPROGRESSPERCENTAGE%", () -> "" + (int) ((float) ((float) activeObjective.getCurrentProgress() / (float) activeObjective.getProgressNeeded()) * 100));
+                internalPlaceholderReplacements.putIfAbsent("%OBJECTIVETASKDESCRIPTION%", () -> main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), false, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), activeObjective));
+                internalPlaceholderReplacements.putIfAbsent("%COMPLETEDOBJECTIVETASKDESCRIPTION%", () -> main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), true, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), activeObjective));
+                internalPlaceholderReplacements.putIfAbsent("%OBJECTIVEDESCRIPTION%", () -> activeObjective.getObjective().getObjectiveHolderDescription());
             } else if (internalPlaceholderObject instanceof final ActiveObjectiveHolder activeObjectiveHolder) {
                 // main.getLogManager().info("Quest placeholders...");
-                internalPlaceholderReplacements.put("%QUESTNAME%", () -> activeObjectiveHolder.getObjectiveHolder().getDisplayNameOrIdentifier());
-                internalPlaceholderReplacements.put("%QUESTDESCRIPTION%", () -> activeObjectiveHolder.getObjectiveHolder().getObjectiveHolderDescription());
-                internalPlaceholderReplacements.put("%COMPLETEDOBJECTIVESCOUNT%", () -> "" + activeObjectiveHolder.getCompletedObjectives().size());
-                internalPlaceholderReplacements.put("%ALLOBJECTIVESCOUNT%", () -> "" + activeObjectiveHolder.getObjectiveHolder().getObjectives().size());
+                internalPlaceholderReplacements.putIfAbsent("%QUESTNAME%", () -> activeObjectiveHolder.getObjectiveHolder().getDisplayNameOrIdentifier());
+                internalPlaceholderReplacements.putIfAbsent("%QUESTDESCRIPTION%", () -> activeObjectiveHolder.getObjectiveHolder().getObjectiveHolderDescription());
+                internalPlaceholderReplacements.putIfAbsent("%COMPLETEDOBJECTIVESCOUNT%", () -> "" + activeObjectiveHolder.getCompletedObjectives().size());
+                internalPlaceholderReplacements.putIfAbsent("%ALLOBJECTIVESCOUNT%", () -> "" + activeObjectiveHolder.getObjectiveHolder().getObjectives().size());
             } else if (internalPlaceholderObject instanceof final Quest quest) {
                 //main.getLogManager().info("Applying Quest placeholders...");
-                internalPlaceholderReplacements.put("%QUESTNAME%", quest::getDisplayNameOrIdentifier);
-                internalPlaceholderReplacements.put("%QUESTDESCRIPTION%", quest::getObjectiveHolderDescription);
+                internalPlaceholderReplacements.putIfAbsent("%QUESTNAME%", quest::getDisplayNameOrIdentifier);
+                internalPlaceholderReplacements.putIfAbsent("%QUESTDESCRIPTION%", quest::getObjectiveHolderDescription);
                 foundQuest = quest;
             }  else if (internalPlaceholderObject instanceof final Objective objective) {
                 //main.getLogManager().info("Applying Objective placeholders...");
-                internalPlaceholderReplacements.put("%OBJECTIVEID%", () -> "" + objective.getObjectiveID());
-                internalPlaceholderReplacements.put("%OBJECTIVENAME%", () -> "" + objective.getDisplayNameOrIdentifier());
+                internalPlaceholderReplacements.putIfAbsent("%OBJECTIVEID%", () -> "" + objective.getObjectiveID());
+                internalPlaceholderReplacements.putIfAbsent("%OBJECTIVENAME%", () -> "" + objective.getDisplayNameOrIdentifier());
             } else if (internalPlaceholderObject instanceof final ObjectiveHolder objectiveHolder) {
                 //main.getLogManager().info("Applying Quest placeholders...");
-                internalPlaceholderReplacements.put("%QUESTNAME%", objectiveHolder::getDisplayNameOrIdentifier);
-                internalPlaceholderReplacements.put("%QUESTDESCRIPTION%", objectiveHolder::getObjectiveHolderDescription);
+                internalPlaceholderReplacements.putIfAbsent("%QUESTNAME%", objectiveHolder::getDisplayNameOrIdentifier);
+                internalPlaceholderReplacements.putIfAbsent("%QUESTDESCRIPTION%", objectiveHolder::getObjectiveHolderDescription);
             }else if (internalPlaceholderObject instanceof final Trigger trigger) {
                 //main.getLogManager().log(Level.INFO, "Applying Trigger placeholders...");
             } else if (internalPlaceholderObject instanceof final QuestPlayer questPlayer) {
