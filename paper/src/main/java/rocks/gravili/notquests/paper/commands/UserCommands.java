@@ -436,12 +436,48 @@ public class UserCommands {
                 ArgumentDescription.of(
                     "Name of the active Quest of which you want to see the progress"))
             .meta(CommandMeta.DESCRIPTION, "Shows progress for an active Quest")
-            .handler(
+            .handler( //TODO: This does text stuff. Add better GUI later
                 (context) -> {
                   final Player player = (Player) context.getSender();
                   QuestPlayer questPlayer =
                       main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
-                  if (questPlayer != null && questPlayer.getActiveQuests().size() > 0) {
+                  if (!questPlayer.getActiveQuests().isEmpty()) {
+                    final ActiveQuest activeQuest = context.get("Active Quest");
+
+                    context
+                        .getSender()
+                        .sendMessage(
+                            main.parse(
+                                "<GREEN>Completed Objectives for Quest <highlight>"
+                                    + activeQuest.getQuest().getDisplayNameOrIdentifier()
+                                    + "<YELLOW>:"));
+                    main.getQuestManager()
+                        .sendCompletedObjectivesAndProgress(questPlayer, activeQuest);
+                    context
+                        .getSender()
+                        .sendMessage(
+                            main.parse(
+                                "<GREEN>Active Objectives for Quest <highlight>"
+                                    + activeQuest.getQuest().getDisplayNameOrIdentifier()
+                                    + "<YELLOW>:"));
+                    main.getQuestManager()
+                        .sendActiveObjectivesAndProgress(questPlayer, activeQuest, 0);
+
+                  } else {
+                    context
+                        .getSender()
+                        .sendMessage(
+                            main.parse(
+                                main.getLanguageManager()
+                                    .getString("chat.no-quests-accepted", player)));
+                  }
+                })
+            /*.handler(
+                (context) -> {
+                  final Player player = (Player) context.getSender();
+                  QuestPlayer questPlayer =
+                      main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
+                  if (!questPlayer.getActiveQuests().isEmpty()) {
                     final ActiveQuest activeQuest = context.get("Active Quest");
 
                     main.getGuiManager().showQuestProgressGUI(questPlayer, activeQuest);
@@ -472,7 +508,7 @@ public class UserCommands {
                                                 .replace("%COMPLETEDOBJECTIVETASKDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), true, player))
                                 )
                         ));
-                    }*/
+                    }*//*
 
                   } else {
                     context
@@ -482,7 +518,7 @@ public class UserCommands {
                                 main.getLanguageManager()
                                     .getString("chat.no-quests-accepted", player)));
                   }
-                }));
+                })*/);
     manager.command(
         builder
             .literal("category")
@@ -681,7 +717,7 @@ public class UserCommands {
                   final Player player = (Player) context.getSender();
                   QuestPlayer questPlayer =
                       main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
-                  if (questPlayer != null && questPlayer.getActiveQuests().size() > 0) {
+                  if (!questPlayer.getActiveQuests().isEmpty()) {
                     final ActiveQuest activeQuest = context.get("Active Quest");
 
                     context
