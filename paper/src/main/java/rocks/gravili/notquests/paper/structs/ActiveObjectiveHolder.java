@@ -33,6 +33,7 @@ public abstract class ActiveObjectiveHolder {
     toRemove = new ArrayList<>();
 
     int objectiveID = 1;
+    main.getLogManager().info("ActiveObjectiveHolder " + this.objectiveHolder.getDisplayNameOrIdentifier() + " loading with " + objectiveHolder.getObjectives().size() + " objectives");
     for (final Objective objective : objectiveHolder.getObjectives()) {
       ActiveObjective activeObjective = new ActiveObjective(main, objectiveID, objective, this);
       getActiveObjectives().add(activeObjective);

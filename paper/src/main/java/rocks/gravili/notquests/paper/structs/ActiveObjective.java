@@ -52,7 +52,7 @@ public class ActiveObjective extends ActiveObjectiveHolder {
     private double progressNeeded;
 
     public ActiveObjective(final NotQuests main, final int objectiveID, final Objective objective, final ActiveObjectiveHolder activeObjectiveHolder) {
-        super(main, activeObjectiveHolder.getQuestPlayer(), activeObjectiveHolder.getObjectiveHolder());
+        super(main, activeObjectiveHolder.getQuestPlayer(), objective);
 
         this.main = main;
         this.objectiveID = objectiveID;
@@ -107,7 +107,7 @@ public class ActiveObjective extends ActiveObjectiveHolder {
                     }
                 }
                 if (notifyPlayer) {
-                    main.getQuestManager().sendActiveObjective(getQuestPlayer(), this);
+                    main.getQuestManager().sendActiveObjective(getQuestPlayer(), this, 0);
                 }
 
             }else{

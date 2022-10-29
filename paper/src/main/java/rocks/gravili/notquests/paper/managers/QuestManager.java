@@ -40,6 +40,7 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
+import rocks.gravili.notquests.paper.structs.ActiveObjectiveHolder;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.CompletedQuest;
 import rocks.gravili.notquests.paper.structs.PredefinedProgressOrder;
@@ -1128,9 +1129,17 @@ public class QuestManager {
         }
     }
 
-    public void sendActiveObjectivesAndProgress(final QuestPlayer questPlayer, final ActiveQuest activeQuest) {
-        for (ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-            sendActiveObjective(questPlayer, activeObjective);
+    @Deprecated
+    //TODO: Remove once I have time & thus fix sub-objectives not showing. Each ActiveObjectiveHolder should be able to know its own level
+    public void sendActiveObjectivesAndProgress(final QuestPlayer questPlayer, final ActiveObjectiveHolder activeObjectiveHolder) {
+        sendActiveObjectivesAndProgress(questPlayer, activeObjectiveHolder, 0);
+    }
+    public void sendActiveObjectivesAndProgress(final QuestPlayer questPlayer, final ActiveObjectiveHolder activeObjectiveHolder, final int level) {
+        for (ActiveObjective activeObjective : activeObjectiveHolder.getActiveObjectives()) {
+            sendActiveObjective(questPlayer, activeObjective, level);
+            if(!activeObjective.getActiveObjectives().isEmpty()){
+                sendActiveObjectivesAndProgress(questPlayer, activeObjective, level+1);
+            }
         }
     }
 
@@ -1226,31 +1235,37 @@ public class QuestManager {
     }
 
 
-    public void sendActiveObjective(final QuestPlayer questPlayer, ActiveObjective activeObjective) {
+    public void sendActiveObjective(final QuestPlayer questPlayer, ActiveObjective activeObjective, final int level) {
         final Player player = questPlayer.getPlayer();
+
+        String prefix = "";
+        for(int i = 0; i < level; i++){
+            prefix += "   ";
+        }
+
         if (activeObjective.isUnlocked()) {
             final String objectiveDescription = activeObjective.getObjective().getObjectiveHolderDescription();
             player.sendMessage(main.parse(
-                    main.getLanguageManager().getString("chat.objectives.counter", player, activeObjective.getActiveObjectiveHolder(), activeObjective)
+                prefix+main.getLanguageManager().getString("chat.objectives.counter", player, activeObjective.getActiveObjectiveHolder(), activeObjective)
             ));
 
             if (!objectiveDescription.isBlank()) {
                 player.sendMessage(main.parse(
-                        main.getLanguageManager().getString("chat.objectives.description", player, activeObjective.getActiveObjectiveHolder(), activeObjective)
+                    prefix+main.getLanguageManager().getString("chat.objectives.description", player, activeObjective.getActiveObjectiveHolder(), activeObjective)
                                 .replace("%OBJECTIVEDESCRIPTION%", activeObjective.getObjective().getObjectiveHolderDescription())
                 ));
             }
 
             player.sendMessage(main.parse(
-                    getObjectiveTaskDescription(activeObjective.getObjective(), false, questPlayer, activeObjective)
+                prefix+getObjectiveTaskDescription(activeObjective.getObjective(), false, questPlayer, activeObjective)
             ));
 
             player.sendMessage(main.parse(
-                    main.getLanguageManager().getString("chat.objectives.progress", player, activeObjective.getActiveObjectiveHolder(), activeObjective)
+                prefix+main.getLanguageManager().getString("chat.objectives.progress", player, activeObjective.getActiveObjectiveHolder(), activeObjective)
             ));
         } else {
             player.sendMessage(main.parse(
-                    main.getLanguageManager().getString("chat.objectives.hidden", player, activeObjective, activeObjective)
+                prefix+main.getLanguageManager().getString("chat.objectives.hidden", player, activeObjective, activeObjective)
             ));
         }
 
