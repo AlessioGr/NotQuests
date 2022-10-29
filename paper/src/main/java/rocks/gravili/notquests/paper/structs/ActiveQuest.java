@@ -43,7 +43,7 @@ public class ActiveQuest extends ActiveObjectiveHolder {
 
 
   public ActiveQuest(final NotQuests main, final Quest quest, final QuestPlayer questPlayer) {
-    super(main, questPlayer, quest);
+    super(main, questPlayer, quest, 0);
     this.quest = quest;
     activeTriggers = new ArrayList<>();
 

@@ -701,7 +701,7 @@ public class UserCommands {
                                     + activeQuest.getQuest().getDisplayNameOrIdentifier()
                                     + "<YELLOW>:"));
                     main.getQuestManager()
-                        .sendActiveObjectivesAndProgress(questPlayer, activeQuest);
+                        .sendActiveObjectivesAndProgress(questPlayer, activeQuest, 0);
 
                   } else {
                     context

@@ -2073,7 +2073,7 @@ public class AdminCommands {
                             "<main>>Active Objectives for Quest <highlight>" + activeQuest.getQuest().getIdentifier() + "</highlight> of player <highlight2>"
                                     + playerName + "</highlight2> <green>(online)</green>:"
                     ));
-                    main.getQuestManager().sendActiveObjectivesAndProgress(questPlayer, activeQuest);
+                    main.getQuestManager().sendActiveObjectivesAndProgress(questPlayer, activeQuest, 0);
 
 
                 } else {
@@ -2114,7 +2114,7 @@ public class AdminCommands {
                             "<main>Active Objectives for Quest <highlight>" + activeQuest.getQuest().getIdentifier() + "</highlight> of player <highlight2>"
                                     + playerName + "</highlight2> <red>(offline)</red>:"
                     ));
-                    main.getQuestManager().sendActiveObjectivesAndProgress(questPlayer, activeQuest);
+                    main.getQuestManager().sendActiveObjectivesAndProgress(questPlayer, activeQuest, 0);
 
 
                 } else {

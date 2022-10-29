@@ -23,10 +23,13 @@ public abstract class ActiveObjectiveHolder {
 
   private final NotQuests main;
   private final QuestPlayer questPlayer;
-  public ActiveObjectiveHolder(final NotQuests main, final QuestPlayer questPlayer, final ObjectiveHolder objectiveHolder){
+
+  private final int level; //Level in the hierarchy. Quest = 0. 1. sub-objective = 1. etc.
+  public ActiveObjectiveHolder(final NotQuests main, final QuestPlayer questPlayer, final ObjectiveHolder objectiveHolder, final int level){
     this.main = main;
     this.objectiveHolder = objectiveHolder;
     this.questPlayer = questPlayer;
+    this.level = level;
 
     activeObjectives = new CopyOnWriteArrayList<>();
     completedObjectives = new ArrayList<>();
@@ -39,6 +42,10 @@ public abstract class ActiveObjectiveHolder {
       getActiveObjectives().add(activeObjective);
       objectiveID++;
     }
+  }
+
+  public final int getLevel(){
+    return level;
   }
 
   public final QuestPlayer getQuestPlayer(){

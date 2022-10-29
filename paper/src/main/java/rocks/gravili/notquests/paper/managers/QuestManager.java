@@ -1129,11 +1129,7 @@ public class QuestManager {
         }
     }
 
-    @Deprecated
-    //TODO: Remove once I have time & thus fix sub-objectives not showing. Each ActiveObjectiveHolder should be able to know its own level
-    public void sendActiveObjectivesAndProgress(final QuestPlayer questPlayer, final ActiveObjectiveHolder activeObjectiveHolder) {
-        sendActiveObjectivesAndProgress(questPlayer, activeObjectiveHolder, 0);
-    }
+
     public void sendActiveObjectivesAndProgress(final QuestPlayer questPlayer, final ActiveObjectiveHolder activeObjectiveHolder, final int level) {
         for (ActiveObjective activeObjective : activeObjectiveHolder.getActiveObjectives()) {
             sendActiveObjective(questPlayer, activeObjective, level);
@@ -1144,6 +1140,7 @@ public class QuestManager {
     }
 
 
+    //TODO: Make this work for sub-objectives:
     public void sendObjectivesAdmin(final CommandSender sender, final ObjectiveHolder quest) {
 
         for (final Objective objective : quest.getObjectives()) {
