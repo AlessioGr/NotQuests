@@ -285,8 +285,11 @@ public class ConversationManager {
         final Speaker speaker = new Speaker(speakerName);
         final String color =
             speakersAndLinesConfigurationSection.getString(speakerName + ".color", "<WHITE>");
+        final int speakerDelayInMS =
+                speakersAndLinesConfigurationSection.getInt(speakerName + ".delay", 0);
         if (!color.isBlank()) {
           speaker.setColor(color);
+          speaker.setDelayInMS(speakerDelayInMS);
         }
 
         if (speakerName.equalsIgnoreCase("player")) {
@@ -346,7 +349,9 @@ public class ConversationManager {
           }
         }
         startLine.setShouting(shouting);
-        startLine.setDelayInMS(delayInMS);
+        if(delayInMS > 0){
+          startLine.setDelayInMS(delayInMS);
+        }
 
         // Conditions
         final ArrayList<Condition> conditions =
@@ -482,7 +487,9 @@ public class ConversationManager {
           }
 
           newLine.setShouting(shouting);
-          newLine.setDelayInMS(delayInMS);
+          if(delayInMS > 0){
+            newLine.setDelayInMS(delayInMS);
+          }
 
           // Conditions
           final ArrayList<Condition> conditions =

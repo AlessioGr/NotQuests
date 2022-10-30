@@ -34,7 +34,7 @@ public class ConversationLine {
   private boolean shout = false;
   private boolean skipMessage = false;
 
-  private int delayInMS = 0;
+  private int delayInMS;
 
   public ConversationLine(final Speaker speaker, final String identifier, final String message) {
     this.speaker = speaker;
@@ -45,6 +45,7 @@ public class ConversationLine {
     actions = new ArrayList<>();
 
     this.fullIdentifier = speaker.getSpeakerName() + "." + identifier;
+    this.delayInMS = speaker.getDelayInMS();
   }
 
   public final ArrayList<Condition> getConditions() {

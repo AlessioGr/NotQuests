@@ -26,6 +26,8 @@ public class Speaker {
   private int talkSpeed = 10;
   private boolean player = false;
 
+  private int delayInMS = 0;
+
   public Speaker(final String speakerName) {
     this.speakerName = speakerName;
     this.speakerDisplayName =
@@ -62,5 +64,14 @@ public class Speaker {
 
   public void setPlayer(final boolean player) {
     this.player = player;
+  }
+
+  public void setDelayInMS(final int delayInMS) {
+    this.delayInMS = delayInMS;
+  }
+
+  public final int getDelayInMS() {
+    return delayInMS;
+
   }
 }
