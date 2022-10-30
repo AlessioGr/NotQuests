@@ -20,6 +20,7 @@ package rocks.gravili.notquests.paper.conversation;
 
 import java.util.ArrayList;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.conversation.interactionhandlers.ConversationInteractionHandler;
@@ -231,6 +232,13 @@ public class ConversationPlayer {
    * @param conversationLine
    */
   public void sendLine(final ConversationLine conversationLine, final boolean deletePrevious) {
+    if(conversationLine.getDelayInMS() <= 0){
+      sendLineInternal(conversationLine, deletePrevious);
+    }else {
+      Bukkit.getScheduler().runTaskLater(main.getMain(), () -> sendLineInternal(conversationLine, deletePrevious), conversationLine.getDelayInMS());
+    }
+  }
+  private void sendLineInternal(final ConversationLine conversationLine, final boolean deletePrevious) {
     if(!conversationLine.isSkipMessage()){
       for(final ConversationInteractionHandler interactionHandler : main.getConversationManager().getInteractionHandlers()){
         interactionHandler.sendText(conversationLine.getMessage(), conversationLine.getSpeaker(), player, questPlayer, conversation, conversationLine, deletePrevious, this);
@@ -252,7 +260,14 @@ public class ConversationPlayer {
    * @param conversationLine
    */
   public void sendOptionLine(final ConversationLine conversationLine) {
+    if(conversationLine.getDelayInMS() <= 0){
+      sendOptionLineInternal(conversationLine);
+    }else {
+      Bukkit.getScheduler().runTaskLater(main.getMain(), () -> sendOptionLineInternal(conversationLine), conversationLine.getDelayInMS());
+    }
+  }
 
+  private void sendOptionLineInternal(final ConversationLine conversationLine){
     for(final ConversationInteractionHandler interactionHandler : main.getConversationManager().getInteractionHandlers()){
       interactionHandler.sendOption(conversationLine.getMessage(), conversationLine.getSpeaker(), player, questPlayer, conversation, conversationLine, this);
     }

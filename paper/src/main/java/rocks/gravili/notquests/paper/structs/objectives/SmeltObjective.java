@@ -57,8 +57,6 @@ public class SmeltObjective extends Objective {
                 (context) -> {
                   final String amountExpression = context.get("amount");
 
-                  boolean smeltAnyItem = false;
-
                   final ItemStackSelection itemStackSelection = context.get("materials");
 
                   SmeltObjective smeltObjective = new SmeltObjective(main);
@@ -92,7 +90,6 @@ public class SmeltObjective extends Objective {
   @Override
   public String getTaskDescriptionInternal(
       final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
-    final String displayName;
 
     return main.getLanguageManager()
         .getString(

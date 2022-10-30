@@ -315,6 +315,8 @@ public class ConversationManager {
         final ArrayList<Action> actions =
             parseActionString(config.getStringList(initialLine + ".actions"));
         final boolean shouting = config.getBoolean(initialLine + ".shout", false);
+        final int delayInMS = config.getInt(initialLine + ".delay", 0);
+
 
         // Speaker
         Speaker foundSpeaker = null;
@@ -344,6 +346,7 @@ public class ConversationManager {
           }
         }
         startLine.setShouting(shouting);
+        startLine.setDelayInMS(delayInMS);
 
         // Conditions
         final ArrayList<Condition> conditions =
@@ -403,6 +406,8 @@ public class ConversationManager {
           final ArrayList<Action> actions =
               parseActionString(config.getStringList(initialLine + ".actions"));
           final boolean shouting = config.getBoolean(initialLine + ".shout", false);
+          final int delayInMS = config.getInt(initialLine + ".delay", 0);
+
 
           main.getLogManager()
               .debug(
@@ -477,6 +482,7 @@ public class ConversationManager {
           }
 
           newLine.setShouting(shouting);
+          newLine.setDelayInMS(delayInMS);
 
           // Conditions
           final ArrayList<Condition> conditions =

@@ -34,6 +34,8 @@ public class ConversationLine {
   private boolean shout = false;
   private boolean skipMessage = false;
 
+  private int delayInMS = 0;
+
   public ConversationLine(final Speaker speaker, final String identifier, final String message) {
     this.speaker = speaker;
     this.identifier = identifier;
@@ -111,5 +113,13 @@ public class ConversationLine {
 
   public void setSkipMessage(final boolean skipMessage) {
     this.skipMessage = skipMessage;
+  }
+
+  public void setDelayInMS(final int delayInMS) {
+    this.delayInMS = delayInMS;
+  }
+
+  public final int getDelayInMS() {
+    return delayInMS;
   }
 }
