@@ -464,14 +464,14 @@ public class LanguageManager {
                 internalPlaceholderReplacements.put("%OBJECTIVENAME%", () -> "" + activeObjective.getObjective().getDisplayNameOrIdentifier());
                 internalPlaceholderReplacements.put("%ACTIVEOBJECTIVEPROGRESS%", () -> {
                     String formatted = String.format("%.2f", activeObjective.getCurrentProgress());
-                    if(formatted.endsWith(".00")){
+                    if(formatted.endsWith(".00") || formatted.endsWith(",00")){
                         formatted = formatted.substring(0, formatted.length()-3);
                     }
                     return formatted;
                 });
                 internalPlaceholderReplacements.put("%OBJECTIVEPROGRESSNEEDED%", () -> {
                     String formatted = String.format("%.2f", activeObjective.getProgressNeeded());
-                    if(formatted.endsWith(".00")){
+                    if(formatted.endsWith(".00") || formatted.endsWith(",00")){
                         formatted = formatted.substring(0, formatted.length()-3);
                     }
                     return formatted;
