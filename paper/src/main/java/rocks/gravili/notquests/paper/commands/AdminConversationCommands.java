@@ -463,7 +463,7 @@ public class AdminConversationCommands {
                   final String speakerColor =
                       context.flags().getValue(main.getCommandManager().speakerColor, "");
 
-                  Speaker speaker = new Speaker(speakerName);
+                  Speaker speaker = new Speaker(speakerName, foundConversation);
                   if (speakerColor != null && !speakerColor.isBlank()) {
                     speaker.setColor(speakerColor);
                   }
