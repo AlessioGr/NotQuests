@@ -71,7 +71,12 @@ public class ConversationPlayer {
    * @return
    */
   public boolean next(final ConversationLine currentLine, boolean deletePrevious) {
-    sendLine(currentLine, deletePrevious);
+    if(currentLine.getDelayInMS() <= 0){
+      sendLine(currentLine, deletePrevious);
+    }else {
+      Bukkit.getScheduler().runTaskLater(main.getMain(), () -> sendLine(currentLine, deletePrevious), currentLine.getDelayInTicks());
+    }
+
 
     final ArrayList<ConversationLine> next =
         findConversationLinesWhichFulfillsCondition(currentLine.getNext());
@@ -127,19 +132,33 @@ public class ConversationPlayer {
    * @return
    */
   public void nextPlayer(final ArrayList<ConversationLine> playerLines) {
+    if(playerLines.isEmpty()){
+      questPlayer.sendDebugMessage("Clearing currentPlayerLines and skipping: there are no playerLines.");
+      currentPlayerLines.clear();
+    }
+    if(playerLines.get(0).getDelayInMS() <= 0){
+      nextPlayerInternal(playerLines);
+    }else {
+      Bukkit.getScheduler().runTaskLater(main.getMain(), () -> nextPlayerInternal(playerLines), playerLines.get(0).getDelayInTicks());
+    }
+
+
+  }
+
+  private void nextPlayerInternal(final ArrayList<ConversationLine> playerLines) {
     questPlayer.sendDebugMessage("Clearing currentPlayerLines (3)");
     currentPlayerLines.clear();
     questPlayer.sendDebugMessage("Adding " + playerLines.size() + " currentPlayerLines");
     currentPlayerLines.addAll(playerLines);
 
     final String chooseAnswerPrefixMiniMessage =
-        main.getLanguageManager()
-            .getString("chat.conversations.choose-answer-prefix", player, conversation);
+            main.getLanguageManager()
+                    .getString("chat.conversations.choose-answer-prefix", player, conversation);
     main.sendMessage(player, chooseAnswerPrefixMiniMessage);
 
     if (main.getConfiguration().deletePreviousConversations) {
       final ArrayList<Component> hist =
-          main.getConversationManager().getConversationChatHistory().getOrDefault(player.getUniqueId(), new ArrayList<>());
+              main.getConversationManager().getConversationChatHistory().getOrDefault(player.getUniqueId(), new ArrayList<>());
 
       if (!chooseAnswerPrefixMiniMessage.isBlank()) {
         hist.add(main.parse(chooseAnswerPrefixMiniMessage));
@@ -154,7 +173,7 @@ public class ConversationPlayer {
 
     if (main.getConfiguration().deletePreviousConversations) {
       final ArrayList<Component> hist =
-          main.getConversationManager().getConversationChatHistory().getOrDefault(player.getUniqueId(), new ArrayList<>());
+              main.getConversationManager().getConversationChatHistory().getOrDefault(player.getUniqueId(), new ArrayList<>());
 
       hist.add(Component.empty());
       main.getConversationManager().getConversationChatHistory().put(player.getUniqueId(), hist);
@@ -162,6 +181,7 @@ public class ConversationPlayer {
 
     player.sendMessage(Component.empty());
   }
+
 
   public ArrayList<ConversationLine> findConversationLinesWhichFulfillsCondition(
       final ArrayList<ConversationLine> conversationLines) {
@@ -232,13 +252,6 @@ public class ConversationPlayer {
    * @param conversationLine
    */
   public void sendLine(final ConversationLine conversationLine, final boolean deletePrevious) {
-    if(conversationLine.getDelayInMS() <= 0){
-      sendLineInternal(conversationLine, deletePrevious);
-    }else {
-      Bukkit.getScheduler().runTaskLater(main.getMain(), () -> sendLineInternal(conversationLine, deletePrevious), conversationLine.getDelayInMS());
-    }
-  }
-  private void sendLineInternal(final ConversationLine conversationLine, final boolean deletePrevious) {
     if(!conversationLine.isSkipMessage()){
       for(final ConversationInteractionHandler interactionHandler : main.getConversationManager().getInteractionHandlers()){
         interactionHandler.sendText(conversationLine.getMessage(), conversationLine.getSpeaker(), player, questPlayer, conversation, conversationLine, deletePrevious, this);
@@ -253,6 +266,7 @@ public class ConversationPlayer {
     }
   }
 
+
   /**
    * Sends the player a clickable option text. The conversation will not continue until the player
    * clicks it
@@ -260,18 +274,11 @@ public class ConversationPlayer {
    * @param conversationLine
    */
   public void sendOptionLine(final ConversationLine conversationLine) {
-    if(conversationLine.getDelayInMS() <= 0){
-      sendOptionLineInternal(conversationLine);
-    }else {
-      Bukkit.getScheduler().runTaskLater(main.getMain(), () -> sendOptionLineInternal(conversationLine), conversationLine.getDelayInMS());
-    }
-  }
-
-  private void sendOptionLineInternal(final ConversationLine conversationLine){
     for(final ConversationInteractionHandler interactionHandler : main.getConversationManager().getInteractionHandlers()){
       interactionHandler.sendOption(conversationLine.getMessage(), conversationLine.getSpeaker(), player, questPlayer, conversation, conversationLine, this);
     }
   }
+
 
   /**
    * Called when the player chooses an answer (clicks in chat).

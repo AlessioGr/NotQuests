@@ -123,4 +123,8 @@ public class ConversationLine {
   public final int getDelayInMS() {
     return delayInMS;
   }
+
+  public final int getDelayInTicks() {
+    return delayInMS/50;
+  }
 }
