@@ -60,7 +60,6 @@ public class ConversationManager {
   final HashMap<UUID, ArrayList<Component>> conversationChatHistory;
   private final NotQuests main;
   private final ArrayList<Conversation> conversations;
-  private final Speaker playerSpeaker;
   private final HashMap<UUID, ConversationPlayer> openConversations;
 
   private final ArrayList<SendClickableText> interactionHandlers;
@@ -74,8 +73,7 @@ public class ConversationManager {
 
     openConversations = new HashMap<>();
 
-    playerSpeaker = new Speaker("You");
-    playerSpeaker.setPlayer(true);
+
 
     chatHistory = new HashMap<>();
     conversationChatHistory = new HashMap<>();
@@ -118,9 +116,12 @@ public class ConversationManager {
         new Conversation(
             main, null, null, "test", null, main.getDataManager().getDefaultCategory());
 
-    final Speaker gustav = new Speaker("Gustav");
+    final Speaker gustav = new Speaker("Gustav", testConversation);
 
     testConversation.addSpeaker(gustav, false);
+
+    final Speaker playerSpeaker = new Speaker("You", testConversation);
+    playerSpeaker.setPlayer(true);
 
     testConversation.addSpeaker(playerSpeaker, false);
 
@@ -268,6 +269,10 @@ public class ConversationManager {
               npcs,
               category);
 
+      final int conversationDelayInMS =
+              config.getInt("delay", 0);
+      conversation.setDelayInMS(conversationDelayInMS);
+
       // First add all speakers
       final ConfigurationSection speakersAndLinesConfigurationSection =
           config.getConfigurationSection("Lines");
@@ -282,7 +287,7 @@ public class ConversationManager {
 
       final ArrayList<Speaker> allSpeakers = new ArrayList<>();
       for (final String speakerName : speakersAndLinesConfigurationSection.getKeys(false)) {
-        final Speaker speaker = new Speaker(speakerName);
+        final Speaker speaker = new Speaker(speakerName, conversation);
         final String color =
             speakersAndLinesConfigurationSection.getString(speakerName + ".color", "<WHITE>");
         final int speakerDelayInMS =

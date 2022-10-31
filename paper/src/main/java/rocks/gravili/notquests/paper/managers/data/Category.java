@@ -35,6 +35,8 @@ public class Category {
 
   private PredefinedProgressOrder predefinedProgressOrder;
 
+  private int conversationDelayInMS = 0;
+
   private File categoryFile,
       questsFile,
       actionsFile,
@@ -168,6 +170,9 @@ public class Category {
         conversationsConfigs.add(loadConfig(conversationFile, null));
       }
     }
+
+    //Setup default values
+    setupDefaults();
   }
 
   private FileConfiguration loadConfig(File file, FileConfiguration fileConfiguration) {
@@ -325,11 +330,7 @@ public class Category {
     }
   }
 
-  public void loadDataFromCategoryConfig() {
-    this.displayName = getCategoryConfig().getString("displayName", "");
-    this.predefinedProgressOrder = PredefinedProgressOrder.fromConfiguration(getCategoryConfig(), "predefinedProgressOrder");
 
-  }
 
   public final ArrayList<Quest> getQuests(){
     return main.getQuestManager().getAllQuests().stream()
@@ -350,5 +351,46 @@ public class Category {
         + ", parentCategory="
         + parentCategory
         + '}';
+  }
+
+  public final int getConversationDelayInMS(){
+    return conversationDelayInMS;
+  }
+
+  public void setConversationDelayInMS(final int conversationDelayInMS, final boolean save){
+    this.conversationDelayInMS = conversationDelayInMS;
+
+    if (save) {
+      getCategoryConfig()
+              .set(
+                      "conversations.delay",
+                      conversationDelayInMS);
+      saveCategoryConfig();
+    }
+  }
+
+  public void setupDefaults(){
+    if(!getCategoryConfig().contains("conversations.delay")){
+      getCategoryConfig()
+              .set(
+                      "conversations.delay",
+                      conversationDelayInMS);
+      saveCategoryConfig();
+    }
+
+    if(!getCategoryConfig().contains("displayName")){
+      getCategoryConfig()
+              .set(
+                      "displayName",
+                      "");
+      saveCategoryConfig();
+    }
+  }
+
+  public void loadDataFromCategoryConfig() {
+    this.displayName = getCategoryConfig().getString("displayName", "");
+    this.predefinedProgressOrder = PredefinedProgressOrder.fromConfiguration(getCategoryConfig(), "predefinedProgressOrder");
+
+    this.conversationDelayInMS = getCategoryConfig().getInt("conversations.delay", 0);
   }
 }

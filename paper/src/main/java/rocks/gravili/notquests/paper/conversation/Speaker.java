@@ -26,12 +26,17 @@ public class Speaker {
   private int talkSpeed = 10;
   private boolean player = false;
 
-  private int delayInMS = 0;
+  private int delayInMS;
 
-  public Speaker(final String speakerName) {
+  private final Conversation conversation;
+
+  public Speaker(final String speakerName, final Conversation conversation) {
     this.speakerName = speakerName;
     this.speakerDisplayName =
         speakerName.replace("__", "{UNDERSCORE}").replace("_", " ").replace("{UNDERSCORE}", "_");
+
+    this.conversation = conversation;
+    this.delayInMS = conversation.getDelayInMS();
   }
 
   public final String getSpeakerName() {
@@ -72,6 +77,9 @@ public class Speaker {
 
   public final int getDelayInMS() {
     return delayInMS;
+  }
 
+  public final Conversation getConversation(){
+    return conversation;
   }
 }
