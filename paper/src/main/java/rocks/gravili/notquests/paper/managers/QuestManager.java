@@ -571,7 +571,7 @@ public class QuestManager {
                             final int applyOn = category.getQuestsConfig().getInt("quests." + questName + ".triggers." + triggerNumber + ".applyOn");
                             final String worldName = category.getQuestsConfig().getString("quests." + questName + ".triggers." + triggerNumber + ".worldName", "ALL");
 
-                            if (Bukkit.getWorld(worldName) == null) {
+                            if (!worldName.equalsIgnoreCase("ALL") && Bukkit.getWorld(worldName) == null) {
                                 main.getLogManager().warn("The world of the trigger <highlight>" + triggerNumber + "</highlight> of Quest <highlight>" + questName + "</highlight> was not found. World name: <highlight>" + worldName + "</highlight>");
                             }
 
