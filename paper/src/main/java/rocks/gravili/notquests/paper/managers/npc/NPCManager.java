@@ -165,7 +165,7 @@ public class NPCManager {
         main.getLogManager().warn("Error: Quest not found while trying to load NPC");
       }
     }
-    main.getLogManager().info("Requesting cleaning of bugged NPCs in loadNPCData()...");
+    main.getLogManager().debug("Requesting cleaning of bugged NPCs in loadNPCData()...");
     main.getNPCManager().cleanupBuggedNPCs();
   }
 

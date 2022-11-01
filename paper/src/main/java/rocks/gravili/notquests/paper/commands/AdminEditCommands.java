@@ -874,7 +874,7 @@ public class AdminEditCommands {
           objectiveIDIdentifier = "Objective ID " + (level+1);
         }
 
-      main.getLogManager().info("Handling EDIT objectives for level <highlight>" + level + "</highlight>... objectiveIDIdentifier: " + objectiveIDIdentifier);
+      main.getLogManager().debug("Handling EDIT objectives for level <highlight>" + level + "</highlight>... objectiveIDIdentifier: " + objectiveIDIdentifier);
 
 
       manager.command(builder.literal("location")

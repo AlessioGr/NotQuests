@@ -66,12 +66,15 @@ public class QuestPlayerManager {
       while (result.next()) {
 
         final long questPoints = result.getLong("QuestPoints");
-        main.getLogManager()
-            .info(
-                "Loaded player with uuid <highlight>"
-                    + uuid
-                    + "</highlight> and questPoints: "
-                    + questPoints);
+        if (main.getConfiguration().isVerboseStartupMessages()) {
+          main.getLogManager()
+                  .info(
+                          "Loaded player with uuid <highlight>"
+                                  + uuid
+                                  + "</highlight> and questPoints: "
+                                  + questPoints);
+        }
+
 
         if (questPlayer != null) {
           // QuestPoints
@@ -429,12 +432,15 @@ public class QuestPlayerManager {
         final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(uuid);
 
         final long questPoints = result.getLong("QuestPoints");
-        main.getLogManager()
-            .info(
-                "Loaded player with uuid <highlight>"
-                    + uuid
-                    + "</highlight> and questPoints: "
-                    + questPoints);
+        if (main.getConfiguration().isVerboseStartupMessages()) {
+          main.getLogManager()
+                  .info(
+                          "Loaded player with uuid <highlight>"
+                                  + uuid
+                                  + "</highlight> and questPoints: "
+                                  + questPoints);
+        }
+
 
         if (questPlayer != null) {
           // QuestPoints
