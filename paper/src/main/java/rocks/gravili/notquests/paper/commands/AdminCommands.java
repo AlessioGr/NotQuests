@@ -619,7 +619,7 @@ public class AdminCommands {
                 .handler((context) -> {
 
                     main.getDataManager().loadGeneralConfig();
-                    main.getLanguageManager().loadLanguageConfig();
+                    main.getLanguageManager().loadLanguageConfig(false);
                     if(main.getConversationManager() != null) {
                       main.getConversationManager().loadConversationsFromConfig();
                     }else{
@@ -642,7 +642,7 @@ public class AdminCommands {
                 .literal("languages")
                 .meta(CommandMeta.DESCRIPTION, "Reload the languages from conversations files.")
                 .handler((context) -> {
-                    main.getLanguageManager().loadLanguageConfig();
+                    main.getLanguageManager().loadLanguageConfig(false);
                     context.getSender().sendMessage(Component.empty());
                     context.getSender().sendMessage(main.parse("<success>Languages have been reloaded."));
                 }));
@@ -997,7 +997,7 @@ public class AdminCommands {
                     context.getSender().sendMessage(main.parse(
                             "<main>Reloading DataManager..."
                     ));
-                    main.getDataManager().reloadData();
+                    main.getDataManager().reloadData(false);
                     context.getSender().sendMessage(main.parse(
                             "<success>DataManager has been reloaded!"
 

@@ -1476,10 +1476,11 @@ public class DataManager {
      * (4) AFTER THAT load the Player Data from the MySQL Database - in an asynchronous Thread (forced)
      * (5) Then it will try to load the Data from Citizens NPCs
      */
-    public void reloadData() {
+    public void reloadData(final boolean firstLoad) {
         if(isLoadingEnabled()){
 
-            main.getLanguageManager().loadLanguageConfig();
+            main.getLogManager().debug("Triggered loadLanguageConfig() from DataManager.reloadData()");
+            main.getLanguageManager().loadLanguageConfig(firstLoad);
 
             //Check for isLoadingEnabled again, in case it changed during loading of the general config
             if(!isLoadingEnabled()){

@@ -244,7 +244,7 @@ public class NotQuests {
         actionsYMLManager.loadActions();
 
         //This finally starts loading all Config-, Quest-, and Player Data. Reload = Load
-        dataManager.reloadData();
+        dataManager.reloadData(true);
 
         //This registers all PlaceholderAPI placeholders, if loading is enabled
         if (getDataManager().isLoadingEnabled()) {

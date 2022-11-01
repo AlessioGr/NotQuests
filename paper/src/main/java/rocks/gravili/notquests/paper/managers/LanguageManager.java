@@ -198,7 +198,11 @@ public class LanguageManager {
     /**
      * Load language configs
      */
-    public final void loadLanguageConfig() {
+    public final void loadLanguageConfig(final boolean skipIfLanguageConfigExists) {
+        if(skipIfLanguageConfigExists && languageConfig != null){
+            main.getLogManager().debug("Skipping loading of language config, as it already exists.");
+            return;
+        }
         loadMissingDefaultLanguageFiles();
 
         final String languageCode = main.getConfiguration().getLanguageCode();
@@ -285,11 +289,11 @@ public class LanguageManager {
         boolean valueChanged = false;
         final ConfigurationSection defaultConfigurationSection = defaultLanguageConfig.getConfigurationSection("");
         if (defaultConfigurationSection != null) {
-            main.getLogManager().debug("All default config keys: " + defaultConfigurationSection.getKeys(true).toString());
+            // main.getLogManager().debug("All default config keys: " + defaultConfigurationSection.getKeys(true).toString());
             for (final String defaultString : defaultConfigurationSection.getKeys(true)) {
 
                 if (defaultConfigurationSection.isConfigurationSection(defaultString)) {
-                    main.getLogManager().debug("Skipping: <highlight>" + defaultString + "</highlight>");
+                    //main.getLogManager().debug("Skipping: <highlight>" + defaultString + "</highlight>");
                     continue;
                 }
 
@@ -299,7 +303,7 @@ public class LanguageManager {
                     getLanguageConfig().set(defaultString, defaultConfigurationSection.get(defaultString));
                     valueChanged = true;
                 }else{
-                    main.getLogManager().debug("Already is string: " + defaultString);
+                    //main.getLogManager().debug("Already is string: " + defaultString);
                 }
             }
         }
@@ -315,7 +319,8 @@ public class LanguageManager {
      */
     public final FileConfiguration getLanguageConfig() {
         if (languageConfig == null) {
-            loadLanguageConfig();
+            main.getLogManager().info("getLanguageConfig() is null. Loading language config...");
+            loadLanguageConfig(true);
         }
         return languageConfig;
     }
