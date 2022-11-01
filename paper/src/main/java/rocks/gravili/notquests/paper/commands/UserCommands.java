@@ -312,7 +312,8 @@ public class UserCommands {
                   final QuestPlayer questPlayer =
                       main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
 
-                  main.getGuiManager().showMainQuestsGUI(questPlayer);
+                  //main.getGuiManager().showMainQuestsGUI(questPlayer);
+                    main.getGuiManager().showTakeQuestsGUI(questPlayer);
                 }));
 
     manager.command(
