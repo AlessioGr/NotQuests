@@ -52,7 +52,8 @@ public class EscortNPCObjective extends Objective { //TODO: Add support for othe
   public static void handleCommands(
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
-      Command.Builder<CommandSender> addObjectiveBuilder) {
+      Command.Builder<CommandSender> addObjectiveBuilder,
+      final int level) {
     if (!main.getIntegrationsManager().isCitizensEnabled()) {
       return;
     }
@@ -139,7 +140,7 @@ public class EscortNPCObjective extends Objective { //TODO: Add support for othe
                   escortNPCObjective.setNpcToEscortID(toEscortNPCID);
                   escortNPCObjective.setNpcToEscortToID(destinationNPCID);
 
-                  main.getObjectiveManager().addObjective(escortNPCObjective, context);
+                  main.getObjectiveManager().addObjective(escortNPCObjective, context, level);
                 }));
   }
 
@@ -210,7 +211,7 @@ public class EscortNPCObjective extends Objective { //TODO: Add support for othe
     if (main.getIntegrationsManager().isCitizensEnabled()) {
       main.getIntegrationsManager()
           .getCitizensManager()
-          .handleEscortNPCObjectiveForActiveObjective(this, activeObjective.getActiveQuest());
+          .handleEscortNPCObjectiveForActiveObjective(this, activeObjective.getActiveObjectiveHolder());
     }
   }
 

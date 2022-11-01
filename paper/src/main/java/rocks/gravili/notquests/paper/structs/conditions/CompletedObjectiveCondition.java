@@ -32,6 +32,7 @@ import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
+import rocks.gravili.notquests.paper.structs.objectives.ObjectiveHolder;
 
 public class CompletedObjectiveCondition extends Condition {
 
@@ -66,7 +67,7 @@ public class CompletedObjectiveCondition extends Condition {
 
                             final Quest quest = context.get("quest");
                             for (final Objective objective : quest.getObjectives()) {
-                              if (objective.getObjectiveID() != (int) context.get("Objective ID")) {
+                              if (objective.getObjectiveID() != ((Objective)context.get("Objective ID")).getObjectiveID() ) { //TODO: Support nested objectives
                                 completions.add("" + objective.getObjectiveID());
                               }
                             }
@@ -88,7 +89,7 @@ public class CompletedObjectiveCondition extends Condition {
                                       "Objective with the ID '"
                                           + ID
                                           + "' does not belong to Quest '"
-                                          + quest.getQuestName()
+                                          + quest.getIdentifier() 
                                           + "'!"));
                             } else {
                               return ArgumentParseResult.success(ID);
@@ -100,9 +101,7 @@ public class CompletedObjectiveCondition extends Condition {
                   (context) -> {
                     final Quest quest = context.get("quest");
 
-                    final int objectiveID = context.get("Objective ID");
-                    final Objective objective = quest.getObjectiveFromID(objectiveID);
-                    assert objective != null; // Shouldn't be null
+                    final Objective objective = context.get("Objective ID"); //TODO: Support nested objectives
 
                     final int dependingObjectiveID = context.get("Depending Objective ID");
                     final Objective dependingObjective =
@@ -137,7 +136,7 @@ public class CompletedObjectiveCondition extends Condition {
   }
 
   public final Objective getObjectiveToComplete() {
-    return getQuest().getObjectiveFromID(getObjectiveToCompleteID());
+    return getObjectiveHolder().getObjectiveFromID(getObjectiveToCompleteID());
   }
 
   @Override
@@ -147,20 +146,26 @@ public class CompletedObjectiveCondition extends Condition {
       return "<RED>Error: Cannot find objective you have to complete first.";
     }
 
-    final Quest quest = getQuest();
-    if (quest == null) {
+    final ObjectiveHolder objectiveHolder = getObjectiveHolder();
+    if (objectiveHolder == null) {
       return "<RED>Error: Cannot find current quest.";
     }
 
-    ActiveQuest activeQuest = questPlayer.getActiveQuest(quest);
-    if (activeQuest == null) {
-      return "<RED>Error: Cannot find current active quest.";
+    //TODO: Support nested objectives
+    if(objectiveHolder instanceof final Quest quest){
+      ActiveQuest activeQuest = questPlayer.getActiveQuest(quest);
+      if (activeQuest == null) {
+        return "<RED>Error: Cannot find current active quest.";
+      }
+
+      if (activeQuest.getActiveObjectiveFromID(getObjectiveToCompleteID()) != null) {
+        return "<YELLOW>Finish the following objective first: <highlight>"
+            + objectiveToComplete.getDisplayNameOrIdentifier();
+      }
+    }else {
+      return "objectiveHolder is no Quest";
     }
 
-    if (activeQuest.getActiveObjectiveFromID(getObjectiveToCompleteID()) != null) {
-      return "<YELLOW>Finish the following objective first: <highlight>"
-          + objectiveToComplete.getFinalName();
-    }
     return "";
   }
 
@@ -168,7 +173,7 @@ public class CompletedObjectiveCondition extends Condition {
   public String getConditionDescriptionInternally(QuestPlayer questPlayer, Object... objects) {
     final Objective otherObjective = getObjectiveToComplete();
     if (otherObjective != null) {
-      return "<GRAY>-- Finish Objective first: " + otherObjective.getFinalName();
+      return "<GRAY>-- Finish Objective first: " + otherObjective.getDisplayNameOrIdentifier();
     } else {
       return "<GRAY>-- Finish otherObjective first: " + getObjectiveToCompleteID();
     }

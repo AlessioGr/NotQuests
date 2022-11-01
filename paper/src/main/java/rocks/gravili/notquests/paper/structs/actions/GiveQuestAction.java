@@ -61,7 +61,7 @@ public class GiveQuestAction extends Action {
                   final boolean forceGive = context.flags().isPresent("forceGive");
 
                   GiveQuestAction giveQuestAction = new GiveQuestAction(main);
-                  giveQuestAction.setQuestToGiveName(foundQuest.getQuestName());
+                  giveQuestAction.setQuestToGiveName(foundQuest.getIdentifier() );
                   giveQuestAction.setForceGive(forceGive);
 
                   main.getActionManager().addAction(giveQuestAction, context, actionFor);
@@ -97,7 +97,7 @@ public class GiveQuestAction extends Action {
     if (!isForceGive()) {
       main.getQuestPlayerManager().acceptQuest(questPlayer, foundQuest, true, true);
     } else {
-      main.getQuestPlayerManager().forceAcceptQuest(questPlayer.getUniqueId(), foundQuest);
+      main.getQuestPlayerManager().forceAcceptQuestSilent(questPlayer.getUniqueId(), foundQuest);
     }
   }
 

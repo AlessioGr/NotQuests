@@ -20,10 +20,13 @@ package rocks.gravili.notquests.paper.commands;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
+import cloud.commandframework.arguments.standard.StringArrayArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -40,6 +43,8 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.ActiveQuestSelector;
 import rocks.gravili.notquests.paper.commands.arguments.CategorySelector;
 import rocks.gravili.notquests.paper.commands.arguments.QuestSelector;
+import rocks.gravili.notquests.paper.conversation.ConversationLine;
+import rocks.gravili.notquests.paper.conversation.ConversationPlayer;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
@@ -233,6 +238,67 @@ public class UserCommands {
                                     .getString("chat.questpoints.none", player)));
                   }
                 }));
+
+    manager.command(
+        builder
+            .literal("continueConversation")
+            .senderType(Player.class)
+            .argument(StringArrayArgument.of("optionMessage",
+                (context, lastString) -> {
+                  final List<String> allArgs = context.getRawInput();
+                  main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "<Enter option message to continue conversation>", "");
+                  ArrayList<String> completions = new ArrayList<>();
+
+                  if( main.getConversationManager() == null){
+                    return completions;
+                  }
+
+                  final Player player = (Player) context.getSender();
+                  final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                  if(questPlayer == null){
+                    return completions;
+                  }
+                  final ConversationPlayer openConversationPlayer = main.getConversationManager().getOpenConversation(questPlayer.getUniqueId());
+                  if(openConversationPlayer == null){
+                    return completions;
+                  }
+
+                  for(final ConversationLine currentPlayerLine : openConversationPlayer.getCurrentPlayerLines()){
+                    completions.add(currentPlayerLine.getMessage());
+                  }
+
+                  return completions;
+                }
+            ), ArgumentDescription.of("Option message to continue conversation"))
+            .meta(CommandMeta.DESCRIPTION, "Selects an answer for the currently open conversation")
+            .handler(
+                (context) -> {
+                  if(main.getConversationManager() == null){
+                    return;
+                  }
+                  final Player player = (Player) context.getSender();
+                  QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+
+                  if(questPlayer != null){
+                    final ConversationPlayer conversationPlayer = main.getConversationManager().getOpenConversation(player.getUniqueId());
+                    if(conversationPlayer != null){
+                      final String[] optionMessageStrings = context.get("optionMessage");
+                      final String optionMessage = String.join(" ", optionMessageStrings);
+
+                      for(final ConversationLine currentPlayerLine : conversationPlayer.getCurrentPlayerLines()){
+                        if(currentPlayerLine.getMessage().equals(optionMessage)){
+                          conversationPlayer.chooseOption(currentPlayerLine);
+                          return;
+                        }
+                      }
+                    }else{
+                      questPlayer.sendDebugMessage("Tried to choose conversation option, but the conversationPlayer was not found! Active conversationPlayers count: <highlight>" + main.getConversationManager().getOpenConversations().size());
+                      questPlayer.sendDebugMessage("All active conversationPlayers: <highlight>" + main.getConversationManager().getOpenConversations().toString());
+                      questPlayer.sendDebugMessage("Current QuestPlayer Object: <highlight>" + questPlayer);
+                      questPlayer.sendDebugMessage("Current QuestPlayer: <highlight>" + questPlayer.getPlayer().getName());
+                    }
+                  }
+                }));
   }
 
   public void constructGUICommands() {
@@ -370,12 +436,48 @@ public class UserCommands {
                 ArgumentDescription.of(
                     "Name of the active Quest of which you want to see the progress"))
             .meta(CommandMeta.DESCRIPTION, "Shows progress for an active Quest")
-            .handler(
+            .handler( //TODO: This does text stuff. Add better GUI later
                 (context) -> {
                   final Player player = (Player) context.getSender();
                   QuestPlayer questPlayer =
                       main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
-                  if (questPlayer != null && questPlayer.getActiveQuests().size() > 0) {
+                  if (!questPlayer.getActiveQuests().isEmpty()) {
+                    final ActiveQuest activeQuest = context.get("Active Quest");
+
+                    context
+                        .getSender()
+                        .sendMessage(
+                            main.parse(
+                                "<GREEN>Completed Objectives for Quest <highlight>"
+                                    + activeQuest.getQuest().getDisplayNameOrIdentifier()
+                                    + "<YELLOW>:"));
+                    main.getQuestManager()
+                        .sendCompletedObjectivesAndProgress(questPlayer, activeQuest);
+                    context
+                        .getSender()
+                        .sendMessage(
+                            main.parse(
+                                "<GREEN>Active Objectives for Quest <highlight>"
+                                    + activeQuest.getQuest().getDisplayNameOrIdentifier()
+                                    + "<YELLOW>:"));
+                    main.getQuestManager()
+                        .sendActiveObjectivesAndProgress(questPlayer, activeQuest, 0);
+
+                  } else {
+                    context
+                        .getSender()
+                        .sendMessage(
+                            main.parse(
+                                main.getLanguageManager()
+                                    .getString("chat.no-quests-accepted", player)));
+                  }
+                })
+            /*.handler(
+                (context) -> {
+                  final Player player = (Player) context.getSender();
+                  QuestPlayer questPlayer =
+                      main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
+                  if (!questPlayer.getActiveQuests().isEmpty()) {
                     final ActiveQuest activeQuest = context.get("Active Quest");
 
                     main.getGuiManager().showQuestProgressGUI(questPlayer, activeQuest);
@@ -406,7 +508,7 @@ public class UserCommands {
                                                 .replace("%COMPLETEDOBJECTIVETASKDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), true, player))
                                 )
                         ));
-                    }*/
+                    }*//*
 
                   } else {
                     context
@@ -416,7 +518,7 @@ public class UserCommands {
                                 main.getLanguageManager()
                                     .getString("chat.no-quests-accepted", player)));
                   }
-                }));
+                })*/);
     manager.command(
         builder
             .literal("category")
@@ -490,7 +592,7 @@ public class UserCommands {
                                   "<GREEN>"
                                       + counter
                                       + ". <YELLOW>"
-                                      + activeQuest.getQuest().getQuestFinalName()));
+                                      + activeQuest.getQuest().getDisplayNameOrIdentifier()));
                       counter += 1;
                     }
 
@@ -615,7 +717,7 @@ public class UserCommands {
                   final Player player = (Player) context.getSender();
                   QuestPlayer questPlayer =
                       main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
-                  if (questPlayer != null && questPlayer.getActiveQuests().size() > 0) {
+                  if (!questPlayer.getActiveQuests().isEmpty()) {
                     final ActiveQuest activeQuest = context.get("Active Quest");
 
                     context
@@ -623,7 +725,7 @@ public class UserCommands {
                         .sendMessage(
                             main.parse(
                                 "<GREEN>Completed Objectives for Quest <highlight>"
-                                    + activeQuest.getQuest().getQuestFinalName()
+                                    + activeQuest.getQuest().getDisplayNameOrIdentifier()
                                     + "<YELLOW>:"));
                     main.getQuestManager()
                         .sendCompletedObjectivesAndProgress(questPlayer, activeQuest);
@@ -632,10 +734,10 @@ public class UserCommands {
                         .sendMessage(
                             main.parse(
                                 "<GREEN>Active Objectives for Quest <highlight>"
-                                    + activeQuest.getQuest().getQuestFinalName()
+                                    + activeQuest.getQuest().getDisplayNameOrIdentifier()
                                     + "<YELLOW>:"));
                     main.getQuestManager()
-                        .sendActiveObjectivesAndProgress(questPlayer, activeQuest);
+                        .sendActiveObjectivesAndProgress(questPlayer, activeQuest, 0);
 
                   } else {
                     context
@@ -646,5 +748,6 @@ public class UserCommands {
                                     .getString("chat.no-quests-accepted", player)));
                   }
                 }));
+
   }
 }

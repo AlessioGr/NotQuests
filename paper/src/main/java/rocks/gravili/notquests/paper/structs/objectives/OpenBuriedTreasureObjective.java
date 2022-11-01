@@ -38,7 +38,8 @@ public class OpenBuriedTreasureObjective extends Objective {
   public static void handleCommands(
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
-      Command.Builder<CommandSender> addObjectiveBuilder) {
+      Command.Builder<CommandSender> addObjectiveBuilder,
+      final int level) {
     manager.command(
         addObjectiveBuilder
             .argument(
@@ -52,7 +53,7 @@ public class OpenBuriedTreasureObjective extends Objective {
                       new OpenBuriedTreasureObjective(main);
                   openBuriedTreasureObjective.setProgressNeededExpression(amountExpression);
 
-                  main.getObjectiveManager().addObjective(openBuriedTreasureObjective, context);
+                  main.getObjectiveManager().addObjective(openBuriedTreasureObjective, context, level);
                 }));
   }
 

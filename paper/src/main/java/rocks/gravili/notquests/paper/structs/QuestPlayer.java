@@ -50,7 +50,6 @@ import rocks.gravili.notquests.paper.structs.conditions.Condition.ConditionResul
 import rocks.gravili.notquests.paper.structs.objectives.ConditionObjective;
 import rocks.gravili.notquests.paper.structs.objectives.NumberVariableObjective;
 import rocks.gravili.notquests.paper.structs.objectives.OtherQuestObjective;
-import rocks.gravili.notquests.paper.structs.objectives.RunCommandObjective;
 import rocks.gravili.notquests.paper.structs.triggers.ActiveTrigger;
 
 /**
@@ -374,28 +373,28 @@ public class QuestPlayer {
         }
     }
 
-    public String addActiveQuest(final ActiveQuest quest, final boolean triggerAcceptQuestTrigger, final boolean sendQuestInfo) {
+    public String addActiveQuest(final ActiveQuest activeQuest, final boolean triggerAcceptQuestTrigger, final boolean sendQuestInfo) {
         if (main.getDataManager().isDisabled()) {
             return "Plugin is disabled due to misconfiguration - you currently cannot take any new quests anymore";
         }
 
         //Configuration Option: general.max-active-quests-per-player
         if (main.getConfiguration().getMaxActiveQuestsPerPlayer() != -1 && activeQuests.size() >= main.getConfiguration().getMaxActiveQuestsPerPlayer()) {
-            return main.getLanguageManager().getString("chat.reached-max-active-quests-per-player-limit", getPlayer(), this, quest, Map.of(
+            return main.getLanguageManager().getString("chat.reached-max-active-quests-per-player-limit", getPlayer(), this, activeQuest, Map.of(
                     "%MAXACTIVEQUESTSPERPLAYER%", "" + main.getConfiguration().getMaxActiveQuestsPerPlayer()
             ));
         }
 
-        for (ActiveQuest activeQuest : activeQuests) {
-            if (activeQuest.getQuest().equals(quest.getQuest())) {
+        for (ActiveQuest currentActiveQuest : activeQuests) {
+            if (currentActiveQuest.getQuestIdentifier().equals(activeQuest.getQuestIdentifier())) {
                 return main.getLanguageManager().getString("chat.quest-already-accepted", getPlayer());
             }
         }
         int completedAmount = 0;
 
         long mostRecentAcceptTime = 0;
-        for (CompletedQuest completedQuest : completedQuests) {
-            if (completedQuest.getQuest().equals(quest.getQuest())) {
+        for (final CompletedQuest completedQuest : completedQuests) {
+            if (completedQuest.getQuestIdentifier().equals(activeQuest.getQuestIdentifier())) {
                 completedAmount += 1;
                 if (completedQuest.getTimeCompleted() > mostRecentAcceptTime) {
                     mostRecentAcceptTime = completedQuest.getTimeCompleted();
@@ -407,25 +406,25 @@ public class QuestPlayer {
         final long acceptTimeDifferenceMinutes = TimeUnit.MILLISECONDS.toMinutes(acceptTimeDifference);
 
 
-        final long timeToWaitInMinutes = quest.getQuest().getAcceptCooldown() - acceptTimeDifferenceMinutes;
+        final long timeToWaitInMinutes = activeQuest.getQuest().getAcceptCooldown() - acceptTimeDifferenceMinutes;
         final double timeToWaitInHours = Math.round((timeToWaitInMinutes / 60f) * 10) / 10.0;
         final double timeToWaitInDays = Math.round((timeToWaitInHours / 24f) * 10) / 10.0;
 
 
         //Max Accepts:
-        if (quest.getQuest().getMaxAccepts() <= -1 || completedAmount < quest.getQuest().getMaxAccepts()) {
+        if (activeQuest.getQuest().getMaxAccepts() <= -1 || completedAmount < activeQuest.getQuest().getMaxAccepts()) {
             //Cooldown:
-            if (acceptTimeDifferenceMinutes >= quest.getQuest().getAcceptCooldown()) {
+            if (acceptTimeDifferenceMinutes >= activeQuest.getQuest().getAcceptCooldown()) {
 
                 //Requirements
                 final StringBuilder requirementsStillNeeded = new StringBuilder();
                 boolean allRequirementsFulfilled = true;
 
                 if (getPlayer() == null) {
-                    requirementsStillNeeded.append("\n").append(main.getLanguageManager().getString("chat.add-active-quest-player-object-not-found", (QuestPlayer) null, this, quest));
+                    requirementsStillNeeded.append("\n").append(main.getLanguageManager().getString("chat.add-active-quest-player-object-not-found", (QuestPlayer) null, this, activeQuest));
                 }
 
-                for (final Condition condition : quest.getQuest().getRequirements()) {
+                for (final Condition condition : activeQuest.getQuest().getRequirements()) {
                     final ConditionResult check = condition.check(this);
                     if (!check.fulfilled()) {
                         if(!condition.isHidden(this)) {
@@ -444,22 +443,22 @@ public class QuestPlayer {
 
 
 
-                finishAddingQuest(quest, triggerAcceptQuestTrigger, false);
+                finishAddingQuest(activeQuest, triggerAcceptQuestTrigger, false);
                 if (sendQuestInfo) {
                     final Player player = getPlayer();
                     if (player != null) {
 
-                        if(!quest.getQuest().getObjectives().isEmpty()){
+                        if(!activeQuest.getQuest().getObjectives().isEmpty()){
                             main.sendMessage(player, main.getLanguageManager().getString("chat.objectives-label-after-quest-accepting", player));
                         }
 
-                        main.getQuestManager().sendActiveObjectivesAndProgress(this, quest);
+                        main.getQuestManager().sendActiveObjectivesAndProgress(this, activeQuest, 0);
 
                         if (main.getConfiguration().visualTitleQuestSuccessfullyAccepted_enabled) {
 
                             player.showTitle(
                                     Title.title(main.parse(main.getLanguageManager().getString("titles.quest-accepted.title", player)),
-                                            main.parse(main.getLanguageManager().getString("titles.quest-accepted.subtitle", player, this, quest)),
+                                            main.parse(main.getLanguageManager().getString("titles.quest-accepted.subtitle", player, this, activeQuest)),
                                             Title.Times.times(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
                                     ));
                         }
@@ -468,13 +467,13 @@ public class QuestPlayer {
                         player.playSound(player.getLocation(), Sound.ENTITY_EVOKER_PREPARE_SUMMON, SoundCategory.MASTER, 100, 2);
 
 
-                        if (!quest.getQuest().getQuestDescription().isBlank()) {
-                            main.sendMessage(player, main.getLanguageManager().getString("chat.quest-description", player, quest));
+                        if (!activeQuest.getQuest().getObjectiveHolderDescription().isBlank()) {
+                            main.sendMessage(player, main.getLanguageManager().getString("chat.quest-description", player, activeQuest));
                         } else {
                             main.sendMessage(player, main.getLanguageManager().getString("chat.missing-quest-description", player));
                         }
 
-                        main.sendMessage(player, main.getLanguageManager().getString("chat.quest-successfully-accepted", player, quest));
+                        main.sendMessage(player, main.getLanguageManager().getString("chat.quest-successfully-accepted", player, activeQuest));
 
 
                     }
@@ -486,27 +485,27 @@ public class QuestPlayer {
             } else {
                 if (timeToWaitInMinutes < 60) {
                     if(timeToWaitInMinutes == 1){
-                        return main.getLanguageManager().getString("chat.quest-on-cooldown.minute", getPlayer(), this, quest);
+                        return main.getLanguageManager().getString("chat.quest-on-cooldown.minute", getPlayer(), this, activeQuest);
                     }else{
-                        return main.getLanguageManager().getString("chat.quest-on-cooldown.minutes", getPlayer(), this, quest, Map.of(
+                        return main.getLanguageManager().getString("chat.quest-on-cooldown.minutes", getPlayer(), this, activeQuest, Map.of(
                                 "%MINUTES%", ""+timeToWaitInMinutes
                         ));
                     }
                 } else {
                     if (timeToWaitInHours < 24) {
                         if (timeToWaitInHours == 1) {
-                            return main.getLanguageManager().getString("chat.quest-on-cooldown.hour", getPlayer(), this, quest);
+                            return main.getLanguageManager().getString("chat.quest-on-cooldown.hour", getPlayer(), this, activeQuest);
                         } else {
-                            return main.getLanguageManager().getString("chat.quest-on-cooldown.hours", getPlayer(), this, quest, Map.of(
+                            return main.getLanguageManager().getString("chat.quest-on-cooldown.hours", getPlayer(), this, activeQuest, Map.of(
                                     "%HOURS%", ""+timeToWaitInHours
                             ));
                         }
                     } else {
                         if (timeToWaitInDays == 1) {
-                            return main.getLanguageManager().getString("chat.quest-on-cooldown.day", getPlayer(), this, quest);
+                            return main.getLanguageManager().getString("chat.quest-on-cooldown.day", getPlayer(), this, activeQuest);
 
                         } else {
-                            return main.getLanguageManager().getString("chat.quest-on-cooldown.days", getPlayer(), this, quest, Map.of(
+                            return main.getLanguageManager().getString("chat.quest-on-cooldown.days", getPlayer(), this, activeQuest, Map.of(
                                     "%DAYS%", ""+timeToWaitInDays
                             ));
                         }
@@ -515,8 +514,8 @@ public class QuestPlayer {
             }
 
         } else {
-            return main.getLanguageManager().getString("chat.reached-max-accepts-limit", getPlayer(), this, quest, Map.of(
-                    "%MAXACCEPTS%", ""+quest.getQuest().getMaxAccepts(),
+            return main.getLanguageManager().getString("chat.reached-max-accepts-limit", getPlayer(), this, activeQuest, Map.of(
+                    "%MAXACCEPTS%", ""+activeQuest.getQuest().getMaxAccepts(),
                     "%COMPLETEDAMOUNT%", ""+completedAmount
             ));
         }
@@ -547,6 +546,14 @@ public class QuestPlayer {
 
     }
 
+    public void forceAddActiveQuestSilent(final ActiveQuest activeQuest, final boolean triggerAcceptQuestTrigger) { //ignores max amount, cooldown and requirements
+        for (ActiveQuest activeQuest1 : activeQuests) {
+            if (activeQuest1.getQuest().getIdentifier().equals(activeQuest.getQuest().getIdentifier())) {
+                return;
+            }
+        }
+        finishAddingQuest(activeQuest, triggerAcceptQuestTrigger, false);
+    }
     public String forceAddActiveQuest(final ActiveQuest quest, final boolean triggerAcceptQuestTrigger) { //ignores max amount, cooldown and requirements
         for (ActiveQuest activeQuest : activeQuests) {
             if (activeQuest.getQuest().equals(quest.getQuest())) {
@@ -585,7 +592,7 @@ public class QuestPlayer {
         if (main.getDataManager().isDisabled()) {
             return;
         }
-        sendDebugMessage("QuestPlayer.giveReward(). Quest: " + quest.getQuestName());
+        sendDebugMessage("QuestPlayer.giveReward(). Quest: " + quest.getIdentifier());
 
 
         final Player player = getPlayer();
@@ -634,11 +641,12 @@ public class QuestPlayer {
     }
 
     public void sendDebugMessage(final String message) {
+        if (!main.getQuestManager().isDebugEnabledPlayer(this.uuid)) {
+            return;
+        }
         final Player player = getPlayer();
         if (player != null) {
-            if (main.getQuestManager().isDebugEnabledPlayer(getUniqueId())) {
-                player.sendMessage(main.parse(NotQuestColors.debugTitleGradient + "[NotQuests Debug]</gradient> " + NotQuestColors.debugGradient + message + "</gradient>"));
-            }
+            player.sendMessage(main.parse(NotQuestColors.debugTitleGradient + "[NotQuests Debug]</gradient> " + NotQuestColors.debugGradient + message + "</gradient>"));
 
         }
     }
@@ -874,7 +882,7 @@ public class QuestPlayer {
 
     public final boolean hasAcceptedQuest(final Quest quest) {
         for (final ActiveQuest activeQuest : activeQuests) {
-            if (activeQuest.getQuestName().equalsIgnoreCase(quest.getQuestName())) {
+            if (activeQuest.getQuestIdentifier().equalsIgnoreCase(quest.getIdentifier())) {
                 return true;
             }
         }
@@ -883,7 +891,7 @@ public class QuestPlayer {
 
     public final boolean hasCompletedQuest(final Quest quest) {
         for (final CompletedQuest completedQuest : completedQuests) {
-            if (completedQuest.getQuestName().equalsIgnoreCase(quest.getQuestName())) {
+            if (completedQuest.getQuestIdentifier() .equalsIgnoreCase(quest.getIdentifier())) {
                 return true;
             }
         }
@@ -892,7 +900,7 @@ public class QuestPlayer {
 
     public final boolean hasCompletedQuest(final String questName) {
         for (final CompletedQuest completedQuest : completedQuests) {
-            if (completedQuest.getQuestName().equalsIgnoreCase(questName)) {
+            if (completedQuest.getQuestIdentifier() .equalsIgnoreCase(questName)) {
                 return true;
             }
         }
@@ -931,11 +939,11 @@ public class QuestPlayer {
         if (main.getConfiguration().isVisualObjectiveTrackingShowProgressInActionBar()) {
             if (activeObjective.getProgressNeeded() == 1) {
                 getPlayer().sendActionBar(main.parse(
-                        main.getLanguageManager().getString("objective-tracking.actionbar-progress-update.only-one-max-progress", getPlayer(), this, activeObjective, activeObjective.getActiveQuest())
+                        main.getLanguageManager().getString("objective-tracking.actionbar-progress-update.only-one-max-progress", getPlayer(), this, activeObjective, activeObjective.getActiveObjectiveHolder())
                 ));
             } else {
                 getPlayer().sendActionBar(main.parse(
-                        main.getLanguageManager().getString("objective-tracking.actionbar-progress-update.default", getPlayer(), this, activeObjective, activeObjective.getActiveQuest())
+                        main.getLanguageManager().getString("objective-tracking.actionbar-progress-update.default", getPlayer(), this, activeObjective, activeObjective.getActiveObjectiveHolder())
                 ));
             }
         }
@@ -948,17 +956,21 @@ public class QuestPlayer {
                     lastBossBarActiveTimeInSeconds = 0;
                 }
                 return; //Hide bossbar once it reached 100%
-            }else if(progress < 0.0f){
+            }
+
+            if(progress < 0.0f){
                 progress = 0;
+            }else if(progress > 1.0f){
+                progress = 1.0f;
             }
 
             final String languageString = activeObjective.getProgressNeeded() == 1 ? "objective-tracking.bossbar-progress-update.only-one-max-progress" : "objective-tracking.bossbar-progress-update.default";
             if (bossBar != null) {
-                bossBar.name(main.getLanguageManager().getComponent(languageString, getPlayer(), this, activeObjective, activeObjective.getActiveQuest()));
+                bossBar.name(main.getLanguageManager().getComponent(languageString, getPlayer(), this, activeObjective.getActiveObjectiveHolder(), activeObjective));
                 bossBar.progress(progress);
                 lastBossBarActiveTimeInSeconds = 0;
             } else {
-                bossBar = BossBar.bossBar(main.getLanguageManager().getComponent(languageString, getPlayer(), this, activeObjective, activeObjective.getActiveQuest()),
+                bossBar = BossBar.bossBar(main.getLanguageManager().getComponent(languageString, getPlayer(), this, activeObjective.getActiveObjectiveHolder(), activeObjective ),
                         progress, BossBar.Color.BLUE, BossBar.Overlay.PROGRESS);
                 player.showBossBar(bossBar);
                 lastBossBarActiveTimeInSeconds = 0;
@@ -1072,6 +1084,21 @@ public class QuestPlayer {
         }
         queuedObjectivesToCheck.add(runForEachObjective);
     }
+
+    public void checkForActiveObjective(final ActiveObjective activeObjective){
+        if(!activeObjective.isUnlocked()){
+            return;
+        }
+        for(final Consumer<ActiveObjective> runForEachObjective : queuedObjectivesToCheck){
+            runForEachObjective.accept(activeObjective);
+        }
+        if(!activeObjective.getActiveObjectives().isEmpty()){
+            for(final ActiveObjective childActiveObjective : activeObjective.getActiveObjectives()){
+                checkForActiveObjective(childActiveObjective);
+            }
+            activeObjective.removeCompletedObjectives(true);
+        }
+    }
     public void checkQueuedObjectives(){
         if(queuedObjectivesToCheck.isEmpty()){
             return;
@@ -1079,11 +1106,7 @@ public class QuestPlayer {
         sendDebugMessage("Checking queued objectives...");
         for (final ActiveQuest activeQuest : getActiveQuests()) {
             for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                if (activeObjective.isUnlocked()) {
-                    for(final Consumer<ActiveObjective> runForEachObjective : queuedObjectivesToCheck){
-                        runForEachObjective.accept(activeObjective);
-                    }
-                }
+                checkForActiveObjective(activeObjective);
 
             }
             activeQuest.removeCompletedObjectives(true);

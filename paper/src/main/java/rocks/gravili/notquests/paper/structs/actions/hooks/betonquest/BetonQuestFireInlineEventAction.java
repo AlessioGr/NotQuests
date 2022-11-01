@@ -29,9 +29,12 @@ import java.util.Map;
 import org.betonquest.betonquest.BetonQuest;
 import org.betonquest.betonquest.Instruction;
 import org.betonquest.betonquest.api.QuestEvent;
+import org.betonquest.betonquest.api.profiles.Profile;
 import org.betonquest.betonquest.config.Config;
 import org.betonquest.betonquest.exceptions.QuestRuntimeException;
 import org.betonquest.betonquest.quest.event.legacy.QuestEventFactory;
+import org.betonquest.betonquest.utils.PlayerConverter;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -217,7 +220,8 @@ public class BetonQuestFireInlineEventAction extends Action {
   public void executeInternally(final QuestPlayer questPlayer, Object... objects) {
     if (getQuestEvent() != null) {
       try {
-        getQuestEvent().fire(questPlayer.getPlayer().getUniqueId().toString());
+        final Profile profile = PlayerConverter.getID(questPlayer.getPlayer() != null ? questPlayer.getPlayer() : Bukkit.getOfflinePlayer(questPlayer.getUniqueId()));
+        getQuestEvent().fire(profile);
       } catch (final QuestRuntimeException e) {
         main.getLogManager()
             .warn(

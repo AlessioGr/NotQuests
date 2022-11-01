@@ -43,7 +43,8 @@ public class SmeltObjective extends Objective {
   public static void handleCommands(
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
-      Command.Builder<CommandSender> addObjectiveBuilder) {
+      Command.Builder<CommandSender> addObjectiveBuilder,
+      final int level) {
     manager.command(
         addObjectiveBuilder
             .argument(
@@ -56,8 +57,6 @@ public class SmeltObjective extends Objective {
                 (context) -> {
                   final String amountExpression = context.get("amount");
 
-                  boolean smeltAnyItem = false;
-
                   final ItemStackSelection itemStackSelection = context.get("materials");
 
                   SmeltObjective smeltObjective = new SmeltObjective(main);
@@ -65,7 +64,7 @@ public class SmeltObjective extends Objective {
 
                   smeltObjective.setProgressNeededExpression(amountExpression);
 
-                  main.getObjectiveManager().addObjective(smeltObjective, context);
+                  main.getObjectiveManager().addObjective(smeltObjective, context, level);
                 }));
   }
 
@@ -91,7 +90,6 @@ public class SmeltObjective extends Objective {
   @Override
   public String getTaskDescriptionInternal(
       final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
-    final String displayName;
 
     return main.getLanguageManager()
         .getString(
@@ -99,7 +97,7 @@ public class SmeltObjective extends Objective {
             questPlayer,
             activeObjective,
             Map.of(
-                "%ITEMTOSMELTTYPE%", getItemStackSelection().getAllMaterialsListed(),
+                "%ITEMTOSMELTTYPE%", getItemStackSelection().getAllMaterialsListedTranslated("main"),
                 "%ITEMTOSMELTNAME%", "",
                 "%(%", "",
                 "%)%", ""));

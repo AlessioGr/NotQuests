@@ -43,7 +43,8 @@ public class ProjectKorraUseAbilityObjective extends Objective {
   public static void handleCommands(
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
-      Command.Builder<CommandSender> addObjectiveBuilder) {
+      Command.Builder<CommandSender> addObjectiveBuilder,
+      final int level) {
     if (!main.getIntegrationsManager().isProjectKorraEnabled()) {
       return;
     }
@@ -95,7 +96,7 @@ public class ProjectKorraUseAbilityObjective extends Objective {
                       context.get("amount"));
                   projectKorraUseAbilityObjective.setAbilityName(abilityName);
 
-                  main.getObjectiveManager().addObjective(projectKorraUseAbilityObjective, context);
+                  main.getObjectiveManager().addObjective(projectKorraUseAbilityObjective, context, level);
                 }));
   }
 

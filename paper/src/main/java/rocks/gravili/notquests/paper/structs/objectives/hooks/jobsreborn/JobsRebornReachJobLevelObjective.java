@@ -50,7 +50,8 @@ public class JobsRebornReachJobLevelObjective extends Objective {
   public static void handleCommands(
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
-      Command.Builder<CommandSender> addObjectiveBuilder) {
+      Command.Builder<CommandSender> addObjectiveBuilder,
+      final int level) {
     if (!main.getIntegrationsManager().isJobsRebornEnabled()) {
       return;
     }
@@ -111,7 +112,7 @@ public class JobsRebornReachJobLevelObjective extends Objective {
                   jobsRebornReachJobLevel.setCountPreviousLevels(countPreviousLevels);
                   jobsRebornReachJobLevel.setJobName(jobName);
 
-                  main.getObjectiveManager().addObjective(jobsRebornReachJobLevel, context);
+                  main.getObjectiveManager().addObjective(jobsRebornReachJobLevel, context, level);
                 }));
   }
 

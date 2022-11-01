@@ -163,7 +163,7 @@ public class QuestPlaceholders extends PlaceholderExpansion {
                         return list.toString();
                     }
 
-                    String nameToAdd = activeQuest.getQuest().getQuestName();
+                    String nameToAdd = activeQuest.getQuest().getIdentifier();
                     if (main.getConfiguration().placeholder_player_active_quests_list_horizontal_use_displayname_if_available) {
                         if (!activeQuest.getQuest().getQuestDisplayName().isBlank()) {
                             nameToAdd = activeQuest.getQuest().getQuestDisplayName();
@@ -194,7 +194,7 @@ public class QuestPlaceholders extends PlaceholderExpansion {
                         return list.toString();
                     }
 
-                    String nameToAdd = activeQuest.getQuest().getQuestName();
+                    String nameToAdd = activeQuest.getQuest().getIdentifier();
                     if (main.getConfiguration().placeholder_player_active_quests_list_vertical_use_displayname_if_available) {
                         if (!activeQuest.getQuest().getQuestDisplayName().isBlank()) {
                             nameToAdd = activeQuest.getQuest().getQuestDisplayName();

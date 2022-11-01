@@ -21,10 +21,8 @@ package rocks.gravili.notquests.paper.managers;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.flags.CommandFlag;
-import cloud.commandframework.arguments.parser.ArgumentParseResult;
 import cloud.commandframework.arguments.standard.DoubleArgument;
 import cloud.commandframework.arguments.standard.DurationArgument;
-import cloud.commandframework.arguments.standard.FloatArgument;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.LongArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
@@ -32,7 +30,7 @@ import cloud.commandframework.arguments.standard.StringArrayArgument;
 import cloud.commandframework.brigadier.CloudBrigadierManager;
 import cloud.commandframework.bukkit.CloudBukkitCapabilities;
 import cloud.commandframework.bukkit.parsers.WorldArgument;
-import cloud.commandframework.exceptions.ArgumentParseException;
+import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.minecraft.extras.AudienceProvider;
@@ -69,6 +67,7 @@ import rocks.gravili.notquests.paper.commands.arguments.MiniMessageSelector;
 import rocks.gravili.notquests.paper.commands.arguments.MiniMessageStringSelector;
 import rocks.gravili.notquests.paper.commands.arguments.MultipleActionsSelector;
 import rocks.gravili.notquests.paper.commands.arguments.NQNPCSelector;
+import rocks.gravili.notquests.paper.commands.arguments.ObjectiveSelector;
 import rocks.gravili.notquests.paper.commands.arguments.QuestSelector;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
@@ -77,6 +76,7 @@ import rocks.gravili.notquests.paper.conversation.ConversationManager;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
+import rocks.gravili.notquests.paper.structs.objectives.ObjectiveHolder;
 
 public class CommandManager {
   private final NotQuests main;
@@ -202,13 +202,6 @@ public class CommandManager {
             .withArgument(
                 MiniMessageStringSelector.<CommandSender>newBuilder("Task Description", main)
                     .withPlaceholders()
-                    .withSuggestionsProvider(
-                        (context, lastString) -> {
-                          final ArrayList<String> completions = new ArrayList<>();
-                          completions.add(
-                              "<Enter task description (put between \" \" if you want to use spaces)>");
-                          return completions;
-                        })
                     .quoted().build())
             .withDescription(ArgumentDescription.of("Custom description of the task"))
             .build();
@@ -400,6 +393,10 @@ public class CommandManager {
             builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
 
         cloudBrigadierManager.registerMapping(
+            new TypeToken<MiniMessageStringSelector.MiniMessageStringParser<CommandSender>>() {},
+            builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
+
+        cloudBrigadierManager.registerMapping(
             new TypeToken<MiniMessageSelector.MiniMessageParser<CommandSender>>() {},
             builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
 
@@ -524,44 +521,7 @@ public class CommandManager {
             .literal("objectives")
             .literal("edit")
             .argument(
-                IntegerArgument.<CommandSender>newBuilder("Objective ID")
-                    .withMin(1)
-                    .withSuggestionsProvider(
-                        (context, lastString) -> {
-                          final List<String> allArgs = context.getRawInput();
-                          main.getUtilManager()
-                              .sendFancyCommandCompletion(
-                                  context.getSender(),
-                                  allArgs.toArray(new String[0]),
-                                  "[Objective ID]",
-                                  "[...]");
-
-                          ArrayList<String> completions = new ArrayList<>();
-
-                          final Quest quest = context.get("quest");
-                          for (final Objective objective : quest.getObjectives()) {
-                            completions.add("" + objective.getObjectiveID());
-                          }
-
-                          return completions;
-                        })
-                    .withParser(
-                        (context, lastString) -> { // TODO: Fix this parser. It isn't run at all.
-                          final int ID = context.get("Objective ID");
-                          final Quest quest = context.get("quest");
-                          final Objective foundObjective = quest.getObjectiveFromID(ID);
-                          if (foundObjective == null) {
-                            return ArgumentParseResult.failure(
-                                new IllegalArgumentException(
-                                    "Objective with the ID '"
-                                        + ID
-                                        + "' does not belong to Quest '"
-                                        + quest.getQuestName()
-                                        + "'!"));
-                          } else {
-                            return ArgumentParseResult.success(ID);
-                          }
-                        }),
+                ObjectiveSelector.<CommandSender>newBuilder("Objective ID", main, 0).build(),
                 ArgumentDescription.of("Objective ID"));
 
     adminEditObjectiveAddUnlockConditionCommandBuilder =
@@ -871,5 +831,27 @@ public class CommandManager {
 
   public final Command.Builder<CommandSender> getUserCommandBuilder() {
     return userCommandBuilder;
+  }
+
+  public final ObjectiveHolder getObjectiveHolderFromContextAndLevel(final CommandContext<CommandSender> context, final int level){
+    final ObjectiveHolder objectiveHolder;
+    if(level == 0){
+      objectiveHolder = context.get("quest");
+    }else if(level == 1){
+      objectiveHolder = context.get("Objective ID");
+    } else {
+      objectiveHolder = context.get("Objective ID " + level);
+    }
+    return objectiveHolder;
+  }
+
+  public final Objective getObjectiveFromContextAndLevel(final CommandContext<CommandSender> context, final int level){
+    final Objective objective;
+    if(level == 0){
+      objective = context.get("Objective ID");
+    }else {
+      objective = context.get("Objective ID " + (level+1));
+    }
+    return objective;
   }
 }

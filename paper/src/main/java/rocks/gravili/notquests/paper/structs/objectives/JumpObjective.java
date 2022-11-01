@@ -39,7 +39,8 @@ public class JumpObjective extends Objective {
   public static void handleCommands(
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
-      Command.Builder<CommandSender> addObjectiveBuilder) {
+      Command.Builder<CommandSender> addObjectiveBuilder,
+      final int level) {
     manager.command(
         addObjectiveBuilder
             .argument(
@@ -52,7 +53,7 @@ public class JumpObjective extends Objective {
                   JumpObjective jumpObjective = new JumpObjective(main);
                   jumpObjective.setProgressNeededExpression(amountExpression);
 
-                  main.getObjectiveManager().addObjective(jumpObjective, context);
+                  main.getObjectiveManager().addObjective(jumpObjective, context, level);
                 }));
   }
 
@@ -80,7 +81,7 @@ public class JumpObjective extends Objective {
                 ""
                     + (activeObjective != null
                         ? activeObjective.getProgressNeeded()
-                        : getProgressNeededExpression())));
+                        : getProgressNeededExpression().getRawExpression())));
   }
 
   @Override

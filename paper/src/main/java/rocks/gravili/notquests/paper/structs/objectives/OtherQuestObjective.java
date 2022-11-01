@@ -43,7 +43,8 @@ public class OtherQuestObjective extends Objective {
   public static void handleCommands(
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
-      Command.Builder<CommandSender> addObjectiveBuilder) {
+      Command.Builder<CommandSender> addObjectiveBuilder,
+      final int level) {
     manager.command(
         addObjectiveBuilder
             .argument(
@@ -67,11 +68,11 @@ public class OtherQuestObjective extends Objective {
 
                   OtherQuestObjective otherQuestObjective = new OtherQuestObjective(main);
 
-                  otherQuestObjective.setOtherQuestName(otherQuest.getQuestName());
+                  otherQuestObjective.setOtherQuestName(otherQuest.getIdentifier() );
                   otherQuestObjective.setCountPreviousCompletions(countPreviouslyCompletedQuests);
                   otherQuestObjective.setProgressNeededExpression(amountExpression);
 
-                  main.getObjectiveManager().addObjective(otherQuestObjective, context);
+                  main.getObjectiveManager().addObjective(otherQuestObjective, context, level);
                 }));
   }
 
@@ -83,7 +84,7 @@ public class OtherQuestObjective extends Objective {
             "chat.objectives.taskDescription.otherQuest.base",
             questPlayer,
             activeObjective,
-            Map.of("%OTHERQUESTNAME%", getOtherQuest().getQuestName()));
+            Map.of("%OTHERQUESTNAME%", getOtherQuest().getIdentifier()));
   }
 
   @Override

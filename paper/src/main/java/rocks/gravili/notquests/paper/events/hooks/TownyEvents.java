@@ -113,7 +113,7 @@ public class TownyEvents implements Listener {
       final QuestPlayer questPlayer =
           main.getQuestPlayerManager().getQuestPlayer(resident.getUUID());
       if (questPlayer != null) {
-        if (questPlayer.getActiveQuests().size() > 0) {
+        if (!questPlayer.getActiveQuests().isEmpty()) {
           for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
             for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
               if (activeObjective.isUnlocked()) {

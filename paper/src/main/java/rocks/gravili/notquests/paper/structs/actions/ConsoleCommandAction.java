@@ -72,7 +72,7 @@ public class ConsoleCommandAction extends Action {
     final String rewardConsoleCommand =
         main.getUtilManager()
             .applyPlaceholders(
-                consoleCommand, questPlayer.getPlayer(), questPlayer, getQuest(), objects);
+                consoleCommand, questPlayer.getPlayer(), questPlayer, getObjectiveHolder(), objects);
 
     final ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
 

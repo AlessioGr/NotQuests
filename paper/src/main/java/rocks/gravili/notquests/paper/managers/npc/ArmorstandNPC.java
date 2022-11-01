@@ -70,10 +70,10 @@ public class ArmorstandNPC extends NQNPC {
 
     if(armorstandPDB.has(attachedQuestsKey, PersistentDataType.STRING)){
       String existingAttachedQuests = armorstandPDB.get(attachedQuestsKey, PersistentDataType.STRING);
-      if(existingAttachedQuests != null && existingAttachedQuests.contains("°"+quest.getQuestName()+"°")){
+      if(existingAttachedQuests != null && existingAttachedQuests.contains("°"+quest.getIdentifier() +"°")){
 
 
-        existingAttachedQuests = existingAttachedQuests.replace("°" + quest.getQuestName() + "°", "°");
+        existingAttachedQuests = existingAttachedQuests.replace("°" + quest.getIdentifier()  + "°", "°");
 
         //So it can go fully empty again
         boolean foundNonSeparator = false;
@@ -99,7 +99,7 @@ public class ArmorstandNPC extends NQNPC {
         if(showQuestInNPC == null){
           return removeQuestGiverNPCTrait(false, quest);
         }
-        return "<RED>Error: That armor stand does not have the Quest <highlight>" + quest.getQuestName() + "</highlight> attached to it!\n" +
+        return "<RED>Error: That armor stand does not have the Quest <highlight>" + quest.getIdentifier()  + "</highlight> attached to it!\n" +
             "<DARK_GREEN>Attached Quests: <highlight>" + existingAttachedQuests;
       }
     } else {
@@ -133,11 +133,11 @@ public class ArmorstandNPC extends NQNPC {
 
       if (existingAttachedQuests != null) {
 
-        if( existingAttachedQuests.equals(quest.getQuestName()) || existingAttachedQuests.contains("°" + quest.getQuestName()+"°") ) {
+        if( existingAttachedQuests.equals(quest.getIdentifier() ) || existingAttachedQuests.contains("°" + quest.getIdentifier() +"°") ) {
           if(showQuestInNPC == null){
             return addQuestGiverNPCTrait(false, quest);
           }
-          return "<RED>Error: That armor stand already has the Quest <highlight>" + quest.getQuestName() + "</highlight> attached to it!\n"
+          return "<RED>Error: That armor stand already has the Quest <highlight>" + quest.getIdentifier()  + "</highlight> attached to it!\n"
               + "<RED>Attached Quests: <highlight>" + existingAttachedQuests;
         }
 
@@ -145,19 +145,19 @@ public class ArmorstandNPC extends NQNPC {
 
       if(existingAttachedQuests != null && existingAttachedQuests.length() >= 1){
         if(   existingAttachedQuests.charAt(existingAttachedQuests.length()-1) == '°' ){
-          existingAttachedQuests += (quest.getQuestName()+"°") ;
+          existingAttachedQuests += (quest.getIdentifier() +"°") ;
         } else {
-          existingAttachedQuests += "°" + quest.getQuestName() + "°";
+          existingAttachedQuests += "°" + quest.getIdentifier()  + "°";
         }
 
       } else {
-        existingAttachedQuests += "°" + quest.getQuestName() + "°";
+        existingAttachedQuests += "°" + quest.getIdentifier()  + "°";
       }
 
       armorStandPDB.set(attachedQuestsKey, PersistentDataType.STRING, existingAttachedQuests);
 
     }else {
-      armorStandPDB.set(attachedQuestsKey, PersistentDataType.STRING, "°" + quest.getQuestName() + "°");
+      armorStandPDB.set(attachedQuestsKey, PersistentDataType.STRING, "°" + quest.getIdentifier()  + "°");
 
 
       //Since this is the first Quest added to it:

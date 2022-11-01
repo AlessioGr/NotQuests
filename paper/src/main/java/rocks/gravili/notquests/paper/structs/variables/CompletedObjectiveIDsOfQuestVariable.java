@@ -48,7 +48,7 @@ public class CompletedObjectiveIDsOfQuestVariable extends Variable<String[]> {
 
                   ArrayList<String> suggestions = new ArrayList<>();
                   for (Quest quest : main.getQuestManager().getAllQuests()) {
-                    suggestions.add(quest.getQuestName());
+                    suggestions.add(quest.getIdentifier() );
                   }
                   return suggestions;
                 })
@@ -62,7 +62,7 @@ public class CompletedObjectiveIDsOfQuestVariable extends Variable<String[]> {
 
     ActiveQuest foundQuest = null;
     for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-      if (activeQuest.getQuestName().equalsIgnoreCase(questName)) {
+      if (activeQuest.getQuestIdentifier().equalsIgnoreCase(questName)) {
         foundQuest = activeQuest;
       }
     }
@@ -88,7 +88,7 @@ public class CompletedObjectiveIDsOfQuestVariable extends Variable<String[]> {
 
     ActiveQuest foundQuest = null;
     for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-      if (activeQuest.getQuestName().equalsIgnoreCase(questName)) {
+      if (activeQuest.getQuestIdentifier().equalsIgnoreCase(questName)) {
         foundQuest = activeQuest;
       }
     }

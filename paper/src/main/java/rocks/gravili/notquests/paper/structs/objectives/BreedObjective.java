@@ -40,7 +40,8 @@ public class BreedObjective extends Objective {
   public static void handleCommands(
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
-      Command.Builder<CommandSender> addObjectiveBuilder) {
+      Command.Builder<CommandSender> addObjectiveBuilder,
+      final int level) {
     manager.command(
         addObjectiveBuilder
             .argument(
@@ -58,7 +59,7 @@ public class BreedObjective extends Objective {
                   breedObjective.setEntityToBreedType(entityType);
                   breedObjective.setProgressNeededExpression(amountExpression);
 
-                  main.getObjectiveManager().addObjective(breedObjective, context);
+                  main.getObjectiveManager().addObjective(breedObjective, context, level);
                 }));
   }
 

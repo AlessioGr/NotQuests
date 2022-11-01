@@ -27,9 +27,7 @@ import java.util.HashMap;
 import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
@@ -137,7 +135,7 @@ public class QuestPlayerManager {
         if (quest != null) {
           final ActiveQuest activeQuest = new ActiveQuest(main, quest, questPlayer);
           activeQuests.add(activeQuest);
-          questPlayer.forceAddActiveQuest(
+          questPlayer.forceAddActiveQuestSilent(
               activeQuest, false); // Run begin/accept trigger when plugin reloads if true
 
         } else {
@@ -157,7 +155,7 @@ public class QuestPlayerManager {
                 "SELECT TriggerType, CurrentProgress, TriggerID FROM ActiveTriggers WHERE PlayerUUID = '"
                     + uuid
                     + "' AND QuestName = '"
-                    + activeQuest.getQuest().getQuestName()
+                    + activeQuest.getQuest().getIdentifier()
                     + "';");
         while (activeQuestTriggerResults.next()) {
           final String triggerTypeString = activeQuestTriggerResults.getString("TriggerType");
@@ -177,7 +175,7 @@ public class QuestPlayerManager {
             main.getLogManager()
                 .warn(
                     "ERROR: TriggerType for the Quest <highlight>"
-                        + activeQuest.getQuest().getQuestName()
+                        + activeQuest.getQuest().getIdentifier()
                         + "</highlight> could not be loaded from database");
           }
         }
@@ -189,7 +187,7 @@ public class QuestPlayerManager {
                 "SELECT ObjectiveType, CurrentProgress, HasBeenCompleted, ObjectiveID, ProgressNeeded FROM ActiveObjectives WHERE PlayerUUID = '"
                     + uuid
                     + "' AND QuestName = '"
-                    + activeQuest.getQuest().getQuestName()
+                    + activeQuest.getQuest().getIdentifier()
                     + "';");
         while (activeQuestObjectiveResults.next()) {
           final String objectiveTypeString = activeQuestObjectiveResults.getString("ObjectiveType");
@@ -215,21 +213,7 @@ public class QuestPlayerManager {
                 }
                 activeObjective.setHasBeenCompleted(hasBeenCompleted);
                 if (activeObjective.getObjective().getCompletionNPC() == null) { // Complete automatically
-                  if (activeObjective.getObjective().getCompletionArmorStandUUID()
-                      != null) { // Only complete if player has talked to the completion Armor Stand
-                    if (activeObjective.hasBeenCompleted()) {
-                      activeObjective.addProgress(
-                          currentProgress,
-                          activeObjective.getObjective().getCompletionArmorStandUUID(),
-                          true);
-
-                    } else {
-                      activeObjective.addProgress(currentProgress, true);
-                    }
-                  } else {
-                    activeObjective.addProgress(currentProgress, true);
-                  }
-
+                  activeObjective.addProgress(currentProgress, true);
                 } else { // Only complete if player has talked to the completion NPC
                   if (activeObjective.hasBeenCompleted()) {
                     activeObjective.addProgress(
@@ -247,7 +231,7 @@ public class QuestPlayerManager {
             main.getLogManager()
                 .warn(
                     "ERROR: ObjectiveType for the Quest <highlight>"
-                        + activeQuest.getQuest().getQuestName()
+                        + activeQuest.getQuest().getIdentifier()
                         + "</highlight> could not be loaded from database");
           }
         }
@@ -325,7 +309,7 @@ public class QuestPlayerManager {
       for (ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
         statement.executeUpdate(
             "INSERT INTO ActiveQuests (QuestName, PlayerUUID) VALUES ('"
-                + activeQuest.getQuest().getQuestName()
+                + activeQuest.getQuest().getIdentifier()
                 + "', '"
                 + questPlayerUUID
                 + "');");
@@ -335,7 +319,7 @@ public class QuestPlayerManager {
               "INSERT INTO ActiveTriggers (TriggerType, QuestName, PlayerUUID, CurrentProgress, TriggerID) VALUES ('"
                   + activeTrigger.getTrigger().getTriggerType()
                   + "', '"
-                  + activeTrigger.getActiveQuest().getQuest().getQuestName()
+                  + activeTrigger.getActiveQuest().getQuest().getIdentifier()
                   + "', '"
                   + questPlayerUUID
                   + "', "
@@ -352,7 +336,7 @@ public class QuestPlayerManager {
                   + main.getObjectiveManager()
                       .getObjectiveType(activeObjective.getObjective().getClass())
                   + "', '"
-                  + activeObjective.getActiveQuest().getQuest().getQuestName()
+                  + activeObjective.getActiveObjectiveHolder().getObjectiveHolder().getIdentifier()
                   + "', '"
                   + questPlayerUUID
                   + "', "
@@ -372,7 +356,7 @@ public class QuestPlayerManager {
                   + main.getObjectiveManager()
                       .getObjectiveType(completedObjective.getObjective().getClass())
                   + "', '"
-                  + completedObjective.getActiveQuest().getQuest().getQuestName()
+                  + completedObjective.getActiveObjectiveHolder().getObjectiveHolder().getIdentifier()
                   + "', '"
                   + questPlayerUUID
                   + "', "
@@ -393,7 +377,7 @@ public class QuestPlayerManager {
       for (CompletedQuest completedQuest : questPlayer.getCompletedQuests()) {
         statement.executeUpdate(
             "INSERT INTO CompletedQuests (QuestName, PlayerUUID, TimeCompleted) VALUES ('"
-                + completedQuest.getQuest().getQuestName()
+                + completedQuest.getQuest().getIdentifier()
                 + "', '"
                 + questPlayerUUID
                 + "', "
@@ -516,7 +500,7 @@ public class QuestPlayerManager {
           if (quest != null) {
             final ActiveQuest activeQuest = new ActiveQuest(main, quest, questPlayer);
             activeQuests.add(activeQuest);
-            questPlayer.forceAddActiveQuest(
+            questPlayer.forceAddActiveQuestSilent(
                 activeQuest, false); // Run begin/accept trigger when plugin reloads if true
 
           } else {
@@ -537,7 +521,7 @@ public class QuestPlayerManager {
                   "SELECT * FROM ActiveTriggers WHERE PlayerUUID = '"
                       + questPlayer.getUniqueId()
                       + "' AND QuestName = '"
-                      + activeQuest.getQuest().getQuestName()
+                      + activeQuest.getQuest().getIdentifier()
                       + "';");
           while (activeQuestTriggerResults.next()) {
             final String triggerTypeString = activeQuestTriggerResults.getString("TriggerType");
@@ -557,7 +541,7 @@ public class QuestPlayerManager {
               main.getLogManager()
                   .warn(
                       "ERROR: TriggerType for the Quest <highlight>"
-                          + activeQuest.getQuest().getQuestName()
+                          + activeQuest.getQuest().getIdentifier()
                           + "</highlight> could not be loaded from database");
             }
           }
@@ -569,7 +553,7 @@ public class QuestPlayerManager {
                   "SELECT * FROM ActiveObjectives WHERE PlayerUUID = '"
                       + questPlayer.getUniqueId()
                       + "' AND QuestName = '"
-                      + activeQuest.getQuest().getQuestName()
+                      + activeQuest.getQuest().getIdentifier()
                       + "';");
           while (activeQuestObjectiveResults.next()) {
             final String objectiveTypeString =
@@ -596,22 +580,7 @@ public class QuestPlayerManager {
                   }
                   activeObjective.setHasBeenCompleted(hasBeenCompleted);
                   if (activeObjective.getObjective().getCompletionNPC() == null) { // Complete automatically
-                    if (activeObjective.getObjective().getCompletionArmorStandUUID()
-                        != null) { // Only complete if player has talked to the completion Armor
-                                   // Stand
-                      if (activeObjective.hasBeenCompleted()) {
-                        activeObjective.addProgress(
-                            currentProgress,
-                            activeObjective.getObjective().getCompletionArmorStandUUID(),
-                            true);
-
-                      } else {
-                        activeObjective.addProgress(currentProgress, true);
-                      }
-                    } else {
-                      activeObjective.addProgress(currentProgress, true);
-                    }
-
+                    activeObjective.addProgress(currentProgress, true);
                   } else { // Only complete if player has talked to the completion NPC
                     if (activeObjective.hasBeenCompleted()) {
                       activeObjective.addProgress(
@@ -631,7 +600,7 @@ public class QuestPlayerManager {
               main.getLogManager()
                   .warn(
                       "ERROR: ObjectiveType for the Quest <highlight>"
-                          + activeQuest.getQuest().getQuestName()
+                          + activeQuest.getQuest().getIdentifier()
                           + "</highlight> could not be loaded from database");
             }
           }
@@ -689,7 +658,7 @@ public class QuestPlayerManager {
         for (ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
           statement.executeUpdate(
               "INSERT INTO ActiveQuests (QuestName, PlayerUUID) VALUES ('"
-                  + activeQuest.getQuest().getQuestName()
+                  + activeQuest.getQuest().getIdentifier()
                   + "', '"
                   + questPlayerUUID
                   + "');");
@@ -699,7 +668,7 @@ public class QuestPlayerManager {
                 "INSERT INTO ActiveTriggers (TriggerType, QuestName, PlayerUUID, CurrentProgress, TriggerID) VALUES ('"
                     + activeTrigger.getTrigger().getTriggerType()
                     + "', '"
-                    + activeTrigger.getActiveQuest().getQuest().getQuestName()
+                    + activeTrigger.getActiveQuest().getQuest().getIdentifier()
                     + "', '"
                     + questPlayerUUID
                     + "', "
@@ -716,7 +685,7 @@ public class QuestPlayerManager {
                     + main.getObjectiveManager()
                         .getObjectiveType(activeObjective.getObjective().getClass())
                     + "', '"
-                    + activeObjective.getActiveQuest().getQuest().getQuestName()
+                    + activeObjective.getActiveObjectiveHolder().getObjectiveHolder().getIdentifier()
                     + "', '"
                     + questPlayerUUID
                     + "', "
@@ -736,7 +705,7 @@ public class QuestPlayerManager {
                     + main.getObjectiveManager()
                         .getObjectiveType(completedObjective.getObjective().getClass())
                     + "', '"
-                    + completedObjective.getActiveQuest().getQuest().getQuestName()
+                    + completedObjective.getActiveObjectiveHolder().getObjectiveHolder().getIdentifier()
                     + "', '"
                     + questPlayerUUID
                     + "', "
@@ -757,7 +726,7 @@ public class QuestPlayerManager {
         for (CompletedQuest completedQuest : questPlayer.getCompletedQuests()) {
           statement.executeUpdate(
               "INSERT INTO CompletedQuests (QuestName, PlayerUUID, TimeCompleted) VALUES ('"
-                  + completedQuest.getQuest().getQuestName()
+                  + completedQuest.getQuest().getIdentifier()
                   + "', '"
                   + questPlayerUUID
                   + "', "
@@ -830,5 +799,12 @@ public class QuestPlayerManager {
     final QuestPlayer questPlayer = getOrCreateQuestPlayer(uuid);
 
     return questPlayer.forceAddActiveQuest(new ActiveQuest(main, quest, questPlayer), true);
+  }
+
+  public void forceAcceptQuestSilent(
+      final UUID uuid, final Quest quest) { // Ignores max amount limit, cooldown and requirements
+    final QuestPlayer questPlayer = getOrCreateQuestPlayer(uuid);
+
+    questPlayer.forceAddActiveQuestSilent(new ActiveQuest(main, quest, questPlayer), true);
   }
 }

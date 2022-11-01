@@ -25,12 +25,14 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
+import rocks.gravili.notquests.paper.structs.objectives.ObjectiveHolder;
 import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 
 /**
@@ -43,11 +45,10 @@ import rocks.gravili.notquests.paper.structs.triggers.Trigger;
  *
  * @author Alessio Gravili
  */
-public class Quest {
+public class Quest extends ObjectiveHolder {
   private final NotQuests main;
   private final String questName;
   private final ArrayList<Action> rewards;
-  private final ArrayList<Objective> objectives;
   private final ArrayList<Condition> conditions; // Requirements to accept the quest
 
   private ArrayList<Condition> conditionsWithSpecialConditions;
@@ -57,18 +58,15 @@ public class Quest {
   private int maxAccepts = -1; // -1 or smaller => unlimited accepts
   private long acceptCooldown = -1; // Cooldown in minute. -1 or smaller => no cooldown.
   private boolean takeEnabled = true;
-  private String description = "";
   private String displayName = "";
   private ItemStack takeItem = new ItemStack(Material.BOOK);
   private Category category;
 
-  private PredefinedProgressOrder predefinedProgressOrder;
 
   public Quest(final NotQuests main, final String questName) {
     this.main = main;
     this.questName = questName;
     rewards = new ArrayList<>();
-    objectives = new ArrayList<>();
     conditions = new ArrayList<>();
     conditionsWithSpecialConditions = new ArrayList<>();
     attachedNPCsWithQuestShowing = new CopyOnWriteArrayList<>();
@@ -81,7 +79,6 @@ public class Quest {
     this.main = main;
     this.questName = questName;
     rewards = new ArrayList<>();
-    objectives = new ArrayList<>();
     conditions = new ArrayList<>();
     conditionsWithSpecialConditions = new ArrayList<>();
     attachedNPCsWithQuestShowing = new CopyOnWriteArrayList<>();
@@ -90,40 +87,16 @@ public class Quest {
     this.category = category;
   }
 
-  public final PredefinedProgressOrder getPredefinedProgressOrder() {
-    return predefinedProgressOrder;
-  }
-
-  public void setPredefinedProgressOrder(final PredefinedProgressOrder predefinedProgressOrder, final boolean save) {
-    this.predefinedProgressOrder = predefinedProgressOrder;
-    if (save) {
-      if(predefinedProgressOrder != null) {
-        predefinedProgressOrder.saveToConfiguration(category.getQuestsConfig(),  "quests."
-            + questName
-            + ".predefinedProgressOrder");
-      }else{
-        category
-            .getQuestsConfig()
-            .set(
-                "quests." + questName + ".predefinedProgressOrder",
-                null);
-      }
-      category.saveQuestsConfig();
-    }
-  }
-
 
   public final Category getCategory() {
     return category;
   }
 
+
   public void setCategory(final Category category) {
     this.category = category;
   }
 
-  public final String getQuestName() {
-    return questName;
-  }
 
   public final ArrayList<Action> getRewards() {
     return rewards;
@@ -135,18 +108,8 @@ public class Quest {
     category.saveQuestsConfig();
   }
 
-  public final ArrayList<Objective> getObjectives() {
-    return objectives;
-  }
 
-  public final Objective getObjectiveFromID(final int objectiveID) {
-    for (final Objective objective : objectives) {
-      if (objective.getObjectiveID() == objectiveID) {
-        return objective;
-      }
-    }
-    return null;
-  }
+
 
   public final Condition getRequirementFromID(final int id) {
     for (final Condition condition : conditions) {
@@ -184,51 +147,7 @@ public class Quest {
     return null;
   }
 
-  public void addObjective(Objective objective, boolean save) {
-    boolean dupeID = false;
-    for (Objective objective1 : objectives) {
-      if (objective.getObjectiveID() == objective1.getObjectiveID()) {
-        dupeID = true;
-        break;
-      }
-    }
-    if (!dupeID) {
-      objectives.add(objective);
-      if (save) {
-        category
-            .getQuestsConfig()
-            .set(
-                "quests."
-                    + questName
-                    + ".objectives."
-                    + objective.getObjectiveID()
-                    + ".objectiveType",
-                main.getObjectiveManager().getObjectiveType(objective.getClass()));
-        category
-            .getQuestsConfig()
-            .set(
-                "quests."
-                    + questName
-                    + ".objectives."
-                    + objective.getObjectiveID()
-                    + ".progressNeededExpression",
-                objective.getProgressNeededExpression().getRawExpression());
 
-        objective.save(
-            category.getQuestsConfig(),
-            "quests." + questName + ".objectives." + objective.getObjectiveID());
-        category.saveQuestsConfig();
-      }
-    } else {
-      main.getLogManager()
-          .warn(
-              "ERROR: Tried to add objective to quest <highlight>"
-                  + getQuestName()
-                  + "</highlight> with the ID <highlight>"
-                  + objective.getObjectiveID()
-                  + "</highlight> but the ID was a DUPLICATE!");
-    }
-  }
 
   public void addRequirement(final Condition condition, final boolean save) {
     boolean dupeID = false;
@@ -284,7 +203,7 @@ public class Quest {
       main.getLogManager()
           .warn(
               "ERROR: Tried to add requirement to quest <highlight>"
-                  + getQuestName()
+                  + getIdentifier()
                   + "</highlight> with the ID <highlight>"
                   + condition.getConditionID()
                   + "</highlight> but the ID was a DUPLICATE!");
@@ -323,7 +242,7 @@ public class Quest {
       main.getLogManager()
           .warn(
               "ERROR: Tried to add reward to quest <highlight>"
-                  + getQuestName()
+                  + getIdentifier()
                   + "</highlight> with the ID <highlight>"
                   + action.getActionID()
                   + "</highlight> but the ID was a DUPLICATE!");
@@ -381,18 +300,14 @@ public class Quest {
       main.getLogManager()
           .warn(
               "ERROR: Tried to add trigger to quest <highlight>"
-                  + getQuestName()
+                  + getIdentifier()
                   + "</highlight> with the ID <highlight>"
                   + trigger.getTriggerID()
                   + "</highlight> but the ID was a DUPLICATE!");
     }
   }
 
-  public void clearObjectives() {
-    objectives.clear();
-    category.getQuestsConfig().set("quests." + questName + ".objectives", null);
-    category.saveQuestsConfig();
-  }
+
 
   public final int getMaxAccepts() {
     return maxAccepts;
@@ -424,14 +339,11 @@ public class Quest {
     category.saveQuestsConfig();
   }
 
-  public final String getQuestDescription() {
-    return description;
-  }
 
   public void setQuestDescription(String newQuestDescription, boolean save) {
     newQuestDescription = main.getUtilManager().replaceLegacyWithMiniMessage(newQuestDescription);
 
-    this.description = newQuestDescription;
+    this.setObjectiveHolderDescription(newQuestDescription);
     if (save) {
       category.getQuestsConfig().set("quests." + questName + ".description", newQuestDescription);
       category.saveQuestsConfig();
@@ -439,7 +351,7 @@ public class Quest {
   }
 
   public void removeQuestDescription(boolean save) {
-    this.description = "";
+    setObjectiveHolderDescription("");
     if (save) {
       category.getQuestsConfig().set("quests." + questName + ".description", null);
       category.saveQuestsConfig();
@@ -447,11 +359,11 @@ public class Quest {
   }
 
   public final String getQuestDescription(final int maxLengthPerLine) {
-    return main.getUtilManager().wrapText(description, maxLengthPerLine);
+    return main.getUtilManager().wrapText(getObjectiveHolderDescription(), maxLengthPerLine);
   }
 
   public final List<String> getQuestDescriptionList(final int maxLengthPerLine) {
-    return main.getUtilManager().wrapTextToList(description, maxLengthPerLine);
+    return main.getUtilManager().wrapTextToList(getObjectiveHolderDescription(), maxLengthPerLine);
   }
 
   public final String getQuestDisplayName() {
@@ -463,8 +375,9 @@ public class Quest {
    *
    * @return either the displayname or the quest name
    */
-  public final String getQuestFinalName() {
-    if (!displayName.isBlank()) {
+  @Override
+  public final String getDisplayNameOrIdentifier() {
+    if (!getQuestDisplayName().isBlank()) {
       return getQuestDisplayName();
     } else {
       return questName;
@@ -514,7 +427,7 @@ public class Quest {
     category.saveQuestsConfig();
   }
 
-  public String bindToNPC(final NQNPC npc, final boolean showQuestInNPC) {
+  public String bindToNPC(@NotNull final NQNPC npc, final boolean showQuestInNPC) {
     final String result = npc.addQuestGiverNPCTrait(showQuestInNPC, this);
     if(!result.isBlank()){
       return result;
@@ -586,13 +499,6 @@ public class Quest {
     category.saveQuestsConfig();
   }
 
-  public void removeObjective(final Objective objective) {
-    category
-        .getQuestsConfig()
-        .set("quests." + questName + ".objectives." + objective.getObjectiveID(), null);
-    category.saveQuestsConfig();
-    objectives.remove(objective);
-  }
 
   public void removeReward(final Action action) {
     category
@@ -646,14 +552,7 @@ public class Quest {
     category.saveQuestsConfig();
   }
 
-  public final int getFreeObjectiveID() {
-    for (int i = 1; i < Integer.MAX_VALUE; i++) {
-      if (getObjectiveFromID(i) == null) {
-        return i;
-      }
-    }
-    return getObjectives().size() + 1;
-  }
+
 
   public final int getFreeRewardID() {
     for (int i = 1; i < Integer.MAX_VALUE; i++) {
@@ -696,7 +595,7 @@ public class Quest {
             for(final Quest otherQuest : category.getQuests()){
               if(counter < ourIndex){
                 if(!questPlayer.hasCompletedQuest(otherQuest)){
-                  return "Quest " + otherQuest.getQuestFinalName() + " needs to be completed first";
+                  return "Quest " + otherQuest.getDisplayNameOrIdentifier() + " needs to be completed first";
                 }
               }
               counter++;
@@ -706,7 +605,7 @@ public class Quest {
             for(final Quest otherQuest : category.getQuests()){
               if(counter > ourIndex){
                 if(!questPlayer.hasCompletedQuest(otherQuest)){
-                  return "Quest " + otherQuest.getQuestFinalName() + " needs to be completed first";
+                  return "Quest " + otherQuest.getDisplayNameOrIdentifier() + " needs to be completed first";
                 }
               }
               counter++;
@@ -750,4 +649,117 @@ public class Quest {
     }
 
   }
+
+  @Override
+  public FileConfiguration getConfig() {
+    return getCategory().getQuestsConfig();
+  }
+
+  @Override
+  public void saveConfig() {
+    getCategory().saveQuestsConfig();
+  }
+
+  @Override
+  public String getInitialConfigPath() {
+    return "quests." + getIdentifier();
+  }
+
+  @Override
+  public String getIdentifier() {
+    return this.questName;
+  }
+
+  @Override
+  public void setPredefinedProgressOrder(final PredefinedProgressOrder predefinedProgressOrder, final boolean save) {
+    this.predefinedProgressOrder = predefinedProgressOrder;
+    if (save) {
+      if(predefinedProgressOrder != null) {
+        predefinedProgressOrder.saveToConfiguration(category.getQuestsConfig(),  "quests."
+            + questName
+            + ".predefinedProgressOrder");
+      }else{
+        category
+            .getQuestsConfig()
+            .set(
+                "quests." + questName + ".predefinedProgressOrder",
+                null);
+      }
+      category.saveQuestsConfig();
+    }
+  }
+
+  @Override
+  public void clearObjectives() {
+    super.getObjectives().clear();
+    category.getQuestsConfig().set("quests." + questName + ".objectives", null);
+    category.saveQuestsConfig();
+  }
+
+  @Override
+  public final Objective getObjectiveFromID(final int objectiveID) {
+    for (final Objective objective : super.getObjectives()) {
+      if (objective.getObjectiveID() == objectiveID) {
+        return objective;
+      }
+    }
+    return null;
+  }
+
+  @Override
+  public void removeObjective(final Objective objective) {
+    category
+        .getQuestsConfig()
+        .set("quests." + questName + ".objectives." + objective.getObjectiveID(), null);
+    category.saveQuestsConfig();
+    super.getObjectives().remove(objective);
+  }
+
+
+  public void addObjective(Objective objective, boolean save) {
+    boolean dupeID = false;
+    for (Objective objective1 : super.getObjectives()) {
+      if (objective.getObjectiveID() == objective1.getObjectiveID()) {
+        dupeID = true;
+        break;
+      }
+    }
+    if (!dupeID) {
+      super.getObjectives().add(objective);
+      if (save) {
+        category
+            .getQuestsConfig()
+            .set(
+                "quests."
+                    + questName
+                    + ".objectives."
+                    + objective.getObjectiveID()
+                    + ".objectiveType",
+                main.getObjectiveManager().getObjectiveType(objective.getClass()));
+        category
+            .getQuestsConfig()
+            .set(
+                "quests."
+                    + questName
+                    + ".objectives."
+                    + objective.getObjectiveID()
+                    + ".progressNeededExpression",
+                objective.getProgressNeededExpression().getRawExpression());
+
+        objective.save(
+            category.getQuestsConfig(),
+            "quests." + questName + ".objectives." + objective.getObjectiveID());
+        category.saveQuestsConfig();
+      }
+    } else {
+      main.getLogManager()
+          .warn(
+              "ERROR: Tried to add objective to quest <highlight>"
+                  + getIdentifier()
+                  + "</highlight> with the ID <highlight>"
+                  + objective.getObjectiveID()
+                  + "</highlight> but the ID was a DUPLICATE!");
+    }
+  }
+
 }

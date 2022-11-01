@@ -441,29 +441,39 @@ public final class MiniMessageStringSelector<C> extends CommandArgument<C, Strin
     @Override
     public @NonNull List<@NonNull String> suggestions(
         final @NonNull CommandContext<C> context,
-        final @NonNull String input
+        @NonNull String input
     ) {
 
-      List<String> completions = new java.util.ArrayList<>(this.suggestionsProvider.apply(context, input));
+      final List<String> completions = new java.util.ArrayList<>(this.suggestionsProvider.apply(context, input));
 
-      String rawInput = context.getRawInputJoined();
+      boolean suggestWithStringAtStart = false;
+      if(input.startsWith("\"")){
+        suggestWithStringAtStart = true;
+        input = input.substring(1);
+      }
+
+      final String prefix = suggestWithStringAtStart ? "\"" : "";
+
+      final String rawInput = context.getRawInputJoined();
       if (input.startsWith("{") && withPlaceholders) {
-        completions.addAll(main.getCommandManager().getAdminCommands().placeholders);
+        for(final String placeholder : main.getCommandManager().getAdminCommands().placeholders){
+          completions.add(prefix + placeholder);
+        }
       } else {
         if (input.startsWith("<")) {
           for (String color : main.getUtilManager().getMiniMessageTokens()) {
-            completions.add("<" + color + ">");
+            completions.add(prefix+"<" + color + ">");
             // Now the closings. First we search IF it contains an opening and IF it doesnt contain
             // more closings than the opening
-            if (rawInput.contains("<" + color + ">")) {
+            if (rawInput.contains(prefix+"<" + color + ">")) {
               if (org.apache.commons.lang.StringUtils.countMatches(rawInput, "<" + color + ">")
                   > org.apache.commons.lang.StringUtils.countMatches(rawInput, "</" + color + ">")) {
-                completions.add("</" + color + ">");
+                completions.add(prefix+"</" + color + ">");
               }
             }
           }
         } else {
-          completions.add("<Enter Message>");
+          completions.add(prefix+"<Enter Message (put in \" \" quotes if you need spaces)>");
         }
       }
 
@@ -473,7 +483,7 @@ public final class MiniMessageStringSelector<C> extends CommandArgument<C, Strin
           .sendFancyCommandCompletion(
               (CommandSender) context.getSender(),
               allArgs.toArray(new String[0]),
-              "<Enter Message>",
+              prefix+"<Enter Message>",
               "");
 
       return completions;

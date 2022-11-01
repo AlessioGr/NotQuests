@@ -46,7 +46,8 @@ public class KillMobsObjective extends Objective {
   public static void handleCommands(
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
-      Command.Builder<CommandSender> addObjectiveBuilder) {
+      Command.Builder<CommandSender> addObjectiveBuilder,
+      final int level) {
     addObjectiveBuilder =
         addObjectiveBuilder
             .argument(
@@ -97,7 +98,7 @@ public class KillMobsObjective extends Objective {
                 killMobsObjective.setProjectKorraAbility(abilityName);
               }
 
-              main.getObjectiveManager().addObjective(killMobsObjective, context);
+              main.getObjectiveManager().addObjective(killMobsObjective, context, level);
 
               if (!nametag_equals.isBlank()) {
                 context

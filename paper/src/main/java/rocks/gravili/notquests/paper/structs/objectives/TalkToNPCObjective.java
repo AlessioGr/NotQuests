@@ -44,7 +44,8 @@ public class TalkToNPCObjective extends Objective {
         super(main);
     }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder,
+        final int level) {
         manager.command(addObjectiveBuilder
                 .argument(NQNPCSelector.of("NPC", main, false, true), ArgumentDescription.of("NPC to whom you should talk."))
                 .handler((context) -> {
@@ -57,17 +58,17 @@ public class TalkToNPCObjective extends Objective {
                             main.getNPCManager().handleRightClickNQNPCSelectionWithAction(
                                 (nqNPC) -> {
                                     final TalkToNPCObjective talkToNPCObjective = new TalkToNPCObjective(main);
-                                    talkToNPCObjective.setQuest(quest);
+                                    talkToNPCObjective.setObjectiveHolder(quest);
                                     talkToNPCObjective.setObjectiveID(quest.getFreeObjectiveID());
                                     talkToNPCObjective.setNPCtoTalkTo(nqNPC);
 
-                                    main.getObjectiveManager().addObjective(talkToNPCObjective, context);
+                                    main.getObjectiveManager().addObjective(talkToNPCObjective, context, level);
                                 },
                                 player,
                                 "<success>You have been given an item with which you can add the TalkToNPC Objective to an NPC by rightclicking the NPC. Check your inventory!",
                                 "<LIGHT_PURPLE>Add TalkToNPC Objective to NPC",
                                 "<WHITE>Right-click an NPC to add the following objective to it:",
-                                "<YELLOW>TalkToNPC <WHITE>Objective of Quest <highlight>" + quest.getQuestName() + "</highlight>."
+                                "<YELLOW>TalkToNPC <WHITE>Objective of Quest <highlight>" + quest.getIdentifier()  + "</highlight>."
                             );
 
                         } else {
@@ -79,7 +80,7 @@ public class TalkToNPCObjective extends Objective {
                         final TalkToNPCObjective talkToNPCObjective = new TalkToNPCObjective(main);
                         talkToNPCObjective.setNPCtoTalkTo(nqNPC);
 
-                        main.getObjectiveManager().addObjective(talkToNPCObjective, context);
+                        main.getObjectiveManager().addObjective(talkToNPCObjective, context, level);
                     }
 
 

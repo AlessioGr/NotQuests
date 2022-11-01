@@ -46,7 +46,8 @@ public class RunCommandObjective extends Objective {
   public static void handleCommands(
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
-      Command.Builder<CommandSender> addObjectiveBuilder) {
+      Command.Builder<CommandSender> addObjectiveBuilder,
+      final int level) {
     manager.command(
         addObjectiveBuilder
             .argument(
@@ -102,7 +103,7 @@ public class RunCommandObjective extends Objective {
                   runCommandObjective.setIgnoreCase(ignoreCase);
                   runCommandObjective.setCancelCommand(cancelCommand);
 
-                  main.getObjectiveManager().addObjective(runCommandObjective, context);
+                  main.getObjectiveManager().addObjective(runCommandObjective, context, level);
                 }));
   }
 

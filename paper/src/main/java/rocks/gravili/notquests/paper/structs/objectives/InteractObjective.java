@@ -50,7 +50,8 @@ public class InteractObjective extends Objective {
   public static void handleCommands(
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
-      Command.Builder<CommandSender> addObjectiveBuilder) {
+      Command.Builder<CommandSender> addObjectiveBuilder,
+      final int level) {
     manager.command(
         addObjectiveBuilder
             .argument(
@@ -109,7 +110,7 @@ public class InteractObjective extends Objective {
                   interactObjective.setCancelInteraction(cancelInteraction);
                   interactObjective.setProgressNeededExpression(amountExpression);
 
-                  main.getObjectiveManager().addObjective(interactObjective, context);
+                  main.getObjectiveManager().addObjective(interactObjective, context, level);
                 }));
   }
 

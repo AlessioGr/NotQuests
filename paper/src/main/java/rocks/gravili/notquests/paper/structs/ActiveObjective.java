@@ -19,8 +19,8 @@
 package rocks.gravili.notquests.paper.structs;
 
 
-import java.util.UUID;
 import org.bukkit.Bukkit;
+import org.jetbrains.annotations.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.NotQuestColors;
 import rocks.gravili.notquests.paper.events.notquests.ObjectiveUnlockEvent;
@@ -40,10 +40,10 @@ import rocks.gravili.notquests.paper.structs.objectives.OtherQuestObjective;
  *
  * @author Alessio Gravili
  */
-public class ActiveObjective {
+public class ActiveObjective extends ActiveObjectiveHolder {
     private final NotQuests main;
     private final Objective objective;
-    private final ActiveQuest activeQuest;
+    private final ActiveObjectiveHolder activeObjectiveHolder;
     private final int objectiveID;
     private double currentProgress;
     private boolean unlocked = false;
@@ -51,14 +51,16 @@ public class ActiveObjective {
 
     private double progressNeeded;
 
-    public ActiveObjective(final NotQuests main, final int objectiveID, final Objective objective, final ActiveQuest activeQuest) {
+    public ActiveObjective(final NotQuests main, final int objectiveID, final Objective objective, final ActiveObjectiveHolder activeObjectiveHolder) {
+        super(main, activeObjectiveHolder.getQuestPlayer(), objective, activeObjectiveHolder.getLevel()+1);
+
         this.main = main;
         this.objectiveID = objectiveID;
         this.objective = objective;
-        this.activeQuest = activeQuest;
+        this.activeObjectiveHolder = activeObjectiveHolder;
         this.currentProgress = 0;
 
-        this.progressNeeded = objective.getProgressNeededExpression().calculateValue(activeQuest.getQuestPlayer());
+        this.progressNeeded = objective.getProgressNeededExpression().calculateValue(activeObjectiveHolder.getQuestPlayer());
     }
 
     public final double getProgressNeeded() {
@@ -77,7 +79,7 @@ public class ActiveObjective {
             this.unlocked = unlocked;
             if (unlocked) {
 
-                ObjectiveUnlockEvent objectiveUnlockEvent = new ObjectiveUnlockEvent(getQuestPlayer(), this, activeQuest, triggerAcceptQuestTrigger);
+                ObjectiveUnlockEvent objectiveUnlockEvent = new ObjectiveUnlockEvent(getQuestPlayer(), this, activeObjectiveHolder, triggerAcceptQuestTrigger);
                 if (Bukkit.isPrimaryThread()) {
                     Bukkit.getScheduler().runTaskAsynchronously(main.getMain(), () -> Bukkit.getPluginManager().callEvent(objectiveUnlockEvent));
                 } else {
@@ -105,7 +107,7 @@ public class ActiveObjective {
                     }
                 }
                 if (notifyPlayer) {
-                    main.getQuestManager().sendActiveObjective(getQuestPlayer(), this);
+                    main.getQuestManager().sendActiveObjective(getQuestPlayer(), this, 0);
                 }
 
             }else{
@@ -123,12 +125,12 @@ public class ActiveObjective {
         getQuestPlayer().sendDebugMessage("Updating if objective is unlocked...");
 
         //First check the quests PredefinedProgressOrder
-        final PredefinedProgressOrder predefinedProgressOrder = activeQuest.getQuest().getPredefinedProgressOrder();
+        final PredefinedProgressOrder predefinedProgressOrder = activeObjectiveHolder.getObjectiveHolder().getPredefinedProgressOrder();
         if(predefinedProgressOrder != null){
             if(predefinedProgressOrder.isFirstToLast()){
-                for(final Objective objective1 : activeQuest.getQuest().getObjectives()){
+                for(final Objective objective1 : activeObjectiveHolder.getObjectiveHolder().getObjectives()){
                     if(objective1.getObjectiveID() < objectiveID){
-                        if(activeQuest.getActiveObjectiveFromID(objective1.getObjectiveID()) != null){
+                        if(activeObjectiveHolder.getActiveObjectiveFromID(objective1.getObjectiveID()) != null){
                             getQuestPlayer().sendDebugMessage("Active objective locked due to firstToLast PredefinedProgressOrder: BecauseActive objective with ID " + objective1.getObjectiveID() + " is still active.");
                             setUnlocked(false, notifyPlayer, triggerAcceptQuestTrigger);
                             return;
@@ -136,9 +138,9 @@ public class ActiveObjective {
                     }
                 }
             }else if(predefinedProgressOrder.isLastToFirst()){
-                for(final Objective objective1 : activeQuest.getQuest().getObjectives()){
+                for(final Objective objective1 : activeObjectiveHolder.getObjectiveHolder().getObjectives()){
                     if(objective1.getObjectiveID() > objectiveID){
-                        if(activeQuest.getActiveObjectiveFromID(objective1.getObjectiveID()) != null){
+                        if(activeObjectiveHolder.getActiveObjectiveFromID(objective1.getObjectiveID()) != null){
                             getQuestPlayer().sendDebugMessage("Active objective locked due to lastToFirst PredefinedProgressOrder: BecauseActive objective with ID " + objective1.getObjectiveID() + " is still active.");
                             setUnlocked(false, notifyPlayer, triggerAcceptQuestTrigger);
                             return;
@@ -152,7 +154,7 @@ public class ActiveObjective {
                     if(objectiveIDToCheck == objectiveID){
                         break;
                     }
-                    if(activeQuest.getActiveObjectiveFromID(objectiveIDToCheck) != null){
+                    if(activeObjectiveHolder.getActiveObjectiveFromID(objectiveIDToCheck) != null){
                         getQuestPlayer().sendDebugMessage("Active objective locked due to custom PredefinedProgressOrder: BecauseActive objective with ID " + objectiveIDToCheck + " is still active.");
                         setUnlocked(false, notifyPlayer, triggerAcceptQuestTrigger);
                         return;
@@ -163,7 +165,7 @@ public class ActiveObjective {
 
         for (final Condition condition : objective.getUnlockConditions()){
             ConditionResult check = condition.check(getQuestPlayer());
-            getQuestPlayer().sendDebugMessage("Condition status for " + objective.getFinalName() + ": " + check.message());
+            getQuestPlayer().sendDebugMessage("Condition status for " + objective.getDisplayNameOrIdentifier() + ": " + check.message());
 
             if(!check.fulfilled()) {
                 getQuestPlayer().sendDebugMessage("Following objective unlock condition is still unfinished (there may be more than what's listed here): " + condition.getConditionDescription(getQuestPlayer()));
@@ -174,19 +176,28 @@ public class ActiveObjective {
 
 
         //If it didn't return; and reaches this, it means all conditions are met!
-        getQuestPlayer().sendDebugMessage("Active objective " + objective.getFinalName() + " has been set to unlocked!");
+        getQuestPlayer().sendDebugMessage("Active objective " + objective.getDisplayNameOrIdentifier() + " has been set to unlocked!");
         setUnlocked(true, notifyPlayer, triggerAcceptQuestTrigger);
+
+        updateObjectivesUnlocked(notifyPlayer, triggerAcceptQuestTrigger);
+
     }
 
     public final boolean canProgress(final boolean checkForProgressDecrease) {
         getQuestPlayer().sendDebugMessage("Checking if objective can progress...");
+
+
+        //Make it so it cannot progress if sub-objectives aren't completed! //TODO: Maybe make this configurable
+        if(!getActiveObjectives().isEmpty()){
+            return false;
+        }
 
         for (final Condition condition : objective.getProgressConditions()){
             if(checkForProgressDecrease && condition.isObjectiveConditionSpecific_allowProgressDecreaseIfNotFulfilled()) {
                 continue;
             }
             ConditionResult check = condition.check(getQuestPlayer());
-            getQuestPlayer().sendDebugMessage("Condition status for " + objective.getFinalName() + " and condition " + condition.getConditionType() + ": " + check.message());
+            getQuestPlayer().sendDebugMessage("Condition status for " + objective.getDisplayNameOrIdentifier() + " and condition " + condition.getConditionType() + ": " + check.message());
 
             if(!check.fulfilled()) {
                 getQuestPlayer().sendDebugMessage("Following objective progress condition is still unfinished (there may be more than what's listed here): " + condition.getConditionDescription(getQuestPlayer()));
@@ -194,7 +205,7 @@ public class ActiveObjective {
             }
         }
         //If it didn't return; and reaches this, it means all conditions are met!
-        getQuestPlayer().sendDebugMessage("Active objective " + objective.getFinalName() + " can progress!");
+        getQuestPlayer().sendDebugMessage("Active objective " + objective.getDisplayNameOrIdentifier() + " can progress!");
         return true;
     }
 
@@ -203,7 +214,7 @@ public class ActiveObjective {
 
         for (final Condition condition : objective.getCompleteConditions()){
             ConditionResult check = condition.check(getQuestPlayer());
-            getQuestPlayer().sendDebugMessage("Condition status for " + objective.getFinalName() + ": " + check.message());
+            getQuestPlayer().sendDebugMessage("Condition status for " + objective.getDisplayNameOrIdentifier() + ": " + check.message());
 
             if(!check.fulfilled()) {
                 getQuestPlayer().sendDebugMessage("Following objective complete condition is still unfinished (there may be more than what's listed here): " + condition.getConditionDescription(getQuestPlayer()));
@@ -211,7 +222,7 @@ public class ActiveObjective {
             }
         }
         //If it didn't return; and reaches this, it means all conditions are met!
-        getQuestPlayer().sendDebugMessage("Active objective " + objective.getFinalName() + " can complete!");
+        getQuestPlayer().sendDebugMessage("Active objective " + objective.getDisplayNameOrIdentifier() + " can complete!");
         return true;
     }
 
@@ -236,28 +247,17 @@ public class ActiveObjective {
         }
     }
     public void addProgress(double progressToAdd) {
-        addProgress(progressToAdd, null, null, false);
+        addProgress(progressToAdd, null, false);
     }
     public void addProgress(double progressToAdd, boolean silent) {
-        addProgress(progressToAdd, null, null, silent);
+        addProgress(progressToAdd, null, silent);
     }
     //For Citizens NPCs
     public void addProgress(double progressToAdd, final NQNPC nqnpc) {
-        addProgress(progressToAdd, nqnpc, null, false);
-    }
-    public void addProgress(double progressToAdd, final NQNPC nqnpc, final boolean silent) {
-        addProgress(progressToAdd, nqnpc, null, silent);
-
-    }
-    //For Armor Stands
-    public void addProgress(double progressToAdd, final UUID armorStandUUID) {
-        addProgress(progressToAdd, null, armorStandUUID, false);
-    }
-    public void addProgress(double progressToAdd, final UUID armorStandUUID, final boolean silent) {
-        addProgress(progressToAdd, null, armorStandUUID, silent);
+        addProgress(progressToAdd, nqnpc, false);
     }
 
-    public void addProgress(double progressToAdd, final NQNPC nqnpc, final UUID armorStandUUID, boolean silent) {
+    public void addProgress(double progressToAdd, final NQNPC nqnpc, boolean silent) {
         if(main.getDataManager().isDisabled() || !canProgress(false)){
             return;
         }
@@ -265,18 +265,16 @@ public class ActiveObjective {
         getQuestPlayer().setTrackingObjective(this);
 
 
-        if ( (nqnpc != null && isCompleted(nqnpc)) || isCompleted(armorStandUUID)) {
+        if ( (isCompleted(nqnpc))) {
+            getQuestPlayer().sendDebugMessage("Objective completed: " + NotQuestColors.debugHighlightGradient + getObjective().getDisplayNameOrIdentifier() + "</gradient> of quest " + NotQuestColors.debugHighlightGradient + getActiveObjectiveHolder().getObjectiveHolder().getDisplayNameOrIdentifier() + "</gradient>. Silent: " + silent);
+
             setHasBeenCompleted(true);
-            if(armorStandUUID != null){
-                activeQuest.notifyActiveObjectiveCompleted(this, silent, armorStandUUID);
-            }else{
-                activeQuest.notifyActiveObjectiveCompleted(this, silent, nqnpc);
-            }
+            activeObjectiveHolder.notifyActiveObjectiveCompleted(this, silent, nqnpc);
         }
         if(main.getConfiguration().isDebug()){
-            main.getLogManager().debug("+" + progressToAdd + " progress for objective " + NotQuestColors.debugHighlightGradient + getObjective().getFinalName() + "</gradient> of quest " + NotQuestColors.debugHighlightGradient + getActiveQuest().getQuest().getQuestFinalName() + "</gradient>. Silent: " + silent);
+            main.getLogManager().debug("+" + progressToAdd + " progress for objective " + NotQuestColors.debugHighlightGradient + getObjective().getDisplayNameOrIdentifier() + "</gradient> of quest " + NotQuestColors.debugHighlightGradient + getActiveObjectiveHolder().getObjectiveHolder().getDisplayNameOrIdentifier() + "</gradient>. Silent: " + silent);
         }
-        getQuestPlayer().sendDebugMessage("+" + progressToAdd + " progress for objective " + NotQuestColors.debugHighlightGradient + getObjective().getFinalName() + "</gradient> of quest " + NotQuestColors.debugHighlightGradient + getActiveQuest().getQuest().getQuestFinalName() + "</gradient>. Silent: " + silent);
+        getQuestPlayer().sendDebugMessage("+" + progressToAdd + " progress for objective " + NotQuestColors.debugHighlightGradient + getObjective().getDisplayNameOrIdentifier() + "</gradient> of quest " + NotQuestColors.debugHighlightGradient + getActiveObjectiveHolder().getObjectiveHolder().getDisplayNameOrIdentifier() + "</gradient>. Silent: " + silent);
     }
 
 
@@ -286,12 +284,12 @@ public class ActiveObjective {
             return;
         }
         if(i < 0) {
-            main.getLogManager().severe("Tried to remove negative progress (=> add progress) from objective " + getObjective().getFinalName() + " of quest " + getActiveQuest().getQuest().getQuestFinalName() + "!");
+            main.getLogManager().severe("Tried to remove negative progress (=> add progress) from objective " + getObjective().getDisplayNameOrIdentifier() + " of quest " + getActiveObjectiveHolder().getObjectiveHolder().getDisplayNameOrIdentifier() + "!");
             return;
         }
 
         //Setting the first argument to true only checks for progress decrease. If the "--allowProgressDecreaseIfNotFulfilled" flag is set for that condition, it would be skipped
-        if(canProgress(true)) {
+        if(!canProgress(true)) {
             return;
         }
 
@@ -307,36 +305,21 @@ public class ActiveObjective {
             currentProgress -= i;
         }
 
-        getQuestPlayer().sendDebugMessage("-" + i + " progress for objective " + NotQuestColors.debugHighlightGradient + getObjective().getFinalName() + "</gradient> of quest " + NotQuestColors.debugHighlightGradient + getActiveQuest().getQuest().getQuestFinalName() + "</gradient>.");
+        getQuestPlayer().sendDebugMessage("-" + i + " progress for objective " + NotQuestColors.debugHighlightGradient + getObjective().getDisplayNameOrIdentifier() + "</gradient> of quest " + NotQuestColors.debugHighlightGradient + getActiveObjectiveHolder().getObjectiveHolder().getDisplayNameOrIdentifier() + "</gradient>.");
 
     }
 
-    //For Citizens NPCs
-    public final boolean isCompleted(final NQNPC nqnpc) {
+    public final boolean isCompleted(@Nullable final NQNPC nqnpc) {
         if (getObjective().getCompletionNPC() == null || getObjective().getCompletionNPC().equals(nqnpc)) {
-            return canComplete() && currentProgress >= getProgressNeeded();
+            return canComplete() && currentProgress >= getProgressNeeded() && super.isCompleted();
         } else {
             return false;
         }
 
     }
 
-    //For Armor Stands
-    public final boolean isCompleted(final UUID armorStandUUID) {
-        if (getObjective().getCompletionArmorStandUUID() == null || getObjective().getCompletionArmorStandUUID().equals(armorStandUUID)) {
-            return canComplete() && currentProgress >= getProgressNeeded();
-        } else {
-            return false;
-        }
-
-    }
-
-    public final QuestPlayer getQuestPlayer() {
-        return activeQuest.getQuestPlayer();
-    }
-
-    public final ActiveQuest getActiveQuest() {
-        return activeQuest;
+    public final ActiveObjectiveHolder getActiveObjectiveHolder() {
+        return activeObjectiveHolder;
     }
 
     public final int getObjectiveID() {

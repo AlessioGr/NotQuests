@@ -54,7 +54,7 @@ public class CompleteQuestAction extends Action {
                   final Quest foundQuest = context.get("quest to complete");
 
                   CompleteQuestAction completeQuestAction = new CompleteQuestAction(main);
-                  completeQuestAction.setQuestToCompleteName(foundQuest.getQuestName());
+                  completeQuestAction.setQuestToCompleteName(foundQuest.getIdentifier() );
 
                   main.getActionManager().addAction(completeQuestAction, context, actionFor);
                 }));

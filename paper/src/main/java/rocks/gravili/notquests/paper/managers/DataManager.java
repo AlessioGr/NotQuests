@@ -53,6 +53,7 @@ import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
+import rocks.gravili.notquests.paper.structs.objectives.ObjectiveHolder;
 
 
 /**
@@ -1406,12 +1407,15 @@ public class DataManager {
                 throwable.printStackTrace(pw);
                 reasonWithObjects += "\n" + "Error message:" + "\n" + sw.toString();
             } else if (object instanceof Quest quest) {
-                main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Quest: <highlight>"+ quest.getQuestName());
-                reasonWithObjects += "\n" + "  <DARK_GRAY>└─</DARK_GRAY> Quest: <highlight>"+ quest.getQuestName();
+                main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Quest: <highlight>"+ quest.getIdentifier());
+                reasonWithObjects += "\n" + "  <DARK_GRAY>└─</DARK_GRAY> Quest: <highlight>"+ quest.getIdentifier();
             } else if (object instanceof Objective objective) {
-                main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Objective ID: <highlight>" + objective.getObjectiveID() + "</highlight> of Quest: <highlight2>" + ((Objective) object).getQuest().getQuestName());
-                reasonWithObjects += "\n" + "  <DARK_GRAY>└─</DARK_GRAY> Objective ID: <highlight>" + objective.getObjectiveID() + "</highlight> of Quest: <highlight2>" + ((Objective) object).getQuest().getQuestName();
-            } else if (object instanceof Action action) {
+                main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Objective ID: <highlight>" + objective.getObjectiveID() + "</highlight> of Quest: <highlight2>" + ((Objective) object).getObjectiveHolder().getIdentifier());
+                reasonWithObjects += "\n" + "  <DARK_GRAY>└─</DARK_GRAY> Objective ID: <highlight>" + objective.getObjectiveID() + "</highlight> of Quest: <highlight2>" + ((Objective) object).getObjectiveHolder().getIdentifier();
+            } else if (object instanceof ObjectiveHolder objectiveHolder) {
+                main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Objective Holder: <highlight>"+ objectiveHolder.getIdentifier());
+                reasonWithObjects += "\n" + "  <DARK_GRAY>└─</DARK_GRAY> Objective Holder: <highlight>"+ objectiveHolder.getIdentifier();
+            }  else if (object instanceof Action action) {
                 main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Action Name: <highlight>" + action.getActionName() + "</highlight> of Type: <highlight2>" + action.getActionType());
                 reasonWithObjects += "\n" + "  <DARK_GRAY>└─</DARK_GRAY> Action Name: <highlight>" + action.getActionName() + "</highlight> of Type: <highlight2>" + action.getActionType();
             } else if (object instanceof Category category) {
@@ -1447,7 +1451,7 @@ public class DataManager {
     public void saveData() {
         if (isSavingEnabled()) {
             if(!main.getConfiguration().isSavePlayerDataOnQuit()){
-                main.getTagManager().saveAllOnlinePlayerTags();
+                main.getTagManager().saveAllOnlinePlayerTags(true);
                 main.getQuestPlayerManager().savePlayerData();
             }else{
                 for(QuestPlayer questPlayer : new ArrayList<>(main.getQuestPlayerManager().getQuestPlayers())) {

@@ -24,11 +24,7 @@ import org.betonquest.betonquest.api.PlayerObjectiveChangeEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
-import rocks.gravili.notquests.paper.structs.ActiveObjective;
-import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
-import rocks.gravili.notquests.paper.structs.objectives.CollectItemsObjective;
 import rocks.gravili.notquests.paper.structs.objectives.hooks.betonquest.BetonQuestObjectiveStateChangeObjective;
 
 public class BetonQuestEvents implements Listener {
@@ -40,7 +36,7 @@ public class BetonQuestEvents implements Listener {
 
     @EventHandler
     public void onBetonQuestObjectiveStateChange(final PlayerObjectiveChangeEvent e) {
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(e.getPlayer().getUniqueId());
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(e.getProfile().getProfileUUID());
         if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
             return;
         }
@@ -64,8 +60,8 @@ public class BetonQuestEvents implements Listener {
     public void onBetonQuestObjectiveStateChange(final ConversationOptionEvent e) {
         final BetonQuest betonQuest = main.getIntegrationsManager().getBetonQuestManager().getBetonQuest();
 
-        if(e.getConversation().getInterceptor().getClass() == betonQuest.getInterceptor("notquests")){
-            main.getConversationManager().removeOldMessages(e.getPlayer());
+        if(e.getConversation().getInterceptor().getClass() == betonQuest.getInterceptor("notquests") && main.getConversationManager() != null){
+            e.getProfile().getPlayer().ifPresent(player -> main.getConversationManager().removeOldMessages(player));
         }
     }
 

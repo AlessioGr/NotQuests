@@ -61,10 +61,12 @@ chat:
     speaker-line-format: '%SPEAKERCOLOR%[%SPEAKER%] <GRAY>%MESSAGE%'
     answer-option-line-format: ' <main>%OPTIONNUMBER%. <gray>%MESSAGE%'
   objectives:
-    counter: '<highlight>%OBJECTIVEID%.</highlight> <main>%OBJECTIVENAME%:'
+    counter: '<highlight>%OBJECTIVEIDWITHSUBID%.</highlight> <main>%OBJECTIVENAME%:'
+    counterForObjectiveObjective: '<highlight>%OBJECTIVEIDWITHSUBID%.</highlight> <main>%OBJECTIVEHOLDERNAME%:'
+    subObjectivePrefixAppend: '    '
     hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[HIDDEN]
-    description: '   <highlight>Açıklama: <main>%OBJECTIVEDESCRIPTION%'
-    progress: '   <highlight>İlerleme: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
+    description: '    <veryUnimportant>└─ <unimportant>Description: <main>%OBJECTIVEDESCRIPTION%'
+    progress: '    <veryUnimportant>└─ <unimportant>Progress: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
     successfully-completed: |2
 
       <CENTER><success>[Görev Tamamlandı]
@@ -105,6 +107,7 @@ chat:
         base: 'Ulaşma Yeri: <main>%LOCATIONNAME%'
       talkToNPC:
         base: '<main>%NAME% ile konuşun'
+        npc-not-available: '    <GRAY>Hedef NPC şu anda mevcut değil!'
       triggerCommand:
         base: 'Hedef: <main>%TRIGGERNAME%'
       killEliteMobs:
@@ -116,6 +119,8 @@ chat:
         base: '%INTERACTTYPE% Konum: %WORLDNAME% <main>%COORDINATES% <main> kordinatlarında'
       jump:
         base: '<main>%AMOUNTOFJUMPS%</main> kez zıpla'
+      objective:
+        base: '%OBJECTIVEHOLDERNAME%'
       sneak:
         base: '<main>%AMOUNTOFSNEAKS%</main> kez eğil'
       smelt:

@@ -23,7 +23,8 @@ public class ShearSheepObjective extends Objective {
   public static void handleCommands(
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
-      Command.Builder<CommandSender> addObjectiveBuilder) {
+      Command.Builder<CommandSender> addObjectiveBuilder,
+      final int level) {
     manager.command(
         addObjectiveBuilder
             .argument(
@@ -46,7 +47,7 @@ public class ShearSheepObjective extends Objective {
                   shearSheepObjective.setCancelShearing(cancelShearing);
                   shearSheepObjective.setProgressNeededExpression(amountExpression);
 
-                  main.getObjectiveManager().addObjective(shearSheepObjective, context);
+                  main.getObjectiveManager().addObjective(shearSheepObjective, context, level);
                 }));
   }
 

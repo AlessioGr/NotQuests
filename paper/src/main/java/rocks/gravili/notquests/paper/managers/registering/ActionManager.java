@@ -256,8 +256,7 @@ public class ActionManager {
     final Quest quest = context.getOrDefault("quest", null);
     Objective objectiveOfQuest = null;
     if (quest != null && context.contains("Objective ID")) {
-      final int objectiveID = context.get("Objective ID");
-      objectiveOfQuest = quest.getObjectiveFromID(objectiveID);
+      objectiveOfQuest = context.get("Objective ID"); //TODO: Support nested objectives
     }
     final String actionIdentifier =
         context.getOrDefault("Action Identifier", context.getOrDefault("action", ""));
@@ -275,7 +274,7 @@ public class ActionManager {
     }
 
     if (quest != null) {
-      action.setQuest(quest);
+      action.setObjectiveHolder(quest);
       action.setCategory(quest.getCategory());
       if (objectiveOfQuest != null) { // Objective Reward
         action.setObjective(objectiveOfQuest);
@@ -293,7 +292,7 @@ public class ActionManager {
                     "<success>"
                         + getActionType(action.getClass())
                         + " Reward successfully added to Objective <highlight>"
-                        + objectiveOfQuest.getFinalName()
+                        + objectiveOfQuest.getDisplayNameOrIdentifier()
                         + "</highlight>!"));
       } else { // Quest Reward
         action.setActionID(quest.getFreeRewardID());
@@ -306,7 +305,7 @@ public class ActionManager {
                     "<success>"
                         + getActionType(action.getClass())
                         + " Reward successfully added to Quest <highlight>"
-                        + quest.getQuestName()
+                        + quest.getIdentifier()
                         + "</highlight>!"));
       }
     } else {

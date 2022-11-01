@@ -71,7 +71,7 @@ public class QuestSelector<C> extends CommandArgument<C, Quest> {
             final @NonNull Quest quest,
             final NotQuests main
     ) {
-        return QuestSelector.<C>newBuilder(name, main).asOptionalWithDefault(quest.getQuestName()).build();
+        return QuestSelector.<C>newBuilder(name, main).asOptionalWithDefault(quest.getIdentifier() ).build();
     }
 
     public @NonNull boolean isTakeEnabledOnly() {
@@ -131,7 +131,7 @@ public class QuestSelector<C> extends CommandArgument<C, Quest> {
             List<String> questNames = new java.util.ArrayList<>();
             for (Quest quest : main.getQuestManager().getAllQuests()) {
                 if (!this.takeEnabledOnly || quest.isTakeEnabled()) {
-                    questNames.add(quest.getQuestName());
+                    questNames.add(quest.getIdentifier() );
                 }
             }
 

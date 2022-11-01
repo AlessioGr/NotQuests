@@ -45,7 +45,8 @@ public class PlaceBlocksObjective extends Objective {
   public static void handleCommands(
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
-      Command.Builder<CommandSender> addObjectiveBuilder) {
+      Command.Builder<CommandSender> addObjectiveBuilder,
+      final int level) {
     manager.command(
         addObjectiveBuilder
             .argument(
@@ -74,7 +75,7 @@ public class PlaceBlocksObjective extends Objective {
                   placeBlocksObjective.setDeductIfBlockIsBroken(deductIfBlockIsBroken);
                   placeBlocksObjective.setProgressNeededExpression(amountExpression);
 
-                  main.getObjectiveManager().addObjective(placeBlocksObjective, context);
+                  main.getObjectiveManager().addObjective(placeBlocksObjective, context, level);
                 }));
   }
 
@@ -94,7 +95,7 @@ public class PlaceBlocksObjective extends Objective {
             "chat.objectives.taskDescription.placeBlocks.base",
             questPlayer,
             activeObjective,
-            Map.of("%BLOCKTOPLACE%", getItemStackSelection().getAllMaterialsListed()));
+            Map.of("%BLOCKTOPLACE%", getItemStackSelection().getAllMaterialsListedTranslated("main")));
   }
 
   public void setDeductIfBlockIsBroken(final boolean deductIfBlockIsBroken) {

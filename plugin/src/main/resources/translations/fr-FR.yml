@@ -61,10 +61,12 @@ chat:
     speaker-line-format: '%SPEAKERCOLOR%[%SPEAKER%] <GRAY>%MESSAGE%'
     answer-option-line-format: ' <main>%OPTIONNUMBER%. <gray>%MESSAGE%'
   objectives:
-    counter: '<highlight>%OBJECTIVEID%</highlight><main>%OBJECTIVENAME%:'
+    counter: '<highlight>%OBJECTIVEIDWITHSUBID%.</highlight> <main>%OBJECTIVENAME%:'
+    counterForObjectiveObjective: '<highlight>%OBJECTIVEIDWITHSUBID%.</highlight> <main>%OBJECTIVEHOLDERNAME%:'
+    subObjectivePrefixAppend: '    '
     hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[CACHÉ]
-    description: '   <highlight>Description : <main>%OBJECTIVEDESCRIPTION%'
-    progress: '   <highlight>Progression : <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
+    description: '    <veryUnimportant>└─ <unimportant>Description: <main>%OBJECTIVEDESCRIPTION%'
+    progress: '    <veryUnimportant>└─ <unimportant>Progress: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
     successfully-completed: |2
 
       <CENTER><success>[Objectif terminé]
@@ -105,6 +107,7 @@ chat:
         base: 'Atteindre un emplacement : <main>%LOCATIONNAME%'
       talkToNPC:
         base: 'Parler à <main>%NAME%'
+        npc-not-available: '    <GRAY>Le PNJ cible n''est actuellement pas disponible !'
       triggerCommand:
         base: 'Objectif : <main>%TRIGGERNAME%'
       killEliteMobs:
@@ -116,6 +119,8 @@ chat:
         base: '%INTERACTTYPE% Emplacement : <main>%COORDINATES% <main>dans le monde %WORLDNAME%'
       jump:
         base: 'Sauter <main>%AMOUNTOFJUMPS%</main> fois'
+      objective:
+        base: '%OBJECTIVEHOLDERNAME%'
       sneak:
         base: 'Se baisser (sneak) <main>%AMOUNTOFSNEAKS%</main> fois'
       smelt:

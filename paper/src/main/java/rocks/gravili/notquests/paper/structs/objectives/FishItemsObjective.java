@@ -25,7 +25,8 @@ public class FishItemsObjective extends Objective {
   public static void handleCommands(
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
-      Command.Builder<CommandSender> addObjectiveBuilder) {
+      Command.Builder<CommandSender> addObjectiveBuilder,
+      final int level) {
     manager.command(
         addObjectiveBuilder
             .argument(
@@ -45,7 +46,7 @@ public class FishItemsObjective extends Objective {
 
                   fishItemsObjective.setProgressNeededExpression(amountExpression);
 
-                  main.getObjectiveManager().addObjective(fishItemsObjective, context);
+                  main.getObjectiveManager().addObjective(fishItemsObjective, context, level);
                 }));
   }
 
@@ -66,7 +67,7 @@ public class FishItemsObjective extends Objective {
             questPlayer,
             activeObjective,
             Map.of(
-                "%ITEMTOFISHTYPE%", getItemStackSelection().getAllMaterialsListed(),
+                "%ITEMTOFISHTYPE%", getItemStackSelection().getAllMaterialsListedTranslated("main"),
                 "%ITEMTOFISHNAME%", "",
                 "%(%", "",
                 "%)%", ""));

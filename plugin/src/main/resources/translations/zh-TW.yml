@@ -61,10 +61,12 @@ chat:
     speaker-line-format: '%SPEAKERCOLOR%[%SPEAKER%] <GRAY>%MESSAGE%'
     answer-option-line-format: ' <main>%OPTIONNUMBER%. <gray>%MESSAGE%'
   objectives:
-    counter: '<highlight>%OBJECTIVEID%.</highlight> <main>%OBJECTIVENAME%:'
+    counter: '<highlight>%OBJECTIVEIDWITHSUBID%.</highlight> <main>%OBJECTIVENAME%:'
+    counterForObjectiveObjective: '<highlight>%OBJECTIVEIDWITHSUBID%.</highlight> <main>%OBJECTIVEHOLDERNAME%:'
+    subObjectivePrefixAppend: '    '
     hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[以隱藏]
-    description: '   <highlight>描述: <main>%OBJECTIVEDESCRIPTION%'
-    progress: '   <highlight>進度: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
+    description: '    <veryUnimportant>└─ <unimportant>Description: <main>%OBJECTIVEDESCRIPTION%'
+    progress: '    <veryUnimportant>└─ <unimportant>Progress: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
     successfully-completed: |2
 
       <CENTER><success>[目標已完成]
@@ -105,6 +107,7 @@ chat:
         base: '到達地點: <main>%LOCATIONNAME%'
       talkToNPC:
         base: '與<main>%NAME%交談'
+        npc-not-available: '    <GRAY>目標 NPC 目前不行操作！'
       triggerCommand:
         base: '目標: <main>%TRIGGERNAME%'
       killEliteMobs:
@@ -116,6 +119,8 @@ chat:
         base: '%INTERACTTYPE% 位置 <main>%COORDINATES% <main>在世界 %WORLDNAME%'
       jump:
         base: '跳躍 <main>%AMOUNTOFJUMPS%</main> 次'
+      objective:
+        base: '%OBJECTIVEHOLDERNAME%'
       sneak:
         base: '蹲下 <main>%AMOUNTOFSNEAKS%</main> 次'
       smelt:

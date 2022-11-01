@@ -43,7 +43,8 @@ public class CraftItemsObjective extends Objective {
   public static void handleCommands(
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
-      Command.Builder<CommandSender> addObjectiveBuilder) {
+      Command.Builder<CommandSender> addObjectiveBuilder,
+      final int level) {
     manager.command(
         addObjectiveBuilder
             .argument(
@@ -63,7 +64,7 @@ public class CraftItemsObjective extends Objective {
 
                   craftItemsObjective.setProgressNeededExpression(amountExpression);
 
-                  main.getObjectiveManager().addObjective(craftItemsObjective, context);
+                  main.getObjectiveManager().addObjective(craftItemsObjective, context, level);
                 }));
   }
 
@@ -95,7 +96,7 @@ public class CraftItemsObjective extends Objective {
             questPlayer,
             activeObjective,
             Map.of(
-                "%ITEMTOCRAFTTYPE%", getItemStackSelection().getAllMaterialsListed(),
+                "%ITEMTOCRAFTTYPE%", getItemStackSelection().getAllMaterialsListedTranslated("main"),
                 "%ITEMTOCRAFTNAME%", "",
                 "%(%", "",
                 "%)%", ""));

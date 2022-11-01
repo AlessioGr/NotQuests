@@ -70,7 +70,7 @@ public class ChatAction extends Action {
     final String chatMessageWithPlaceholdersReplaced = //TODO: add option to disable placeholders
         main.getUtilManager()
             .applyPlaceholders(
-                chatMessage, questPlayer.getPlayer(), questPlayer, getQuest(), objects);
+                chatMessage, questPlayer.getPlayer(), questPlayer, getObjective(), objects);
 
 
     if (Bukkit.isPrimaryThread()) {

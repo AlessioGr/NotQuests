@@ -38,6 +38,8 @@ public class Conversation {
   private final CopyOnWriteArrayList<NQNPC> npcs; // -1: no NPC
   private Category category;
 
+  private int delayInMS;
+
   public Conversation(
       final NotQuests main,
       final File configFile,
@@ -58,6 +60,8 @@ public class Conversation {
     start = new ArrayList<>();
     speakers = new ArrayList<>();
     this.category = category;
+
+    delayInMS = category.getConversationDelayInMS();
   }
 
   public final Category getCategory() {
@@ -214,5 +218,13 @@ public class Conversation {
                   + getIdentifier()
                   + "</highlight>. The conversation file could not be moved.");
     }
+  }
+
+  public void setDelayInMS(final int delayInMS) {
+    this.delayInMS = delayInMS;
+  }
+
+  public final int getDelayInMS() {
+    return delayInMS;
   }
 }

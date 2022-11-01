@@ -46,7 +46,7 @@ public class QuestOnCooldownVariable extends Variable<Boolean> {
 
                   ArrayList<String> suggestions = new ArrayList<>();
                   for (Quest quest : main.getQuestManager().getAllQuests()) {
-                    suggestions.add(quest.getQuestName());
+                    suggestions.add(quest.getIdentifier() );
                   }
                   return suggestions;
                 })

@@ -51,7 +51,8 @@ public class DeliverItemsObjective extends Objective {
         super(main);
     }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder,
+        final int level) {
         manager.command(addObjectiveBuilder
                 .argument(ItemStackSelectionArgument.of("materials", main), ArgumentDescription.of("Material of the item which needs to be delivered"))
                 .argument(NumberVariableValueArgument.newBuilder("amount", main, null), ArgumentDescription.of("Amount of items which need to be delivered"))
@@ -76,13 +77,13 @@ public class DeliverItemsObjective extends Objective {
                                     deliverItemsObjective.setProgressNeededExpression(amountToDeliverExpression);
                                     deliverItemsObjective.setRecipientNPC(nqNPC);
 
-                                    main.getObjectiveManager().addObjective(deliverItemsObjective, context);
+                                    main.getObjectiveManager().addObjective(deliverItemsObjective, context, level);
                                 },
                                 player,
                                 "<success>You have been given an item with which you can add the DeliverItems Objective to an NPC by rightclicking the NPC. Check your inventory!",
                                 "<LIGHT_PURPLE>Add DeliverItems Objective to NPC",
                                 "<WHITE>Right-click an NPC to add the following objective to it:",
-                                "<YELLOW>DeliverItems <WHITE>Objective of Quest <highlight>" + quest.getQuestName() + "</highlight>."
+                                "<YELLOW>DeliverItems <WHITE>Objective of Quest <highlight>" + quest.getIdentifier()  + "</highlight>."
                             );
 
                         } else {
@@ -97,7 +98,7 @@ public class DeliverItemsObjective extends Objective {
                         deliverItemsObjective.setProgressNeededExpression(amountToDeliverExpression);
                         deliverItemsObjective.setRecipientNPC(nqNPC);
 
-                        main.getObjectiveManager().addObjective(deliverItemsObjective, context);
+                        main.getObjectiveManager().addObjective(deliverItemsObjective, context, level);
                     }
 
                 }));
@@ -131,7 +132,7 @@ public class DeliverItemsObjective extends Objective {
     public String getTaskDescriptionInternal(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
         String toReturn;
         toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.base", questPlayer, activeObjective, Map.of(
-                "%ITEMTODELIVERTYPE%", getItemStackSelection().getAllMaterialsListed(),
+                "%ITEMTODELIVERTYPE%", getItemStackSelection().getAllMaterialsListedTranslated("main"),
                 "%ITEMTODELIVERNAME%", "",
                 "%(%", "",
                 "%)%", ""

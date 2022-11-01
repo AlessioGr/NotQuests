@@ -244,7 +244,7 @@ public class ArmorStandEvents implements Listener {
                                 ));
                             } else {
                                 player.sendMessage(main.parse(
-                                        "<error>Error: Objective with the ID <highlight>"+ objectiveID + "</highlight> was not found for quest <highlight2>" + quest.getQuestName() + "</highlight2>!"
+                                        "<error>Error: Objective with the ID <highlight>"+ objectiveID + "</highlight> was not found for quest <highlight2>" + quest.getIdentifier()  + "</highlight2>!"
                                 ));
                             }
                         } else {
@@ -363,14 +363,14 @@ public class ArmorStandEvents implements Listener {
 
                                 if (progressLeft < itemStack.getAmount()) { //We can finish it with this itemStack
                                     itemStack.setAmount((itemStack.getAmount() - (int) progressLeft));
-                                    activeObjective.addProgress(progressLeft, armorStand.getUniqueId());
+                                    activeObjective.addProgress(progressLeft, armorStandNQNPC);
                                     player.sendMessage(main.parse(
                                         "<GREEN>You have delivered <highlight>" + progressLeft + "</highlight> items to <highlight>" + main.getArmorStandManager().getArmorStandName(armorStand)
                                     ));
                                     break;
                                 } else {
                                     player.getInventory().removeItemAnySlot(itemStack);
-                                    activeObjective.addProgress(itemStack.getAmount(), armorStand.getUniqueId());
+                                    activeObjective.addProgress(itemStack.getAmount(), armorStandNQNPC);
                                     player.sendMessage(main.parse(
                                         "<GREEN>You have delivered <highlight>" + itemStack.getAmount() + "</highlight> items to <highlight>" + main.getArmorStandManager().getArmorStandName(armorStand)
                                     ));
@@ -385,7 +385,7 @@ public class ArmorStandEvents implements Listener {
             questPlayer.queueObjectiveCheck(activeObjective -> {
                 if (activeObjective.getObjective() instanceof final TalkToNPCObjective talkToNPCObjective) {
                     if (armorStandNQNPC.equals(talkToNPCObjective.getNPCtoTalkTo())) {
-                        activeObjective.addProgress(1, armorStand.getUniqueId());
+                        activeObjective.addProgress(1, armorStandNQNPC);
                         player.sendMessage(main.parse(
                             "<GREEN>You talked to <highlight>" + main.getArmorStandManager().getArmorStandName(armorStand)
                         ));
@@ -395,9 +395,9 @@ public class ArmorStandEvents implements Listener {
             });
             questPlayer.queueObjectiveCheck(activeObjective -> {
                 //Eventually trigger CompletionNPC Objective Completion if the objective is not set to complete automatically (so, if getCompletionArmorStandUUID() is not null)
-                if (activeObjective.getObjective().getCompletionArmorStandUUID() != null) {
+                if (activeObjective.getObjective().getCompletionNPC() != null && activeObjective.getObjective().getCompletionNPC().getNPCType().equalsIgnoreCase("armorstand")) {
 
-                    activeObjective.addProgress(0, armorStand.getUniqueId());
+                    activeObjective.addProgress(0, activeObjective.getObjective().getCompletionNPC());
                 }
             });
             questPlayer.checkQueuedObjectives();

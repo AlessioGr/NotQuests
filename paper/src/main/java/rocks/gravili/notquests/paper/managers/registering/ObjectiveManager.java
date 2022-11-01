@@ -18,6 +18,7 @@
 
 package rocks.gravili.notquests.paper.managers.registering;
 
+import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.meta.CommandMeta;
@@ -29,7 +30,7 @@ import java.util.HashMap;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.structs.Quest;
+import rocks.gravili.notquests.paper.commands.arguments.ObjectiveSelector;
 import rocks.gravili.notquests.paper.structs.objectives.BreakBlocksObjective;
 import rocks.gravili.notquests.paper.structs.objectives.BreedObjective;
 import rocks.gravili.notquests.paper.structs.objectives.CollectItemsObjective;
@@ -43,6 +44,8 @@ import rocks.gravili.notquests.paper.structs.objectives.JumpObjective;
 import rocks.gravili.notquests.paper.structs.objectives.KillMobsObjective;
 import rocks.gravili.notquests.paper.structs.objectives.NumberVariableObjective;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
+import rocks.gravili.notquests.paper.structs.objectives.ObjectiveHolder;
+import rocks.gravili.notquests.paper.structs.objectives.ObjectiveObjective;
 import rocks.gravili.notquests.paper.structs.objectives.OpenBuriedTreasureObjective;
 import rocks.gravili.notquests.paper.structs.objectives.OtherQuestObjective;
 import rocks.gravili.notquests.paper.structs.objectives.PlaceBlocksObjective;
@@ -103,6 +106,7 @@ public class ObjectiveManager {
     registerObjective("SmeltItems", SmeltObjective.class);
     registerObjective("OpenBuriedTreasure", OpenBuriedTreasureObjective.class);
     registerObjective("ShearSheep", ShearSheepObjective.class);
+    registerObjective("Objective", ObjectiveObjective.class);
 
     registerObjective("NumberVariable", NumberVariableObjective.class); //Special
 
@@ -144,16 +148,76 @@ public class ObjectiveManager {
     try {
       Method commandHandler =
           objective.getMethod(
-              "handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class);
+              "handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class, int.class);
+
+      //Level 0
+      final Command.Builder<CommandSender> objectivesBuilder = main.getCommandManager().getAdminEditCommandBuilder().literal("objectives", "o");
+      final Command.Builder<CommandSender> adminEditAddObjectiveCommandBuilder =
+          objectivesBuilder.literal("add");
+
       commandHandler.invoke(
           objective,
           main,
           main.getCommandManager().getPaperCommandManager(),
-          main.getCommandManager()
-              .getAdminEditAddObjectiveCommandBuilder()
+          adminEditAddObjectiveCommandBuilder
               .literal(identifier)
               .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " objective")
-              .flag(main.getCommandManager().taskDescription));
+              .flag(main.getCommandManager().taskDescription),
+          0);
+
+      //Level 1
+      final String objectiveIDIdentifier = "Objective ID";
+      final int level = 1;
+      final Command.Builder<CommandSender> objectivesBuilderLevel1 =
+          objectivesBuilder
+              .literal("edit")
+              .argument(
+                  ObjectiveSelector.<CommandSender>newBuilder(objectiveIDIdentifier, main, 0).build(),
+                  ArgumentDescription.of(objectiveIDIdentifier));
+
+
+
+      final Command.Builder<CommandSender> adminEditAddObjectiveCommandBuilderLevel1 =
+          objectivesBuilderLevel1.literal("objectives", "o").literal("add");
+
+      //Level 1
+      commandHandler.invoke(
+          objective,
+          main,
+          main.getCommandManager().getPaperCommandManager(),
+          adminEditAddObjectiveCommandBuilderLevel1
+              .literal(identifier)
+              .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " objective")
+              .flag(main.getCommandManager().taskDescription),
+          1);
+
+
+
+      final Command.Builder<CommandSender> objectivesBuilder2 = objectivesBuilderLevel1.literal("objectives", "");
+      final String objectiveIDIdentifier2 = "Objective ID 2";
+      final int level2 = 2;
+      final Command.Builder<CommandSender> objectivesBuilderLevel2 =
+          objectivesBuilder2
+              .literal("edit")
+              .argument(
+                  ObjectiveSelector.<CommandSender>newBuilder(objectiveIDIdentifier2, main, 1).build(),
+                  ArgumentDescription.of(objectiveIDIdentifier2));
+
+
+      final Command.Builder<CommandSender> adminEditAddObjectiveCommandBuilderLevel2 =
+          objectivesBuilderLevel2.literal("objectives", "o").literal("add");
+
+      //Level 2
+      commandHandler.invoke(
+          objective,
+          main,
+          main.getCommandManager().getPaperCommandManager(),
+          adminEditAddObjectiveCommandBuilderLevel2
+              .literal(identifier)
+              .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " objective")
+              .flag(main.getCommandManager().taskDescription),
+          2);
+
     } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
       e.printStackTrace();
     }
@@ -184,32 +248,30 @@ public class ObjectiveManager {
     return objectives.keySet();
   }
 
-  public void addObjective(Objective objective, CommandContext<CommandSender> context) {
+  public void addObjective(Objective objective, CommandContext<CommandSender> context, int level) {
 
-    final Quest quest = context.getOrDefault("quest", null);
 
+    final ObjectiveHolder objectiveHolder = main.getCommandManager().getObjectiveHolderFromContextAndLevel(context, level);
     final String taskDescription =
-        context.flags().getValue(main.getCommandManager().taskDescription, "");
+    context.flags().getValue(main.getCommandManager().taskDescription, "");
 
-    if (quest != null) {
-      objective.setQuest(quest);
-      objective.setObjectiveID(quest.getFreeObjectiveID());
-      if(taskDescription != null && !taskDescription.isBlank()) {
-        objective.setTaskDescription(taskDescription, true);
-      }
-
-      context
-          .getSender()
-          .sendMessage(
-              main.parse(
-                  "<success>"
-                      + getObjectiveType(objective.getClass())
-                      + " Objective successfully added to Quest <highlight>"
-                      + quest.getQuestName()
-                      + "</highlight>!"));
-
-      quest.addObjective(objective, true);
+    objective.setObjectiveHolder(objectiveHolder);
+    objective.setObjectiveID(objectiveHolder.getFreeObjectiveID());
+    if(taskDescription != null && !taskDescription.isBlank()) {
+      objective.setTaskDescription(taskDescription, true);
     }
+
+    context
+        .getSender()
+        .sendMessage(
+            main.parse(
+                "<success>"
+                    + getObjectiveType(objective.getClass())
+                    + " Objective successfully added to Quest <highlight>"
+                    + objectiveHolder.getIdentifier()
+                    + "</highlight>!"));
+
+    objectiveHolder.addObjective(objective, true);
   }
 
   public void updateVariableObjectives() {

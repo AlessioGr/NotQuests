@@ -60,7 +60,7 @@ public class PlayerCommandAction extends Action {
     final String rewardPlayerCommand =
         main.getUtilManager()
             .applyPlaceholders(
-                playerCommand, questPlayer.getPlayer(), questPlayer, getQuest(), objects);
+                playerCommand, questPlayer.getPlayer(), questPlayer, getObjectiveHolder(), objects);
 
 
     if (Bukkit.isPrimaryThread()) {

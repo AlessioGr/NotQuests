@@ -41,7 +41,8 @@ public class ConditionObjective extends Objective {
   public static void handleCommands(
       NotQuests main,
       PaperCommandManager<CommandSender> manager,
-      Command.Builder<CommandSender> addObjectiveBuilder) {
+      Command.Builder<CommandSender> addObjectiveBuilder,
+      final int level) {
     manager.command(
         addObjectiveBuilder
             .argument(
@@ -63,7 +64,7 @@ public class ConditionObjective extends Objective {
                   conditionObjective.setCheckOnlyWhenCorrespondingVariableValueChanged(
                       checkOnlyWhenCorrespondingVariableValueChanged);
 
-                  main.getObjectiveManager().addObjective(conditionObjective, context);
+                  main.getObjectiveManager().addObjective(conditionObjective, context, level);
                 }));
   }
 
@@ -71,7 +72,7 @@ public class ConditionObjective extends Objective {
   public String getTaskDescriptionInternal(
       final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
     if (condition != null) {
-      return condition.isHidden(questPlayer) ? "Hidden" : condition.getConditionDescription(questPlayer, getQuest());
+      return condition.isHidden(questPlayer) ? "Hidden" : condition.getConditionDescription(questPlayer, getObjectiveHolder());
     } else {
       return "<YELLOW>Error: Condition not found.";
     }
@@ -130,7 +131,7 @@ public class ConditionObjective extends Objective {
               "Error: Cannot load Condition <highlight>"
                   + conditionName
                   + "</highlight> of Condition Objective for Quest <highlight2>"
-                  + getQuest().getQuestName()
+                  + getObjectiveHolder().getIdentifier()
                   + "</highlight>, because the condition does not exist.");
     }
     checkOnlyWhenCorrespondingVariableValueChanged =

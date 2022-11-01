@@ -355,7 +355,7 @@ public class GUIManager {
                                 questPlayer,
                                 quest));
 
-                    if (!quest.getQuestDescription().isBlank()) {
+                    if (!quest.getObjectiveHolderDescription().isBlank()) {
                       List<String> loreStringList =
                           main.getLanguageManager()
                               .getStringList(
@@ -535,7 +535,7 @@ public class GUIManager {
                           ItemStackElement.of(
                               confirmTakeItemStack,
                               (clickHandler) -> {
-                                player.chat("/notquests take " + quest.getQuestName());
+                                player.chat("/notquests take " + quest.getIdentifier());
                                 clickHandler.viewer().close();
                               }),
                           main.getLanguageManager().getInt("gui.previewQuest.button.confirmTake.x"),
@@ -715,7 +715,7 @@ public class GUIManager {
                                   activeQuest,
                                   activeObjective));
 
-                      if (!activeObjective.getObjective().getDescription().isBlank()) {
+                      if (!activeObjective.getObjective().getObjectiveHolderDescription().isBlank()) {
                         List<String> loreStringList =
                             main.getLanguageManager()
                                 .getStringList(
@@ -818,7 +818,7 @@ public class GUIManager {
                                 activeQuest,
                                 activeObjective));
 
-                    if (!activeObjective.getObjective().getDescription().isBlank()) {
+                    if (!activeObjective.getObjective().getObjectiveHolderDescription().isBlank()) {
                       List<String> loreStringList =
                           main.getLanguageManager()
                               .getStringList(
@@ -937,7 +937,7 @@ public class GUIManager {
                               // main.getLogManager().info("Found line: " + loreString);
 
                               if (loreString.contains("%WRAPPEDQUESTDESCRIPTION%")) {
-                                if (!quest.getQuestDescription().isBlank()) {
+                                if (!quest.getObjectiveHolderDescription().isBlank()) {
                                   int counter = 0;
                                   for (String questDescriptionLine :
                                       quest.getQuestDescriptionList(
@@ -1367,7 +1367,7 @@ public class GUIManager {
                     // main.getLogManager().info("Found line: " + loreString);
 
                     if (loreString.contains("%WRAPPEDQUESTDESCRIPTION%")) {
-                      if (!quest.getQuestDescription().isBlank()) {
+                      if (!quest.getObjectiveHolderDescription().isBlank()) {
                         int counter = 0;
                         for (String questDescriptionLine :
                             quest.getQuestDescriptionList(

@@ -47,7 +47,8 @@ public class WorldEditManager {
   public void handleReachLocationObjectiveCreation(
       final Player player,
       final String locationName,
-      final @NonNull CommandContext<CommandSender> context) {
+      final @NonNull CommandContext<CommandSender> context,
+      final int level) {
     BukkitPlayer actor =
         BukkitAdapter.adapt(player); // WorldEdit's native Player class extends Actor
     SessionManager manager =
@@ -82,7 +83,7 @@ public class WorldEditManager {
       reachLocationObjective.setMinLocation(min);
       reachLocationObjective.setMaxLocation(max);
 
-      main.getObjectiveManager().addObjective(reachLocationObjective, context);
+      main.getObjectiveManager().addObjective(reachLocationObjective, context, level);
 
     } catch (IncompleteRegionException ex) {
       player.sendMessage(

@@ -23,6 +23,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
+import rocks.gravili.notquests.paper.structs.ActiveObjectiveHolder;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
@@ -31,18 +32,18 @@ public class ObjectiveCompleteEvent extends Event implements Cancellable {
   private static final HandlerList HANDLERS = new HandlerList();
   private final QuestPlayer questPlayer;
   private final ActiveObjective activeObjective;
-  private final ActiveQuest activeQuest;
+  private final ActiveObjectiveHolder activeObjectiveHolder;
   private boolean isCancelled;
 
   public ObjectiveCompleteEvent(
       final QuestPlayer questPlayer,
       final ActiveObjective activeObjective,
-      final ActiveQuest activeQuest) {
+      final ActiveObjectiveHolder activeObjectiveHolder) {
     super(true);
 
     this.questPlayer = questPlayer;
     this.activeObjective = activeObjective;
-    this.activeQuest = activeQuest;
+    this.activeObjectiveHolder = activeObjectiveHolder;
 
     this.isCancelled = false;
   }
@@ -75,7 +76,7 @@ public class ObjectiveCompleteEvent extends Event implements Cancellable {
     return this.activeObjective;
   }
 
-  public ActiveQuest getActiveQuest() {
-    return this.activeQuest;
+  public ActiveObjectiveHolder getActiveObjectiveHolder() {
+    return this.activeObjectiveHolder;
   }
 }
