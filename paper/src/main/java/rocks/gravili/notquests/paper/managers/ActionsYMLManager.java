@@ -45,12 +45,12 @@ public class ActionsYMLManager {
     main.getLogManager()
         .info(
             "Scheduled Actions Data load for following categories: <highlight>"
-                + categoriesStringList);
+                + categoriesStringList + "</highlight>...");
 
     for (final Category category : main.getDataManager().getCategories()) {
-      loadActions(category);
       main.getLogManager()
-          .info("Loading actions for category <highlight>" + category.getCategoryFullName());
+              .info("Loading actions for category <highlight>" + category.getCategoryFullName());
+      loadActions(category);
     }
   }
 
@@ -77,7 +77,9 @@ public class ActionsYMLManager {
                       + " already exists.");
           return;
         }
-        main.getLogManager().info("Loading action <highlight>" + actionIdentifier);
+        if (main.getConfiguration().isVerboseStartupMessages()) {
+          main.getLogManager().info("Loading action <highlight>" + actionIdentifier);
+        }
 
 
         if (actionIdentifier.isBlank()) {

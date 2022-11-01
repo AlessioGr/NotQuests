@@ -196,6 +196,7 @@ public class ConversationManager {
   public void loadConversationsFromConfig() {
     conversations.clear();
     openConversations.clear();
+    main.getLogManager().info("Loading conversations...");
     for (final Category category : main.getDataManager().getCategories()) {
       loadConversationsFromConfig(category);
     }
@@ -218,11 +219,14 @@ public class ConversationManager {
     for (File conversationFile :
         main.getUtilManager().listFilesRecursively(category.getConversationsFolder())) {
       linesForOneFile.clear();
-      main.getLogManager()
-          .info(
-              "Reading conversation file <highlight>"
-                  + conversationFile.getName()
-                  + "</highlight>...");
+      if (main.getConfiguration().isVerboseStartupMessages()) {
+        main.getLogManager()
+                .info(
+                        "Reading conversation file <highlight>"
+                                + conversationFile.getName()
+                                + "</highlight>...");
+      }
+
 
       final YamlConfiguration config = new YamlConfiguration();
       try {

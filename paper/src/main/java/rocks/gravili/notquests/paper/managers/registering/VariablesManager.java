@@ -131,6 +131,8 @@ public class VariablesManager {
   }
 
   public void registerDefaultVariables() {
+    main.getLogManager().info("Registering variables...");
+
     variables.clear();
     registerVariable("True", TrueVariable.class);
     registerVariable("False", FalseVariable.class);

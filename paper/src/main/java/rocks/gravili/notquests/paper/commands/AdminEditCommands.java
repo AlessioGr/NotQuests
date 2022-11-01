@@ -725,8 +725,9 @@ public class AdminEditCommands {
 
       //Builder: qa edit questname objectives edit <objectiveID> objectives
 
-      main.getLogManager().info("Handling objectives for level <highlight>" + level + "</highlight>...");
-      final Command.Builder<CommandSender> predefinedProgressOrderBuilder = builder.literal("predefinedProgressOrder");
+        main.getLogManager().debug("Handling objectives for level <highlight>" + level + "</highlight>...");
+
+        final Command.Builder<CommandSender> predefinedProgressOrderBuilder = builder.literal("predefinedProgressOrder");
 
       manager.command(predefinedProgressOrderBuilder.literal("show")
           .meta(CommandMeta.DESCRIPTION, "Shows the current predefined order in which the objectives need to be progressed for your quest.")

@@ -54,6 +54,8 @@ public class TriggerManager {
   }
 
   public void registerDefaultTriggers() {
+    main.getLogManager().info("Registering triggers...");
+
     triggers.clear();
     registerTrigger("BEGIN", BeginTrigger.class);
     registerTrigger("COMPLETE", CompleteTrigger.class);
