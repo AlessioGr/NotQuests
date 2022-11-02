@@ -48,7 +48,7 @@ chat:
   quest-on-cooldown:
     minute: '<red>Данное задание на откате! Подождите <highlight>1 минуту</highlight> до тех пор, пока вы не сможете взять его снова.'
     minutes: '<red>Данное задание на откате! Подождите <highlight>%MINUTES%</highlight> до тех пор, пока вы не сможете взять его снова.'
-    hour: '<red>This quest is on a cooldown! You have to wait another <highlight>1 hour</highlight> until you can take it again.'
+    hour: '<red>Откат в выполнении этого задания! Вам нужно подождать <highlight>1 час</highlight> до тех пор, пока вы не сможете взять его снова.'
     hours: '<red>This quest is on a cooldown! You have to wait another <highlight>%HOURS% hours</highlight> until you can take it again.'
     day: '<red>This quest is on a cooldown! You have to wait another <highlight>1 day</highlight> until you can take it again.'
     days: '<red>This quest is on a cooldown! You have to wait another <highlight>%DAYS% days</highlight> until you can take it again.'
