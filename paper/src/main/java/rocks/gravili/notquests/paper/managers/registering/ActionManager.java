@@ -82,6 +82,8 @@ public class ActionManager {
   }
 
   public void registerDefaultActions() {
+    main.getLogManager().info("Registering actions...");
+
     actions.clear();
     registerAction("Action", ActionAction.class);
     registerAction("GiveQuest", GiveQuestAction.class);

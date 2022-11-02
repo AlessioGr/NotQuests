@@ -70,6 +70,7 @@ public class ConditionsManager {
     }
 
     public void registerDefaultConditions() {
+        main.getLogManager().info("Registering conditions...");
         conditions.clear();
         //registerCondition("Condition", ConditionCondition.class); //Old. Replaced with Condition Variable
 

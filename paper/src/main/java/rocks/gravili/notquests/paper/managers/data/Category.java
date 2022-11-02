@@ -178,7 +178,7 @@ public class Category {
   private FileConfiguration loadConfig(File file, FileConfiguration fileConfiguration) {
     if (file != null && fileConfiguration == null) {
       main.getLogManager()
-          .info(
+          .debug(
               "    Loading <highlight>"
                   + file.getName()
                   + "</highlight> of category <highlight>"

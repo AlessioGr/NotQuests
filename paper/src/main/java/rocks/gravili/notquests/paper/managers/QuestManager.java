@@ -429,7 +429,9 @@ public class QuestManager {
 
             if (questsConfigurationSection != null) {
                 for (final String questName : questsConfigurationSection.getKeys(false)) {
-                    main.getLogManager().info("   Loading Quest <highlight>" + questName + "</highlight>...");
+                    if (main.getConfiguration().isVerboseStartupMessages()) {
+                        main.getLogManager().info("   Loading Quest <highlight>" + questName + "</highlight>...");
+                    }
 
                     final Quest quest = new Quest(main, questName, category);
                     quest.setMaxAccepts(category.getQuestsConfig().getInt("quests." + questName + ".maxAccepts", -1));
@@ -569,7 +571,7 @@ public class QuestManager {
                             final int applyOn = category.getQuestsConfig().getInt("quests." + questName + ".triggers." + triggerNumber + ".applyOn");
                             final String worldName = category.getQuestsConfig().getString("quests." + questName + ".triggers." + triggerNumber + ".worldName", "ALL");
 
-                            if (Bukkit.getWorld(worldName) == null) {
+                            if (!worldName.equalsIgnoreCase("ALL") && Bukkit.getWorld(worldName) == null) {
                                 main.getLogManager().warn("The world of the trigger <highlight>" + triggerNumber + "</highlight> of Quest <highlight>" + questName + "</highlight> was not found. World name: <highlight>" + worldName + "</highlight>");
                             }
 

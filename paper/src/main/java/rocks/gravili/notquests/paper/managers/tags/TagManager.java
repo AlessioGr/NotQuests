@@ -99,10 +99,14 @@ public class TagManager {
 
     public void onJoin(final QuestPlayer questPlayer, final Player player) {
         if (!questPlayer.getTags().isEmpty()) {
-            main.getLogManager().info("Skip Loading tags for " + player.getName() + "! Size: " + questPlayer.getTags().size());
+            if (main.getConfiguration().isVerboseStartupMessages()) {
+                main.getLogManager().info("Skip Loading tags for " + player.getName() + "! Size: " + questPlayer.getTags().size());
+            }
             return;
         }
-        main.getLogManager().info("Loading tags for " + player.getName() + "...");
+        if (main.getConfiguration().isVerboseStartupMessages()) {
+            main.getLogManager().info("Loading tags for " + player.getName() + "...");
+        }
         final UUID uuid = player.getUniqueId();
 
         try (Connection connection = main.getDataManager().getConnection();
@@ -120,7 +124,9 @@ public class TagManager {
                     questPlayer.setTagValue(tagIdentifier, null);
                     continue;
                 }
-                main.getLogManager().info("Loaded <highlight>" + tagIdentifier + "</highlight> " + tagType + " tag for player <highlight2>" + player.getName() + "</highlight2> with the value <highlight2>" + tagValue + "</highlight2>.");
+                if (main.getConfiguration().isVerboseStartupMessages()) {
+                    main.getLogManager().info("Loaded <highlight>" + tagIdentifier + "</highlight> " + tagType + " tag for player <highlight2>" + player.getName() + "</highlight2> with the value <highlight2>" + tagValue + "</highlight2>.");
+                }
 
 
                 switch (tagType) {
@@ -142,7 +148,10 @@ public class TagManager {
         questPlayer.setFinishedLoadingTags(true);
 
 
-        main.getLogManager().info("Loaded " + questPlayer.getTags().size() + " tags for " + player.getName() + ":");
+        if (main.getConfiguration().isVerboseStartupMessages()) {
+            main.getLogManager().info("Loaded " + questPlayer.getTags().size() + " tags for " + player.getName() + ":");
+
+        }
         if (!questPlayer.getTags().isEmpty()) {
             for (final String tagIdentifier : questPlayer.getTags().keySet()) {
                 main.getLogManager().info("   " + tagIdentifier + ": " + questPlayer.getTagValue(tagIdentifier) + " (" + questPlayer.getTagValue(tagIdentifier).getClass().getName() + ")");
@@ -168,7 +177,9 @@ public class TagManager {
             for (final String tagIdentifier : questPlayer.getTags().keySet()) {
                 @Nullable final Object tagValue = questPlayer.getTagValue(tagIdentifier);
 
-                main.getLogManager().info("Saving the " + (tagValue != null ? tagValue.getClass().getName() : "null") + " tag <highlight>" + tagIdentifier + "</highlight> with value <highlight>" + (tagValue != null ? tagValue : "null") + "</highlight> for player <highlight2>" + player.getName() + "</highlight2>...");
+                if (main.getConfiguration().isVerboseStartupMessages()) {
+                    main.getLogManager().info("Saving the " + (tagValue != null ? tagValue.getClass().getName() : "null") + " tag <highlight>" + tagIdentifier + "</highlight> with value <highlight>" + (tagValue != null ? tagValue : "null") + "</highlight> for player <highlight2>" + player.getName() + "</highlight2>...");
+                }
 
                 //Remove all tags first before adding all fresh and updated ones
                 statement.executeUpdate("DELETE FROM Tags WHERE PlayerUUID = '" + uuidString + "';");
@@ -183,24 +194,14 @@ public class TagManager {
                 if (tagValue instanceof final Boolean booleanTagValue) {
 
                     statement.executeUpdate("INSERT INTO Tags (PlayerUUID, TagIdentifier, TagValue, TagType) VALUES ('" + uuidString + "', '" + tagIdentifier + "', '" + booleanTagValue.toString() + "', 'BOOLEAN');");
-
-                    main.getLogManager().info("Saved boolean tag!");
                 } else if (tagValue instanceof final Integer integerTagValue) {
                     statement.executeUpdate("INSERT INTO Tags (PlayerUUID, TagIdentifier, TagValue, TagType) VALUES ('" + uuidString + "', '" + tagIdentifier + "', '" + integerTagValue + "', 'INTEGER');");
-
-                    main.getLogManager().info("Saved integer tag!");
                 } else if (tagValue instanceof final Float floatValue) {
                     statement.executeUpdate("INSERT INTO Tags (PlayerUUID, TagIdentifier, TagValue, TagType) VALUES ('" + uuidString + "', '" + tagIdentifier + "', '" + floatValue + "', 'FLOAT');");
-
-                    main.getLogManager().info("Saved float tag!");
                 } else if (tagValue instanceof final Double doubleValue) {
                     statement.executeUpdate("INSERT INTO Tags (PlayerUUID, TagIdentifier, TagValue, TagType) VALUES ('" + uuidString + "', '" + tagIdentifier + "', '" + doubleValue + "', 'DOUBLE');");
-
-                    main.getLogManager().info("Saved double tag!");
                 } else if (tagValue instanceof final String stringTagValue) {
                     statement.executeUpdate("INSERT INTO Tags (PlayerUUID, TagIdentifier, TagValue, TagType) VALUES ('" + uuidString + "', '" + tagIdentifier + "', '" + stringTagValue + "', 'STRING');");
-
-                    main.getLogManager().info("Saved string tag!");
                 }
             }
 
@@ -230,11 +231,15 @@ public class TagManager {
         for (final Category category : main.getDataManager().getCategories()) {
             categoriesStringList.add(category.getCategoryFullName());
         }
-        main.getLogManager().info("Scheduled Tags Data load for following categories: <highlight>" + categoriesStringList);
+        if (main.getConfiguration().isVerboseStartupMessages()) {
+            main.getLogManager().info("Scheduled Tags Data load for following categories: <highlight>" + categoriesStringList);
+        }
 
         for (final Category category : main.getDataManager().getCategories()) {
             loadTags(category);
-            main.getLogManager().info("  Loading tags for category <highlight>" + category.getCategoryFullName());
+            if (main.getConfiguration().isVerboseStartupMessages()) {
+                main.getLogManager().info("  Loading tags for category <highlight>" + category.getCategoryFullName());
+            }
         }
     }
 
@@ -252,7 +257,9 @@ public class TagManager {
                     main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading tags.yml tag data: The tag " + tagIdentifier + " already exists.");
                     return;
                 }
-                main.getLogManager().info("Loading tag <highlight>" + tagIdentifier);
+                if (main.getConfiguration().isVerboseStartupMessages()) {
+                    main.getLogManager().info("Loading tag <highlight>" + tagIdentifier);
+                }
 
                 final String tagTypeString = tagsConfigurationSection.getString(tagIdentifier + ".tagType", "");
 

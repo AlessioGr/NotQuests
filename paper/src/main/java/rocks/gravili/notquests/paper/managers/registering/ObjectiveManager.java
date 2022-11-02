@@ -79,6 +79,8 @@ public class ObjectiveManager {
   }
 
   public void registerDefaultObjectives() {
+    main.getLogManager().info("Registering objectives...");
+
     objectives.clear();
     registerObjective("Condition", ConditionObjective.class);
     registerObjective("BreakBlocks", BreakBlocksObjective.class);

@@ -1145,7 +1145,7 @@ public class DataManager {
                 "Inventory slot in which the journal should appear."
         ));
 
-        configuration.setVerboseStartupMessages(getGeneralConfigBoolean(
+        configuration.setVerboseStartupMessages( configuration.isDebug()|| getGeneralConfigBoolean(
                 "logging.verbose-startup-messages",
                 true,
                 "If set to true, more startup messages will be logged."
@@ -1476,10 +1476,11 @@ public class DataManager {
      * (4) AFTER THAT load the Player Data from the MySQL Database - in an asynchronous Thread (forced)
      * (5) Then it will try to load the Data from Citizens NPCs
      */
-    public void reloadData() {
+    public void reloadData(final boolean firstLoad) {
         if(isLoadingEnabled()){
 
-            main.getLanguageManager().loadLanguageConfig();
+            main.getLogManager().debug("Triggered loadLanguageConfig() from DataManager.reloadData()");
+            main.getLanguageManager().loadLanguageConfig(firstLoad);
 
             //Check for isLoadingEnabled again, in case it changed during loading of the general config
             if(!isLoadingEnabled()){
@@ -1509,23 +1510,30 @@ public class DataManager {
         try (final Connection connection = getConnection();
              final Statement statement = connection.createStatement();
         ) {
-            main.getLogManager().info(LogCategory.DATA, "Creating database table 'QuestPlayerData' if it doesn't exist yet...");
+            if (main.getConfiguration().isVerboseStartupMessages()) {
+                main.getLogManager().info(LogCategory.DATA, "Creating database table 'QuestPlayerData' if it doesn't exist yet...");
+            }
             statement.executeUpdate("""
                 CREATE TABLE IF NOT EXISTS `QuestPlayerData` (`PlayerUUID` varchar(200), `QuestPoints` BIGINT(255), PRIMARY KEY (PlayerUUID))
             """);
 
-            main.getLogManager().info(LogCategory.DATA, "Creating database table 'ActiveQuests' if it doesn't exist yet...");
+            if (main.getConfiguration().isVerboseStartupMessages()) {
+                main.getLogManager().info(LogCategory.DATA, "Creating database table 'ActiveQuests' if it doesn't exist yet...");
+            }
             statement.executeUpdate("""
                 CREATE TABLE IF NOT EXISTS `ActiveQuests` (`QuestName` varchar(200), `PlayerUUID` varchar(200))
             """);
 
-            main.getLogManager().info(LogCategory.DATA, "Creating database table 'CompletedQuests' if it doesn't exist yet...");
+            if (main.getConfiguration().isVerboseStartupMessages()) {
+                main.getLogManager().info(LogCategory.DATA, "Creating database table 'CompletedQuests' if it doesn't exist yet...");
+            }
             statement.executeUpdate("""
                 CREATE TABLE IF NOT EXISTS `CompletedQuests` (`QuestName` varchar(200), `PlayerUUID` varchar(200), `TimeCompleted` BIGINT(255))
             """);
 
-
-            main.getLogManager().info(LogCategory.DATA, "Adding 'ProgressNeeded' column to 'ActiveObjectives' if it the table exists but the column doesn't exist yet...");
+            if (main.getConfiguration().isVerboseStartupMessages()) {
+                main.getLogManager().info(LogCategory.DATA, "Adding 'ProgressNeeded' column to 'ActiveObjectives' if it the table exists but the column doesn't exist yet...");
+            }
             boolean seemsIAlreadyMigrated = false;
             try{
                 statement.executeUpdate("""
@@ -1552,17 +1560,23 @@ public class DataManager {
             }
 
 
-            main.getLogManager().info(LogCategory.DATA, "Creating database table 'ActiveObjectives' if it doesn't exist yet...");
+            if (main.getConfiguration().isVerboseStartupMessages()) {
+                main.getLogManager().info(LogCategory.DATA, "Creating database table 'ActiveObjectives' if it doesn't exist yet...");
+            }
             statement.executeUpdate("""
                 CREATE TABLE IF NOT EXISTS `ActiveObjectives` (`ObjectiveType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` DOUBLE, `ObjectiveID` INT(255), `HasBeenCompleted` BOOLEAN, `ProgressNeeded` DOUBLE)
             """);
 
-            main.getLogManager().info(LogCategory.DATA, "Creating database table 'ActiveTriggers' if it doesn't exist yet...");
+            if (main.getConfiguration().isVerboseStartupMessages()) {
+                main.getLogManager().info(LogCategory.DATA, "Creating database table 'ActiveTriggers' if it doesn't exist yet...");
+            }
             statement.executeUpdate("""
                 CREATE TABLE IF NOT EXISTS `ActiveTriggers` (`TriggerType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` BIGINT(255), `TriggerID` INT(255))
             """);
 
-            main.getLogManager().info(LogCategory.DATA, "Creating database table 'Tags' if it doesn't exist yet...");
+            if (main.getConfiguration().isVerboseStartupMessages()) {
+                main.getLogManager().info(LogCategory.DATA, "Creating database table 'Tags' if it doesn't exist yet...");
+            }
             statement.executeUpdate("""
                 CREATE TABLE IF NOT EXISTS `Tags` (`PlayerUUID` varchar(200), `TagIdentifier` varchar(200), `TagValue` varchar(200), `TagType` varchar(200) )
             """);

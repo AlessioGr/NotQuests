@@ -83,9 +83,13 @@ public class NQPacketListener extends ChannelDuplexHandler {
 
     public void handleMainChatHistorySavingLogic(final ClientboundSystemChatPacket clientboundSystemChatPacket, final Player player) {
         try {
+            if(clientboundSystemChatPacket.overlay()){ //This seems to block out actionbar messages. Not quite sure what else it does, though
+                return;
+            }
 
             String json = clientboundSystemChatPacket.content();
             Component adventureComponent = clientboundSystemChatPacket.adventure$content();
+
 
 
 
@@ -116,6 +120,9 @@ public class NQPacketListener extends ChannelDuplexHandler {
 
                 }
             }
+
+            //main.getLogManager().info("cspacket overlay: " + clientboundSystemChatPacket.overlay() + " content: " + PlainTextComponentSerializer.plainText().serialize(adventureComponent).replace("§", "").replace("&", "") );
+
 
 
             final ArrayList<Component> convHist = main.getConversationManager().getConversationChatHistory().get(player.getUniqueId());

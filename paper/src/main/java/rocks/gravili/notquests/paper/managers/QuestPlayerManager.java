@@ -66,12 +66,15 @@ public class QuestPlayerManager {
       while (result.next()) {
 
         final long questPoints = result.getLong("QuestPoints");
-        main.getLogManager()
-            .info(
-                "Loaded player with uuid <highlight>"
-                    + uuid
-                    + "</highlight> and questPoints: "
-                    + questPoints);
+        if (main.getConfiguration().isVerboseStartupMessages()) {
+          main.getLogManager()
+                  .info(
+                          "Loaded player with uuid <highlight>"
+                                  + uuid
+                                  + "</highlight> and questPoints: "
+                                  + questPoints);
+        }
+
 
         if (questPlayer != null) {
           // QuestPoints
@@ -270,7 +273,9 @@ public class QuestPlayerManager {
   }
 
   public void saveSinglePlayerData(final Player player) {
-    main.getLogManager().info("Saving PlayerData of player " + player.getName() + "...");
+    if(main.getConfiguration().isVerboseStartupMessages()){
+      main.getLogManager().info("Saving PlayerData of player " + player.getName() + "...");
+    }
 
     if (!main.getConfiguration().savePlayerData) {
       main.getLogManager().info("Saving of playerdata has been skipped...");
@@ -394,7 +399,9 @@ public class QuestPlayerManager {
       return;
     }
 
-    main.getLogManager().info("PlayerData of player " + player.getName() + " was saved (" + questPoints + " QuestPoints)");
+    if(main.getConfiguration().isVerboseStartupMessages()){
+      main.getLogManager().info("PlayerData of player " + player.getName() + " was saved (" + questPoints + " QuestPoints)");
+    }
 
     questPlayer.onQuitAsync(player);
     if (!Bukkit.isPrimaryThread()) {
@@ -429,12 +436,15 @@ public class QuestPlayerManager {
         final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(uuid);
 
         final long questPoints = result.getLong("QuestPoints");
-        main.getLogManager()
-            .info(
-                "Loaded player with uuid <highlight>"
-                    + uuid
-                    + "</highlight> and questPoints: "
-                    + questPoints);
+        if (main.getConfiguration().isVerboseStartupMessages()) {
+          main.getLogManager()
+                  .info(
+                          "Loaded player with uuid <highlight>"
+                                  + uuid
+                                  + "</highlight> and questPoints: "
+                                  + questPoints);
+        }
+
 
         if (questPlayer != null) {
           // QuestPoints
