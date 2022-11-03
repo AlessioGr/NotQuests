@@ -76,7 +76,7 @@ public class UpdateManager {
                                 + main.getMain().getDescription().getVersion()
                                 + "</red> is not the latest version (<green>"
                                 + latestVersion
-                                + "</green>). <bold>Click this message to update!</bold></click></hover>"));
+                                + "</green>). <bold>Click this message to update: <underlined>https://www.notquests.com/update/</underlined></bold></click></hover>"));
                   }
                 })
             .onFail(
