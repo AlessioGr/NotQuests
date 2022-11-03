@@ -5,6 +5,7 @@ import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -45,16 +46,14 @@ public class EnderChestVariable extends Variable<ItemStack[]>{
                         }
                     }
                 }else {
-                    left = questPlayer.getPlayer().getInventory().addItem(left.values().toArray(ItemStack[]::new));
+                    left = questPlayer.getPlayer().getInventory().addItem(left.values().toArray(new ItemStack[0]));
                     if(!left.isEmpty()) {
-                        if(!getRequiredBooleanValue("addToInventoryIfEnderChestFull", questPlayer)){
-                            if (!getRequiredBooleanValue("skipItemIfEnderChestFull", questPlayer)) {
-                                for (ItemStack leftItemStack : left.values()) {
-                                    questPlayer
-                                            .getPlayer()
-                                            .getWorld()
-                                            .dropItem(questPlayer.getPlayer().getLocation(), leftItemStack);
-                                }
+                        if (!getRequiredBooleanValue("skipItemIfEnderChestFull", questPlayer)) {
+                            for (ItemStack leftItemStack : left.values()) {
+                                questPlayer
+                                        .getPlayer()
+                                        .getWorld()
+                                        .dropItem(questPlayer.getPlayer().getLocation(), leftItemStack);
                             }
                         }
                     }
