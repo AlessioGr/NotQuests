@@ -133,7 +133,7 @@ public class VariablesManager {
     registerVariable("Chance", ChanceVariable.class);
     registerVariable("Advancement", AdvancementVariable.class);
     registerVariable("Inventory", InventoryVariable.class);
-    registerVariable("EnderChestVariable", EnderChestVariable.class);
+    registerVariable("EnderChest", EnderChestVariable.class);
 
     registerVariable("ContainerInventory", ContainerInventoryVariable.class);
     registerVariable("Block", BlockVariable.class);
