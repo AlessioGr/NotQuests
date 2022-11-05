@@ -1556,7 +1556,7 @@ public class DataManager {
                 CREATE TABLE `QuestPlayerData` (`PlayerUUID` varchar(200), `QuestPoints` BIGINT(255), `Profile` varchar(200))
             """);
         statement.executeUpdate("""
-                INSERT INTO QuestPlayerData (PlayerUUID,QuestPoints,Profile) SELECT PlayerUUID,QuestPoints,Profile FROM QuestPlayerData
+                INSERT INTO QuestPlayerData (PlayerUUID,QuestPoints,Profile) SELECT PlayerUUID,QuestPoints,Profile FROM QuestPlayerDataOld
             """);
         statement.executeUpdate("""
                 DROP TABLE QuestPlayerDataOld
