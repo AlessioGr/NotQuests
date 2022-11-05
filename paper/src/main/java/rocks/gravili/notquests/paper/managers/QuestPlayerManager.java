@@ -186,7 +186,7 @@ public class QuestPlayerManager {
 
   public final String createQuestPlayer(final UUID uuid, final String profile, final boolean setAsCurrentProfile) {
     QuestPlayer questPlayer = getQuestPlayer(uuid);
-    if (questPlayer == null) {
+    if (questPlayer == null || !questPlayer.getProfile().equalsIgnoreCase(profile)) {
       questPlayer = new QuestPlayer(main, uuid, profile);
       if(questPlayersAndUUIDs.containsKey(uuid)){
         questPlayersAndUUIDs.get(uuid).add(questPlayer);
