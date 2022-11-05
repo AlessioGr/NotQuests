@@ -469,9 +469,19 @@ public class QuestPlayerManager {
         }
       }
       if(player != null){
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
-        questPlayer.setCurrentlyLoading(false);
-        questPlayer.setFinishedLoadingGeneralData(true);
+        if(main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId()) == null){
+          final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
+          questPlayer.setCurrentlyLoading(false);
+          questPlayer.setFinishedLoadingGeneralData(true);
+          questPlayer.onJoinAsync(player);
+          Bukkit.getScheduler()
+                  .runTask(
+                          main.getMain(),
+                          () -> {
+                            questPlayer.onJoin(player);
+                          });
+        }
+
       }
     } catch (Exception e) {
       if(player != null){
