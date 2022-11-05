@@ -124,11 +124,11 @@ public class BackupManager {
             new File(
                     main.getMain().getDataFolder().getPath()
                             + "/backups/"
-                            + "database-backup-sqlite-"
+                            + "database_sqlite-backup-"
                             + backupFileDateFormat.format(new Date(System.currentTimeMillis()))
-                            + ".yml");
+                            + ".db");
       try {
-        FileUtils.copyDirectory(dataBaseFile, newDatabaseBackupFile);
+        FileUtils.copyFile(dataBaseFile, newDatabaseBackupFile);
         main.getLogManager()
                 .info(
                         "Your sqlite database has been successfully backed up to <highlight2>"
