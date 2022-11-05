@@ -380,7 +380,7 @@ public class NotQuests {
 
         //Hide existing bossbars
         for(Player player : Bukkit.getOnlinePlayers()){
-            QuestPlayer questPlayer = getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            QuestPlayer questPlayer = getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
             if(questPlayer != null && questPlayer.getBossBar() != null){
                 player.hideBossBar(questPlayer.getBossBar());
             }

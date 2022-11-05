@@ -115,7 +115,7 @@ public class QuestEvents implements Listener {
                     return;
                 }
                 for(final Player player : Bukkit.getOnlinePlayers()) {
-                    final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                    final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
                     if(questPlayer == null){
                         return;
                     }
@@ -208,7 +208,7 @@ public class QuestEvents implements Listener {
             return;
         }
         final Player player = e.getPlayer();
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
         if(questPlayer == null){
             return;
         }
@@ -264,7 +264,7 @@ public class QuestEvents implements Listener {
     private void onSmeltEvent(InventoryClickEvent e) {
         final Entity entity = e.getWhoClicked();
         if (entity instanceof final Player player) {
-            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
             if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
                 return;
             }
@@ -410,7 +410,7 @@ public class QuestEvents implements Listener {
     private void onCraftItemEvent(CraftItemEvent e) {
         final Entity entity = e.getWhoClicked();
         if (entity instanceof final Player player && e.getInventory().getResult() != null) {
-            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
             if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
                 return;
             }
@@ -552,7 +552,7 @@ public class QuestEvents implements Listener {
     public void onPlayerJump(final PlayerJumpEvent e) {
 
         final Player player = e.getPlayer();
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
         if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
             return;
         }
@@ -569,7 +569,7 @@ public class QuestEvents implements Listener {
     @EventHandler
     public void interactEvent(final PlayerInteractEvent e) {
         final Player player = e.getPlayer();
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
         if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
             return;
         }
@@ -630,7 +630,7 @@ public class QuestEvents implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onCommand(final PlayerCommandPreprocessEvent e) {
         final Player player = e.getPlayer();
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
         if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
             return;
         }
@@ -661,7 +661,7 @@ public class QuestEvents implements Listener {
     @EventHandler
     public void playerChangeWorldEvent(PlayerChangedWorldEvent e) {
         final Player player = e.getPlayer();
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
         if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
             return;
         }
@@ -691,7 +691,7 @@ public class QuestEvents implements Listener {
     private void onEntityBreed(EntityBreedEvent e) {
         if (!e.isCancelled()) {
             if (e.getBreeder() instanceof final Player player) {
-                final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
                 if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
                     return;
                 }
@@ -715,7 +715,7 @@ public class QuestEvents implements Listener {
     private void onBlockBreak(BlockBreakEvent e) {
         if (!e.isCancelled()) {
             final Player player = e.getPlayer();
-            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
             if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
                 return;
             }
@@ -751,7 +751,7 @@ public class QuestEvents implements Listener {
     private void onBlockPlace(BlockPlaceEvent e) {
         if (!e.isCancelled()) {
             final Player player = e.getPlayer();
-            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
             if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
                 return;
             }
@@ -795,7 +795,7 @@ public class QuestEvents implements Listener {
 
 
         final Player player = e.getPlayer();
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
         if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
             return;
         }
@@ -827,7 +827,7 @@ public class QuestEvents implements Listener {
     private void onPickupItemEvent(EntityPickupItemEvent e) {
         final Entity entity = e.getEntity();
         if (entity instanceof final Player player) {
-            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
             if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
                 return;
             }
@@ -855,7 +855,7 @@ public class QuestEvents implements Listener {
     private void onDropItemEvent(PlayerDropItemEvent e) { //DEFAULT ENABLED FOR ITEM DROPS UNLIKE FOR BLOCK BREAKS
         final Entity player = e.getPlayer();
 
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
         if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
             return;
         }
@@ -886,7 +886,7 @@ public class QuestEvents implements Listener {
 
         //Death Triggers
         if (e.getEntity() instanceof final Player player) {
-            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
 
             if (questPlayer != null && !questPlayer.getActiveQuests().isEmpty()) {
                 for (int i = 0; i < questPlayer.getActiveQuests().size(); i++) {
@@ -907,7 +907,7 @@ public class QuestEvents implements Listener {
         //KillMobs objectives
         final Player player = e.getEntity().getKiller();
         if (player != null) {
-            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
             if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
                 return;
             }
@@ -980,7 +980,7 @@ public class QuestEvents implements Listener {
     private void onConsumeItemEvent(PlayerItemConsumeEvent e) { //DEFAULT ENABLED FOR ITEM DROPS UNLIKE FOR BLOCK BREAKS
         final Player player = e.getPlayer();
 
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
         if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
             return;
         }
@@ -1060,7 +1060,7 @@ public class QuestEvents implements Listener {
 
     public void checkIfInReachLocation(final PlayerMoveEvent e, final Location currentLocation) {
 
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(e.getPlayer().getUniqueId());
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(e.getPlayer().getUniqueId());
         if (e.isCancelled() || questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
             return;
         }
@@ -1100,8 +1100,8 @@ public class QuestEvents implements Listener {
             return false;
         }
         final int optionIndex = optionNumber-1;
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-        if (main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId()) == null) {
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
+        if (main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId()) == null) {
             return false;
         }
         //Check if the player has an open conversation
@@ -1131,7 +1131,7 @@ public class QuestEvents implements Listener {
         }
 
         final Player player = e.getPlayer();
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
         if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
             return;
         }
@@ -1157,7 +1157,7 @@ public class QuestEvents implements Listener {
                 main.getQuestPlayerManager().saveSinglePlayerData(e.getPlayer());
             }
         }else{
-            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(e.getPlayer().getUniqueId());
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(e.getPlayer().getUniqueId());
             if (questPlayer != null) {
                 if (Bukkit.isPrimaryThread()) {
                     Bukkit.getScheduler().runTaskAsynchronously(main.getMain(), () -> {
@@ -1189,7 +1189,7 @@ public class QuestEvents implements Listener {
 
             //no need to call onJoin here as it's called by loadSinglePlayerData automatically
         }else{
-            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(e.getPlayer().getUniqueId());
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(e.getPlayer().getUniqueId());
 
             if (questPlayer != null) {
                 Bukkit.getScheduler().runTaskAsynchronously(main.getMain(), () -> {
@@ -1271,7 +1271,7 @@ public class QuestEvents implements Listener {
     public void onShearSheep(final PlayerShearEntityEvent e) {
         if (e.getEntity() instanceof Sheep) {
             final Player player = e.getPlayer();
-            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
             if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
                 return;
             }

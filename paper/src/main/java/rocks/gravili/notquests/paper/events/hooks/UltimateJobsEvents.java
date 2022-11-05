@@ -36,7 +36,7 @@ public class UltimateJobsEvents implements Listener {
 
     @EventHandler
     public void onJobsLevelUp(PlayerLevelJobEvent e) {
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(e.getPlayer().getUniqueId());
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(e.getPlayer().getUniqueId());
         if (questPlayer != null) {
             if (questPlayer.getActiveQuests().size() > 0) {
                 for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {

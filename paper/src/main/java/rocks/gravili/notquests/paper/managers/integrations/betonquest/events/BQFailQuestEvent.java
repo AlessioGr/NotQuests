@@ -71,7 +71,7 @@ public class BQFailQuestEvent extends QuestEvent {
 
       if (profile != null) {
         final QuestPlayer questPlayer =
-            main.getQuestPlayerManager().getQuestPlayer(profile.getProfileUUID());
+            main.getQuestPlayerManager().getActiveQuestPlayer(profile.getProfileUUID());
         if (questPlayer != null) {
           ActiveQuest questToFail = null;
           for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {

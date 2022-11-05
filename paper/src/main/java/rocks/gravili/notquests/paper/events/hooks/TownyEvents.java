@@ -42,7 +42,7 @@ public class TownyEvents implements Listener {
   public void onTownAddToNation(NationAddTownEvent e) {
     for (final Resident resident : e.getNation().getResidents()) {
       final QuestPlayer questPlayer =
-          main.getQuestPlayerManager().getQuestPlayer(resident.getUUID());
+          main.getQuestPlayerManager().getActiveQuestPlayer(resident.getUUID());
       if (questPlayer != null) {
         if (questPlayer.getActiveQuests().size() > 0) {
           for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
@@ -65,7 +65,7 @@ public class TownyEvents implements Listener {
   public void onTownRemoveFromNation(NationAddTownEvent e) {
     for (final Resident resident : e.getNation().getResidents()) {
       final QuestPlayer questPlayer =
-          main.getQuestPlayerManager().getQuestPlayer(resident.getUUID());
+          main.getQuestPlayerManager().getActiveQuestPlayer(resident.getUUID());
       if (questPlayer != null) {
         if (questPlayer.getActiveQuests().size() > 0) {
           for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
@@ -88,7 +88,7 @@ public class TownyEvents implements Listener {
   public void onResidentAdd(TownAddResidentEvent e) {
     for (final Resident resident : e.getTown().getResidents()) {
       final QuestPlayer questPlayer =
-          main.getQuestPlayerManager().getQuestPlayer(resident.getUUID());
+          main.getQuestPlayerManager().getActiveQuestPlayer(resident.getUUID());
       if (questPlayer != null) {
         if (questPlayer.getActiveQuests().size() > 0) {
           for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
@@ -111,7 +111,7 @@ public class TownyEvents implements Listener {
   public void onResidentRemove(TownRemoveResidentEvent e) {
     for (final Resident resident : e.getTown().getResidents()) {
       final QuestPlayer questPlayer =
-          main.getQuestPlayerManager().getQuestPlayer(resident.getUUID());
+          main.getQuestPlayerManager().getActiveQuestPlayer(resident.getUUID());
       if (questPlayer != null) {
         if (!questPlayer.getActiveQuests().isEmpty()) {
           for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {

@@ -72,7 +72,7 @@ public class BQQuestPointsEvent extends QuestEvent {
   protected Void execute(final Profile profile) throws QuestRuntimeException {
     if (profile != null) {
       final QuestPlayer questPlayer =
-          main.getQuestPlayerManager().getQuestPlayer(profile.getProfileUUID());
+          main.getQuestPlayerManager().getActiveQuestPlayer(profile.getProfileUUID());
       if (questPlayer != null) {
 
         if (action.equalsIgnoreCase("set")) {

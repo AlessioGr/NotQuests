@@ -188,7 +188,7 @@ public class AdminCommands {
                     final SinglePlayerSelector singlePlayerSelector = context.get("player");
                     final Player player = singlePlayerSelector.getPlayer();
                     if (singlePlayerSelector.hasAny() && player != null) {
-                        QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                        QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
                         if (questPlayer != null) {
                             context.getSender().sendMessage(main.parse("<main>Active quests of player <highlight>" + player.getName() + "</highlight> <green>(online)</green>:"));
                             int counter = 1;
@@ -202,7 +202,7 @@ public class AdminCommands {
                         }
                     } else {
                         OfflinePlayer offlinePlayer = main.getUtilManager().getOfflinePlayer(singlePlayerSelector.getSelector());
-                        QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(offlinePlayer.getUniqueId());
+                        QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(offlinePlayer.getUniqueId());
                         if (questPlayer != null) {
                             context.getSender().sendMessage(main.parse("<main>Active quests of player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red>:"));
                             int counter = 1;
@@ -225,7 +225,7 @@ public class AdminCommands {
                     final SinglePlayerSelector singlePlayerSelector = context.get("player");
                     final Player player = singlePlayerSelector.getPlayer();
                     if (singlePlayerSelector.hasAny() && player != null) {
-                        QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                        QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
                         if (questPlayer != null) {
                             context.getSender().sendMessage(main.parse("<main>Completed quests of player <highlight>" + player.getName() + "</highlight> <green>(online)</green>:"));
                             int counter = 1;
@@ -243,7 +243,7 @@ public class AdminCommands {
                         }
                     } else {
                         OfflinePlayer offlinePlayer = main.getUtilManager().getOfflinePlayer(singlePlayerSelector.getSelector());
-                        QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(offlinePlayer.getUniqueId());
+                        QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(offlinePlayer.getUniqueId());
                         if (questPlayer != null) {
                             context.getSender().sendMessage(main.parse("<main>Completed quests of player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red>:"));
                             int counter = 1;
@@ -298,7 +298,7 @@ public class AdminCommands {
                     final Player player = singlePlayerSelector.getPlayer();
                     final ActiveQuest activeQuest = context.get("activeQuest");
                     if (player != null) {
-                        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                        final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
                         if (questPlayer != null) {
                             questPlayer.failQuest(activeQuest);
                             context.getSender().sendMessage(main.parse(
@@ -327,7 +327,7 @@ public class AdminCommands {
                     final Player player = singlePlayerSelector.getPlayer();
                     final ActiveQuest activeQuest = context.get("activeQuest");
                     if (player != null) {
-                        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                        final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
                         if (questPlayer != null) {
                             questPlayer.forceActiveQuestCompleted(activeQuest);
                             context.getSender().sendMessage(main.parse(
@@ -441,7 +441,7 @@ public class AdminCommands {
                     final SinglePlayerSelector singlePlayerSelector = context.get("Player Name");
                     final Player player = singlePlayerSelector.getPlayer();
                     if (player != null) {
-                        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                        final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
                         if (questPlayer != null) {
                             if (questPlayer.getActiveQuests().size() > 0) {
                                 for (ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
@@ -485,7 +485,7 @@ public class AdminCommands {
                         return;
                     }
 
-                    final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                    final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
 
                     if(questPlayer == null){
                         context.getSender().sendMessage(main.parse(
@@ -1335,7 +1335,7 @@ public class AdminCommands {
 
                     if (singlePlayerSelector.hasAny() && singlePlayerSelector.getPlayer() != null) {
 
-                        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(singlePlayerSelector.getPlayer().getUniqueId());
+                        final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(singlePlayerSelector.getPlayer().getUniqueId());
                         if (questPlayer != null) {
                             context.getSender().sendMessage(main.parse("<main>Quest points for player <highlight>" + singlePlayerSelector.getPlayer().getName() + "</highlight> <green>(online)</green>: <highlight2>" + questPlayer.getQuestPoints()));
                         } else {
@@ -1345,7 +1345,7 @@ public class AdminCommands {
 
                         final OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(singlePlayerSelector.getSelector());
 
-                        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(offlinePlayer.getUniqueId());
+                        final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(offlinePlayer.getUniqueId());
                         if (questPlayer != null) {
                             context.getSender().sendMessage(main.parse("<main>Quest points for player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red>: <highlight2>" + questPlayer.getQuestPoints()));
                         } else {
@@ -1947,7 +1947,7 @@ public class AdminCommands {
         if (player != null) {
 
 
-            QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
             if (questPlayer != null) {
 
                 if (activeQuest != null) {
@@ -1986,7 +1986,7 @@ public class AdminCommands {
         } else {
             OfflinePlayer offlinePlayer = main.getUtilManager().getOfflinePlayer(playerName);
 
-            QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(offlinePlayer.getUniqueId());
+            QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(offlinePlayer.getUniqueId());
             if (questPlayer != null) {
 
 

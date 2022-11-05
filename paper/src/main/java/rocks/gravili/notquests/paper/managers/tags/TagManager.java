@@ -21,7 +21,6 @@ package rocks.gravili.notquests.paper.managers.tags;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -58,7 +57,7 @@ public class TagManager {
         main.getLogManager().info("Loading tags of all online players...");
         for (final Player player : Bukkit.getOnlinePlayers()) {
             main.getLogManager().info("Loading tags of all online player " + player.getName());
-            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
             if (questPlayer != null) {
                 onJoin(questPlayer, player);
             } else {
@@ -87,7 +86,7 @@ public class TagManager {
         main.getLogManager().info("Saving tags of all online players...");
         for (final Player player : Bukkit.getOnlinePlayers()) {
             main.getLogManager().info("Saving tags of all online player " + player.getName());
-            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
             if (questPlayer != null) {
                 onQuit(questPlayer, player);
             } else {
@@ -106,7 +105,9 @@ public class TagManager {
             return;
         }
         if (main.getConfiguration().isVerboseStartupMessages()) {
-            main.getLogManager().info("Loading tags for " + player.getName() + "...");
+            main.getLogManager().info("Loading tags for " + player.getName() + " (Profile: %s) ...",
+                questPlayer.getProfile()
+            );
         }
         final UUID uuid = player.getUniqueId();
 
@@ -132,7 +133,7 @@ public class TagManager {
                     continue;
                 }
                 if (main.getConfiguration().isVerboseStartupMessages()) {
-                    main.getLogManager().info("Loaded <highlight>%s</highlight> %s tag for player <highlight2>%s</highlight2> with the value <highlight2>%s</highlight2>.",
+                    main.getLogManager().info("  Loaded <highlight>%s</highlight> %s tag for player <highlight2>%s</highlight2> with the value <highlight2>%s</highlight2>.",
                             tagIdentifier,
                             tagType,
                             player.getName(),
@@ -161,7 +162,7 @@ public class TagManager {
 
 
         if (main.getConfiguration().isVerboseStartupMessages()) {
-            main.getLogManager().info("Loaded %s tags for %s:",
+            main.getLogManager().info("  Loaded %s tags for %s:",
                     questPlayer.getTags().size(),
                     player.getName()
             );
@@ -169,7 +170,7 @@ public class TagManager {
         }
         if (!questPlayer.getTags().isEmpty()) {
             for (final String tagIdentifier : questPlayer.getTags().keySet()) {
-                main.getLogManager().info("   %s: %s (%s)",
+                main.getLogManager().info("    %s: %s (%s)",
                         tagIdentifier,
                         questPlayer.getTagValue(tagIdentifier),
                         questPlayer.getTagValue(tagIdentifier).getClass().getName()

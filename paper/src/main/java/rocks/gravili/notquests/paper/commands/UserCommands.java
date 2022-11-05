@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -393,7 +392,7 @@ public class UserCommands {
                 (context) -> {
                   final Player player = (Player) context.getSender();
                   QuestPlayer questPlayer =
-                      main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                      main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
 
                   if (questPlayer != null) {
                     context
@@ -427,7 +426,7 @@ public class UserCommands {
                   }
 
                   final Player player = (Player) context.getSender();
-                  final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                  final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
                   if(questPlayer == null){
                     return completions;
                   }
@@ -450,7 +449,7 @@ public class UserCommands {
                     return;
                   }
                   final Player player = (Player) context.getSender();
-                  QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                  QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
 
                   if(questPlayer != null){
                     final ConversationPlayer conversationPlayer = main.getConversationManager().getOpenConversation(player.getUniqueId());
@@ -749,7 +748,7 @@ public class UserCommands {
                 (context) -> {
                   final Player player = (Player) context.getSender();
                   final QuestPlayer questPlayer =
-                      main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                      main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
                   if (questPlayer != null) {
                     context
                         .getSender()
@@ -789,7 +788,7 @@ public class UserCommands {
                 (context) -> {
                   final Player player = (Player) context.getSender();
                   final QuestPlayer questPlayer =
-                      main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                      main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
                   if (questPlayer != null) {
                     context
                         .getSender()
@@ -835,7 +834,7 @@ public class UserCommands {
                 (context) -> {
                   final Player player = (Player) context.getSender();
                   QuestPlayer questPlayer =
-                      main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                      main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
                   if (questPlayer != null && questPlayer.getActiveQuests().size() > 0) {
                     final ActiveQuest activeQuest = context.get("Active Quest");
 

@@ -152,7 +152,7 @@ public class QuestGiverNPCTrait extends Trait {
             npcHolo.customName(Component.text(npcHoloText));
             for (final Entity e : npcEntity.getNearbyEntities(16, 16, 16)) {
               if (e instanceof final Player player) {
-                QuestPlayer qp = main.getQuestPlayerManager().getQuestPlayer(e.getUniqueId());
+                QuestPlayer qp = main.getQuestPlayerManager().getActiveQuestPlayer(e.getUniqueId());
                 ArrayList<Quest> questsArrayList = main.getQuestManager().getAllQuestsAttachedToNPC(
                     main.getNPCManager().getOrCreateNQNpc("Citizens", NQNPCID.fromInteger(getNPC().getId())));
                 main.getPacketManager().getModernPacketInjector().sendHolo(

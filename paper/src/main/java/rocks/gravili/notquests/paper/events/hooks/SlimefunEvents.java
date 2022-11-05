@@ -41,7 +41,7 @@ public class SlimefunEvents implements Listener {
     public void onPlayerResearch(final PlayerPreResearchEvent e) {
         if (!e.isCancelled()) {
             final Player player = e.getPlayer();
-            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
             if (questPlayer != null) {
                 if (questPlayer.getActiveQuests().size() > 0) {
                     for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {

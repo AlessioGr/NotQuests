@@ -70,7 +70,7 @@ public class BQAbortQuestEvent extends QuestEvent {
     if (quest != null) {
       if (profile != null) {
         final QuestPlayer questPlayer =
-            main.getQuestPlayerManager().getQuestPlayer(profile.getProfileUUID());
+            main.getQuestPlayerManager().getActiveQuestPlayer(profile.getProfileUUID());
         if (questPlayer != null) {
 
           ActiveQuest activeQuestToRemove = null;

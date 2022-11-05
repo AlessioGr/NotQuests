@@ -36,7 +36,7 @@ public class BetonQuestEvents implements Listener {
 
     @EventHandler
     public void onBetonQuestObjectiveStateChange(final PlayerObjectiveChangeEvent e) {
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(e.getProfile().getProfileUUID());
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(e.getProfile().getProfileUUID());
         if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
             return;
         }

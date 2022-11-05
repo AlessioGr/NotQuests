@@ -137,7 +137,7 @@ public class ActiveQuestSelector<C> extends CommandArgument<C, ActiveQuest> {
         uuid = ((Player) context.getSender()).getUniqueId();
       }
 
-      final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(uuid);
+      final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(uuid);
       if (questPlayer != null) {
         for (Quest quest : main.getQuestManager().getAllQuests()) {
           if (questPlayer.hasAcceptedQuest(quest)) {
@@ -182,7 +182,7 @@ public class ActiveQuestSelector<C> extends CommandArgument<C, ActiveQuest> {
         uuid = player.getUniqueId();
       }
 
-      final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(uuid);
+      final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(uuid);
       if (questPlayer == null) {
 
         return ArgumentParseResult.failure(

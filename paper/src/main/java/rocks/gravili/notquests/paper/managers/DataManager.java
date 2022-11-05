@@ -1461,7 +1461,7 @@ public class DataManager {
                 main.getTagManager().saveAllOnlinePlayerTags(true);
                 main.getQuestPlayerManager().saveAllPlayerDataAtOnce();
             }else{
-                for(QuestPlayer questPlayer : new ArrayList<>(main.getQuestPlayerManager().getAllQuestPlayersForAllProfiles())) {
+                for(QuestPlayer questPlayer : new ArrayList<>(main.getQuestPlayerManager().getActiveQuestPlayers())) { //Only need to save active ones here, as the saveSinglePlayerData() method already iterates through each active one to also save all non-active ones
                     main.getQuestPlayerManager().saveSinglePlayerData(questPlayer.getPlayer());
                 }
             }
@@ -1691,7 +1691,8 @@ public class DataManager {
                 }else{
                     for(final Player player : Bukkit.getOnlinePlayers()){
                         main.getQuestPlayerManager().loadSinglePlayerData(player.getUniqueId());
-                    }                }
+                    }
+                }
 
             }
 

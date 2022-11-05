@@ -343,7 +343,7 @@ public class ArmorStandEvents implements Listener {
         //Handle Objectives
         final AtomicBoolean handledObjective = new AtomicBoolean(false);
 
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
 
         if (questPlayer != null) {
             questPlayer.queueObjectiveCheck(activeObjective -> {

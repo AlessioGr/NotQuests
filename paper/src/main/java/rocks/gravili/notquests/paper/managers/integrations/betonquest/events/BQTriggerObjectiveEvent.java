@@ -74,7 +74,7 @@ public class BQTriggerObjectiveEvent extends QuestEvent {
     @Override
     protected Void execute(final Profile profile) throws QuestRuntimeException {
         if (profile != null) {
-            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(profile.getProfileUUID());
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(profile.getProfileUUID());
             if (questPlayer != null) {
                 if (questPlayer.getActiveQuests().size() > 0) {
                     for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
