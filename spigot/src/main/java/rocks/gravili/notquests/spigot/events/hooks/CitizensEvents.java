@@ -44,6 +44,7 @@ import rocks.gravili.notquests.spigot.structs.triggers.ActiveTrigger;
 import rocks.gravili.notquests.spigot.structs.triggers.types.NPCDeathTrigger;
 
 import java.util.Locale;
+import java.util.Map;
 
 public class CitizensEvents implements Listener {
     private final NotQuests main;
@@ -134,14 +135,16 @@ public class CitizensEvents implements Listener {
                                                     itemStack.setAmount((itemStack.getAmount() - (int) progressLeft));
                                                     activeObjective.addProgress(progressLeft, npc.getId());
                                                     audience.sendMessage(MiniMessage.miniMessage().deserialize(
-                                                            "<GREEN>You have delivered <AQUA>" + progressLeft + "</AQUA> items to <AQUA>" + npc.getName()
-                                                    ));
+                                                            main.getLanguageManager().getString("chat.objectives.success-updates.delivery-progress",
+                                                                    questPlayer.getPlayer(), Map.of("%NPCNAME%", npc.getName()))));
                                                     break;
                                                 } else {
                                                     player.getInventory().removeItem(itemStack);
                                                     activeObjective.addProgress(itemStack.getAmount(), npc.getId());
                                                     audience.sendMessage(MiniMessage.miniMessage().deserialize(
-                                                            "<GREEN>You have delivered <AQUA>" + itemStack.getAmount() + "</AQUA> items to <AQUA>" + npc.getName()
+                                                            main.getLanguageManager().getString("chat.objectives.success-updates.delivery-items-progress",
+                                                                    questPlayer.getPlayer(), Map.of("%NPCNAME%", npc.getName(),
+                                                                            "%ITEMSTACKAMOUNT%", itemStack.getAmount()))
                                                     ));
                                                 }
                                             }
@@ -164,7 +167,9 @@ public class CitizensEvents implements Listener {
                                         if (npcToEscort.isSpawned() && (npcToEscort.getEntity().getLocation().distance(player.getLocation()) < 6)) {
                                             activeObjective.addProgress(1, npc.getId());
                                             audience.sendMessage(MiniMessage.miniMessage().deserialize(
-                                                    "<GREEN>You have successfully delivered the NPC <AQUA>" + npcToEscort.getName()
+                                                    main.getLanguageManager().getString("chat.talked-to-npc", questPlayer.getPlayer(), Map.of(
+                                                            "%NPCNAME%", npcToEscort.getName()
+                                                    ))
                                             ));
 
                                             FollowTrait followerTrait = null;
@@ -180,7 +185,7 @@ public class CitizensEvents implements Listener {
                                             npcToEscort.despawn();
                                         } else {
                                             audience.sendMessage(MiniMessage.miniMessage().deserialize(
-                                                    "<RED>The NPC you have to escort is not close enough to you!"
+                                                    main.getLanguageManager().getString("chat.npc.delivery-of-npc-complete", questPlayer.getPlayer())
                                             ));
                                         }
                                     }

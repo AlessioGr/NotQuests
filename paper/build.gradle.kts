@@ -175,8 +175,6 @@ dependencies {
     compileOnly("com.github.UlrichBR:UClansV5-API:4.5")
     compileOnly(files("libs/ProjectKorra-1.10.0.jar"))
     //compileOnly(files("libs/UltimateJobs-0.2.0-SNAPSHOT.jar"))
-    compileOnly(files("libs/NeoSurvival-1.0-SNAPSHOT.jar"))
-
     compileOnly("org.betonquest:betonquest:2.0.0-SNAPSHOT")
 
     compileOnly("com.sk89q.worldedit:worldedit-core:7.3.0-SNAPSHOT")

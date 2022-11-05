@@ -75,6 +75,10 @@ chat:
     successfully-completed-rewards-prefix: '    <highlight>Ödüller:'
     successfully-completed-rewards-rewardformat: '    <highlight><unimportant>%reward%'
     successfully-completed-rewards-suffix: <EMPTY>
+    success-updates:
+      delivery-progress: '<GREEN><highlight> %ALLOBJECTIVESCOUNT% </highlight> öğeyi <highlight> %NPCNAME% ye teslim ettiniz'
+      delivery-items-progress: '<GREEN><highlight> %ITEMSTACKAMOUNT% </highlight> öğeyi <highlight> %NPCNAME% öğesine teslim ettiniz'
+      delivery-of-npc-complete: '<GREEN>NPC yi başarıyla teslim ettiniz <highlight>'
     taskDescription:
       global:
         prefix: '    <veryUnimportant>└─ <unimportant>'
@@ -148,6 +152,9 @@ chat:
       not-fulfilled: "<warn>Takip edilmesi gereken %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
       variable-not-found: "<error>değişken bulunamadı. <highlight>%VARIABLENAME%</highlight> Bunu Sunucu sahibine bildirin."
       wrong-operator: "<error>Hata: değişken operatörü geçersiz. <highlight>%OPERATOR%/highlight> Bunu Sunucu sahibine bildirin."
+  npc:
+    talked-to: "<GREEN>You talked to <highlight> %NPCNAME%"
+    too-far: "<RED>The NPC you have to escort is not close enough to you!"
 objective-tracking:
   actionbar-progress-update:
     default: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"

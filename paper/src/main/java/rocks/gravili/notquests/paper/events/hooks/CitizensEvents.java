@@ -19,6 +19,7 @@
 package rocks.gravili.notquests.paper.events.hooks;
 
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.event.CitizensEnableEvent;
@@ -171,16 +172,21 @@ public class CitizensEvents implements Listener {
 
 
                                 player.sendMessage(main.parse(
-                                    "<GREEN>You have delivered <highlight>" + progressLeft + "</highlight> items to <highlight>" + mmNpcName
-                                ));
+                                        main.getLanguageManager().getString("chat.objectives.success-updates.delivery-progress", questPlayer, Map.of(
+                                                "%NPCNAME%", mmNpcName
+                                        )
+                                )));
                                 break;
                             } else {
                                 questPlayer.sendDebugMessage("Calling player.getInventory().removeItemAnySlot with amount " + itemStack.getAmount() + "...");
                                 player.getInventory().removeItemAnySlot(itemStack);
                                 activeObjective.addProgress(itemStack.getAmount(), nqNPC);
                                 player.sendMessage(main.parse(
-                                    "<GREEN>You have delivered <highlight>" + itemStack.getAmount() + "</highlight> items to <highlight>" + mmNpcName
-                                ));
+                                        main.getLanguageManager().getString("chat.objectives.success-updates.delivery-items-progress", questPlayer, Map.of(
+                                                "%NPCNAME%", mmNpcName,
+                                                "%ITEMSTACKAMOUNT%", itemStack.getAmount()
+                                        )
+                                )));
                             }
                         }
 
@@ -196,7 +202,9 @@ public class CitizensEvents implements Listener {
                     final String mmNpcName = main.getMiniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(npc.getName().replace("§","&")));
 
                     player.sendMessage(main.parse(
-                        "<GREEN>You talked to <highlight>" +mmNpcName
+                            main.getLanguageManager().getString("chat.talked-to-npc", questPlayer, Map.of(
+                                    "%NPCNAME%", mmNpcName
+                            ))
                     ));
                     handledObjective.set(true);
                 }
@@ -209,10 +217,9 @@ public class CitizensEvents implements Listener {
                     if (npcToEscort != null) {
                         if (npcToEscort.isSpawned() && (npcToEscort.getEntity().getLocation().distance(player.getLocation()) < 6)) {
                             activeObjective.addProgress(1, nqNPC);
-                            final String mmNpcName = main.getMiniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(npcToEscort.getName()));
 
                             player.sendMessage(main.parse(
-                                "<GREEN>You have successfully delivered the NPC <highlight>" + mmNpcName
+                                    main.getLanguageManager().getString("chat.npc.delivery-of-npc-complete", questPlayer)
                             ));
                             handledObjective.set(true);
                             FollowTrait followerTrait = null;
@@ -228,7 +235,7 @@ public class CitizensEvents implements Listener {
                             npcToEscort.despawn();
                         } else {
                             player.sendMessage(main.parse(
-                                "<RED>The NPC you have to escort is not close enough to you!"
+                                    main.getLanguageManager().getString("chat.npc.too-far", questPlayer)
                             ));
                         }
                     }

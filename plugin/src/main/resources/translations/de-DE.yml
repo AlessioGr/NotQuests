@@ -75,6 +75,10 @@ chat:
     successfully-completed-rewards-prefix: '    <highlight>Belohnungen:'
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
     successfully-completed-rewards-suffix: <EMPTY>
+    success-updates:
+      delivery-progress: '<GREEN>Sie haben <highlight> %ALLOBJECTIVESCOUNT% </highlight> Artikel an <highlight> %NPCNAME% geliefert.'
+      delivery-items-progress: '<GREEN>Du hast <highlight> %ITEMSTACKAMOUNT% </highlight> Artikel an <highlight> %NPCNAME% geliefert.'
+      delivery-of-npc-complete: '<GREEN>Du hast erfolgreich den NPC <highlight> geliefert'
     taskDescription:
       global:
         prefix: '    <veryUnimportant>└─ <unimportant>'
@@ -148,6 +152,9 @@ chat:
       not-fulfilled: "<warn>Folgendes muss %BOOLEANREQUIREMENT% sein: <highlight>%VARIABLESINGULAR%</highlight>."
       variable-not-found: "<error>Fehler: Die Variable <highlight>%VARIABLENAME%</highlight> wurde nicht gefunden. Bitte melde das an den Serverbesitzer."
       wrong-operator: "<error>Fehler: Der Variablen-Operator <highlight>%OPERATOR%/highlight> ist nicht gültig. Bitte melde das an den Serverbesitzer."
+  npc:
+    talked-to: "<GREEN>Du hast mit <highlight> %NPCNAME% gesprochen"
+    too-far: "<RED>Der NPC, den du eskortieren musst, ist nicht nah genug bei dir!"
 objective-tracking:
   actionbar-progress-update:
     default: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
