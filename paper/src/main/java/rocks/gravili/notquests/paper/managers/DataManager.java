@@ -1547,9 +1547,6 @@ public class DataManager {
         //Create Database tables if they don't exist yet
         try (final Connection connection = getConnection();
              final Statement statement = connection.createStatement();
-             final PreparedStatement migrationAddProfileColumnsPreparedStatement = connection.prepareStatement("""
-                ALTER TABLE ? ADD COLUMN `Profile` VARCHAR NOT NULL DEFAULT 'default'
-             """);
 
              final PreparedStatement createQuestPlayerDataTablePreparedStatement = connection.prepareStatement("""
                 CREATE TABLE IF NOT EXISTS `QuestPlayerData` (`PlayerUUID` varchar(200), `QuestPoints` BIGINT(255), `Profile` varchar(200), PRIMARY KEY (PlayerUUID))
