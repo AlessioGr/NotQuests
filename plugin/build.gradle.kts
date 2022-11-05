@@ -271,5 +271,9 @@ bukkit {
             default = net.minecrell.pluginyml.bukkit.BukkitPluginDescription.Permission.Default.TRUE
             description = "Gives the player permission to use the /notquests user command. They can not create new quests or other administrative tasks with just this permission."
         }
+        register("notquests.user.profiles"){
+            default = net.minecrell.pluginyml.bukkit.BukkitPluginDescription.Permission.Default.OP
+            description = "Gives the player permission to use the /notquests profile command, and to create, delete and switch profiles."
+        }
     }
 }
