@@ -468,15 +468,10 @@ public class QuestPlayerManager {
                           });
         }
       }
-      main.getLogManager().debug("S1");
       if(player != null){
-        main.getLogManager().debug("S2");
         final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
-        if(questPlayer != null){
-          main.getLogManager().debug("S3");
-          questPlayer.setCurrentlyLoading(false);
-          questPlayer.setFinishedLoadingGeneralData(true);
-        }
+        questPlayer.setCurrentlyLoading(false);
+        questPlayer.setFinishedLoadingGeneralData(true);
       }
     } catch (Exception e) {
       if(player != null){
