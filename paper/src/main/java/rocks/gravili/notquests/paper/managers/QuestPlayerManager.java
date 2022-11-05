@@ -186,17 +186,21 @@ public class QuestPlayerManager {
 
   public final String createQuestPlayer(final UUID uuid, final String profile, final boolean setAsCurrentProfile) {
     QuestPlayer questPlayer = getQuestPlayer(uuid);
+
     if (questPlayer == null || !questPlayer.getProfile().equalsIgnoreCase(profile)) {
       questPlayer = new QuestPlayer(main, uuid, profile);
+
       if(questPlayersAndUUIDs.containsKey(uuid)){
         questPlayersAndUUIDs.get(uuid).add(questPlayer);
       } else {
-        questPlayersAndUUIDs.put(uuid, List.of(questPlayer));
+        final ArrayList<QuestPlayer> newQuestPlayers = new ArrayList<>();
+        newQuestPlayers.add(questPlayer);
+        questPlayersAndUUIDs.put(uuid, newQuestPlayers);
       }
       if(setAsCurrentProfile){
         activeQuestPlayersAndUUIDs.put(uuid, questPlayer);
       }
-      return "<success>Quest player with uuid <highlight>%s</highlight> has been created successfully!".formatted(uuid);
+      return "<success>Quest player with uuid <highlight>%s</highlight> has been created successfully!".formatted(uuid.toString());
 
     } else {
       return "<error>Quest player already exists.";

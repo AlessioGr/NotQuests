@@ -345,7 +345,9 @@ public class UserCommands {
                       return;
                   }
 
-                  main.getQuestPlayerManager().createQuestPlayer(player.getUniqueId(), newProfile, false);
+                  main.getLogManager().info("PN: " + newProfile);
+
+                  main.getLogManager().info("CQP Result: " + main.getQuestPlayerManager().createQuestPlayer(player.getUniqueId(), newProfile, false));
 
                   main.sendMessage(context.getSender(),
                       main.getLanguageManager().getString(
