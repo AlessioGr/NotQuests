@@ -78,7 +78,7 @@ chat:
     success-updates:
       delivery-progress: '<GREEN>You have delivered <highlight> %ALLOBJECTIVESCOUNT% </highlight> items to <highlight> %NPCNAME%'
       delivery-items-progress: '<GREEN>You have delivered <highlight> %ITEMSTACKAMOUNT% </highlight> items to <highlight> %NPCNAME%'
-      delivery-of-npc-complete: '<GREEN>You have successfully delivered the NPC <highlight>'
+      delivery-of-npc-complete: '<GREEN>You have successfully delivered the NPC <highlight> %NPCNAME%'
     taskDescription:
       global:
         prefix: '    <veryUnimportant>└─ <unimportant>'
