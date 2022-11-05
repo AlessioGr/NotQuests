@@ -1503,14 +1503,13 @@ public class DataManager {
         }
     }
 
-    private void migrationAddProfileColumns(final PreparedStatement preparedStatement, final String tableName){
+    private void migrationAddProfileColumns(final Statement statement, final String query){
         if (main.getConfiguration().isVerboseStartupMessages()) {
-            main.getLogManager().info(LogCategory.DATA, "Adding 'Profile' column to '%s' if it the table exists but the column doesn't exist yet...".formatted(tableName));
+            main.getLogManager().info(LogCategory.DATA, "Adding 'Profile' column to database tables if it the table exists but the column doesn't exist yet...");
         }
 
         try{
-            preparedStatement.setString(1, tableName);
-            preparedStatement.execute();
+            statement.executeUpdate(query);
         }catch (Exception ignored){
         }
     }
@@ -1573,12 +1572,12 @@ public class DataManager {
              """)
 
         ) {
-            migrationAddProfileColumns(migrationAddProfileColumnsPreparedStatement, "QuestPlayerData");
-            migrationAddProfileColumns(migrationAddProfileColumnsPreparedStatement, "ActiveQuests");
-            migrationAddProfileColumns(migrationAddProfileColumnsPreparedStatement, "CompletedQuests");
-            migrationAddProfileColumns(migrationAddProfileColumnsPreparedStatement, "ActiveObjectives");
-            migrationAddProfileColumns(migrationAddProfileColumnsPreparedStatement, "ActiveTriggers");
-            migrationAddProfileColumns(migrationAddProfileColumnsPreparedStatement, "Tags");
+            migrationAddProfileColumns(statement, "ALTER TABLE QuestPlayerData ADD COLUMN `Profile` VARCHAR NOT NULL DEFAULT 'default'");
+            migrationAddProfileColumns(statement, "ALTER TABLE ActiveQuests ADD COLUMN `Profile` VARCHAR NOT NULL DEFAULT 'default'");
+            migrationAddProfileColumns(statement, "ALTER TABLE CompletedQuests ADD COLUMN `Profile` VARCHAR NOT NULL DEFAULT 'default'");
+            migrationAddProfileColumns(statement, "ALTER TABLE ActiveObjectives ADD COLUMN `Profile` VARCHAR NOT NULL DEFAULT 'default'");
+            migrationAddProfileColumns(statement, "ALTER TABLE ActiveTriggers ADD COLUMN `Profile` VARCHAR NOT NULL DEFAULT 'default'");
+            migrationAddProfileColumns(statement, "ALTER TABLE Tags ADD COLUMN `Profile` VARCHAR NOT NULL DEFAULT 'default'");
 
 
             if (main.getConfiguration().isVerboseStartupMessages()) {
