@@ -1461,7 +1461,7 @@ public class DataManager {
                 main.getTagManager().saveAllOnlinePlayerTags(true);
                 main.getQuestPlayerManager().saveAllPlayerDataAtOnce();
             }else{
-                for(QuestPlayer questPlayer : new ArrayList<>(main.getQuestPlayerManager().getActiveQuestPlayers())) { //Only need to save active ones here, as the saveSinglePlayerData() method already iterates through each active one to also save all non-active ones
+                for(final QuestPlayer questPlayer : new ArrayList<>(main.getQuestPlayerManager().getActiveQuestPlayers())) { //Only need to save active ones here, as the saveSinglePlayerData() method already iterates through each active one to also save all non-active ones
                     main.getQuestPlayerManager().saveSinglePlayerData(questPlayer.getPlayer());
                 }
             }
