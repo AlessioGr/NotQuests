@@ -619,6 +619,12 @@ public class DataManager {
                 "If this is set to true, all quests.yml files of all categories will be backed up everytime the plugin shuts down. This only include quests data - nothing else."
         ));
 
+        configuration.setStorageCreateDatabaseBackupBeforeDatabaseLoads(getGeneralConfigBoolean(
+                "storage.backups.create-for-database-before-database-loads",
+                true,
+                "If this is set to true, your database will be backed-up before it loads. This only works for SQLite databases as of now."
+        ));
+
         configuration.setMaxActiveQuestsPerPlayer(getGeneralConfigInt(
                 "general.max-active-quests-per-player",
                 -1,
@@ -1566,6 +1572,13 @@ public class DataManager {
     private void reloadDataInternal() {
         openConnection();
 
+        //First: back-up
+        if (getConfiguration().isStorageCreateDatabaseBackupBeforeDatabaseLoads()) {
+            main.getBackupManager().backupDatabase();
+        }
+
+
+
         //Create Database tables if they don't exist yet
         try (final Connection connection = getConnection();
              final Statement statement = connection.createStatement();
@@ -1596,6 +1609,8 @@ public class DataManager {
 
         ) {
 
+
+            //Migrations
             migrationAddProfileColumns(statement, "ALTER TABLE QuestPlayerData ADD COLUMN `Profile` VARCHAR NOT NULL DEFAULT 'default'");
             migrationAddProfileColumns(statement, "ALTER TABLE ActiveQuests ADD COLUMN `Profile` VARCHAR NOT NULL DEFAULT 'default'");
             migrationAddProfileColumns(statement, "ALTER TABLE CompletedQuests ADD COLUMN `Profile` VARCHAR NOT NULL DEFAULT 'default'");

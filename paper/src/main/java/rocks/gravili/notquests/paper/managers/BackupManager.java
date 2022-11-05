@@ -19,8 +19,13 @@
 package rocks.gravili.notquests.paper.managers;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import org.apache.commons.io.FileUtils;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
 
@@ -97,5 +102,41 @@ public class BackupManager {
         e.printStackTrace();
       }
     }
+  }
+
+  public void backupDatabase(){ //TODO: Make this work for MySQL as well
+    if (!prepareBackupFolder()) {
+      return;
+    }
+
+    main.getLogManager().info("Backing up database...");
+    if(main.getConfiguration().isMySQLEnabled()){
+      main.getLogManager().info("Cancelled: only SQLite databases can be backed up as of now, but you are using MySQL. Please backup your MySQL database manually from time to time.");
+      return;
+    }
+
+      File dataBaseFile = new File(main.getMain().getDataFolder(), "database_sqlite.db");
+      if (!dataBaseFile.exists()){
+        main.getLogManager().info("No database to back-up!");
+        return;
+      }
+    File newDatabaseBackupFile =
+            new File(
+                    main.getMain().getDataFolder().getPath()
+                            + "/backups/"
+                            + "database-backup-sqlite-"
+                            + backupFileDateFormat.format(new Date(System.currentTimeMillis()))
+                            + ".yml");
+      try {
+        FileUtils.copyDirectory(dataBaseFile, newDatabaseBackupFile);
+        main.getLogManager()
+                .info(
+                        "Your sqlite database has been successfully backed up to <highlight2>"
+                                + newDatabaseBackupFile.getPath());
+      } catch (IOException e) {
+        main.getLogManager()
+                .warn("There was an error saving the backup file for your sqlite database. Error:");
+        e.printStackTrace();
+      }
   }
 }

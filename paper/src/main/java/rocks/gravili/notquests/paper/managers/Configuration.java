@@ -49,6 +49,8 @@ public class Configuration {
   public boolean loadPlayerDataOnJoin = true;
   public boolean savePlayerDataOnQuit = true;
   public boolean storageCreateBackupsWhenServerShutsDown = true;
+  public boolean storageCreateDatabaseBackupBeforeDatabaseLoads = true;
+
   public String placeholder_player_active_quests_list_horizontal_separator = " | ";
   public int placeholder_player_active_quests_list_horizontal_limit = -1;
   public int placeholder_player_active_quests_list_vertical_limit = -1;
@@ -412,6 +414,15 @@ public class Configuration {
   public void setStorageCreateBackupsWhenServerShutsDown(
       boolean storageCreateBackupsWhenServerShutsDown) {
     this.storageCreateBackupsWhenServerShutsDown = storageCreateBackupsWhenServerShutsDown;
+  }
+
+  public boolean isStorageCreateDatabaseBackupBeforeDatabaseLoads() {
+    return storageCreateDatabaseBackupBeforeDatabaseLoads;
+  }
+
+  public void setStorageCreateDatabaseBackupBeforeDatabaseLoads(
+          boolean storageCreateDatabaseBackupBeforeDatabaseLoads) {
+    this.storageCreateDatabaseBackupBeforeDatabaseLoads = storageCreateDatabaseBackupBeforeDatabaseLoads;
   }
 
   public String getPlaceholder_player_active_quests_list_horizontal_separator() {
