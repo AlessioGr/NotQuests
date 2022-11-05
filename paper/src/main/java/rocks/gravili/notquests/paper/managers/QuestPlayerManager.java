@@ -47,6 +47,9 @@ public class QuestPlayerManager {
     if (!main.getConfiguration().loadPlayerData) {
       return;
     }
+    if(main.getConfiguration().isVerboseStartupMessages()){
+      main.getLogManager().info("Loading PlayerData of player %s...", player.getName());
+    }
     final UUID uuid = player.getUniqueId();
     questPlayersAndUUIDs.remove(uuid);
 
@@ -57,6 +60,10 @@ public class QuestPlayerManager {
   }
 
   public void saveSinglePlayerData(final Player player) {
+    if(player == null){
+      main.getLogManager().warn("Saving of single PlayerData has been skipped for a certain player, as they are null");
+      return;
+    }
     if(main.getConfiguration().isVerboseStartupMessages()){
       main.getLogManager().info("Saving PlayerData of player %s...", player.getName());
     }
@@ -237,7 +244,9 @@ public class QuestPlayerManager {
         questPlayerDataResult = questPlayerDataPSIfPlayerNotProvided.executeQuery();
       }
 
+      main.getLogManager().debug("Before questPlayerDataResult.next()");
       while (questPlayerDataResult.next()) {
+        main.getLogManager().debug("Next result!");
 
         final UUID uuid;
         if(player != null){
@@ -259,6 +268,9 @@ public class QuestPlayerManager {
         }else{
           profile = "default";
         }
+
+        main.getLogManager().debug("Profile: %s", profile);
+
 
         completedQuestsPS.setString(2, profile);
         activeQuestsPS.setString(2, profile);
@@ -454,6 +466,16 @@ public class QuestPlayerManager {
                           () -> {
                             questPlayer.onJoin(player);
                           });
+        }
+      }
+      main.getLogManager().debug("S1");
+      if(player != null){
+        main.getLogManager().debug("S2");
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
+        if(questPlayer != null){
+          main.getLogManager().debug("S3");
+          questPlayer.setCurrentlyLoading(false);
+          questPlayer.setFinishedLoadingGeneralData(true);
         }
       }
     } catch (Exception e) {
