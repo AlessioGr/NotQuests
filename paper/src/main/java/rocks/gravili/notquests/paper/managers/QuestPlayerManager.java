@@ -253,7 +253,7 @@ public class QuestPlayerManager {
         String profile;
         if(isColumnThere(questPlayerDataResult, "Profile")){
           profile = questPlayerDataResult.getString("Profile");
-          if(profile.isBlank()){
+          if(profile == null || profile.isBlank()){
             profile = "default";
           }
         }else{

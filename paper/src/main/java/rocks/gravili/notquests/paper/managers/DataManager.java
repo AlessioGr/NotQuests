@@ -66,6 +66,8 @@ import rocks.gravili.notquests.paper.structs.objectives.ObjectiveHolder;
  */
 public class DataManager {
 
+    private boolean hasToMigrateQuestPlayerDataTable = false;
+
     /**
      * ArrayList for Command Tab Completions. They will be re-used where possible. This is sort of like a buffer for completions.
      * It does not return the real completions, but it's for example used in ObjectivesAdminCommand handleCompletions() which is
@@ -1229,6 +1231,10 @@ public class DataManager {
         ));
 
         //Do potential data updating here
+        if(main.getConfiguration().getConfigurationVersionMajor() < 5 || (main.getConfiguration().getConfigurationVersionMajor() == 5 && main.getConfiguration().getConfigurationVersionMinor() < 8)){
+            hasToMigrateQuestPlayerDataTable = true;
+        }
+
         /////
         //Now update config version value, assuming everything is updated
         if (!getGeneralConfig().isString("config-version-do-not-edit") ||
@@ -1236,7 +1242,7 @@ public class DataManager {
             getGeneralConfig().set("config-version-do-not-edit", main.getMain().getDescription().getVersion());
             valueChanged = true;
         }
-        configuration.setConfigurationVersion(getGeneralConfig().getString("config-version-do-not-edit"));
+        configuration.setConfigurationVersion(getGeneralConfig().getString("config-version-do-not-edit", main.getMain().getDescription().getVersion()));
 
 
 
@@ -1541,6 +1547,22 @@ public class DataManager {
         }
     }
 
+    private void migrateQuestPlayerDataTable(final Statement statement) throws SQLException { //for < v5.8.0 cuz primary key way removed
+        main.getLogManager().info(LogCategory.DATA, "Migrating QuestPlayerData from versions <5.8.0");
+        statement.executeUpdate("""
+                ALTER TABLE QuestPlayerData RENAME TO QuestPlayerDataOld
+            """);
+        statement.executeUpdate("""
+                CREATE TABLE `QuestPlayerData` (`PlayerUUID` varchar(200), `QuestPoints` BIGINT(255), `Profile` varchar(200))
+            """);
+        statement.executeUpdate("""
+                INSERT INTO QuestPlayerData (PlayerUUID,QuestPoints,Profile) SELECT PlayerUUID,QuestPoints,Profile FROM QuestPlayerData
+            """);
+        statement.executeUpdate("""
+                DROP TABLE QuestPlayerDataOld
+            """);
+    }
+
     private void reloadData2() {
         openConnection();
 
@@ -1549,7 +1571,7 @@ public class DataManager {
              final Statement statement = connection.createStatement();
 
              final PreparedStatement createQuestPlayerDataTablePreparedStatement = connection.prepareStatement("""
-                CREATE TABLE IF NOT EXISTS `QuestPlayerData` (`PlayerUUID` varchar(200), `QuestPoints` BIGINT(255), `Profile` varchar(200), PRIMARY KEY (PlayerUUID))
+                CREATE TABLE IF NOT EXISTS `QuestPlayerData` (`PlayerUUID` varchar(200), `QuestPoints` BIGINT(255), `Profile` varchar(200))
              """);
 
              final PreparedStatement createActiveQuestsTablePreparedStatement = connection.prepareStatement("""
@@ -1569,12 +1591,17 @@ public class DataManager {
              """)
 
         ) {
+
             migrationAddProfileColumns(statement, "ALTER TABLE QuestPlayerData ADD COLUMN `Profile` VARCHAR NOT NULL DEFAULT 'default'");
             migrationAddProfileColumns(statement, "ALTER TABLE ActiveQuests ADD COLUMN `Profile` VARCHAR NOT NULL DEFAULT 'default'");
             migrationAddProfileColumns(statement, "ALTER TABLE CompletedQuests ADD COLUMN `Profile` VARCHAR NOT NULL DEFAULT 'default'");
             migrationAddProfileColumns(statement, "ALTER TABLE ActiveObjectives ADD COLUMN `Profile` VARCHAR NOT NULL DEFAULT 'default'");
             migrationAddProfileColumns(statement, "ALTER TABLE ActiveTriggers ADD COLUMN `Profile` VARCHAR NOT NULL DEFAULT 'default'");
             migrationAddProfileColumns(statement, "ALTER TABLE Tags ADD COLUMN `Profile` VARCHAR NOT NULL DEFAULT 'default'");
+
+            if(hasToMigrateQuestPlayerDataTable){
+                migrateQuestPlayerDataTable(statement);
+            }
 
 
             if (main.getConfiguration().isVerboseStartupMessages()) {

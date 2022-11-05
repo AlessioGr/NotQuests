@@ -37,7 +37,10 @@ public class Configuration {
   public boolean visualObjectiveTrackingShowProgressInBossBarIfObjectiveCompleted = false;
   public int visualObjectiveTrackingBossBarTimer = 10;
 
-  public String configurationVersion = "";
+  private String configurationVersion = "";
+  private int configurationVersionMajor;
+  private int configurationVersionMinor;
+  private int configurationVersionPatch;
 
   public boolean debug = false;
   public boolean verboseStartupMessages = true;
@@ -255,8 +258,22 @@ public class Configuration {
     return configurationVersion;
   }
 
+  public final int getConfigurationVersionMajor(){
+    return this.configurationVersionMajor;
+  }
+  public final int getConfigurationVersionMinor(){
+    return this.configurationVersionMinor;
+  }
+  public final int getConfigurationVersionPatch(){
+    return this.configurationVersionPatch;
+  }
+
   public void setConfigurationVersion(String configurationVersion) {
     this.configurationVersion = configurationVersion;
+    final String[] configurationVersionSplit = configurationVersion.split("\\.");
+    this.configurationVersionMajor = Integer.parseInt(configurationVersionSplit[0]);
+    this.configurationVersionMinor = Integer.parseInt(configurationVersionSplit[1]);
+    this.configurationVersionPatch = Integer.parseInt(configurationVersionSplit[2]);
   }
 
   public boolean isQuestVisibilityEvaluationMaxAccepts() {
@@ -1150,4 +1167,6 @@ public class Configuration {
   public void setColorsConsoleDebugDownsampled(String colorsConsoleDebugDownsampled) {
     this.colorsConsoleDebugDownsampled = colorsConsoleDebugDownsampled;
   }
+
+
 }
