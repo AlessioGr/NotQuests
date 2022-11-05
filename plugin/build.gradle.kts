@@ -273,7 +273,7 @@ bukkit {
         }
         register("notquests.user.profiles"){
             default = net.minecrell.pluginyml.bukkit.BukkitPluginDescription.Permission.Default.OP
-            description = "Gives the player permission to use the /notquests profile command, and to create, delete and switch profiles."
+            description = "Gives the player permission to use the /notquests profiles command, and to create, delete and switch profiles."
         }
     }
 }

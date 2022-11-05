@@ -521,6 +521,7 @@ public class LanguageManager {
             } else if (internalPlaceholderObject instanceof final QuestPlayer questPlayer) {
                 //main.getLogManager().log(Level.INFO, "Applying QuestPlayer placeholders...");
                 internalPlaceholderReplacements.put("%QUESTPOINTS%", () -> "" + questPlayer.getQuestPoints());
+                internalPlaceholderReplacements.put("%PROFILENAME%", () -> "" + questPlayer.getProfile());
                 foundQuestPlayer = questPlayer;
             } else if (internalPlaceholderObject instanceof final Map providedInternalPlaceholderReplacements) {
                 for (final Object key : providedInternalPlaceholderReplacements.keySet()) {

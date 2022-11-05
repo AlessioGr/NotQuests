@@ -153,6 +153,10 @@ public class QuestPlayerManager {
     }};
   }
 
+  public final HashMap<UUID, List<QuestPlayer>> getQuestPlayersForUUIDs() {
+    return questPlayersAndUUIDs;
+  }
+
   public final QuestPlayer getQuestPlayer(final UUID uuid) {
     return activeQuestPlayersAndUUIDs.get(uuid);
   }
@@ -201,6 +205,10 @@ public class QuestPlayerManager {
 
   public final Collection<QuestPlayer> getActiveQuestPlayers() {
     return activeQuestPlayersAndUUIDs.values();
+  }
+
+  public void changeProfile(final UUID uuid, final QuestPlayer newQuestPlayer){
+    activeQuestPlayersAndUUIDs.put(uuid, newQuestPlayer);
   }
 
   public String acceptQuest(
@@ -694,4 +702,4 @@ public class QuestPlayerManager {
   }
 
 
-  }
+}
