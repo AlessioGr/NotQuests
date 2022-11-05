@@ -1181,10 +1181,10 @@ public class QuestEvents implements Listener {
         if(main.getConfiguration().isLoadPlayerDataOnJoin()){
             if (Bukkit.isPrimaryThread()) {
                 Bukkit.getScheduler().runTaskAsynchronously(main.getMain(), () -> {
-                    main.getQuestPlayerManager().loadSinglePlayerData(e.getPlayer());
+                    main.getQuestPlayerManager().loadSinglePlayerData(e.getPlayer().getUniqueId());
                 });
             }else{
-                main.getQuestPlayerManager().loadSinglePlayerData(e.getPlayer());
+                main.getQuestPlayerManager().loadSinglePlayerData(e.getPlayer().getUniqueId());
             }
 
             //no need to call onJoin here as it's called by loadSinglePlayerData automatically

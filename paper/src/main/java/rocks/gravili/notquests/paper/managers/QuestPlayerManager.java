@@ -36,25 +36,27 @@ import rocks.gravili.notquests.paper.structs.triggers.ActiveTrigger;
 public class QuestPlayerManager {
   private final NotQuests main;
 
-  private final HashMap<UUID, QuestPlayer> questPlayersAndUUIDs;
+  private final HashMap<UUID, List<QuestPlayer>> questPlayersAndUUIDs; //Can contain multiple profiles since one UUID can have multiple profiles => multiple QuestPlayer
+  private final HashMap<UUID, QuestPlayer> activeQuestPlayersAndUUIDs; //Only stores the current active profile
+
 
   public QuestPlayerManager(NotQuests notQuests) {
     this.main = notQuests;
     questPlayersAndUUIDs = new HashMap<>();
+    activeQuestPlayersAndUUIDs = new HashMap<>();
   }
 
-  public void loadSinglePlayerData(final Player player) {
+  public void loadSinglePlayerData(final UUID uuid) {
     if (!main.getConfiguration().loadPlayerData) {
       return;
     }
     if(main.getConfiguration().isVerboseStartupMessages()){
-      main.getLogManager().info("Loading PlayerData of player %s...", player.getName());
+      main.getLogManager().info("Loading PlayerData of player %s...", uuid.toString());
     }
-    final UUID uuid = player.getUniqueId();
     questPlayersAndUUIDs.remove(uuid);
+    activeQuestPlayersAndUUIDs.remove(uuid);
 
-
-    loadPlayerDataInternal(player);
+    loadPlayerDataInternal(uuid);
 
 
   }
@@ -106,6 +108,7 @@ public class QuestPlayerManager {
     }
 
     questPlayersAndUUIDs.remove(player.getUniqueId());
+    activeQuestPlayersAndUUIDs.remove(player.getUniqueId());
   }
 
   private boolean isColumnThere(final ResultSet rs, final String column){
@@ -125,12 +128,13 @@ public class QuestPlayerManager {
     }
 
     questPlayersAndUUIDs.clear();
+    activeQuestPlayersAndUUIDs.clear();
 
     loadPlayerDataInternal(null);
     main.getTagManager().loadAllOnlinePlayerTags();
   }
 
-  public void savePlayerData() {
+  public void saveAllPlayerDataAtOnce() {
     if (!main.getConfiguration().savePlayerData) {
       main.getLogManager().info("Saving of PlayerData has been skipped...");
       return;
@@ -138,26 +142,65 @@ public class QuestPlayerManager {
 
     main.getLogManager().info("Saving player data...");
 
-    savePlayerDataInternal(questPlayersAndUUIDs.values().stream().toList());
+    savePlayerDataInternal(getAllQuestPlayersForAllProfiles());
 
     main.getLogManager().info("PlayerData of all players saved");
   }
 
-  public final QuestPlayer getQuestPlayer(final UUID uuid) {
-    return questPlayersAndUUIDs.get(uuid);
+  public final ArrayList<QuestPlayer> getAllQuestPlayersForAllProfiles(){
+    return new ArrayList<>(){{
+      questPlayersAndUUIDs.forEach((uuid, questPlayers) -> addAll(questPlayers));
+    }};
   }
 
-  public final @NotNull QuestPlayer getOrCreateQuestPlayer(@NotNull final UUID uuid) {
+  public final QuestPlayer getQuestPlayer(final UUID uuid) {
+    return activeQuestPlayersAndUUIDs.get(uuid);
+  }
+
+  /*Useful for getting offline players*/
+  public final @NotNull QuestPlayer getOrCreateQuestPlayerFromDatabase(@NotNull final UUID uuid ) {
+    QuestPlayer foundQuestPlayer = getQuestPlayer(uuid);
+    if (foundQuestPlayer == null) {
+      loadSinglePlayerData(uuid);
+      return getQuestPlayer(uuid);
+    }
+    return foundQuestPlayer;
+  }
+    public final @NotNull QuestPlayer getOrCreateQuestPlayer(@NotNull final UUID uuid) {
     QuestPlayer foundQuestPlayer = getQuestPlayer(uuid);
     if (foundQuestPlayer == null) {
       foundQuestPlayer = new QuestPlayer(main, uuid, "default");
-      questPlayersAndUUIDs.put(uuid, foundQuestPlayer);
+      if(questPlayersAndUUIDs.containsKey(uuid)){
+        questPlayersAndUUIDs.get(uuid).add(foundQuestPlayer);
+      } else {
+        questPlayersAndUUIDs.put(uuid, List.of(foundQuestPlayer));
+      }
+      activeQuestPlayersAndUUIDs.put(uuid, foundQuestPlayer);
     }
     return foundQuestPlayer;
   }
 
-  public final Collection<QuestPlayer> getQuestPlayers() {
-    return questPlayersAndUUIDs.values();
+  public final String createQuestPlayer(final UUID uuid, final String profile, final boolean setAsCurrentProfile) {
+    QuestPlayer questPlayer = getQuestPlayer(uuid);
+    if (questPlayer == null) {
+      questPlayer = new QuestPlayer(main, uuid, profile);
+      if(questPlayersAndUUIDs.containsKey(uuid)){
+        questPlayersAndUUIDs.get(uuid).add(questPlayer);
+      } else {
+        questPlayersAndUUIDs.put(uuid, List.of(questPlayer));
+      }
+      if(setAsCurrentProfile){
+        activeQuestPlayersAndUUIDs.put(uuid, questPlayer);
+      }
+      return "<success>Quest player with uuid <highlight>%s</highlight> has been created successfully!".formatted(uuid);
+
+    } else {
+      return "<error>Quest player already exists.";
+    }
+  }
+
+  public final Collection<QuestPlayer> getActiveQuestPlayers() {
+    return activeQuestPlayersAndUUIDs.values();
   }
 
   public String acceptQuest(
@@ -181,17 +224,7 @@ public class QuestPlayerManager {
     return questPlayer.addActiveQuest(newActiveQuest, triggerAcceptQuestTrigger, sendQuestInfo);
   }
 
-  public final String createQuestPlayer(final UUID uuid, final String profile) {
-    QuestPlayer questPlayer = getQuestPlayer(uuid);
-    if (questPlayer == null) {
-      questPlayer = new QuestPlayer(main, uuid, profile);
-      questPlayersAndUUIDs.put(uuid, questPlayer);
-      return "<success>Quest player with uuid <highlight>%s</highlight> has been created successfully!".formatted(uuid);
 
-    } else {
-      return "<error>Quest player already exists.";
-    }
-  }
 
   public final String forceAcceptQuest(
       final UUID uuid, final Quest quest) { // Ignores max amount limit, cooldown and requirements
@@ -209,13 +242,16 @@ public class QuestPlayerManager {
 
 
 
-  private void loadPlayerDataInternal(final @Nullable Player player) {
+  private void loadPlayerDataInternal(final @Nullable UUID playerUUID) {
     try (Connection connection = main.getDataManager().getConnection();
-         final PreparedStatement questPlayerDataPSIfPlayerProvided = connection.prepareStatement("""
-            SELECT * FROM QuestPlayerData WHERE PlayerUUID LIKE ?;
+         final PreparedStatement questPlayerDataIfPlayerProvidedPS = connection.prepareStatement("""
+            SELECT * FROM QuestPlayerData WHERE PlayerUUID = ?;
           """);
-         final PreparedStatement questPlayerDataPSIfPlayerNotProvided = connection.prepareStatement("""
+         final PreparedStatement questPlayerDataIfPlayerNotProvidedPS = connection.prepareStatement("""
             SELECT * FROM QuestPlayerData;
+          """);
+         final PreparedStatement questPlayerProfileDataPS = connection.prepareStatement("""
+            SELECT * FROM QuestPlayerProfileData WHERE PlayerUUID = ?;
           """);
          final PreparedStatement completedQuestsPS = connection.prepareStatement("""
             SELECT QuestName, TimeCompleted FROM CompletedQuests
@@ -237,11 +273,11 @@ public class QuestPlayerManager {
 
 
       final ResultSet questPlayerDataResult;
-      if(player != null){
-        questPlayerDataPSIfPlayerProvided.setString(1, player.getUniqueId().toString());
-        questPlayerDataResult = questPlayerDataPSIfPlayerProvided.executeQuery();
+      if(playerUUID != null){
+        questPlayerDataIfPlayerProvidedPS.setString(1, playerUUID.toString());
+        questPlayerDataResult = questPlayerDataIfPlayerProvidedPS.executeQuery();
       }else{
-        questPlayerDataResult = questPlayerDataPSIfPlayerNotProvided.executeQuery();
+        questPlayerDataResult = questPlayerDataIfPlayerNotProvidedPS.executeQuery();
       }
 
       main.getLogManager().debug("Before questPlayerDataResult.next()");
@@ -249,8 +285,8 @@ public class QuestPlayerManager {
         main.getLogManager().debug("Next result!");
 
         final UUID uuid;
-        if(player != null){
-          uuid = player.getUniqueId();
+        if(playerUUID != null){
+          uuid = playerUUID;
         }else{
           uuid = UUID.fromString(questPlayerDataResult.getString("PlayerUUID"));
         }
@@ -271,14 +307,21 @@ public class QuestPlayerManager {
 
         main.getLogManager().debug("Profile: %s", profile);
 
-
         completedQuestsPS.setString(2, profile);
         activeQuestsPS.setString(2, profile);
         activeQuestTriggersPS.setString(2, profile);
         activeQuestObjectivesPS.setString(2, profile);
 
-        createQuestPlayer(uuid, profile);
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(uuid);
+
+        questPlayerProfileDataPS.setString(1, uuid.toString());
+        final ResultSet currentQuestPlayerProfile = questPlayerProfileDataPS.executeQuery();
+        String currentProfile = "default";
+        while (currentQuestPlayerProfile.next()) {
+          currentProfile = currentQuestPlayerProfile.getString("CurrentProfile");
+        }
+
+        createQuestPlayer(uuid, profile, currentProfile == null || profile.equals(currentProfile) || currentProfile.isBlank());
+        final QuestPlayer questPlayer = getQuestPlayer(uuid);
 
         final long questPoints = questPlayerDataResult.getLong("QuestPoints");
         if (main.getConfiguration().isVerboseStartupMessages()) {
@@ -457,38 +500,46 @@ public class QuestPlayerManager {
         questPlayer.setFinishedLoadingGeneralData(true);
 
 
-        if(player != null){
+        if(playerUUID != null){
           //Load single player data => player actually joined and tagmanager wont load automatically after that
-          questPlayer.onJoinAsync(player);
-          Bukkit.getScheduler()
-                  .runTask(
-                          main.getMain(),
-                          () -> {
-                            questPlayer.onJoin(player);
-                          });
+          final Player player = Bukkit.getPlayer(playerUUID);
+          if(player != null){
+            questPlayer.onJoinAsync(player);
+            Bukkit.getScheduler()
+                    .runTask(
+                            main.getMain(),
+                            () -> {
+                              questPlayer.onJoin(player);
+                            });
+          }
+
         }
       }
-      if(player != null){
-        if(main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId()) == null){
-          final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
+      if(playerUUID != null){
+        if(getQuestPlayer(playerUUID) == null){
+          final QuestPlayer questPlayer = getOrCreateQuestPlayer(playerUUID);
           questPlayer.setCurrentlyLoading(false);
           questPlayer.setFinishedLoadingGeneralData(true);
-          questPlayer.onJoinAsync(player);
-          Bukkit.getScheduler()
-                  .runTask(
-                          main.getMain(),
-                          () -> {
-                            questPlayer.onJoin(player);
-                          });
+          final Player player = Bukkit.getPlayer(playerUUID);
+          if(player != null){
+            questPlayer.onJoinAsync(player);
+            Bukkit.getScheduler()
+                    .runTask(
+                            main.getMain(),
+                            () -> {
+                              questPlayer.onJoin(player);
+                            });
+          }
+
         }
 
       }
     } catch (Exception e) {
-      if(player != null){
+      if(playerUUID != null){
         main.getDataManager()
                 .disablePluginAndSaving(
                         "There was a database error, so QuestPlayer loading for player <highlight>%s</highlight> has been disabled. (1.1)".formatted(
-                                player.getName()
+                                playerUUID.toString()
                         ),
                         e);
       }else{
@@ -500,6 +551,14 @@ public class QuestPlayerManager {
 
   private void savePlayerDataInternal(final List<QuestPlayer> questPlayers) {
     try (Connection connection = main.getDataManager().getConnection();
+         final PreparedStatement deleteFromQuestPlayerProfileDataPS = connection.prepareStatement("""
+            DELETE FROM QuestPlayerProfileData WHERE PlayerUUID = ?;
+         """);
+
+         final PreparedStatement insertIntoQuestPlayerProfileDataPS = connection.prepareStatement("""
+            INSERT INTO QuestPlayerProfileData (PlayerUUID, CurrentProfile) VALUES (?, ?);
+          """);
+
          final PreparedStatement deleteFromQuestPlayerDataPS = connection.prepareStatement("""
             DELETE FROM QuestPlayerData WHERE PlayerUUID = ? AND Profile = ?;
          """);
@@ -537,6 +596,16 @@ public class QuestPlayerManager {
         final long questPoints = questPlayer.getQuestPoints();
         final UUID questPlayerUUID = questPlayer.getUniqueId();
         final String profile = questPlayer.getProfile();
+
+        //Current Profile
+        deleteFromQuestPlayerProfileDataPS.setString(1, questPlayerUUID.toString());
+        deleteFromQuestPlayerDataPS.executeUpdate();
+
+        insertIntoQuestPlayerProfileDataPS.setString(1, questPlayerUUID.toString());
+        final QuestPlayer activeQuestPlayer = activeQuestPlayersAndUUIDs.get(questPlayerUUID);
+        insertIntoQuestPlayerProfileDataPS.setString(2, activeQuestPlayer != null ? activeQuestPlayer.getProfile() : "default");
+        insertIntoQuestPlayerProfileDataPS.executeUpdate();
+
         // QuestPoints
         deleteFromQuestPlayerDataPS.setString(1, questPlayerUUID.toString());
         deleteFromQuestPlayerDataPS.setString(2, profile);

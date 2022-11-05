@@ -533,7 +533,7 @@ public class AdminCommands {
                     context.getSender().sendMessage(Component.empty());
 
                     final Quest quest = context.get("quest");
-                    for (final QuestPlayer questPlayer : main.getQuestPlayerManager().getQuestPlayers()) { //TODO: Doesn't include players which aren't loaded from the database
+                    for (final QuestPlayer questPlayer : main.getQuestPlayerManager().getAllQuestPlayersForAllProfiles()) { //TODO: Doesn't include players which aren't loaded from the database
                         final ArrayList<ActiveQuest> activeQuestsToRemove = new ArrayList<>();
                         for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                             if (activeQuest.getQuest().equals(quest)) {
@@ -575,7 +575,7 @@ public class AdminCommands {
                     final Quest quest = context.get("quest");
 
 
-                    for (final QuestPlayer questPlayer : main.getQuestPlayerManager().getQuestPlayers()) { //TODO: Doesn't include players which aren't loaded from the database
+                    for (final QuestPlayer questPlayer : main.getQuestPlayerManager().getAllQuestPlayersForAllProfiles()) { //TODO: Doesn't include players which aren't loaded from the database
                         final ArrayList<ActiveQuest> activeQuestsToRemove = new ArrayList<>();
                         for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                             if (activeQuest.getQuest().equals(quest)) {
@@ -1367,57 +1367,20 @@ public class AdminCommands {
                     int questPointsToAdd = context.get("amount");
 
                     if (singlePlayerSelector.hasAny() && singlePlayerSelector.getPlayer() != null) {
-                        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(singlePlayerSelector.getPlayer().getUniqueId());
-                        if (questPlayer != null) {
-                            long oldQuestPoints = questPlayer.getQuestPoints();
-                            questPlayer.addQuestPoints(questPointsToAdd, false);
-                            context.getSender().sendMessage(main.parse("<main>Quest points for player <highlight>" + singlePlayerSelector.getPlayer().getName() + "</highlight> <green>(online)</green> have been set from <unimportant>" + oldQuestPoints
-                                    + "</unimportant> to <highlight2>"+ (oldQuestPoints + questPointsToAdd) + "</highlight2>."));
-                        } else {
-                            context.getSender().sendMessage(main.parse("<warn>Seems like the player <highlight>" + singlePlayerSelector.getPlayer().getName() + "</highlight> <green>(online)</green> never accepted any quests! A new QuestPlayer has been created for him."));
-                            context.getSender().sendMessage(main.parse("<main>Quest player creation status: <highlight>" + main.getQuestPlayerManager().createQuestPlayer(singlePlayerSelector.getPlayer().getUniqueId(), "default")));
-                            final QuestPlayer newQuestPlayer = main.getQuestPlayerManager().getQuestPlayer(singlePlayerSelector.getPlayer().getUniqueId());
-                            if (newQuestPlayer != null) {
-                                long oldQuestPoints = newQuestPlayer.getQuestPoints();
-                                newQuestPlayer.addQuestPoints(questPointsToAdd, false);
-                                context.getSender().sendMessage(main.parse(
-                                        "<success>Quest points for player <highlight>"+ singlePlayerSelector.getPlayer().getName()
-                                                + "</highlight> <green>(online)</green> have been set from <unimportant>" + oldQuestPoints + "</unimportant> to <highlight2>"
-                                                + (oldQuestPoints + questPointsToAdd) + "</highlight2>."
-                                ));
-                            } else {
-                                context.getSender().sendMessage(main.parse("<error>Something went wrong during the questPlayer creation!"));
-                            }
-                        }
+                        final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(singlePlayerSelector.getPlayer().getUniqueId());
+                        long oldQuestPoints = questPlayer.getQuestPoints();
+                        questPlayer.addQuestPoints(questPointsToAdd, false);
+                        context.getSender().sendMessage(main.parse("<main>Quest points for player <highlight>" + singlePlayerSelector.getPlayer().getName() + "</highlight> <green>(online)</green> have been set from <unimportant>" + oldQuestPoints
+                                + "</unimportant> to <highlight2>"+ (oldQuestPoints + questPointsToAdd) + "</highlight2>."));
                     } else {
                         final OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(singlePlayerSelector.getSelector());
-                        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(offlinePlayer.getUniqueId());
-                        if (questPlayer != null) {
-                            final long oldQuestPoints = questPlayer.getQuestPoints();
-                            questPlayer.addQuestPoints(questPointsToAdd, false);
-                            context.getSender().sendMessage(main.parse(  "<main>Quest points for player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red> have been set from <unimportant>" + oldQuestPoints
-                                    + "</unimportant> to <highlight2>" + (oldQuestPoints + questPointsToAdd) + "</highlight2>."));
-                        } else {
-                            context.getSender().sendMessage(main.parse("<warn>Seems like the player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red> never accepted any quests! A new QuestPlayer has been created for him."));
-                            context.getSender().sendMessage(main.parse("<main>Quest player creation status: <highlight>" + main.getQuestPlayerManager().createQuestPlayer(offlinePlayer.getUniqueId(), "default")));
+                        final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayerFromDatabase(offlinePlayer.getUniqueId());
+                        final long oldQuestPoints = questPlayer.getQuestPoints();
+                        questPlayer.addQuestPoints(questPointsToAdd, false);
+                        context.getSender().sendMessage(main.parse(  "<main>Quest points for player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red> have been set from <unimportant>" + oldQuestPoints
+                                + "</unimportant> to <highlight2>" + (oldQuestPoints + questPointsToAdd) + "</highlight2>."));
 
-                            final QuestPlayer newQuestPlayer = main.getQuestPlayerManager().getQuestPlayer(offlinePlayer.getUniqueId());
-                            if (newQuestPlayer != null) {
-                                final long oldQuestPoints = newQuestPlayer.getQuestPoints();
-                                newQuestPlayer.addQuestPoints(questPointsToAdd, false);
-                                context.getSender().sendMessage(main.parse(
-                                        "<success>Quest points for player <highlight>" + offlinePlayer.getName()
-                                                + "</highlight> <red>(offline)</red> have been set from <unimportant>" + oldQuestPoints + "</unimportant> to <highlight2>"
-                                                + (oldQuestPoints + questPointsToAdd) + "</highlight2>."));
-                            } else {
-                                context.getSender().sendMessage(main.parse("<error>Something went wrong during the questPlayer creation!"));
-                            }
-                        }
-                        if (questPlayer != null) {
-                            context.getSender().sendMessage(main.parse("<main>Quest points for player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red>: <highlight2>"  + questPlayer.getQuestPoints()));
-                        } else {
-                            context.getSender().sendMessage(main.parse("<error>Seems like the player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red> does not have any quest points!"));
-                        }
+                        context.getSender().sendMessage(main.parse("<main>Quest points for player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red>: <highlight2>"  + questPlayer.getQuestPoints()));
                     }
                 }));
 
@@ -1431,57 +1394,20 @@ public class AdminCommands {
                     int questPointsToRemove = context.get("amount");
 
                     if (singlePlayerSelector.hasAny() && singlePlayerSelector.getPlayer() != null) {
-                        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(singlePlayerSelector.getPlayer().getUniqueId());
-                        if (questPlayer != null) {
-                            long oldQuestPoints = questPlayer.getQuestPoints();
-                            questPlayer.removeQuestPoints(questPointsToRemove, false);
-                            context.getSender().sendMessage(main.parse(  "<main>Quest points for player <highlight>" + singlePlayerSelector.getPlayer().getName() + "</highlight> <green>(online)</green> have been set from <unimportant>" + oldQuestPoints
-                                    + "</unimportant> to <highlight2>" + (oldQuestPoints - questPointsToRemove) + "</highlight2>."));
-                        } else {
-                            context.getSender().sendMessage(main.parse("<warn>Seems like the player <highlight>" + singlePlayerSelector.getPlayer().getName() + "</highlight> <green>(online)</green> never accepted any quests! A new QuestPlayer has been created for him."));
-                            context.getSender().sendMessage(main.parse("<main>Quest player creation status: <highlight>" + main.getQuestPlayerManager().createQuestPlayer(singlePlayerSelector.getPlayer().getUniqueId(), "default")));
-                            final QuestPlayer newQuestPlayer = main.getQuestPlayerManager().getQuestPlayer(singlePlayerSelector.getPlayer().getUniqueId());
-                            if (newQuestPlayer != null) {
-                                long oldQuestPoints = newQuestPlayer.getQuestPoints();
-                                newQuestPlayer.removeQuestPoints(questPointsToRemove, false);
-                                context.getSender().sendMessage(main.parse(
-                                        "<success>Quest points for player <highlight>" + singlePlayerSelector.getPlayer().getName()
-                                                + "</highlight> <green>(online)</green> have been set from <unimportant>" + oldQuestPoints + "</unimportant> to <highlight2>"
-                                                + (oldQuestPoints - questPointsToRemove) + "</highlight2>."
-                                ));
-                            } else {
-                                context.getSender().sendMessage(main.parse( "<error>Something went wrong during the questPlayer creation!"));
-                            }
-                        }
+                        final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(singlePlayerSelector.getPlayer().getUniqueId());
+                        long oldQuestPoints = questPlayer.getQuestPoints();
+                        questPlayer.removeQuestPoints(questPointsToRemove, false);
+                        context.getSender().sendMessage(main.parse(  "<main>Quest points for player <highlight>" + singlePlayerSelector.getPlayer().getName() + "</highlight> <green>(online)</green> have been set from <unimportant>" + oldQuestPoints
+                                + "</unimportant> to <highlight2>" + (oldQuestPoints - questPointsToRemove) + "</highlight2>."));
                     } else {
                         final OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(singlePlayerSelector.getSelector());
-                        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(offlinePlayer.getUniqueId());
-                        if (questPlayer != null) {
-                            final long oldQuestPoints = questPlayer.getQuestPoints();
-                            questPlayer.removeQuestPoints(questPointsToRemove, false);
-                            context.getSender().sendMessage(main.parse( "<main>Quest points for player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red> have been set from <unimportant>" + oldQuestPoints
-                                    + "</unimportant> to <highlight2>" + (oldQuestPoints - questPointsToRemove) + "</highlight2>."));
-                        } else {
-                            context.getSender().sendMessage(main.parse( "<warn>Seems like the player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red> never accepted any quests! A new QuestPlayer has been created for him."));
-                            context.getSender().sendMessage(main.parse("<main>Quest player creation status: <highlight>" + main.getQuestPlayerManager().createQuestPlayer(offlinePlayer.getUniqueId(), "default")));
+                        final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayerFromDatabase(offlinePlayer.getUniqueId());
+                        final long oldQuestPoints = questPlayer.getQuestPoints();
+                        questPlayer.removeQuestPoints(questPointsToRemove, false);
+                        context.getSender().sendMessage(main.parse( "<main>Quest points for player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red> have been set from <unimportant>" + oldQuestPoints
+                                + "</unimportant> to <highlight2>" + (oldQuestPoints - questPointsToRemove) + "</highlight2>."));
 
-                            final QuestPlayer newQuestPlayer = main.getQuestPlayerManager().getQuestPlayer(offlinePlayer.getUniqueId());
-                            if (newQuestPlayer != null) {
-                                final long oldQuestPoints = newQuestPlayer.getQuestPoints();
-                                newQuestPlayer.removeQuestPoints(questPointsToRemove, false);
-                                context.getSender().sendMessage(main.parse(
-                                        "<success>Quest points for player <highlight>" + offlinePlayer.getName()
-                                                + "</highlight> <red>(offline)</red> have been set from <unimportant>" + oldQuestPoints + "</unimportant> to <highlight2>"
-                                                + (oldQuestPoints - questPointsToRemove) + "</highlight2>."));
-                            } else {
-                                context.getSender().sendMessage(main.parse("<error>Something went wrong during the questPlayer creation!"));
-                            }
-                        }
-                        if (questPlayer != null) {
-                            context.getSender().sendMessage(main.parse("<main>Quest points for player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red>: <highlight2>" + questPlayer.getQuestPoints()));
-                        } else {
-                            context.getSender().sendMessage(main.parse("<error>Seems like the player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red> does not have any quest points!"));
-                        }
+                        context.getSender().sendMessage(main.parse("<main>Quest points for player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red>: <highlight2>" + questPlayer.getQuestPoints()));
                     }
                 }));
 
@@ -1496,57 +1422,19 @@ public class AdminCommands {
                     int newQuestPointsAmount = context.get("amount");
 
                     if (singlePlayerSelector.hasAny() && singlePlayerSelector.getPlayer() != null) {
-                        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(singlePlayerSelector.getPlayer().getUniqueId());
-                        if (questPlayer != null) {
-                            long oldQuestPoints = questPlayer.getQuestPoints();
-                            questPlayer.setQuestPoints(newQuestPointsAmount, false);
-                            context.getSender().sendMessage(main.parse("<main>Quest points for player <highlight>" + singlePlayerSelector.getPlayer().getName() + "</highlight> <green>(online)</green> have been set from <unimportant>" + oldQuestPoints
-                                    + "</unimportant> to <highlight2>" + (newQuestPointsAmount) + "</highlight2>."));
-                        } else {
-                            context.getSender().sendMessage(main.parse( "<warn>Seems like the player <highlight>" + singlePlayerSelector.getPlayer().getName() + "</highlight> <green>(online)</green> never accepted any quests! A new QuestPlayer has been created for him."));
-                            context.getSender().sendMessage(main.parse("<main>Quest player creation status: <highlight>" + main.getQuestPlayerManager().createQuestPlayer(singlePlayerSelector.getPlayer().getUniqueId(), "default")));
-                            final QuestPlayer newQuestPlayer = main.getQuestPlayerManager().getQuestPlayer(singlePlayerSelector.getPlayer().getUniqueId());
-                            if (newQuestPlayer != null) {
-                                long oldQuestPoints = newQuestPlayer.getQuestPoints();
-                                newQuestPlayer.setQuestPoints(newQuestPointsAmount, false);
-                                context.getSender().sendMessage(main.parse(
-                                        "<success>Quest points for player <highlight>" + singlePlayerSelector.getPlayer().getName()
-                                                + "</highlight> <green>(online)</green> have been set from <unimportant>" + oldQuestPoints + "</unimportant> to <highlight2>"
-                                                + (newQuestPointsAmount) + "</highlight2>."
-                                ));
-                            } else {
-                                context.getSender().sendMessage(main.parse("<error>Something went wrong during the questPlayer creation!"));
-                            }
-                        }
+                        final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(singlePlayerSelector.getPlayer().getUniqueId());
+                        long oldQuestPoints = questPlayer.getQuestPoints();
+                        questPlayer.setQuestPoints(newQuestPointsAmount, false);
+                        context.getSender().sendMessage(main.parse("<main>Quest points for player <highlight>" + singlePlayerSelector.getPlayer().getName() + "</highlight> <green>(online)</green> have been set from <unimportant>" + oldQuestPoints
+                                + "</unimportant> to <highlight2>" + (newQuestPointsAmount) + "</highlight2>."));
                     } else {
                         final OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(singlePlayerSelector.getSelector());
-                        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(offlinePlayer.getUniqueId());
-                        if (questPlayer != null) {
-                            final long oldQuestPoints = questPlayer.getQuestPoints();
-                            questPlayer.setQuestPoints(newQuestPointsAmount, false);
-                            context.getSender().sendMessage(main.parse("<main>Quest points for player <highlight>" + offlinePlayer.getName() + "</highlight2> <red>(offline)</red> have been set from <unimportant>" + oldQuestPoints
-                                    + "</unimportant> to <highlight2>" + (newQuestPointsAmount) + "</highlight2>."));
-                        } else {
-                            context.getSender().sendMessage(main.parse("<warn>Seems like the player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red> never accepted any quests! A new QuestPlayer has been created for him."));
-                            context.getSender().sendMessage(main.parse("<main>Quest player creation status: <highlight>" + main.getQuestPlayerManager().createQuestPlayer(offlinePlayer.getUniqueId(), "default")));
-
-                            final QuestPlayer newQuestPlayer = main.getQuestPlayerManager().getQuestPlayer(offlinePlayer.getUniqueId());
-                            if (newQuestPlayer != null) {
-                                final long oldQuestPoints = newQuestPlayer.getQuestPoints();
-                                newQuestPlayer.setQuestPoints(newQuestPointsAmount, false);
-                                context.getSender().sendMessage(main.parse(
-                                        "<success>Quest points for player <highlight>" + offlinePlayer.getName()
-                                                + "</highlight> <red>(offline)</red> have been set from <unimportant>" + oldQuestPoints + "</unimportant> to <highlight2>"
-                                                + (newQuestPointsAmount) + "</highlight2>."));
-                            } else {
-                                context.getSender().sendMessage(main.parse("<error>Something went wrong during the questPlayer creation!"));
-                            }
-                        }
-                        if (questPlayer != null) {
-                            context.getSender().sendMessage(main.parse("<main>Quest points for player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red>: <highlight2>" + questPlayer.getQuestPoints()));
-                        } else {
-                            context.getSender().sendMessage(main.parse( "<error>Seems like the player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red> does not have any quest points!"));
-                        }
+                        final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayerFromDatabase(offlinePlayer.getUniqueId());
+                        final long oldQuestPoints = questPlayer.getQuestPoints();
+                        questPlayer.setQuestPoints(newQuestPointsAmount, false);
+                        context.getSender().sendMessage(main.parse("<main>Quest points for player <highlight>" + offlinePlayer.getName() + "</highlight2> <red>(offline)</red> have been set from <unimportant>" + oldQuestPoints
+                                + "</unimportant> to <highlight2>" + (newQuestPointsAmount) + "</highlight2>."));
+                        context.getSender().sendMessage(main.parse("<main>Quest points for player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red>: <highlight2>" + questPlayer.getQuestPoints()));
                     }
                 }));
 

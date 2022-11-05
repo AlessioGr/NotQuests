@@ -1459,9 +1459,9 @@ public class DataManager {
         if (isSavingEnabled()) {
             if(!main.getConfiguration().isSavePlayerDataOnQuit()){
                 main.getTagManager().saveAllOnlinePlayerTags(true);
-                main.getQuestPlayerManager().savePlayerData();
+                main.getQuestPlayerManager().saveAllPlayerDataAtOnce();
             }else{
-                for(QuestPlayer questPlayer : new ArrayList<>(main.getQuestPlayerManager().getQuestPlayers())) {
+                for(QuestPlayer questPlayer : new ArrayList<>(main.getQuestPlayerManager().getAllQuestPlayersForAllProfiles())) {
                     main.getQuestPlayerManager().saveSinglePlayerData(questPlayer.getPlayer());
                 }
             }
@@ -1497,11 +1497,11 @@ public class DataManager {
 
             if (Bukkit.isPrimaryThread()) {
                 Bukkit.getScheduler().runTaskAsynchronously(main.getMain(), () -> {
-                    reloadData2();
+                    reloadDataInternal();
                     currentlyLoading = false;
                 });
             } else { //If this is already an asynchronous thread, this else{ thingy does not try to create a new asynchronous thread for better performance. The contents of this else section is identical.2
-                reloadData2();
+                reloadDataInternal();
                 currentlyLoading = false;
             }
         } else {
@@ -1563,12 +1563,16 @@ public class DataManager {
             """);
     }
 
-    private void reloadData2() {
+    private void reloadDataInternal() {
         openConnection();
 
         //Create Database tables if they don't exist yet
         try (final Connection connection = getConnection();
              final Statement statement = connection.createStatement();
+
+             final PreparedStatement createQuestPlayerProfileDataTablePreparedStatement = connection.prepareStatement("""
+                CREATE TABLE IF NOT EXISTS `QuestPlayerProfileData` (`PlayerUUID` varchar(200), `CurrentProfile` varchar(200), PRIMARY KEY (PlayerUUID))
+             """);
 
              final PreparedStatement createQuestPlayerDataTablePreparedStatement = connection.prepareStatement("""
                 CREATE TABLE IF NOT EXISTS `QuestPlayerData` (`PlayerUUID` varchar(200), `QuestPoints` BIGINT(255), `Profile` varchar(200))
@@ -1603,6 +1607,10 @@ public class DataManager {
                 migrateQuestPlayerDataTable(statement);
             }
 
+            if (main.getConfiguration().isVerboseStartupMessages()) {
+                main.getLogManager().info(LogCategory.DATA, "Creating database table 'QuestPlayerProfileData' if it doesn't exist yet...");
+            }
+            createQuestPlayerProfileDataTablePreparedStatement.executeUpdate();
 
             if (main.getConfiguration().isVerboseStartupMessages()) {
                 main.getLogManager().info(LogCategory.DATA, "Creating database table 'QuestPlayerData' if it doesn't exist yet...");
@@ -1677,12 +1685,12 @@ public class DataManager {
                 if (Bukkit.isPrimaryThread()) {
                     Bukkit.getScheduler().runTaskAsynchronously(main.getMain(), () -> {
                         for(final Player player : Bukkit.getOnlinePlayers()){
-                            main.getQuestPlayerManager().loadSinglePlayerData(player);
+                            main.getQuestPlayerManager().loadSinglePlayerData(player.getUniqueId());
                         }
                     });
                 }else{
                     for(final Player player : Bukkit.getOnlinePlayers()){
-                        main.getQuestPlayerManager().loadSinglePlayerData(player);
+                        main.getQuestPlayerManager().loadSinglePlayerData(player.getUniqueId());
                     }                }
 
             }
