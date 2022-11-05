@@ -272,17 +272,21 @@ public class UserCommands {
                   }
 
                   if(foundNewQuestPlayer == null){
-                      main.getLanguageManager().getString(
-                              "chat.profiles.change-profile-doesnt-exist",
-                              currentQuestPlayer, currentQuestPlayer
+                      main.sendMessage(context.getSender(),
+                          main.getLanguageManager().getString(
+                                  "chat.profiles.change-profile-doesnt-exist",
+                                  currentQuestPlayer, currentQuestPlayer
+                          )
                       );
                   }else{
                       main.getQuestPlayerManager().changeProfile(player.getUniqueId(), foundNewQuestPlayer);
-                      main.getLanguageManager().getString(
+                      main.sendMessage(context.getSender(),
+                              main.getLanguageManager().getString(
                               "chat.profiles.changed-successfully",
                               currentQuestPlayer, currentQuestPlayer, Map.of(
                                       "%OLDPROFILENAME%", currentQuestPlayer.getProfile(),
                                       "%NEWPROFILENAME%", foundNewQuestPlayer.getProfile()
+                                      )
                               )
                       );
                   }
@@ -311,13 +315,16 @@ public class UserCommands {
                   final List<QuestPlayer> allQuestPlayers =  main.getQuestPlayerManager().getQuestPlayersForUUIDs().get(player.getUniqueId());
                   for(final QuestPlayer questPlayer : allQuestPlayers) {
                       if(questPlayer.getProfile().equalsIgnoreCase(newProfile)){
-                          main.getLanguageManager().getString(
+                          main.sendMessage(context.getSender(),
+                              main.getLanguageManager().getString(
                                   "chat.profiles.create-already-exists",
                                   currentQuestPlayer, currentQuestPlayer,
                                   Map.of(
                                           "%NEWPROFILENAME%", questPlayer.getProfile() //questPlayer.getProfile() instead of newProfile so it shows the correct case (uppercase/lowercase) of the profile which already exists
                                   )
+                              )
                           );
+
                           return;
                       }
                   }
@@ -325,24 +332,29 @@ public class UserCommands {
                   //Now check for invalid characters
                   final String safeProfileName =  newProfile.replaceAll("[^0-9a-zA-Z-._]", "_^_^_^");
                   if(safeProfileName.contains("_^_^_^")){
-                      main.getLanguageManager().getString(
-                              "chat.profiles.create-invalid-characters",
-                              currentQuestPlayer, currentQuestPlayer,
-                              Map.of(
-                                      "%NEWPROFILENAME%", newProfile
-                              )
+                      main.sendMessage(context.getSender(),
+                          main.getLanguageManager().getString(
+                                  "chat.profiles.create-invalid-characters",
+                                  currentQuestPlayer, currentQuestPlayer,
+                                  Map.of(
+                                          "%NEWPROFILENAME%", newProfile
+                                  )
+                          )
                       );
+
                       return;
                   }
 
                   main.getQuestPlayerManager().createQuestPlayer(player.getUniqueId(), newProfile, false);
 
-                  main.getLanguageManager().getString(
+                  main.sendMessage(context.getSender(),
+                      main.getLanguageManager().getString(
                           "chat.profiles.created-successfully",
                           currentQuestPlayer, currentQuestPlayer,
                           Map.of(
                                   "%NEWPROFILENAME%", newProfile
                           )
+                      )
                   );
 
               }));
