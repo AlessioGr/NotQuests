@@ -62,12 +62,15 @@ public class LogManager {
     return warnLogs;
   }
 
-  private void log(final Level level, final String color, final String message) {
-    log(level, LogCategory.DEFAULT, color, message);
+  private void log(final Level level, final String color, final String message, final Object... interpolatedStrings) {
+    log(level, LogCategory.DEFAULT, color, message, interpolatedStrings);
   }
 
   private void log(
-      final Level level, final LogCategory logCategory, final String color, final String message) {
+      final Level level, final LogCategory logCategory, final String color, String message, final Object... interpolatedStrings) {
+
+    message = message.formatted((Object[]) interpolatedStrings);
+
     if (main.getConfiguration() == null || main.getConfiguration().isConsoleColorsEnabled()) {
       if (main.getConfiguration() != null && !main.getConfiguration().isConsoleColorsDownsampleColors()) {
         consoleSender.sendMessage( prefix.append(main.parse(color + message)));
@@ -90,51 +93,55 @@ public class LogManager {
               main.getMiniMessage()
                   .stripTags(message, main.getMessageManager().getTagResolver()))));
     }
-  }
 
-  public void info(final LogCategory logCategory, final String message) {
-    if (logCategory == LogCategory.DEFAULT) {
-      log(Level.INFO, logCategory, main.getConfiguration().isConsoleColorsDownsampleColors() ? main.getConfiguration().getColorsConsoleInfoDefaultDownsampled() : main.getConfiguration().getColorsConsoleInfoDefault(), message);
-    } else if (logCategory == LogCategory.DATA) {
-      log(Level.INFO, logCategory, main.getConfiguration().isConsoleColorsDownsampleColors() ? main.getConfiguration().getColorsConsoleInfoDataDownsampled() : main.getConfiguration().getColorsConsoleInfoData(), message);
-    } else if (logCategory == LogCategory.LANGUAGE) {
-      log(Level.INFO, logCategory, main.getConfiguration().isConsoleColorsDownsampleColors() ? main.getConfiguration().getColorsConsoleInfoLanguageDownsampled() : main.getConfiguration().getColorsConsoleInfoLanguage(), message);
+    if(level == Level.SEVERE){
+      severeLogs.add(message);
+    } else if(level == Level.WARNING){
+      warnLogs.add(message);
     }
   }
 
-  public void info(final String message) {
-    info(LogCategory.DEFAULT, message);
+  public void info(final LogCategory logCategory, final String message, final Object... interpolatedStrings) {
+    if (logCategory == LogCategory.DEFAULT) {
+      log(Level.INFO, logCategory, main.getConfiguration().isConsoleColorsDownsampleColors() ? main.getConfiguration().getColorsConsoleInfoDefaultDownsampled() : main.getConfiguration().getColorsConsoleInfoDefault(), message, interpolatedStrings);
+    } else if (logCategory == LogCategory.DATA) {
+      log(Level.INFO, logCategory, main.getConfiguration().isConsoleColorsDownsampleColors() ? main.getConfiguration().getColorsConsoleInfoDataDownsampled() : main.getConfiguration().getColorsConsoleInfoData(), message, interpolatedStrings);
+    } else if (logCategory == LogCategory.LANGUAGE) {
+      log(Level.INFO, logCategory, main.getConfiguration().isConsoleColorsDownsampleColors() ? main.getConfiguration().getColorsConsoleInfoLanguageDownsampled() : main.getConfiguration().getColorsConsoleInfoLanguage(), message, interpolatedStrings);
+    }
   }
 
-  public void warn(final LogCategory logCategory, final String message) {
-    log(Level.WARNING, logCategory, main.getConfiguration().isConsoleColorsDownsampleColors() ? main.getConfiguration().getColorsConsoleWarnDefaultDownsampled() : main.getConfiguration().getColorsConsoleWarnDefault(), message);
-    warnLogs.add(message);
+  public void info(final String message, final Object... interpolatedStrings) {
+    info(LogCategory.DEFAULT, message, interpolatedStrings);
   }
 
-  public void warn(final String message) {
-    warn(LogCategory.DEFAULT, message);
+  public void warn(final LogCategory logCategory, final String message, final Object... interpolatedStrings) {
+    log(Level.WARNING, logCategory, main.getConfiguration().isConsoleColorsDownsampleColors() ? main.getConfiguration().getColorsConsoleWarnDefaultDownsampled() : main.getConfiguration().getColorsConsoleWarnDefault(), message, interpolatedStrings);
   }
 
-  public void severe(final LogCategory logCategory, final String message) {
+  public void warn(final String message, final Object... interpolatedStrings) {
+    warn(LogCategory.DEFAULT, message, interpolatedStrings);
+  }
+
+  public void severe(final LogCategory logCategory, final String message, final Object... interpolatedStrings) {
     log(
         Level.SEVERE,
         logCategory,
         main.getConfiguration() != null ? (main.getConfiguration().isConsoleColorsDownsampleColors() ? main.getConfiguration().getColorsConsoleSevereDefaultDownsampled() : main.getConfiguration().getColorsConsoleSevereDefault()) : "",
-        message);
-    severeLogs.add(message);
+        message, interpolatedStrings);
   }
 
-  public void severe(final String message) {
-    severe(LogCategory.DEFAULT, message);
+  public void severe(final String message, final Object... interpolatedStrings) {
+    severe(LogCategory.DEFAULT, message, interpolatedStrings);
   }
 
-  public void debug(final LogCategory logCategory, final String message) {
+  public void debug(final LogCategory logCategory, final String message, final Object... interpolatedStrings) {
     if (main.getConfiguration().debug) {
-      log(Level.FINE, logCategory, main.getConfiguration().isConsoleColorsDownsampleColors() ? main.getConfiguration().getColorsConsoleDebugDownsampled() : main.getConfiguration().getColorsConsoleDebugDefault(), message);
+      log(Level.FINE, logCategory, main.getConfiguration().isConsoleColorsDownsampleColors() ? main.getConfiguration().getColorsConsoleDebugDownsampled() : main.getConfiguration().getColorsConsoleDebugDefault(), message, interpolatedStrings);
     }
   }
 
-  public void debug(final String message) {
-    debug(LogCategory.DEFAULT, message);
+  public void debug(final String message, final Object... interpolatedStrings) {
+    debug(LogCategory.DEFAULT, message, interpolatedStrings);
   }
 }

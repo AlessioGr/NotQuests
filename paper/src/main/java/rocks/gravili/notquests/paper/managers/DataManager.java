@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -1502,84 +1503,122 @@ public class DataManager {
         }
     }
 
+    private void migrationAddProfileColumns(final PreparedStatement preparedStatement, final String tableName){
+        if (main.getConfiguration().isVerboseStartupMessages()) {
+            main.getLogManager().info(LogCategory.DATA, "Adding 'Profile' column to '%s' if it the table exists but the column doesn't exist yet...".formatted(tableName));
+        }
+
+        try{
+            preparedStatement.setString(1, tableName);
+            preparedStatement.execute();
+        }catch (Exception ignored){
+        }
+    }
+
+    private void migrateActiveObjectivesTable(final Statement statement) throws SQLException {
+        boolean seemsIAlreadyMigrated = false;
+        try{
+            statement.executeUpdate("""
+                ALTER TABLE `ActiveObjectives` ADD COLUMN `ProgressNeeded` DOUBLE
+            """);
+        }catch (Exception ignored){
+            seemsIAlreadyMigrated = true;
+        }
+
+        if(!seemsIAlreadyMigrated){
+            main.getLogManager().info(LogCategory.DATA, "Making the 'CurrentProgress' column of 'ActiveObjectives' of datatype double (from BigInt) by recreating it..");
+            statement.executeUpdate("""
+                ALTER TABLE ActiveObjectives RENAME TO ActiveObjectivesOld
+            """);
+            statement.executeUpdate("""
+                CREATE TABLE `ActiveObjectives` (`ObjectiveType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` DOUBLE, `ObjectiveID` INT(255), `HasBeenCompleted` BOOLEAN, `ProgressNeeded` DOUBLE, `Profile` varchar(200))
+            """);
+            statement.executeUpdate("""
+                INSERT INTO ActiveObjectives (ObjectiveType,QuestName,PlayerUUID,CurrentProgress,ObjectiveID,HasBeenCompleted,ProgressNeeded,Profile) SELECT ObjectiveType,QuestName,PlayerUUID,CurrentProgress,ObjectiveID,HasBeenCompleted,ProgressNeeded FROM ActiveObjectivesOld
+            """);
+            statement.executeUpdate("""
+                DROP TABLE ActiveObjectivesOld
+            """);
+        }
+    }
+
     private void reloadData2() {
         openConnection();
-
 
         //Create Database tables if they don't exist yet
         try (final Connection connection = getConnection();
              final Statement statement = connection.createStatement();
+             final PreparedStatement migrationAddProfileColumnsPreparedStatement = connection.prepareStatement("""
+                ALTER TABLE ? ADD COLUMN `Profile` VARCHAR NOT NULL DEFAULT 'default'
+             """);
+
+             final PreparedStatement createQuestPlayerDataTablePreparedStatement = connection.prepareStatement("""
+                CREATE TABLE IF NOT EXISTS `QuestPlayerData` (`PlayerUUID` varchar(200), `QuestPoints` BIGINT(255), `Profile` varchar(200), PRIMARY KEY (PlayerUUID))
+             """);
+
+             final PreparedStatement createActiveQuestsTablePreparedStatement = connection.prepareStatement("""
+                CREATE TABLE IF NOT EXISTS `ActiveQuests` (`QuestName` varchar(200), `PlayerUUID` varchar(200), `Profile` varchar(200))
+             """);
+
+             final PreparedStatement createCompletedQuestsTablePreparedStatement = connection.prepareStatement("""
+                CREATE TABLE IF NOT EXISTS `CompletedQuests` (`QuestName` varchar(200), `PlayerUUID` varchar(200), `TimeCompleted` BIGINT(255), `Profile` varchar(200))
+             """);
+
+             final PreparedStatement createActiveTriggersTablePreparedStatement = connection.prepareStatement("""
+                CREATE TABLE IF NOT EXISTS `ActiveTriggers` (`TriggerType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` BIGINT(255), `TriggerID` INT(255), `Profile` varchar(200))
+             """);
+
+             final PreparedStatement createTagsTablePreparedStatement = connection.prepareStatement("""
+                CREATE TABLE IF NOT EXISTS `Tags` (`PlayerUUID` varchar(200), `TagIdentifier` varchar(200), `TagValue` varchar(200), `TagType` varchar(200), `Profile` varchar(200) )
+             """)
+
         ) {
+            migrationAddProfileColumns(migrationAddProfileColumnsPreparedStatement, "QuestPlayerData");
+            migrationAddProfileColumns(migrationAddProfileColumnsPreparedStatement, "ActiveQuests");
+            migrationAddProfileColumns(migrationAddProfileColumnsPreparedStatement, "CompletedQuests");
+            migrationAddProfileColumns(migrationAddProfileColumnsPreparedStatement, "ActiveObjectives");
+            migrationAddProfileColumns(migrationAddProfileColumnsPreparedStatement, "ActiveTriggers");
+            migrationAddProfileColumns(migrationAddProfileColumnsPreparedStatement, "Tags");
+
+
             if (main.getConfiguration().isVerboseStartupMessages()) {
                 main.getLogManager().info(LogCategory.DATA, "Creating database table 'QuestPlayerData' if it doesn't exist yet...");
             }
-            statement.executeUpdate("""
-                CREATE TABLE IF NOT EXISTS `QuestPlayerData` (`PlayerUUID` varchar(200), `QuestPoints` BIGINT(255), PRIMARY KEY (PlayerUUID))
-            """);
+            createQuestPlayerDataTablePreparedStatement.executeUpdate();
 
             if (main.getConfiguration().isVerboseStartupMessages()) {
                 main.getLogManager().info(LogCategory.DATA, "Creating database table 'ActiveQuests' if it doesn't exist yet...");
             }
-            statement.executeUpdate("""
-                CREATE TABLE IF NOT EXISTS `ActiveQuests` (`QuestName` varchar(200), `PlayerUUID` varchar(200))
-            """);
+            createActiveQuestsTablePreparedStatement.executeUpdate();
 
             if (main.getConfiguration().isVerboseStartupMessages()) {
                 main.getLogManager().info(LogCategory.DATA, "Creating database table 'CompletedQuests' if it doesn't exist yet...");
             }
-            statement.executeUpdate("""
-                CREATE TABLE IF NOT EXISTS `CompletedQuests` (`QuestName` varchar(200), `PlayerUUID` varchar(200), `TimeCompleted` BIGINT(255))
-            """);
+            createCompletedQuestsTablePreparedStatement.executeUpdate();
 
             if (main.getConfiguration().isVerboseStartupMessages()) {
                 main.getLogManager().info(LogCategory.DATA, "Adding 'ProgressNeeded' column to 'ActiveObjectives' if it the table exists but the column doesn't exist yet...");
             }
-            boolean seemsIAlreadyMigrated = false;
-            try{
-                statement.executeUpdate("""
-                ALTER TABLE `ActiveObjectives` ADD COLUMN `ProgressNeeded` DOUBLE
-            """);
-            }catch (Exception ignored){
-                seemsIAlreadyMigrated = true;
-            }
 
-            if(!seemsIAlreadyMigrated){
-                main.getLogManager().info(LogCategory.DATA, "Making the 'CurrentProgress' column of 'ActiveObjectives' of datatype double (from BigInt) by recreating it..");
-                statement.executeUpdate("""
-                ALTER TABLE ActiveObjectives RENAME TO ActiveObjectivesOld
-            """);
-                statement.executeUpdate("""
-                CREATE TABLE `ActiveObjectives` (`ObjectiveType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` DOUBLE, `ObjectiveID` INT(255), `HasBeenCompleted` BOOLEAN, `ProgressNeeded` DOUBLE)
-            """);
-                statement.executeUpdate("""
-                INSERT INTO ActiveObjectives (ObjectiveType,QuestName,PlayerUUID,CurrentProgress,ObjectiveID,HasBeenCompleted,ProgressNeeded) SELECT ObjectiveType,QuestName,PlayerUUID,CurrentProgress,ObjectiveID,HasBeenCompleted,ProgressNeeded FROM ActiveObjectivesOld
-            """);
-                statement.executeUpdate("""
-                DROP TABLE ActiveObjectivesOld
-            """);
-            }
+            migrateActiveObjectivesTable(statement);
 
 
             if (main.getConfiguration().isVerboseStartupMessages()) {
                 main.getLogManager().info(LogCategory.DATA, "Creating database table 'ActiveObjectives' if it doesn't exist yet...");
             }
             statement.executeUpdate("""
-                CREATE TABLE IF NOT EXISTS `ActiveObjectives` (`ObjectiveType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` DOUBLE, `ObjectiveID` INT(255), `HasBeenCompleted` BOOLEAN, `ProgressNeeded` DOUBLE)
+                CREATE TABLE IF NOT EXISTS `ActiveObjectives` (`ObjectiveType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` DOUBLE, `ObjectiveID` INT(255), `HasBeenCompleted` BOOLEAN, `ProgressNeeded` DOUBLE, `Profile` varchar(200))
             """);
 
             if (main.getConfiguration().isVerboseStartupMessages()) {
                 main.getLogManager().info(LogCategory.DATA, "Creating database table 'ActiveTriggers' if it doesn't exist yet...");
             }
-            statement.executeUpdate("""
-                CREATE TABLE IF NOT EXISTS `ActiveTriggers` (`TriggerType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` BIGINT(255), `TriggerID` INT(255))
-            """);
+            createActiveTriggersTablePreparedStatement.executeUpdate();
 
             if (main.getConfiguration().isVerboseStartupMessages()) {
                 main.getLogManager().info(LogCategory.DATA, "Creating database table 'Tags' if it doesn't exist yet...");
             }
-            statement.executeUpdate("""
-                CREATE TABLE IF NOT EXISTS `Tags` (`PlayerUUID` varchar(200), `TagIdentifier` varchar(200), `TagValue` varchar(200), `TagType` varchar(200) )
-            """);
+            createTagsTablePreparedStatement.executeUpdate();
 
         } catch (final SQLException e) {
             disablePluginAndSaving("Plugin disabled, because there was an error while trying to load MySQL database tables", e);
@@ -1610,7 +1649,7 @@ public class DataManager {
             }
 
             if(!main.getConfiguration().isLoadPlayerDataOnJoin()){
-                main.getQuestPlayerManager().loadPlayerData();
+                main.getQuestPlayerManager().loadAllPlayerDataAtOnce();
             }else{
                 if (Bukkit.isPrimaryThread()) {
                     Bukkit.getScheduler().runTaskAsynchronously(main.getMain(), () -> {

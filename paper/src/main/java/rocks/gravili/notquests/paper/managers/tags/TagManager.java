@@ -19,6 +19,7 @@
 package rocks.gravili.notquests.paper.managers.tags;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -110,9 +111,15 @@ public class TagManager {
         final UUID uuid = player.getUniqueId();
 
         try (Connection connection = main.getDataManager().getConnection();
-             Statement statement = connection.createStatement()
+             final PreparedStatement tagsStatement = connection.prepareStatement("""
+                SELECT TagIdentifier, TagValue, TagType FROM Tags
+                WHERE PlayerUUID = ? AND Profile = ?;
+             """)
         ) {
-            ResultSet result = statement.executeQuery("SELECT TagIdentifier, TagValue, TagType FROM Tags WHERE PlayerUUID LIKE '" + uuid.toString() + "';");
+            tagsStatement.setString(1, uuid.toString());
+            tagsStatement.setString(2, questPlayer.getProfile());
+
+            final ResultSet result = tagsStatement.executeQuery();
             while (result.next()) {
 
                 final String tagIdentifier = result.getString("TagIdentifier");
@@ -125,7 +132,12 @@ public class TagManager {
                     continue;
                 }
                 if (main.getConfiguration().isVerboseStartupMessages()) {
-                    main.getLogManager().info("Loaded <highlight>" + tagIdentifier + "</highlight> " + tagType + " tag for player <highlight2>" + player.getName() + "</highlight2> with the value <highlight2>" + tagValue + "</highlight2>.");
+                    main.getLogManager().info("Loaded <highlight>%s</highlight> %s tag for player <highlight2>%s</highlight2> with the value <highlight2>%s</highlight2>.",
+                            tagIdentifier,
+                            tagType,
+                            player.getName(),
+                            tagValue
+                    );
                 }
 
 
@@ -139,7 +151,7 @@ public class TagManager {
 
             }
         } catch (Exception e) {
-            main.getLogManager().severe("ERROR: Could not load tags for player with uuid <highlight>" + uuid + "</highlight>. Error: ");
+            main.getLogManager().severe("ERROR: Could not load tags for player with uuid <highlight>%s</highlight>. Error: ", uuid);
             e.printStackTrace();
             return;
         }
@@ -149,12 +161,19 @@ public class TagManager {
 
 
         if (main.getConfiguration().isVerboseStartupMessages()) {
-            main.getLogManager().info("Loaded " + questPlayer.getTags().size() + " tags for " + player.getName() + ":");
+            main.getLogManager().info("Loaded %s tags for %s:",
+                    questPlayer.getTags().size(),
+                    player.getName()
+            );
 
         }
         if (!questPlayer.getTags().isEmpty()) {
             for (final String tagIdentifier : questPlayer.getTags().keySet()) {
-                main.getLogManager().info("   " + tagIdentifier + ": " + questPlayer.getTagValue(tagIdentifier) + " (" + questPlayer.getTagValue(tagIdentifier).getClass().getName() + ")");
+                main.getLogManager().info("   %s: %s (%s)",
+                        tagIdentifier,
+                        questPlayer.getTagValue(tagIdentifier),
+                        questPlayer.getTagValue(tagIdentifier).getClass().getName()
+                );
             }
         }
     }
@@ -170,8 +189,13 @@ public class TagManager {
         final String uuidString = player.getUniqueId().toString();
 
         try (Connection connection = main.getDataManager().getConnection();
-             Statement statement = connection.createStatement()
-        ) {
+             final PreparedStatement deleteTagsPS = connection.prepareStatement("""
+                DELETE FROM Tags WHERE PlayerUUID = ?;
+             """);
+             final PreparedStatement insertIntoTagsPS = connection.prepareStatement("""
+                INSERT INTO Tags (PlayerUUID, TagIdentifier, TagValue, TagType, Profile) VALUES (?, ?, ?, ?, ?);
+             """)
+             ) {
 
 
             for (final String tagIdentifier : questPlayer.getTags().keySet()) {
@@ -182,7 +206,8 @@ public class TagManager {
                 }
 
                 //Remove all tags first before adding all fresh and updated ones
-                statement.executeUpdate("DELETE FROM Tags WHERE PlayerUUID = '" + uuidString + "';");
+                deleteTagsPS.setString(1, uuidString);
+                deleteTagsPS.executeUpdate();
 
                 //Skip over adding the tag if it's null (= removing it)
                 if (tagValue == null) {
@@ -191,22 +216,40 @@ public class TagManager {
                     continue;
                 }
 
-                if (tagValue instanceof final Boolean booleanTagValue) {
+                insertIntoTagsPS.setString(1, uuidString);
+                insertIntoTagsPS.setString(2, tagIdentifier);
+                insertIntoTagsPS.setString(5, questPlayer.getProfile());
 
-                    statement.executeUpdate("INSERT INTO Tags (PlayerUUID, TagIdentifier, TagValue, TagType) VALUES ('" + uuidString + "', '" + tagIdentifier + "', '" + booleanTagValue.toString() + "', 'BOOLEAN');");
+                if (tagValue instanceof final Boolean booleanTagValue) {
+                    insertIntoTagsPS.setString(3, booleanTagValue.toString());
+                    insertIntoTagsPS.setString(4, "BOOLEAN");
+                    insertIntoTagsPS.executeUpdate();
                 } else if (tagValue instanceof final Integer integerTagValue) {
-                    statement.executeUpdate("INSERT INTO Tags (PlayerUUID, TagIdentifier, TagValue, TagType) VALUES ('" + uuidString + "', '" + tagIdentifier + "', '" + integerTagValue + "', 'INTEGER');");
+                    insertIntoTagsPS.setString(3, integerTagValue.toString());
+                    insertIntoTagsPS.setString(4, "INTEGER");
+                    insertIntoTagsPS.executeUpdate();
                 } else if (tagValue instanceof final Float floatValue) {
-                    statement.executeUpdate("INSERT INTO Tags (PlayerUUID, TagIdentifier, TagValue, TagType) VALUES ('" + uuidString + "', '" + tagIdentifier + "', '" + floatValue + "', 'FLOAT');");
+                    insertIntoTagsPS.setString(3, floatValue.toString());
+                    insertIntoTagsPS.setString(4, "FLOAT");
+                    insertIntoTagsPS.executeUpdate();
                 } else if (tagValue instanceof final Double doubleValue) {
-                    statement.executeUpdate("INSERT INTO Tags (PlayerUUID, TagIdentifier, TagValue, TagType) VALUES ('" + uuidString + "', '" + tagIdentifier + "', '" + doubleValue + "', 'DOUBLE');");
+                    insertIntoTagsPS.setString(3, doubleValue.toString());
+                    insertIntoTagsPS.setString(4, "DOUBLE");
+                    insertIntoTagsPS.executeUpdate();
                 } else if (tagValue instanceof final String stringTagValue) {
-                    statement.executeUpdate("INSERT INTO Tags (PlayerUUID, TagIdentifier, TagValue, TagType) VALUES ('" + uuidString + "', '" + tagIdentifier + "', '" + stringTagValue + "', 'STRING');");
+                    insertIntoTagsPS.setString(3, stringTagValue);
+                    insertIntoTagsPS.setString(4, "STRING");
+                    insertIntoTagsPS.executeUpdate();
+                } else{
+                    main.getLogManager().warn("Encountered an unknown tag value type when saving tag %s. Tag value type: %s",
+                            tagIdentifier,
+                            tagValue.getClass().toString()
+                    );
                 }
             }
 
         } catch (Exception e) {
-            main.getLogManager().severe("There was an error saving the tag data of player with UUID <highlight>" + questPlayer.getUniqueId() + "</highlight>! Stacktrace:");
+            main.getLogManager().severe("There was an error saving the tag data of player with UUID <highlight>%s</highlight>! Stacktrace:", questPlayer.getUniqueId());
             e.printStackTrace();
         }
     }
@@ -232,13 +275,13 @@ public class TagManager {
             categoriesStringList.add(category.getCategoryFullName());
         }
         if (main.getConfiguration().isVerboseStartupMessages()) {
-            main.getLogManager().info("Scheduled Tags Data load for following categories: <highlight>" + categoriesStringList);
+            main.getLogManager().info("Scheduled Tags Data load for following categories: <highlight>%s", categoriesStringList);
         }
 
         for (final Category category : main.getDataManager().getCategories()) {
             loadTags(category);
             if (main.getConfiguration().isVerboseStartupMessages()) {
-                main.getLogManager().info("  Loading tags for category <highlight>" + category.getCategoryFullName());
+                main.getLogManager().info("  Loading tags for category <highlight>%s", category.getCategoryFullName());
             }
         }
     }
@@ -246,7 +289,9 @@ public class TagManager {
     public void loadTags(final Category category) {
         //First load from tags.yml:
         if (category.getTagsConfig() == null) {
-            main.getLogManager().severe("Error: Cannot load tags of category <highlight>" + category.getCategoryFullName() + "</highlight>, because it doesn't have a tags config. This category has been skipped.");
+            main.getLogManager().severe("Error: Cannot load tags of category <highlight>%s</highlight>, because it doesn't have a tags config. This category has been skipped.",
+                    category.getCategoryFullName()
+            );
             return;
         }
 
@@ -254,11 +299,13 @@ public class TagManager {
         if (tagsConfigurationSection != null) {
             for (final String tagIdentifier : tagsConfigurationSection.getKeys(false)) {
                 if (identifiersAndTags.get(tagIdentifier) != null) {
-                    main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading tags.yml tag data: The tag " + tagIdentifier + " already exists.");
+                    main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading tags.yml tag data: The tag %s already exists.",
+                            tagIdentifier
+                    );
                     return;
                 }
                 if (main.getConfiguration().isVerboseStartupMessages()) {
-                    main.getLogManager().info("Loading tag <highlight>" + tagIdentifier);
+                    main.getLogManager().info("Loading tag <highlight>%s", tagIdentifier);
                 }
 
                 final String tagTypeString = tagsConfigurationSection.getString(tagIdentifier + ".tagType", "");
@@ -267,7 +314,10 @@ public class TagManager {
                 try {
                     tagType = TagType.valueOf(tagTypeString);
                 } catch (Exception e) {
-                    main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading tags.yml tag data: The tag " + tagIdentifier + " has an invalid tag type which could not be loaded: " + tagTypeString);
+                    main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading tags.yml tag data: The tag %s has an invalid tag type which could not be loaded: %s",
+                            tagIdentifier,
+                            tagTypeString
+                    );
                     return;
                 }
 
