@@ -185,6 +185,10 @@ public class Conversation {
   }
 
   public void addNPC(final NQNPC nqnpc) {
+    if(nqnpc == null){
+      main.getLogManager().warn("Tried to add a null NQNPC to the conversation <highlight>%s</highlight>. This NPC has been skipped.", getIdentifier());
+      return;
+    }
     this.npcs.add(nqnpc);
     bindToNQNPC(nqnpc);
 
