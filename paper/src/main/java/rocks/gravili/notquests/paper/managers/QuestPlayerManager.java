@@ -559,10 +559,12 @@ public class QuestPlayerManager {
       return;
     }
 
-    main.getLogManager().info("Loading active objectives for quest/objective holder name <highlight>%s</highlight>. ActiveObjectiveHolder: <highlight2>%s</highlight2>", questName, activeObjectiveHolder);
+    main.getLogManager().debug("Loading active objectives for quest/objective holder name <highlight>%s</highlight>. ActiveObjectiveHolder: <highlight2>%s</highlight2>", questName, activeObjectiveHolder);
 
     activeQuestObjectivesPS.setString(3, questName);
     ResultSet activeQuestObjectiveResults = activeQuestObjectivesPS.executeQuery();
+
+    final ArrayList<ActiveObjective> activeObjectivesWithSubObjectives = new ArrayList<>();
 
     while (activeQuestObjectiveResults.next()) {
       final String objectiveTypeString =
@@ -578,10 +580,13 @@ public class QuestPlayerManager {
 
         // So the active objectives are already there - we just need to fill them with
         // progress data.
+        main.getLogManager().debug("  Active objective count (.next() for %s): %s", objectiveID, activeObjectiveHolder.getActiveObjectives().size());
         for (final ActiveObjective activeObjective : activeObjectiveHolder.getActiveObjectives()) {
           if (activeObjective.getObjective().getClass()
                   == main.getObjectiveManager().getObjectiveClass(objectiveTypeString)
                   && activeObjective.getObjectiveID() == objectiveID) {
+            main.getLogManager().debug("  >Handling active objective <highlight>%s</highlight> (ID: %s) of holder <highlight2>%s</highlight2>", activeObjective.getObjective().getIdentifier(), activeObjective.getObjectiveID(), activeObjectiveHolder.getObjectiveHolder().getIdentifier());
+            main.getLogManager().debug("  Has been completed: %s, currentProgress: %s, progressNeeded: %s", hasBeenCompleted, currentProgress, progressNeeded);
             // System.out.println("§4§lHAS BEEN COMPLETED: §b" + hasBeenCompleted + " §c- ID:
             // §b" + objectiveID);
             if (!progressNeededNull) {
@@ -602,13 +607,17 @@ public class QuestPlayerManager {
               }
             }
             if(!activeObjective.getActiveObjectives().isEmpty()){
-              main.getLogManager().warn("Active objective %s has %s more activeobjectives!", activeObjective.getObjective().getIdentifier(), activeObjective.getActiveObjectives().size());
-              handleLoadingOfActiveObjectives(activeQuestObjectivesPS, activeObjective);
-              activeObjective.removeCompletedObjectives(false);
+              main.getLogManager().debug("    Active objective %s has %s more activeobjectives!", activeObjective.getObjective().getIdentifier(), activeObjective.getActiveObjectives().size());
+              activeObjectivesWithSubObjectives.add(activeObjective);
             }
+          }else{
+            main.getLogManager().debug("  >Skipping active objective <highlight>%s</highlight> (ID: %s) of holder <highlight2>%s</highlight2>", activeObjective.getObjective().getIdentifier(), activeObjective.getObjectiveID(), activeObjectiveHolder.getObjectiveHolder().getIdentifier());
+
           }
         }
         activeObjectiveHolder.removeCompletedObjectives(false);
+
+
 
       } else {
         main.getLogManager()
@@ -623,6 +632,14 @@ public class QuestPlayerManager {
     for (final ActiveObjective activeObjectiveToCheckForIfUnlocked :
             activeObjectiveHolder.getActiveObjectives()) {
       activeObjectiveToCheckForIfUnlocked.updateUnlocked(false, true);
+    }
+
+    for(final ActiveObjective activeObjectiveWithSubObjectives : activeObjectivesWithSubObjectives){
+      main.getLogManager().debug("Loading active objective with sub-objectives...");
+      handleLoadingOfActiveObjectives(activeQuestObjectivesPS, activeObjectiveWithSubObjectives);
+      main.getLogManager().debug("    Done loading sub-aO's");
+
+      activeObjectiveWithSubObjectives.removeCompletedObjectives(false);
     }
   }
 
