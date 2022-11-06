@@ -52,6 +52,17 @@ chat:
     hours: '<red>任务冷却中! 您还需要等待 <highlight>%HOURS% 小时</highlight> 才能接受该任务.'
     day: '<red>任务冷却中! 您还需要等待 <highlight>1 天</highlight> 才能接受该任务.'
     days: '<red>任务冷却中! 您还需要等待 <highlight>%DAYS% 天</highlight> 才能接受该任务.'
+  profiles:
+    list-current: '<highlight>Current profile: <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
+    list-other-heading: '<highlight>Other profiles:'
+    list-other-none: '  <main>You have no more profiles.'
+    list-other: '  <highlight>- <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
+    change-same-profile: '<error>You are already using that profile!'
+    change-profile-doesnt-exist: '<error>That profile does not exist.'
+    changed-successfully: '<success>You have successfully changed your profile from %OLDPROFILENAME% to <highlight>%NEWPROFILENAME%</highlight>!'
+    create-already-exists: '<error>A profile with the name <highlight>%NEWPROFILENAME%</highlight> already exists.'
+    create-invalid-characters: '<error>The profile name you provided contains invalid characters.'
+    created-successfully: '<success>You have successfully created the profile <highlight>%NEWPROFILENAME%</highlight>! To switch to it, use <highlight2>/nq profile change %NEWPROFILENAME%</highlight2>'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>
