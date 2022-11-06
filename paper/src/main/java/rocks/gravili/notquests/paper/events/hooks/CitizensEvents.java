@@ -66,8 +66,8 @@ public class CitizensEvents implements Listener {
     private void onNPCDeathEvent(NPCDeathEvent event) {
         final NPC npc = event.getNPC();
 
-        for (final QuestPlayer questPlayer : main.getQuestPlayerManager().getQuestPlayers()) {
-            if (questPlayer.getActiveQuests().size() > 0) {
+        for (final QuestPlayer questPlayer : main.getQuestPlayerManager().getActiveQuestPlayers()) {
+            if (!questPlayer.getActiveQuests().isEmpty()) {
                 for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                     for (final ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
                         if (activeTrigger.getTrigger().getTriggerType().equals("NPCDEATH")) {

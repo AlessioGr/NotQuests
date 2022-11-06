@@ -20,6 +20,7 @@ package rocks.gravili.notquests.paper.commands;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
+import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.arguments.standard.StringArrayArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
@@ -27,7 +28,9 @@ import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -188,6 +191,175 @@ public class UserCommands {
   }
 
   public void constructCommands() {
+      manager.command(builder.literal("profiles").literal("show", "view", "list", "")
+              .permission("notquests.user.profiles")
+              .senderType(Player.class)
+              .meta(CommandMeta.DESCRIPTION, "Shows current profile and lists other profiles.")
+              .handler((context) -> {
+                  final Player player = (Player) context.getSender();
+                  final QuestPlayer currentQuestPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
+
+                  main.sendMessage(player, main.getLanguageManager().getString(
+                            "chat.profiles.list-current",
+                          currentQuestPlayer, currentQuestPlayer
+                  ));
+                  main.sendMessage(player, main.getLanguageManager().getString(
+                          "chat.profiles.list-other-heading",
+                          currentQuestPlayer, currentQuestPlayer
+                  ));
+
+                  final List<QuestPlayer> allQuestPlayers =  main.getQuestPlayerManager().getQuestPlayersForUUIDs().get(player.getUniqueId());
+                  if(allQuestPlayers.size() == 1){
+                      main.sendMessage(player, main.getLanguageManager().getString(
+                              "chat.profiles.list-other-none",
+                              currentQuestPlayer, currentQuestPlayer
+                      ));
+                  }else{
+                      for(final QuestPlayer questPlayer : allQuestPlayers) {
+                        if(!questPlayer.getProfile().equals(currentQuestPlayer.getProfile())){
+                            main.sendMessage(player, main.getLanguageManager().getString(
+                                    "chat.profiles.list-other",
+                                    currentQuestPlayer, questPlayer
+                            ));
+                        }
+                      }
+                  }
+              }));
+
+      manager.command(builder.literal("profiles").literal("change", "set", "switch")
+              .argument(StringArgument.<CommandSender>newBuilder("Profile Name").withSuggestionsProvider(
+                      (context, lastString) -> {
+                          final List<String> allArgs = context.getRawInput();
+                          main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "<enter the name of the profile you want to change to>", "");
+
+                          final ArrayList<String> completions = new ArrayList<>();
+                          final Player player = (Player)context.getSender();
+                          final List<QuestPlayer> allQuestPlayers =  main.getQuestPlayerManager().getQuestPlayersForUUIDs().get(player.getUniqueId());
+                          final QuestPlayer currentQuestPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
+                          for(final QuestPlayer questPlayer : allQuestPlayers) {
+                              if(!questPlayer.getProfile().equals(currentQuestPlayer.getProfile())){
+                                  completions.add(questPlayer.getProfile());
+                              }
+                          }
+                          return completions;
+                      }
+              ).single().build(), ArgumentDescription.of("Name of the existing profile."))
+              .permission("notquests.user.profiles")
+              .senderType(Player.class)
+              .meta(CommandMeta.DESCRIPTION, "Shows current profile and lists other profiles.")
+              .handler((context) -> {
+                  final Player player = (Player) context.getSender();
+                  final QuestPlayer currentQuestPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
+                  final String newProfile = context.get("Profile Name");
+                  if(currentQuestPlayer.getProfile().equalsIgnoreCase(newProfile)){
+                      main.sendMessage(
+                              context.getSender(),
+                              main.getLanguageManager().getString(
+                                      "chat.profiles.change-same-profile",
+                                      currentQuestPlayer, currentQuestPlayer
+                              )
+                      );
+                      return;
+                  }
+
+                  final List<QuestPlayer> allQuestPlayers =  main.getQuestPlayerManager().getQuestPlayersForUUIDs().get(player.getUniqueId());
+                  QuestPlayer foundNewQuestPlayer = null;
+                  for(final QuestPlayer questPlayer : allQuestPlayers) {
+                      if(questPlayer.getProfile().equalsIgnoreCase(newProfile)){
+                          foundNewQuestPlayer = questPlayer;
+                      }
+                  }
+
+                  if(foundNewQuestPlayer == null){
+                      main.sendMessage(context.getSender(),
+                          main.getLanguageManager().getString(
+                                  "chat.profiles.change-profile-doesnt-exist",
+                                  currentQuestPlayer, currentQuestPlayer
+                          )
+                      );
+                  }else{
+                      main.getQuestPlayerManager().changeProfile(player.getUniqueId(), foundNewQuestPlayer);
+                      main.sendMessage(context.getSender(),
+                              main.getLanguageManager().getString(
+                              "chat.profiles.changed-successfully",
+                              currentQuestPlayer, currentQuestPlayer, Map.of(
+                                      "%OLDPROFILENAME%", currentQuestPlayer.getProfile(),
+                                      "%NEWPROFILENAME%", foundNewQuestPlayer.getProfile()
+                                      )
+                              )
+                      );
+                  }
+              }));
+
+      manager.command(builder.literal("profiles").literal("create", "new", "add")
+              .argument(StringArgument.<CommandSender>newBuilder("Profile Name").withSuggestionsProvider(
+                      (context, lastString) -> {
+                          final List<String> allArgs = context.getRawInput();
+                          main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "<enter the name of the profile you want to change to>", "");
+
+                          final ArrayList<String> completions = new ArrayList<>();
+                          completions.add("<enter new profile name (no spaces!)");
+                          return completions;
+                      }
+              ).single().build(), ArgumentDescription.of("Name of the trigger which should be triggered."))
+              .permission("notquests.user.profiles")
+              .senderType(Player.class)
+              .meta(CommandMeta.DESCRIPTION, "Creates a new profile.")
+              .handler((context) -> {
+                  final Player player = (Player) context.getSender();
+                  final QuestPlayer currentQuestPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
+                  final String newProfile = context.get("Profile Name");
+
+
+                  final List<QuestPlayer> allQuestPlayers =  main.getQuestPlayerManager().getQuestPlayersForUUIDs().get(player.getUniqueId());
+                  for(final QuestPlayer questPlayer : allQuestPlayers) {
+                      if(questPlayer.getProfile().equalsIgnoreCase(newProfile)){
+                          main.sendMessage(context.getSender(),
+                              main.getLanguageManager().getString(
+                                  "chat.profiles.create-already-exists",
+                                  currentQuestPlayer, currentQuestPlayer,
+                                  Map.of(
+                                          "%NEWPROFILENAME%", questPlayer.getProfile() //questPlayer.getProfile() instead of newProfile so it shows the correct case (uppercase/lowercase) of the profile which already exists
+                                  )
+                              )
+                          );
+
+                          return;
+                      }
+                  }
+
+                  //Now check for invalid characters
+                  final String safeProfileName =  newProfile.replaceAll("[^0-9a-zA-Z-._]", "_^_^_^");
+                  if(safeProfileName.contains("_^_^_^")){
+                      main.sendMessage(context.getSender(),
+                          main.getLanguageManager().getString(
+                                  "chat.profiles.create-invalid-characters",
+                                  currentQuestPlayer, currentQuestPlayer,
+                                  Map.of(
+                                          "%NEWPROFILENAME%", newProfile
+                                  )
+                          )
+                      );
+
+                      return;
+                  }
+
+                  main.getLogManager().info("PN: " + newProfile);
+
+                  main.getLogManager().info("CQP Result: " + main.getQuestPlayerManager().createQuestPlayer(player.getUniqueId(), newProfile, false));
+
+                  main.sendMessage(context.getSender(),
+                      main.getLanguageManager().getString(
+                          "chat.profiles.created-successfully",
+                          currentQuestPlayer, currentQuestPlayer,
+                          Map.of(
+                                  "%NEWPROFILENAME%", newProfile
+                          )
+                      )
+                  );
+
+              }));
+
     manager.command(
         builder
             .literal("take")
@@ -220,7 +392,7 @@ public class UserCommands {
                 (context) -> {
                   final Player player = (Player) context.getSender();
                   QuestPlayer questPlayer =
-                      main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                      main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
 
                   if (questPlayer != null) {
                     context
@@ -254,7 +426,7 @@ public class UserCommands {
                   }
 
                   final Player player = (Player) context.getSender();
-                  final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                  final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
                   if(questPlayer == null){
                     return completions;
                   }
@@ -277,7 +449,7 @@ public class UserCommands {
                     return;
                   }
                   final Player player = (Player) context.getSender();
-                  QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                  QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
 
                   if(questPlayer != null){
                     final ConversationPlayer conversationPlayer = main.getConversationManager().getOpenConversation(player.getUniqueId());
@@ -576,7 +748,7 @@ public class UserCommands {
                 (context) -> {
                   final Player player = (Player) context.getSender();
                   final QuestPlayer questPlayer =
-                      main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                      main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
                   if (questPlayer != null) {
                     context
                         .getSender()
@@ -616,7 +788,7 @@ public class UserCommands {
                 (context) -> {
                   final Player player = (Player) context.getSender();
                   final QuestPlayer questPlayer =
-                      main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                      main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
                   if (questPlayer != null) {
                     context
                         .getSender()
@@ -662,7 +834,7 @@ public class UserCommands {
                 (context) -> {
                   final Player player = (Player) context.getSender();
                   QuestPlayer questPlayer =
-                      main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                      main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
                   if (questPlayer != null && questPlayer.getActiveQuests().size() > 0) {
                     final ActiveQuest activeQuest = context.get("Active Quest");
 

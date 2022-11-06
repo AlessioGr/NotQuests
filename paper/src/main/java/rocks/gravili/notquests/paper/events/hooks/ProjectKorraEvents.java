@@ -41,7 +41,7 @@ public class ProjectKorraEvents implements Listener {
     @EventHandler
     public void onAbilityStart(AbilityStartEvent e) {
         if (!e.isCancelled()) {
-            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(e.getAbility().getPlayer().getUniqueId());
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(e.getAbility().getPlayer().getUniqueId());
             if (questPlayer != null) {
                 if (questPlayer.getActiveQuests().size() > 0) {
                     for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
@@ -65,7 +65,7 @@ public class ProjectKorraEvents implements Listener {
 
     @EventHandler
     public void onEntityKilled(EntityBendingDeathEvent e) {
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(e.getAttacker().getUniqueId());
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(e.getAttacker().getUniqueId());
         if (questPlayer != null) {
             if (questPlayer.getActiveQuests().size() > 0) {
                 for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {

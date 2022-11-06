@@ -52,6 +52,17 @@ chat:
     hours: '<red>This quest is on a cooldown! You have to wait another <highlight>%HOURS% hours</highlight> until you can take it again.'
     day: '<red>This quest is on a cooldown! You have to wait another <highlight>1 day</highlight> until you can take it again.'
     days: '<red>This quest is on a cooldown! You have to wait another <highlight>%DAYS% days</highlight> until you can take it again.'
+  profiles:
+    list-current: '<highlight>Current profile: <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
+    list-other-heading: '<highlight>Other profiles:'
+    list-other-none: '  <main>You have no more profiles.'
+    list-other: '  <highlight>- <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
+    change-same-profile: '<error>You are already using that profile!'
+    change-profile-doesnt-exist: '<error>That profile does not exist.'
+    changed-successfully: '<success>You have successfully changed your profile from %OLDPROFILENAME% to <highlight>%NEWPROFILENAME%</highlight>!'
+    create-already-exists: '<error>A profile with the name <highlight>%NEWPROFILENAME%</highlight> already exists.'
+    create-invalid-characters: '<error>The profile name you provided contains invalid characters.'
+    created-successfully: '<success>You have successfully created the profile <highlight>%NEWPROFILENAME%</highlight>! To switch to it, use <highlight2>/nq profile change %NEWPROFILENAME%</highlight2>'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>

@@ -41,7 +41,7 @@ public class MythicMobsEvents implements Listener {
     public void onMythicMobDeath(final MythicMobDeathEvent event) {
         //KillMobs objectives
         if (event.getKiller() instanceof final Player player) {
-            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
             if (questPlayer != null) {
                 if (questPlayer.getActiveQuests().size() > 0) {
                     for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {

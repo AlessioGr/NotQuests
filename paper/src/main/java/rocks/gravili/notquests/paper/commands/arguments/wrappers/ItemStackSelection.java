@@ -139,7 +139,6 @@ public class ItemStackSelection {
     }
     final StringBuilder materialsString = new StringBuilder();
     for (final Material material : materials) {
-      main.getLogManager().info("TK " + material.translationKey());
       materialsString.append(", ").append("<" + tag + "><lang:" + material.translationKey() + "></" + tag + ">");
     }
     for (final NQItem nqItem : nqItems) {

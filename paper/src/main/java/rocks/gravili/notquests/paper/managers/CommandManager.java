@@ -643,6 +643,10 @@ public class CommandManager {
             .withHandler(
                 MinecraftExceptionHandler.ExceptionType.INVALID_SYNTAX,
                 (sender, e) -> {
+                    main.getLogManager().debug("Command0: " + e.toString());
+                    if(main.getConfiguration().debug){
+                        e.printStackTrace();
+                    }
                   final String[] split = e.getMessage().split("syntax is: ");
                   minecraftAdminHelp.queryCommands(split[1], sender);
                   return main.parse("<error>" + split[0] + "syntax is: <main>" + split[1]);
@@ -650,11 +654,22 @@ public class CommandManager {
             .withHandler(
                 ExceptionType.COMMAND_EXECUTION,
                 (sender, e) -> {
+                    main.getLogManager().debug("Command1: " + e.toString());
+                    if(main.getConfiguration().debug){
+                        e.printStackTrace();
+                    }
+                    if(main.getConfiguration().debug){
+                        e.printStackTrace();
+                    }
                   return main.parse("<error>" + e.getCause().getMessage());
                 })
             .withHandler(
                 ExceptionType.ARGUMENT_PARSING,
                 (sender, e) -> {
+                    main.getLogManager().debug("Command2: " + e.toString());
+                    if(main.getConfiguration().debug){
+                        e.printStackTrace();
+                    }
                   return main.parse("<error>" + e.getCause().getMessage());
                 })
         ;

@@ -37,7 +37,10 @@ public class Configuration {
   public boolean visualObjectiveTrackingShowProgressInBossBarIfObjectiveCompleted = false;
   public int visualObjectiveTrackingBossBarTimer = 10;
 
-  public String configurationVersion = "";
+  private String configurationVersion = "";
+  private int configurationVersionMajor;
+  private int configurationVersionMinor;
+  private int configurationVersionPatch;
 
   public boolean debug = false;
   public boolean verboseStartupMessages = true;
@@ -46,6 +49,8 @@ public class Configuration {
   public boolean loadPlayerDataOnJoin = true;
   public boolean savePlayerDataOnQuit = true;
   public boolean storageCreateBackupsWhenServerShutsDown = true;
+  public boolean storageCreateDatabaseBackupBeforeDatabaseLoads = true;
+
   public String placeholder_player_active_quests_list_horizontal_separator = " | ";
   public int placeholder_player_active_quests_list_horizontal_limit = -1;
   public int placeholder_player_active_quests_list_vertical_limit = -1;
@@ -255,8 +260,22 @@ public class Configuration {
     return configurationVersion;
   }
 
+  public final int getConfigurationVersionMajor(){
+    return this.configurationVersionMajor;
+  }
+  public final int getConfigurationVersionMinor(){
+    return this.configurationVersionMinor;
+  }
+  public final int getConfigurationVersionPatch(){
+    return this.configurationVersionPatch;
+  }
+
   public void setConfigurationVersion(String configurationVersion) {
     this.configurationVersion = configurationVersion;
+    final String[] configurationVersionSplit = configurationVersion.split("\\.");
+    this.configurationVersionMajor = Integer.parseInt(configurationVersionSplit[0]);
+    this.configurationVersionMinor = Integer.parseInt(configurationVersionSplit[1]);
+    this.configurationVersionPatch = Integer.parseInt(configurationVersionSplit[2]);
   }
 
   public boolean isQuestVisibilityEvaluationMaxAccepts() {
@@ -395,6 +414,15 @@ public class Configuration {
   public void setStorageCreateBackupsWhenServerShutsDown(
       boolean storageCreateBackupsWhenServerShutsDown) {
     this.storageCreateBackupsWhenServerShutsDown = storageCreateBackupsWhenServerShutsDown;
+  }
+
+  public boolean isStorageCreateDatabaseBackupBeforeDatabaseLoads() {
+    return storageCreateDatabaseBackupBeforeDatabaseLoads;
+  }
+
+  public void setStorageCreateDatabaseBackupBeforeDatabaseLoads(
+          boolean storageCreateDatabaseBackupBeforeDatabaseLoads) {
+    this.storageCreateDatabaseBackupBeforeDatabaseLoads = storageCreateDatabaseBackupBeforeDatabaseLoads;
   }
 
   public String getPlaceholder_player_active_quests_list_horizontal_separator() {
@@ -1150,4 +1178,6 @@ public class Configuration {
   public void setColorsConsoleDebugDownsampled(String colorsConsoleDebugDownsampled) {
     this.colorsConsoleDebugDownsampled = colorsConsoleDebugDownsampled;
   }
+
+
 }

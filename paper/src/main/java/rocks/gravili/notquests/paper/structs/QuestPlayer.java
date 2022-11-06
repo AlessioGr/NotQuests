@@ -61,6 +61,9 @@ import rocks.gravili.notquests.paper.structs.triggers.ActiveTrigger;
  * @author Alessio Gravili
  */
 public class QuestPlayer {
+
+    private final String profile;
+
     private final NotQuests main;
 
     private final UUID uuid;
@@ -92,9 +95,11 @@ public class QuestPlayer {
     private final ArrayList<Consumer<ActiveObjective>> queuedObjectivesToCheck = new ArrayList<>();
 
 
-    public QuestPlayer(NotQuests main, UUID uuid) {
+    public QuestPlayer(final NotQuests main, final UUID uuid, final String profile) {
         this.main = main;
         this.uuid = uuid;
+        this.profile = profile;
+
         activeQuests = new CopyOnWriteArrayList<>();
         questsToComplete = new ArrayList<>();
         questsToRemove = new ArrayList<>();
@@ -104,6 +109,10 @@ public class QuestPlayer {
         activeLocationAndBeams = new HashMap<>();
 
         tags = new HashMap<>();
+    }
+
+    public final String getProfile(){
+        return profile;
     }
 
     public boolean isHasActiveConditionObjectives(){

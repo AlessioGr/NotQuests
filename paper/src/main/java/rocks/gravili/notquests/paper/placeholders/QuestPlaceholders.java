@@ -128,7 +128,7 @@ public class QuestPlaceholders extends PlaceholderExpansion {
 
 
         if (identifier.startsWith("player_questpoints")) {
-            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
             if (questPlayer != null) {
                 return "" + questPlayer.getQuestPoints();
             }
@@ -136,7 +136,7 @@ public class QuestPlaceholders extends PlaceholderExpansion {
         }
 
         if (identifier.startsWith("player_completed_quests_amount")) {
-            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
             if (questPlayer != null) {
                 return "" + questPlayer.getCompletedQuests().size();
             }
@@ -144,7 +144,7 @@ public class QuestPlaceholders extends PlaceholderExpansion {
         }
 
         if (identifier.startsWith("player_active_quests_amount")) {
-            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
             if (questPlayer != null) {
                 return "" + questPlayer.getActiveQuests().size();
             }
@@ -152,7 +152,7 @@ public class QuestPlaceholders extends PlaceholderExpansion {
         }
 
         if (identifier.startsWith("player_active_quests_list_horizontal")) {
-            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
             if (questPlayer != null) {
                 StringBuilder list = new StringBuilder();
                 int amount = 0;
@@ -183,7 +183,7 @@ public class QuestPlaceholders extends PlaceholderExpansion {
 
         }
         if (identifier.startsWith("player_active_quests_list_vertical")) {
-            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
             if (questPlayer != null) {
                 StringBuilder list = new StringBuilder();
                 int amount = 0;
@@ -218,7 +218,7 @@ public class QuestPlaceholders extends PlaceholderExpansion {
             final String questName = identifier.replace("player_has_completed_quest_", "");
             final Quest quest = main.getQuestManager().getQuest(questName);
             if (quest != null) {
-                final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
                 if (questPlayer != null) {
                     for (final CompletedQuest completedQuest : questPlayer.getCompletedQuests()) {
                         if (completedQuest.getQuest().equals(quest)) {
@@ -234,7 +234,7 @@ public class QuestPlaceholders extends PlaceholderExpansion {
             final String questName = identifier.replace("player_has_current_active_quest_", "");
             final Quest quest = main.getQuestManager().getQuest(questName);
             if (quest != null) {
-                final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
                 if (questPlayer != null) {
                     for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                         if (activeQuest.getQuest().equals(quest)) {
@@ -256,7 +256,7 @@ public class QuestPlaceholders extends PlaceholderExpansion {
 
             final Quest quest = main.getQuestManager().getQuest(questName);
             if (quest != null) {
-                final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
                 if (questPlayer != null) {
                     for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                         if (activeQuest.getQuest().equals(quest)) {
@@ -287,7 +287,7 @@ public class QuestPlaceholders extends PlaceholderExpansion {
 
             final Quest quest = main.getQuestManager().getQuest(questName);
             if (quest != null) {
-                final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
                 if (questPlayer != null) {
                     for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                         if (activeQuest.getQuest().equals(quest)) {
@@ -324,7 +324,7 @@ public class QuestPlaceholders extends PlaceholderExpansion {
 
             final Quest quest = main.getQuestManager().getQuest(questName);
             if (quest != null) {
-                final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
                 if (questPlayer != null) {
                     for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                         if (activeQuest.getQuest().equals(quest)) {
@@ -365,7 +365,7 @@ public class QuestPlaceholders extends PlaceholderExpansion {
             final String tagName = identifier.replace("player_tag_", "");
             Tag tag = main.getTagManager().getTag(tagName);
             if (tag != null) {
-                final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
                 if (questPlayer != null) {
                     Object tagValue = questPlayer.getTagValue(tagName);
                     if (tagValue != null) {
@@ -381,7 +381,7 @@ public class QuestPlaceholders extends PlaceholderExpansion {
             final Quest quest = main.getQuestManager().getQuest(questName);
 
             if (quest != null) {
-                final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
                 if (questPlayer != null) {
                     return questPlayer.getCooldownFormatted(quest);
                 }
@@ -399,7 +399,7 @@ public class QuestPlaceholders extends PlaceholderExpansion {
 
             final Quest quest = main.getQuestManager().getQuest(questName);
             if (quest != null) {
-                final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
                 if (questPlayer != null) {
                     for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                         if (activeQuest.getQuest().equals(quest)) {
@@ -436,7 +436,7 @@ public class QuestPlaceholders extends PlaceholderExpansion {
 
             final Quest quest = main.getQuestManager().getQuest(questName);
             if (quest != null) {
-                final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
                 if (questPlayer != null) {
                     for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                         if (activeQuest.getQuest().equals(quest)) {
