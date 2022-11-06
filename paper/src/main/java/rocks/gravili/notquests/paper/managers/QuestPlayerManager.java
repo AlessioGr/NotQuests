@@ -714,7 +714,23 @@ public class QuestPlayerManager {
 
   private void handleSavingOfActiveObjectives(final PreparedStatement insertIntoActiveObjectivesPS, final ActiveObjective activeObjective, final UUID questPlayerUUID, final String profile) throws SQLException {
     insertIntoActiveObjectivesPS.setString(1, main.getObjectiveManager().getObjectiveType(activeObjective.getObjective().getClass()));
-    insertIntoActiveObjectivesPS.setString(2, activeObjective.getActiveObjectiveHolder().getObjectiveHolder().getIdentifier());
+
+    ActiveObjective lastActiveObjective = activeObjective;
+    String counterWithSubId = "";
+    for(int i = 0; i < activeObjective.getLevel(); i++){
+      if(lastActiveObjective.getActiveObjectiveHolder() instanceof final ActiveObjective parentActiveObjective){
+        lastActiveObjective = parentActiveObjective;
+        counterWithSubId = lastActiveObjective.getObjectiveID() + "."+counterWithSubId;
+      }else if(lastActiveObjective.getActiveObjectiveHolder() instanceof final ActiveQuest activeQuest){
+        counterWithSubId = activeQuest.getQuestIdentifier() + "."+counterWithSubId;
+        break;
+      }
+    }
+    if(counterWithSubId.endsWith(".")){
+      counterWithSubId = counterWithSubId.substring(0, counterWithSubId.length()-1);
+    }
+
+    insertIntoActiveObjectivesPS.setString(2, /*activeObjective.getActiveObjectiveHolder().getObjectiveHolder().getIdentifier()*/counterWithSubId);
     insertIntoActiveObjectivesPS.setString(3, questPlayerUUID.toString());
     insertIntoActiveObjectivesPS.setDouble(4, activeObjective.getCurrentProgress());
     insertIntoActiveObjectivesPS.setInt(5, activeObjective.getObjectiveID());
@@ -733,7 +749,23 @@ public class QuestPlayerManager {
 
   private void handleSavingOfCompletedActiveObjectives(final PreparedStatement insertIntoActiveObjectivesPS, final ActiveObjective completedObjective, final UUID questPlayerUUID, final String profile) throws SQLException {
     insertIntoActiveObjectivesPS.setString(1, main.getObjectiveManager().getObjectiveType(completedObjective.getObjective().getClass()));
-    insertIntoActiveObjectivesPS.setString(2, completedObjective.getActiveObjectiveHolder().getObjectiveHolder().getIdentifier());
+
+    ActiveObjective lastActiveObjective = completedObjective;
+    String counterWithSubId = "";
+    for(int i = 0; i < completedObjective.getLevel(); i++){
+      if(lastActiveObjective.getActiveObjectiveHolder() instanceof final ActiveObjective parentActiveObjective){
+        lastActiveObjective = parentActiveObjective;
+        counterWithSubId = lastActiveObjective.getObjectiveID() + "."+counterWithSubId;
+      }else if(lastActiveObjective.getActiveObjectiveHolder() instanceof final ActiveQuest activeQuest){
+        counterWithSubId = activeQuest.getQuestIdentifier() + "."+counterWithSubId;
+        break;
+      }
+    }
+    if(counterWithSubId.endsWith(".")){
+      counterWithSubId = counterWithSubId.substring(0, counterWithSubId.length()-1);
+    }
+
+    insertIntoActiveObjectivesPS.setString(2, /*completedObjective.getActiveObjectiveHolder().getObjectiveHolder().getIdentifier()*/counterWithSubId);
     insertIntoActiveObjectivesPS.setString(3, questPlayerUUID.toString());
     insertIntoActiveObjectivesPS.setDouble(4, completedObjective.getCurrentProgress());
     insertIntoActiveObjectivesPS.setInt(5, completedObjective.getObjectiveID());
