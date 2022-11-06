@@ -236,6 +236,7 @@ bukkit {
         "Citizens",
         "Vault",
         "PlaceholderAPI",
+        "NeoConfig",
         "MythicMobs",
         "EliteMobs",
         "BetonQuest",

@@ -153,6 +153,12 @@ repositories {
         }
     }
 
+    maven("https://hub.neomechanical.com/repository/maven-releases/") {
+        content {
+            includeGroup("com.neomechanical")
+        }
+    }
+
     //mavenLocal()
 
 }
@@ -225,7 +231,7 @@ dependencies {
 
     implementation("com.jeff_media:SpigotUpdateChecker:3.0.0")
 
-
+    implementation("com.neomechanical:NeoConfig:1.5.4")
     //implementation 'commons-io:commons-io:2.11.0'
     //implementation 'org.apache.commons:commons-text:1.9'
     //implementation 'org.apache.commons:commons-lang3:3.12.0'
