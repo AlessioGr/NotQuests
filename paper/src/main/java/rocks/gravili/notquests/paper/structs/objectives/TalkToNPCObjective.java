@@ -114,10 +114,18 @@ public class TalkToNPCObjective extends Objective {
 
         if (npcToTalkTo == null) {
             npcToTalkTo = main.getNPCManager().getOrCreateNQNpc("citizens", NQNPCID.fromInteger(configuration.getInt(initialPath + ".specifics.NPCtoTalkID", -1)));
-            if(npcToTalkTo == null){
-                final String armorStandUUIDString = configuration.getString(initialPath + ".specifics.ArmorStandToTalkUUID", "");
-                npcToTalkTo = main.getNPCManager().getOrCreateNQNpc("armorstand", NQNPCID.fromUUID(UUID.fromString(armorStandUUIDString)));
+            try{
+                if(npcToTalkTo == null){
+                    final String armorStandUUIDString = configuration.getString(initialPath + ".specifics.ArmorStandToTalkUUID", "");
+                    npcToTalkTo = main.getNPCManager().getOrCreateNQNpc("armorstand", NQNPCID.fromUUID(UUID.fromString(armorStandUUIDString)));
+                }
+            }catch (Exception e){
+                main.getLogManager().warn("Some error happened when reading/converting NqNPC (which was null) for DeliverItemsObjective (Objective Holder: %s, config path: %s)", getObjectiveHolder().getIdentifier(), initialPath);
+                if(main.getConfiguration().debug){
+                    e.printStackTrace();
+                }
             }
+
         }
     }
 

@@ -177,13 +177,21 @@ public class DeliverItemsObjective extends Objective {
 
         recipientNPC = NQNPC.fromConfig(main, configuration, initialPath + ".specifics.recipientNPC");
 
-        if (recipientNPC == null) { //Convert
-            recipientNPC = main.getNPCManager().getOrCreateNQNpc("citizens", NQNPCID.fromInteger(configuration.getInt(initialPath + ".specifics.recipientNPCID")));
+        try{
+            if (recipientNPC == null) { //Convert
+                recipientNPC = main.getNPCManager().getOrCreateNQNpc("citizens", NQNPCID.fromInteger(configuration.getInt(initialPath + ".specifics.recipientNPCID")));
 
-            if (recipientNPC == null) {
-                recipientNPC = main.getNPCManager().getOrCreateNQNpc("armorstand", NQNPCID.fromUUID(UUID.fromString(configuration.getString(initialPath + ".specifics.recipientArmorStandID", ""))));
+                if (recipientNPC == null) {
+                    recipientNPC = main.getNPCManager().getOrCreateNQNpc("armorstand", NQNPCID.fromUUID(UUID.fromString(configuration.getString(initialPath + ".specifics.recipientArmorStandID", ""))));
+                }
+            }
+        }catch (Exception e){
+            main.getLogManager().warn("Some error happened when reading/converting NqNPC (which was null) for DeliverItemsObjective (Objective Holder: %s, config path: %s)", getObjectiveHolder().getIdentifier(), initialPath);
+            if(main.getConfiguration().debug){
+                e.printStackTrace();
             }
         }
+
 
     }
 }
