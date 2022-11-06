@@ -153,12 +153,6 @@ repositories {
         }
     }
 
-    maven("https://hub.neomechanical.com/repository/maven-releases/") {
-        content {
-            includeGroup("com.neomechanical")
-        }
-    }
-
     //mavenLocal()
 
 }
