@@ -161,8 +161,6 @@ dependencies {
     //implementation project(':common')
     paperDevBundle("1.19.2-R0.1-SNAPSHOT")
     //compileOnly("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT!!")
-
-    implementation("org.bstats:bstats-bukkit:3.0.0")
     //implementation("de.themoep:inventorygui:1.5-SNAPSHOT")
 
     compileOnly("net.citizensnpcs:citizens-main:2.0.30-SNAPSHOT")
@@ -270,7 +268,6 @@ tasks.withType<ShadowJar> {
     //exclude('com.mojang:brigadier')
 
     //relocate('io.papermc.lib', path.concat('.paper'))
-    relocate("org.bstats", "$shadowPath.bstats")
     relocate("cloud.commandframework", "$shadowPath.cloud")
     relocate("io.leangen.geantyref", "$shadowPath.geantyref")
     relocate("de.themoep", "$shadowPath.de.themoep")
@@ -307,7 +304,6 @@ tasks.withType<ShadowJar> {
 
         //include(dependency('io.papermc:paperlib')
         //include(dependency("de.themoep:inventorygui:1.5-SNAPSHOT"))
-        include(dependency("org.bstats:"))
         include(dependency("cloud.commandframework:"))
         include(dependency("io.leangen.geantyref:"))
         include(dependency("me.lucko:"))
