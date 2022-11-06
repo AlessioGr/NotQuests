@@ -34,7 +34,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import com.neomechanical.neoconfig.menu.ConfigMenu;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -98,33 +97,6 @@ public class AdminCommands {
         placeholders.add("{{expression}}");
 
         resultDate = new Date();
-
-
-        manager.command(builder.literal("config")
-                .handler((context) -> {
-                    if (main.getMain().getServer().getPluginManager().isPluginEnabled("NeoConfig")) {
-                        if (!(context.getSender() instanceof Player)) {
-                            context.getSender().sendMessage("This command is for players only");
-                            return;
-                        }
-                        ConfigMenu configMenu = new ConfigMenu(main.getMain());
-                        configMenu.onComplete((playerAsAuthor, text) -> {
-                                    main.getDataManager().loadGeneralConfig();
-                                    main.getLanguageManager().loadLanguageConfig(false);
-                                    if(main.getConversationManager() != null) {
-                                        main.getConversationManager().loadConversationsFromConfig();
-                                    }else{
-                                        context.getSender().sendMessage("<error> Loading conversations has been skipped: ConversationManager is null");
-                                    }
-                                }) //Called one a player has finished editing a key
-                                .title("Change key") //Title of the anvil editor
-                                .permission("notquests.admin.config", () -> "You do not have permission to do that")//Set the permission node and message to change a key
-                                .setPluginEditing(main.getMain())//Set the menu for the player and plugin specified, if you don't specify a plugin instance to open the it will show all the plugins and their files
-                                .open((Player) context.getSender());//Open the menu for the player specified
-                    } else {
-                        context.getSender().sendMessage("NeoConfig is not installed, install it at https://www.spigotmc.org/resources/neoconfig.104089/");
-                    }
-                }));
 
         manager.command(builder.literal("create")
                 .argument(StringArgument.<CommandSender>newBuilder("Quest Name").withSuggestionsProvider(

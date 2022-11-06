@@ -135,14 +135,14 @@ public class CitizensEvents implements Listener {
                                                     itemStack.setAmount((itemStack.getAmount() - (int) progressLeft));
                                                     activeObjective.addProgress(progressLeft, npc.getId());
                                                     audience.sendMessage(MiniMessage.miniMessage().deserialize(
-                                                            main.getLanguageManager().getString("chat.objectives.success-updates.delivery-progress",
+                                                            main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.delivery-progress",
                                                                     questPlayer.getPlayer(), Map.of("%NPCNAME%", npc.getName()))));
                                                     break;
                                                 } else {
                                                     player.getInventory().removeItem(itemStack);
                                                     activeObjective.addProgress(itemStack.getAmount(), npc.getId());
                                                     audience.sendMessage(MiniMessage.miniMessage().deserialize(
-                                                            main.getLanguageManager().getString("chat.objectives.success-updates.delivery-items-progress",
+                                                            main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.delivery-items-progress",
                                                                     questPlayer.getPlayer(), Map.of("%NPCNAME%", npc.getName(),
                                                                             "%ITEMSTACKAMOUNT%", itemStack.getAmount()))
                                                     ));
@@ -185,7 +185,7 @@ public class CitizensEvents implements Listener {
                                             npcToEscort.despawn();
                                         } else {
                                             audience.sendMessage(MiniMessage.miniMessage().deserialize(
-                                                    main.getLanguageManager().getString("chat.npc.delivery-of-npc-complete", questPlayer.getPlayer(),
+                                                    main.getLanguageManager().getString("chat.objectives.taskCompletion.deliverItems.delivery-of-npc-complete", questPlayer.getPlayer(),
                                                             Map.of("%NPCNAME%", npcToEscort.getName()))
                                             ));
                                         }

@@ -172,7 +172,7 @@ public class CitizensEvents implements Listener {
 
 
                                 player.sendMessage(main.parse(
-                                        main.getLanguageManager().getString("chat.objectives.success-updates.delivery-progress", questPlayer, Map.of(
+                                        main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.delivery-progress", questPlayer, Map.of(
                                                 "%NPCNAME%", mmNpcName
                                         )
                                 )));
@@ -182,7 +182,7 @@ public class CitizensEvents implements Listener {
                                 player.getInventory().removeItemAnySlot(itemStack);
                                 activeObjective.addProgress(itemStack.getAmount(), nqNPC);
                                 player.sendMessage(main.parse(
-                                        main.getLanguageManager().getString("chat.objectives.success-updates.delivery-items-progress", questPlayer, Map.of(
+                                        main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.delivery-items-progress", questPlayer, Map.of(
                                                 "%NPCNAME%", mmNpcName,
                                                 "%ITEMSTACKAMOUNT%", itemStack.getAmount()
                                         )
@@ -219,7 +219,7 @@ public class CitizensEvents implements Listener {
                             activeObjective.addProgress(1, nqNPC);
                             final String mmNpcName = main.getMiniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(npcToEscort.getName()));
                             player.sendMessage(main.parse(
-                                    main.getLanguageManager().getString("chat.npc.delivery-of-npc-complete", questPlayer,
+                                    main.getLanguageManager().getString("chat.objectives.taskCompletion.deliverItems.delivery-of-npc-complete", questPlayer,
                                             Map.of("%NPCNAME%", mmNpcName))
                             ));
                             handledObjective.set(true);
