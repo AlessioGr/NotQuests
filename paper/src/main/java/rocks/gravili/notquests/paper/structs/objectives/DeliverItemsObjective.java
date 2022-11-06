@@ -186,7 +186,7 @@ public class DeliverItemsObjective extends Objective {
                 }
             }
         }catch (Exception e){
-            main.getLogManager().warn("Some error happened when reading/converting NqNPC (which was null) for DeliverItemsObjective (Objective Holder: %s, config path: %s)", getObjectiveHolder().getIdentifier(), initialPath);
+            main.getLogManager().warn("Some error happened when reading/converting NqNPC (which was null) for DeliverItemsObjective (Objective Holder: <highlight>%s</highlight>, config path: <highlight>%s</highlight>)", getObjectiveHolder().getIdentifier(), initialPath);
             if(main.getConfiguration().debug){
                 e.printStackTrace();
             }
