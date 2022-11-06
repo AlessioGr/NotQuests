@@ -48,7 +48,7 @@ public class NPCManager {
   }
 
   public final @Nullable NQNPC getOrCreateNQNpc(final @NotNull String type, final @NotNull NQNPCID npcID){
-    main.getLogManager().debug("Called getOrCreateNQNpc with type " + type + " and npcID " + npcID);
+    main.getLogManager().debug("Called getOrCreateNQNpc with type %s and npcID %s", type, npcID);
     for(final NQNPC nqnpc : npcs){
       if(nqnpc.getID().equals(npcID) && nqnpc.getNPCType().equalsIgnoreCase(type)){
         return nqnpc;
@@ -61,7 +61,7 @@ public class NPCManager {
         npcs.add(newCitizensNPC);
         return newCitizensNPC;
       }else{
-        main.getLogManager().warn("Tried to create a Citizens NQNPC with ID %s, but Citizens is not active/loaded.", npcID);
+        main.getLogManager().warn("Tried to create a Citizens NQNPC with ID <highlight>%s</highlight>, but Citizens is not active/loaded.", npcID);
         return null;
       }
     }else if(type.equalsIgnoreCase("armorstand")){
@@ -74,7 +74,7 @@ public class NPCManager {
         npcs.add(newZNPCNPC);
         return newZNPCNPC;
       }else{
-        main.getLogManager().warn("Tried to create a zNPCs NQNPC with ID %s, but zNPCs is not active/loaded.", npcID);
+        main.getLogManager().warn("Tried to create a zNPCs NQNPC with ID <highlight>%s</highlight>, but zNPCs is not active/loaded.", npcID);
         return null;
       }
     }
