@@ -1003,6 +1003,14 @@ public class AdminCommands {
 
     public void handleDebugCommands() {
         manager.command(builder.literal("debug")
+                .literal("clearOwnChat")
+                .meta(CommandMeta.DESCRIPTION, "Clears your own chat")
+                .handler((context) -> {
+                    final Component componentToSend = Component.text("").append(Component.newline()).append(Component.newline()).append(Component.newline()).append(Component.newline()).append(Component.newline()).append(Component.newline()).append(Component.newline()).append(Component.newline()).append(Component.newline()).append(Component.newline()).append(Component.newline()).append(Component.newline()).append(Component.newline()).append(Component.newline()).append(Component.newline()).append(Component.newline()).append(Component.newline()).append(Component.newline()).append(Component.newline()).append(Component.newline()).append(Component.newline()).append(Component.newline()).append(Component.newline()).append(Component.newline()).append(Component.newline()).append(Component.newline()).append(Component.newline()).append(Component.newline()).append(Component.newline());
+                    context.getSender().sendMessage(componentToSend);
+                }));
+
+        manager.command(builder.literal("debug")
                 .literal("worldInfo")
                 .meta(CommandMeta.DESCRIPTION, "Shows you information about the current world")
                 .senderType(Player.class)

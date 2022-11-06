@@ -48,7 +48,7 @@ public class NPCManager {
   }
 
   public final @Nullable NQNPC getOrCreateNQNpc(final @NotNull String type, final @NotNull NQNPCID npcID){
-    main.getLogManager().debug("Called getOrCreateNQNpc with type " + type + " and npcID " + npcID);
+    main.getLogManager().debug("Called getOrCreateNQNpc with type %s and npcID %s", type, npcID);
     for(final NQNPC nqnpc : npcs){
       if(nqnpc.getID().equals(npcID) && nqnpc.getNPCType().equalsIgnoreCase(type)){
         return nqnpc;
@@ -56,17 +56,27 @@ public class NPCManager {
     }
 
     if(type.equalsIgnoreCase("citizens")){
-      final CitizensNPC newCitizensNPC = new CitizensNPC(main, npcID);
-      npcs.add(newCitizensNPC);
-      return newCitizensNPC;
+      if(main.getIntegrationsManager().isCitizensEnabled()){
+        final CitizensNPC newCitizensNPC = new CitizensNPC(main, npcID);
+        npcs.add(newCitizensNPC);
+        return newCitizensNPC;
+      }else{
+        main.getLogManager().warn("Tried to create a Citizens NQNPC with ID <highlight>%s</highlight>, but Citizens is not active/loaded.", npcID);
+        return null;
+      }
     }else if(type.equalsIgnoreCase("armorstand")){
       final ArmorstandNPC newArmorStandNPC = new ArmorstandNPC(main, npcID);
       npcs.add(newArmorStandNPC);
       return newArmorStandNPC;
     }else if(type.equalsIgnoreCase("znpcs")){
-      final ZNPCNPC newZNPCNPC = new ZNPCNPC(main, npcID);
-      npcs.add(newZNPCNPC);
-      return newZNPCNPC;
+      if(main.getIntegrationsManager().isZNPCsEnabled()){
+        final ZNPCNPC newZNPCNPC = new ZNPCNPC(main, npcID);
+        npcs.add(newZNPCNPC);
+        return newZNPCNPC;
+      }else{
+        main.getLogManager().warn("Tried to create a zNPCs NQNPC with ID <highlight>%s</highlight>, but zNPCs is not active/loaded.", npcID);
+        return null;
+      }
     }
 
     return null;

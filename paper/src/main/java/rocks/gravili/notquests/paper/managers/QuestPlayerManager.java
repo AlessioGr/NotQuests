@@ -26,11 +26,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.structs.ActiveObjective;
-import rocks.gravili.notquests.paper.structs.ActiveQuest;
-import rocks.gravili.notquests.paper.structs.CompletedQuest;
-import rocks.gravili.notquests.paper.structs.Quest;
-import rocks.gravili.notquests.paper.structs.QuestPlayer;
+import rocks.gravili.notquests.paper.structs.*;
 import rocks.gravili.notquests.paper.structs.triggers.ActiveTrigger;
 
 public class QuestPlayerManager {
@@ -471,64 +467,7 @@ public class QuestPlayerManager {
           // activeQuestTriggerResults.close();
 
           // Active Objectives
-          activeQuestObjectivesPS.setString(3, activeQuest.getQuest().getIdentifier());
-          ResultSet activeQuestObjectiveResults = activeQuestObjectivesPS.executeQuery();
-
-          while (activeQuestObjectiveResults.next()) {
-            final String objectiveTypeString =
-                    activeQuestObjectiveResults.getString("ObjectiveType");
-            final double currentProgress = activeQuestObjectiveResults.getDouble("CurrentProgress");
-            final boolean hasBeenCompleted =
-                    activeQuestObjectiveResults.getBoolean("HasBeenCompleted");
-            final double progressNeeded = activeQuestObjectiveResults.getDouble("ProgressNeeded");
-            final boolean progressNeededNull = activeQuestObjectiveResults.wasNull();
-
-            if (objectiveTypeString != null) {
-              final int objectiveID = activeQuestObjectiveResults.getInt("ObjectiveID");
-
-              // So the active objectives are already there - we just need to fill them with
-              // progress data.
-              for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                if (activeObjective.getObjective().getClass()
-                        == main.getObjectiveManager().getObjectiveClass(objectiveTypeString)
-                        && activeObjective.getObjectiveID() == objectiveID) {
-                  // System.out.println("§4§lHAS BEEN COMPLETED: §b" + hasBeenCompleted + " §c- ID:
-                  // §b" + objectiveID);
-                  if (!progressNeededNull) {
-                    activeObjective.setProgressNeeded(progressNeeded);
-                  }
-                  activeObjective.setHasBeenCompleted(hasBeenCompleted);
-                  if (activeObjective.getObjective().getCompletionNPC() == null) { // Complete automatically
-                    activeObjective.addProgress(currentProgress, true);
-                  } else { // Only complete if player has talked to the completion NPC
-                    if (activeObjective.hasBeenCompleted()) {
-                      activeObjective.addProgress(
-                              currentProgress,
-                              activeObjective.getObjective().getCompletionNPC(),
-                              true);
-
-                    } else {
-                      activeObjective.addProgress(currentProgress, true);
-                    }
-                  }
-                }
-              }
-              activeQuest.removeCompletedObjectives(false);
-
-            } else {
-              main.getLogManager()
-                      .warn(
-                              "ERROR: ObjectiveType for the Quest <highlight>"
-                                      + activeQuest.getQuest().getIdentifier()
-                                      + "</highlight> could not be loaded from database");
-            }
-          }
-
-          // Update all active objectives to see if they are unlocked
-          for (final ActiveObjective activeObjectiveToCheckForIfUnlocked :
-                  activeQuest.getActiveObjectives()) {
-            activeObjectiveToCheckForIfUnlocked.updateUnlocked(false, true);
-          }
+          handleLoadingOfActiveObjectives(activeQuestObjectivesPS, activeQuest);
 
           // activeQuestObjectiveResults.close();
         }
@@ -586,6 +525,125 @@ public class QuestPlayerManager {
       }
     }
   }
+
+  private void handleLoadingOfActiveObjectives(final PreparedStatement activeQuestObjectivesPS, final ActiveObjectiveHolder activeObjectiveHolder) throws SQLException {
+    String questName;
+    if(activeObjectiveHolder instanceof final ActiveQuest activeQuest){
+      questName = activeQuest.getQuestIdentifier();
+    }else if(activeObjectiveHolder instanceof final ActiveObjective activeObjective){
+
+      ActiveObjective lastActiveObjective = activeObjective;
+      String counterWithSubId = ""+activeObjective.getObjectiveID();
+      main.getLogManager().warn("Level: %s", activeObjective.getLevel());
+      for(int i = 0; i < activeObjective.getLevel(); i++){
+        if(lastActiveObjective.getActiveObjectiveHolder() instanceof final ActiveObjective parentActiveObjective){
+          lastActiveObjective = parentActiveObjective;
+          counterWithSubId = lastActiveObjective.getObjectiveID() + "."+counterWithSubId;
+          main.getLogManager().warn("  counterWithSubId now1: %s", counterWithSubId);
+
+        }else if(lastActiveObjective.getActiveObjectiveHolder() instanceof final ActiveQuest activeQuest){
+          counterWithSubId = activeQuest.getQuestIdentifier() + "."+counterWithSubId;
+          main.getLogManager().warn("  counterWithSubId now2: %s", counterWithSubId);
+          break;
+        }
+      }
+      main.getLogManager().warn("counterWithSubId: %s", counterWithSubId);
+
+      /*if(counterWithSubId.endsWith(".")){
+        counterWithSubId = counterWithSubId.substring(0, counterWithSubId.length()-1);
+      }*/
+      questName = counterWithSubId;
+
+    }else {
+      main.getLogManager().warn("Skipped loading of active objectives because the type of the ActiveObjectiveHolder (%s) was not found!", activeObjectiveHolder);
+      return;
+    }
+
+    main.getLogManager().debug("Loading active objectives for quest/objective holder name <highlight>%s</highlight>. ActiveObjectiveHolder: <highlight2>%s</highlight2>", questName, activeObjectiveHolder);
+
+    activeQuestObjectivesPS.setString(3, questName);
+    ResultSet activeQuestObjectiveResults = activeQuestObjectivesPS.executeQuery();
+
+    final ArrayList<ActiveObjective> activeObjectivesWithSubObjectives = new ArrayList<>();
+
+    while (activeQuestObjectiveResults.next()) {
+      final String objectiveTypeString =
+              activeQuestObjectiveResults.getString("ObjectiveType");
+      final double currentProgress = activeQuestObjectiveResults.getDouble("CurrentProgress");
+      final boolean hasBeenCompleted =
+              activeQuestObjectiveResults.getBoolean("HasBeenCompleted");
+      final double progressNeeded = activeQuestObjectiveResults.getDouble("ProgressNeeded");
+      final boolean progressNeededNull = activeQuestObjectiveResults.wasNull();
+
+      if (objectiveTypeString != null) {
+        final int objectiveID = activeQuestObjectiveResults.getInt("ObjectiveID");
+
+        // So the active objectives are already there - we just need to fill them with
+        // progress data.
+        main.getLogManager().debug("  Active objective count (.next() for %s): %s", objectiveID, activeObjectiveHolder.getActiveObjectives().size());
+        for (final ActiveObjective activeObjective : activeObjectiveHolder.getActiveObjectives()) {
+          if (activeObjective.getObjective().getClass()
+                  == main.getObjectiveManager().getObjectiveClass(objectiveTypeString)
+                  && activeObjective.getObjectiveID() == objectiveID) {
+            main.getLogManager().debug("  >Handling active objective <highlight>%s</highlight> (ID: %s) of holder <highlight2>%s</highlight2>", activeObjective.getObjective().getIdentifier(), activeObjective.getObjectiveID(), activeObjectiveHolder.getObjectiveHolder().getIdentifier());
+            main.getLogManager().debug("  Has been completed: %s, currentProgress: %s, progressNeeded: %s", hasBeenCompleted, currentProgress, progressNeeded);
+            // System.out.println("§4§lHAS BEEN COMPLETED: §b" + hasBeenCompleted + " §c- ID:
+            // §b" + objectiveID);
+            if (!progressNeededNull) {
+              activeObjective.setProgressNeeded(progressNeeded);
+            }
+            activeObjective.setHasBeenCompleted(hasBeenCompleted);
+            if (activeObjective.getObjective().getCompletionNPC() == null) { // Complete automatically
+              activeObjective.addProgress(currentProgress, true);
+            } else { // Only complete if player has talked to the completion NPC
+              if (activeObjective.hasBeenCompleted()) {
+                activeObjective.addProgress(
+                        currentProgress,
+                        activeObjective.getObjective().getCompletionNPC(),
+                        true);
+
+              } else {
+                activeObjective.addProgress(currentProgress, true);
+              }
+            }
+            if(!activeObjective.getActiveObjectives().isEmpty()){
+              main.getLogManager().debug("    Active objective %s has %s more activeobjectives!", activeObjective.getObjective().getIdentifier(), activeObjective.getActiveObjectives().size());
+              activeObjectivesWithSubObjectives.add(activeObjective);
+            }
+          }else{
+            main.getLogManager().debug("  >Skipping active objective <highlight>%s</highlight> (ID: %s) of holder <highlight2>%s</highlight2>", activeObjective.getObjective().getIdentifier(), activeObjective.getObjectiveID(), activeObjectiveHolder.getObjectiveHolder().getIdentifier());
+
+          }
+        }
+        activeObjectiveHolder.removeCompletedObjectives(false);
+
+
+
+      } else {
+        main.getLogManager()
+                .warn(
+                        "ERROR: ObjectiveType for the Quest <highlight>"
+                                + activeObjectiveHolder.getObjectiveHolder().getIdentifier()
+                                + "</highlight> could not be loaded from database");
+      }
+    }
+
+    // Update all active objectives to see if they are unlocked
+    for (final ActiveObjective activeObjectiveToCheckForIfUnlocked :
+            activeObjectiveHolder.getActiveObjectives()) {
+      activeObjectiveToCheckForIfUnlocked.updateUnlocked(false, true);
+    }
+
+    for(final ActiveObjective activeObjectiveWithSubObjectives : activeObjectivesWithSubObjectives){
+      main.getLogManager().debug("Loading active objective with sub-objectives...");
+      handleLoadingOfActiveObjectives(activeQuestObjectivesPS, activeObjectiveWithSubObjectives);
+      main.getLogManager().debug("    Done loading sub-aO's");
+
+      activeObjectiveWithSubObjectives.removeCompletedObjectives(false);
+    }
+  }
+
+
 
 
   private void savePlayerDataInternal(final List<QuestPlayer> questPlayers) {
@@ -682,27 +740,11 @@ public class QuestPlayerManager {
 
           // Active Objectives
           for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-            insertIntoActiveObjectivesPS.setString(1, main.getObjectiveManager().getObjectiveType(activeObjective.getObjective().getClass()));
-            insertIntoActiveObjectivesPS.setString(2, activeObjective.getActiveObjectiveHolder().getObjectiveHolder().getIdentifier());
-            insertIntoActiveObjectivesPS.setString(3, questPlayerUUID.toString());
-            insertIntoActiveObjectivesPS.setDouble(4, activeObjective.getCurrentProgress());
-            insertIntoActiveObjectivesPS.setInt(5, activeObjective.getObjectiveID());
-            insertIntoActiveObjectivesPS.setBoolean(6, activeObjective.hasBeenCompleted());
-            insertIntoActiveObjectivesPS.setDouble(7, activeObjective.getProgressNeeded());
-            insertIntoActiveObjectivesPS.setString(8, profile);
-            insertIntoActiveObjectivesPS.executeUpdate();
+            handleSavingOfActiveObjectives(insertIntoActiveObjectivesPS, activeObjective, questPlayerUUID, profile);
           }
           // Active Objectives from completed Objective list
           for (final ActiveObjective completedObjective : activeQuest.getCompletedObjectives()) {
-            insertIntoActiveObjectivesPS.setString(1, main.getObjectiveManager().getObjectiveType(completedObjective.getObjective().getClass()));
-            insertIntoActiveObjectivesPS.setString(2, completedObjective.getActiveObjectiveHolder().getObjectiveHolder().getIdentifier());
-            insertIntoActiveObjectivesPS.setString(3, questPlayerUUID.toString());
-            insertIntoActiveObjectivesPS.setDouble(4, completedObjective.getCurrentProgress());
-            insertIntoActiveObjectivesPS.setInt(5, completedObjective.getObjectiveID());
-            insertIntoActiveObjectivesPS.setBoolean(6,  completedObjective.hasBeenCompleted());
-            insertIntoActiveObjectivesPS.setDouble(7, completedObjective.getProgressNeeded());
-            insertIntoActiveObjectivesPS.setString(8, profile);
-            insertIntoActiveObjectivesPS.executeUpdate();
+            handleSavingOfCompletedActiveObjectives(insertIntoActiveObjectivesPS, completedObjective, questPlayerUUID, profile);
           }
         }
 
@@ -730,6 +772,76 @@ public class QuestPlayerManager {
       e.printStackTrace();
     }
 
+  }
+
+  private void handleSavingOfActiveObjectives(final PreparedStatement insertIntoActiveObjectivesPS, final ActiveObjective activeObjective, final UUID questPlayerUUID, final String profile) throws SQLException {
+    insertIntoActiveObjectivesPS.setString(1, main.getObjectiveManager().getObjectiveType(activeObjective.getObjective().getClass()));
+
+    ActiveObjective lastActiveObjective = activeObjective;
+    String counterWithSubId = "";
+    for(int i = 0; i < activeObjective.getLevel(); i++){
+      if(lastActiveObjective.getActiveObjectiveHolder() instanceof final ActiveObjective parentActiveObjective){
+        lastActiveObjective = parentActiveObjective;
+        counterWithSubId = lastActiveObjective.getObjectiveID() + "."+counterWithSubId;
+      }else if(lastActiveObjective.getActiveObjectiveHolder() instanceof final ActiveQuest activeQuest){
+        counterWithSubId = activeQuest.getQuestIdentifier() + "."+counterWithSubId;
+        break;
+      }
+    }
+    if(counterWithSubId.endsWith(".")){
+      counterWithSubId = counterWithSubId.substring(0, counterWithSubId.length()-1);
+    }
+
+    insertIntoActiveObjectivesPS.setString(2, /*activeObjective.getActiveObjectiveHolder().getObjectiveHolder().getIdentifier()*/counterWithSubId);
+    insertIntoActiveObjectivesPS.setString(3, questPlayerUUID.toString());
+    insertIntoActiveObjectivesPS.setDouble(4, activeObjective.getCurrentProgress());
+    insertIntoActiveObjectivesPS.setInt(5, activeObjective.getObjectiveID());
+    insertIntoActiveObjectivesPS.setBoolean(6, activeObjective.hasBeenCompleted());
+    insertIntoActiveObjectivesPS.setDouble(7, activeObjective.getProgressNeeded());
+    insertIntoActiveObjectivesPS.setString(8, profile);
+    insertIntoActiveObjectivesPS.executeUpdate();
+
+    if(!activeObjective.getActiveObjectives().isEmpty()){
+      //Handle active sub-objectives here
+      for(final ActiveObjective subActiveObjective : activeObjective.getActiveObjectives()){
+        handleSavingOfActiveObjectives(insertIntoActiveObjectivesPS, subActiveObjective, questPlayerUUID, profile);
+      }
+    }
+  }
+
+  private void handleSavingOfCompletedActiveObjectives(final PreparedStatement insertIntoActiveObjectivesPS, final ActiveObjective completedObjective, final UUID questPlayerUUID, final String profile) throws SQLException {
+    insertIntoActiveObjectivesPS.setString(1, main.getObjectiveManager().getObjectiveType(completedObjective.getObjective().getClass()));
+
+    ActiveObjective lastActiveObjective = completedObjective;
+    String counterWithSubId = "";
+    for(int i = 0; i < completedObjective.getLevel(); i++){
+      if(lastActiveObjective.getActiveObjectiveHolder() instanceof final ActiveObjective parentActiveObjective){
+        lastActiveObjective = parentActiveObjective;
+        counterWithSubId = lastActiveObjective.getObjectiveID() + "."+counterWithSubId;
+      }else if(lastActiveObjective.getActiveObjectiveHolder() instanceof final ActiveQuest activeQuest){
+        counterWithSubId = activeQuest.getQuestIdentifier() + "."+counterWithSubId;
+        break;
+      }
+    }
+    if(counterWithSubId.endsWith(".")){
+      counterWithSubId = counterWithSubId.substring(0, counterWithSubId.length()-1);
+    }
+
+    insertIntoActiveObjectivesPS.setString(2, /*completedObjective.getActiveObjectiveHolder().getObjectiveHolder().getIdentifier()*/counterWithSubId);
+    insertIntoActiveObjectivesPS.setString(3, questPlayerUUID.toString());
+    insertIntoActiveObjectivesPS.setDouble(4, completedObjective.getCurrentProgress());
+    insertIntoActiveObjectivesPS.setInt(5, completedObjective.getObjectiveID());
+    insertIntoActiveObjectivesPS.setBoolean(6,  completedObjective.hasBeenCompleted());
+    insertIntoActiveObjectivesPS.setDouble(7, completedObjective.getProgressNeeded());
+    insertIntoActiveObjectivesPS.setString(8, profile);
+    insertIntoActiveObjectivesPS.executeUpdate();
+
+    if(!completedObjective.getCompletedObjectives().isEmpty()){
+      //Handle active sub-objectives here
+      for(final ActiveObjective subCompletedActiveObjective : completedObjective.getCompletedObjectives()){
+        handleSavingOfCompletedActiveObjectives(insertIntoActiveObjectivesPS, subCompletedActiveObjective, questPlayerUUID, profile);
+      }
+    }
   }
 
 

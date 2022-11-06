@@ -21,9 +21,6 @@ package rocks.gravili.notquests.paper;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
-import org.bstats.bukkit.Metrics;
-import org.bstats.charts.AdvancedPie;
-import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -39,6 +36,7 @@ import rocks.gravili.notquests.paper.events.TriggerEvents;
 import rocks.gravili.notquests.paper.events.notquests.NotQuestsFullyLoadedEvent;
 import rocks.gravili.notquests.paper.managers.*;
 import rocks.gravili.notquests.paper.managers.integrations.IntegrationsManager;
+import rocks.gravili.notquests.paper.managers.integrations.bstats.Metrics;
 import rocks.gravili.notquests.paper.managers.items.ItemsManager;
 import rocks.gravili.notquests.paper.managers.npc.NPCManager;
 import rocks.gravili.notquests.paper.managers.packets.PacketManager;
@@ -289,14 +287,14 @@ public class NotQuests {
         final int pluginId = 12824; // <- Plugin ID (on bstats)
         metrics = new Metrics(main, pluginId);
 
-        metrics.addCustomChart(new SingleLineChart("quests", new Callable<Integer>() {
+        metrics.addCustomChart(new Metrics.SingleLineChart("quests", new Callable<Integer>() {
             @Override
             public Integer call() {
                 return getQuestManager().getAllQuests().size();
             }
         }));
 
-        metrics.addCustomChart(new SingleLineChart("conversations", new Callable<Integer>() {
+        metrics.addCustomChart(new Metrics.SingleLineChart("conversations", new Callable<Integer>() {
             @Override
             public Integer call() {
                 if(getConversationManager() == null) {
@@ -306,7 +304,7 @@ public class NotQuests {
             }
         }));
 
-        metrics.addCustomChart(new AdvancedPie("ObjectiveTypes", new Callable<Map<String, Integer>>() {
+        metrics.addCustomChart(new Metrics.AdvancedPie("ObjectiveTypes", new Callable<Map<String, Integer>>() {
             @Override
             public Map<String, Integer> call() {
                 Map<String, Integer> valueMap = new HashMap<>();
@@ -321,7 +319,7 @@ public class NotQuests {
         }));
 
 
-        metrics.addCustomChart(new AdvancedPie("ConditionTypes", new Callable<Map<String, Integer>>() {
+        metrics.addCustomChart(new Metrics.AdvancedPie("ConditionTypes", new Callable<Map<String, Integer>>() {
             @Override
             public Map<String, Integer> call() {
                 Map<String, Integer> map = new HashMap<>();
@@ -335,7 +333,7 @@ public class NotQuests {
             }
         }));
 
-        metrics.addCustomChart(new AdvancedPie("AllActionTypes", new Callable<Map<String, Integer>>() {
+        metrics.addCustomChart(new Metrics.AdvancedPie("AllActionTypes", new Callable<Map<String, Integer>>() {
             @Override
             public Map<String, Integer> call() {
                 Map<String, Integer> map = new HashMap<>();
@@ -349,7 +347,7 @@ public class NotQuests {
             }
         }));
 
-        metrics.addCustomChart(new AdvancedPie("TriggerTypes", new Callable<Map<String, Integer>>() {
+        metrics.addCustomChart(new Metrics.AdvancedPie("TriggerTypes", new Callable<Map<String, Integer>>() {
             @Override
             public Map<String, Integer> call() {
                 Map<String, Integer> map = new HashMap<>();
