@@ -26,11 +26,8 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.structs.ActiveObjective;
-import rocks.gravili.notquests.paper.structs.ActiveQuest;
-import rocks.gravili.notquests.paper.structs.CompletedQuest;
-import rocks.gravili.notquests.paper.structs.Quest;
-import rocks.gravili.notquests.paper.structs.QuestPlayer;
+import rocks.gravili.notquests.paper.structs.*;
+import rocks.gravili.notquests.paper.structs.objectives.ObjectiveHolder;
 import rocks.gravili.notquests.paper.structs.triggers.ActiveTrigger;
 
 public class QuestPlayerManager {
@@ -682,27 +679,11 @@ public class QuestPlayerManager {
 
           // Active Objectives
           for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-            insertIntoActiveObjectivesPS.setString(1, main.getObjectiveManager().getObjectiveType(activeObjective.getObjective().getClass()));
-            insertIntoActiveObjectivesPS.setString(2, activeObjective.getActiveObjectiveHolder().getObjectiveHolder().getIdentifier());
-            insertIntoActiveObjectivesPS.setString(3, questPlayerUUID.toString());
-            insertIntoActiveObjectivesPS.setDouble(4, activeObjective.getCurrentProgress());
-            insertIntoActiveObjectivesPS.setInt(5, activeObjective.getObjectiveID());
-            insertIntoActiveObjectivesPS.setBoolean(6, activeObjective.hasBeenCompleted());
-            insertIntoActiveObjectivesPS.setDouble(7, activeObjective.getProgressNeeded());
-            insertIntoActiveObjectivesPS.setString(8, profile);
-            insertIntoActiveObjectivesPS.executeUpdate();
+            handleSavingOfActiveObjectives(insertIntoActiveObjectivesPS, activeObjective, questPlayerUUID, profile);
           }
           // Active Objectives from completed Objective list
           for (final ActiveObjective completedObjective : activeQuest.getCompletedObjectives()) {
-            insertIntoActiveObjectivesPS.setString(1, main.getObjectiveManager().getObjectiveType(completedObjective.getObjective().getClass()));
-            insertIntoActiveObjectivesPS.setString(2, completedObjective.getActiveObjectiveHolder().getObjectiveHolder().getIdentifier());
-            insertIntoActiveObjectivesPS.setString(3, questPlayerUUID.toString());
-            insertIntoActiveObjectivesPS.setDouble(4, completedObjective.getCurrentProgress());
-            insertIntoActiveObjectivesPS.setInt(5, completedObjective.getObjectiveID());
-            insertIntoActiveObjectivesPS.setBoolean(6,  completedObjective.hasBeenCompleted());
-            insertIntoActiveObjectivesPS.setDouble(7, completedObjective.getProgressNeeded());
-            insertIntoActiveObjectivesPS.setString(8, profile);
-            insertIntoActiveObjectivesPS.executeUpdate();
+            handleSavingOfCompletedActiveObjectives(insertIntoActiveObjectivesPS, completedObjective, questPlayerUUID, profile);
           }
         }
 
@@ -730,6 +711,44 @@ public class QuestPlayerManager {
       e.printStackTrace();
     }
 
+  }
+
+  private void handleSavingOfActiveObjectives(final PreparedStatement insertIntoActiveObjectivesPS, final ActiveObjective activeObjective, final UUID questPlayerUUID, final String profile) throws SQLException {
+    insertIntoActiveObjectivesPS.setString(1, main.getObjectiveManager().getObjectiveType(activeObjective.getObjective().getClass()));
+    insertIntoActiveObjectivesPS.setString(2, activeObjective.getActiveObjectiveHolder().getObjectiveHolder().getIdentifier());
+    insertIntoActiveObjectivesPS.setString(3, questPlayerUUID.toString());
+    insertIntoActiveObjectivesPS.setDouble(4, activeObjective.getCurrentProgress());
+    insertIntoActiveObjectivesPS.setInt(5, activeObjective.getObjectiveID());
+    insertIntoActiveObjectivesPS.setBoolean(6, activeObjective.hasBeenCompleted());
+    insertIntoActiveObjectivesPS.setDouble(7, activeObjective.getProgressNeeded());
+    insertIntoActiveObjectivesPS.setString(8, profile);
+    insertIntoActiveObjectivesPS.executeUpdate();
+
+    if(!activeObjective.getActiveObjectives().isEmpty()){
+      //Handle active sub-objectives here
+      for(final ActiveObjective subActiveObjective : activeObjective.getActiveObjectives()){
+        handleSavingOfActiveObjectives(insertIntoActiveObjectivesPS, subActiveObjective, questPlayerUUID, profile);
+      }
+    }
+  }
+
+  private void handleSavingOfCompletedActiveObjectives(final PreparedStatement insertIntoActiveObjectivesPS, final ActiveObjective completedObjective, final UUID questPlayerUUID, final String profile) throws SQLException {
+    insertIntoActiveObjectivesPS.setString(1, main.getObjectiveManager().getObjectiveType(completedObjective.getObjective().getClass()));
+    insertIntoActiveObjectivesPS.setString(2, completedObjective.getActiveObjectiveHolder().getObjectiveHolder().getIdentifier());
+    insertIntoActiveObjectivesPS.setString(3, questPlayerUUID.toString());
+    insertIntoActiveObjectivesPS.setDouble(4, completedObjective.getCurrentProgress());
+    insertIntoActiveObjectivesPS.setInt(5, completedObjective.getObjectiveID());
+    insertIntoActiveObjectivesPS.setBoolean(6,  completedObjective.hasBeenCompleted());
+    insertIntoActiveObjectivesPS.setDouble(7, completedObjective.getProgressNeeded());
+    insertIntoActiveObjectivesPS.setString(8, profile);
+    insertIntoActiveObjectivesPS.executeUpdate();
+
+    if(!completedObjective.getCompletedObjectives().isEmpty()){
+      //Handle active sub-objectives here
+      for(final ActiveObjective subCompletedActiveObjective : completedObjective.getCompletedObjectives()){
+        handleSavingOfCompletedActiveObjectives(insertIntoActiveObjectivesPS, subCompletedActiveObjective, questPlayerUUID, profile);
+      }
+    }
   }
 
 
