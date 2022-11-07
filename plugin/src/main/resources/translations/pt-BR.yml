@@ -1,14 +1,14 @@
 ---
 chat:
   wrong-command-usage: <error>Erro ao usar o comando!
-  missing-permission: '<error>Sem permissão! Você precisa da permissão necessaria: <highlight>%PERMISSION%'
+  missing-permission: '<error>Sem permissão! Você precisa da permissão necessária: <highlight>%PERMISSION%'
   too-many-arguments: <error>Existem muitos argumentos, verifique!
   quest-successfully-accepted: |2
 
     <CENTER><main>[A Missão foi aceita.]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
-  quest-description: '<main>descrição da missão: <unimportant>%QUESTDESCRIPTION%'
+  quest-description: '<main>Descrição da missão: <unimportant>%QUESTDESCRIPTION%'
   quest-already-accepted: <error>A missão já foi aceita.
   quest-failed: |2
 
@@ -29,7 +29,7 @@ chat:
   missing-quest-description: <unimportant>Esta missão não tem descrição de missão.
   objectives-label-after-quest-accepting: '<highlight>Objetivos:'
   questpoints:
-    query: <main>You currently have <highlight>%QUESTPOINTS%</highlight> Pontos de missão.
+    query: <main>Você tem atualmente <highlight>%QUESTPOINTS%</highlight> Pontos de missão.
     none: <error>Parece que você não tem nenhum ponto de missão!
     notify-when-changed:
       set: '<main>Seus pontos de missão foram definidos para <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.'
@@ -37,21 +37,32 @@ chat:
       remove: '<highlight>-%QUESTPOINTSTOREMOVE% <negative>Ponto de missão!'
   no-quests-accepted: <error>Parece que você não tem nenhuma missão ativa!
   quest-does-not-exist: <error>Missão <highlight>%QUESTNAME%</highlight> não existe!
-  quest-not-found-or-does-not-exist: <error>Missão <highlight>%QUESTNAME%</highlight> não encontrado ou não ativo!
+  quest-not-found-or-does-not-exist: <error>Missão <highlight>%QUESTNAME%</highlight> não encontrada ou não ativa!
   active-quests-label: '<highlight>Missões ativas:'
-  take-disabled: <error>Aceitando ou visualizando a missão <highlight>%QUESTNAME%</highlight> esta desabilitado.
-  quest-not-active-error: '<error>Error: <highlight>%QUESTNAME%</highlight> não é uma missão ativa!'
-  force-add-active-quest-accepted: '<success>Aceitou a missão com sucesso (Forced).'
+  take-disabled: <error>Aceitando ou visualizando a missão <highlight>%QUESTNAME%</highlight> está desabilitado.
+  quest-not-active-error: '<error>Erro: <highlight>%QUESTNAME%</highlight> não é uma missão ativa!'
+  force-add-active-quest-accepted: '<success>Aceitou a missão com sucesso (Forçada).'
   add-active-quest-player-object-not-found: '<warn>Error: Objeto do jogador não encontrado. Por favor, informe isso ao desenvolvedor do plugin.'
-  reached-max-accepts-limit: '<red>Você já terminou essas missões muitas vezes. Você só pode aceita <highlight>%MAXACCEPTS%</highlight> vezes, mas você já aceitou<highlight>%COMPLETEDAMOUNT%</highlight> vezes.'
+  reached-max-accepts-limit: '<red>Você já terminou essas missões muitas vezes. Você só pode aceitar <highlight>%MAXACCEPTS%</highlight> vezes, mas você já aceitou<highlight>%COMPLETEDAMOUNT%</highlight> vezes.'
   reached-max-active-quests-per-player-limit: '<red>Você não pode aceitar mais de <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> Missões.'
   quest-on-cooldown:
-    minute: '<red>Esta missão está em uma espera! Você tem que espera outror <highlight>1 minuto</highlight> até que vpcê possa tentar de novo.'
-    minutes: '<red>Esta missão está em uma espera! Você tem que espera outror <highlight>%MINUTES% minutos</highlight> até que vpcê possa tentar de novo.'
-    hour: '<red>Esta missão está em uma espera! Você tem que espera outror <highlight>1 hora</highlight> até que vpcê possa tentar de novo.'
-    hours: '<red>Esta missão está em uma espera! Você tem que espera outror <highlight>%HOURS% horas</highlight> até que vpcê possa tentar de novo.'
-    day: '<red>Esta missão está em uma espera! Você tem que espera outror <highlight>1 dia</highlight> até que vpcê possa tentar de novo.'
-    days: '<red>Esta missão está em uma espera! Você tem que espera outror <highlight>%DAYS% dias</highlight> até que vpcê possa tentar de novo.'
+    minute: '<red>Esta missão está em uma espera! Você precisa esperar mais <highlight>1 minuto</highlight> até você poder tentar novamente.'
+    minutes: '<red>Esta missão está em uma espera! Você precisa esperar mais <highlight>%MINUTES% minutos</highlight> até você poder tentar novamente.'
+    hour: '<red>Esta missão está em uma espera! Você precisa esperar mais <highlight>1 hora</highlight> até você poder tentar novamente.'
+    hours: '<red>Esta missão está em uma espera! Você precisa esperar mais <highlight>%HOURS% horas</highlight> até você poder tentar novamente.'
+    day: '<red>Esta missão está em uma espera! Você precisa esperar mais <highlight>1 dia</highlight> até você poder tentar novamente.'
+    days: '<red>Esta missão está em uma espera! Você precisa esperar mais <highlight>%DAYS% dias</highlight> até você poder tentar novamente.'
+  profiles:
+    list-current: '<highlight>Current profile: <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
+    list-other-heading: '<highlight>Other profiles:'
+    list-other-none: '  <main>You have no more profiles.'
+    list-other: '  <highlight>- <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
+    change-same-profile: '<error>You are already using that profile!'
+    change-profile-doesnt-exist: '<error>That profile does not exist.'
+    changed-successfully: '<success>You have successfully changed your profile from %OLDPROFILENAME% to <highlight>%NEWPROFILENAME%</highlight>!'
+    create-already-exists: '<error>A profile with the name <highlight>%NEWPROFILENAME%</highlight> already exists.'
+    create-invalid-characters: '<error>The profile name you provided contains invalid characters.'
+    created-successfully: '<success>You have successfully created the profile <highlight>%NEWPROFILENAME%</highlight>! To switch to it, use <highlight2>/nq profile change %NEWPROFILENAME%</highlight2>'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>
@@ -64,9 +75,9 @@ chat:
     counter: '<highlight>%OBJECTIVEIDWITHSUBID%.</highlight> <main>%OBJECTIVENAME%:'
     counterForObjectiveObjective: '<highlight>%OBJECTIVEIDWITHSUBID%.</highlight> <main>%OBJECTIVEHOLDERNAME%:'
     subObjectivePrefixAppend: '    '
-    hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[HIDDEN]
-    description: '    <veryUnimportant>└─ <unimportant>Description: <main>%OBJECTIVEDESCRIPTION%'
-    progress: '    <veryUnimportant>└─ <unimportant>Progress: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
+    hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[OCULTO]
+    description: '    <veryUnimportant>└─ <unimportant>Descrição: <main>%OBJECTIVEDESCRIPTION%'
+    progress: '    <veryUnimportant>└─ <unimportant>Progresso: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
     successfully-completed: |2
 
       <CENTER><success>[Objetivo concluído]
@@ -80,73 +91,73 @@ chat:
         prefix: '    <veryUnimportant>└─ <unimportant>'
         suffix: ''
       breakBlocks:
-        base: 'Break Blocks: <main>%BLOCKTOBREAK%'
+        base: 'Quebrar Blocos: <main>%BLOCKTOBREAK%'
       breed:
-        base: 'Breed Mobs: <main>%ENTITYTOBREED%'
+        base: 'Reproduzir Criaturas: <main>%ENTITYTOBREED%'
       collectItems:
-        base: 'Collect Items: <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
+        base: 'Coletar itens: <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
       consumeItems:
-        base: 'Consume Items: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
+        base: 'Consumir Itens: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: 'Craft Items: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+        base: 'Criar Itens: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: 'Deliver Items: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
+        base: 'Entregar Itens: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
         deliver-to-npc: '      <GRAY>Entregue para <WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>O NPC de entrega não está disponível no momento!'
       escortNPC:
-        base: 'Escort <main>%NPCNAME%</main> to <main>%DESTINATIONNPCNAME%'
+        base: 'Escolte <main>%NPCNAME%</main> para <main>%DESTINATIONNPCNAME%'
       fishItems:
-        base: 'Fish Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
+        base: 'Itens de Peixe: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
       killMobs:
-        base: 'Kill mobs: <main>%MOBTOKILL%'
+        base: 'Matar criaturas: <main>%MOBTOKILL%'
       otherQuest:
-        base: 'Complete Quest: <main>%OTHERQUESTNAME%'
+        base: 'Missão Concluída: <main>%OTHERQUESTNAME%'
       placeBlocks:
-        base: 'Place Blocks: <main>%BLOCKTOPLACE%'
+        base: 'Colocar blocos: <main>%BLOCKTOPLACE%'
       reachLocation:
-        base: 'Reach Location: <main>%LOCATIONNAME%'
+        base: 'Chegar na Localização: <main>%LOCATIONNAME%'
       talkToNPC:
-        base: 'Talk to <main>%NAME%'
-        npc-not-available: '    <GRAY>The target NPC is currently not available!'
+        base: 'Fale com <main>%NAME%'
+        npc-not-available: '    <GRAY> O NPC alvo não está disponível no momento!'
       triggerCommand:
-        base: 'Goal: <main>%TRIGGERNAME%'
+        base: 'Objetivo: <main>%TRIGGERNAME%'
       killEliteMobs:
-        base: 'Kill Elite Mob: <main>%ELITEMOBNAME%'
-        any: 'Kill any Elite Mob!'
+        base: 'Mate o Monstro de Elite: <main>%ELITEMOBNAME%'
+        any: 'Mate qualquer Monstro De Elite!'
       runCommand:
-        base: 'Run command: <main>%COMMANDTORUN%'
+        base: 'Use o comando: <main>%COMMANDTORUN%'
       interact:
-        base: '%INTERACTTYPE% Location: <main>%COORDINATES% <main>in world %WORLDNAME%'
+        base: '%INTERACTTYPE% Localização: <main>%COORDINATES% <main>no mundo %WORLDNAME%'
       jump:
-        base: 'Jump <main>%AMOUNTOFJUMPS%</main> times'
+        base: 'Pule <main>%AMOUNTOFJUMPS%</main> vezes'
       objective:
         base: '%OBJECTIVEHOLDERNAME%'
       sneak:
-        base: 'Sneak <main>%AMOUNTOFSNEAKS%</main> times'
+        base: 'Agache <main>%AMOUNTOFSNEAKS%</main> vezes'
       smelt:
-        base: 'Smelt Items: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+        base: 'Fundir Itens: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       openBuriedTreasure:
-        base: 'Open buried treasures'
+        base: 'Abrir tesouros enterrados'
       shearSheep:
-        base: 'Shear <main>%AMOUNTOFSHEEP%</main> sheep'
+        base: 'Tosquie <main>%AMOUNTOFSHEEP%</main> ovelhas'
       townyReachResidentCount:
-        base: 'Reach resident amount: <main>%AMOUNT%'
+        base: 'Alcance a quantidade de residentes: <main>%AMOUNT%'
       townyNationReachTownCount:
-        base: 'Reach town amount with your nation: <main>%AMOUNT%'
+        base: 'Alcance o valor da cidade com sua nação: <main>%AMOUNT%'
       jobsRebornReachJobLevel:
-        base: 'Reach job level <main>%AMOUNT%</main> with job <main>%JOB%'
+        base: 'Consiga o nível de trabalho <main>%AMOUNT%</main> com o trabalho <main>%JOB%'
       SlimefunResearch:
-        base: 'Spend on research'
+        base: 'Gaste em pesquisa'
       ProjectKorraUseAbility:
-        base: 'Use Ability: <main>%ABILITY%'
+        base: 'Use a habilidade: <main>%ABILITY%'
       BetonQuestCompleteObjective:
-        base: 'Finish Objective: <main>%BETONQUESTOBJECTIVENAME%'
+        base: 'Termine o objetivo: <main>%BETONQUESTOBJECTIVENAME%'
       ultimateJobsReachJobLevel:
-        base: 'Reach job level <main>%AMOUNT%</main> with job <main>%JOBID%'
+        base: 'Alcance o nível de trabalho <main>%AMOUNT%</main> com o trabalho <main>%JOBID%'
   conditions:
     boolean:
       not-fulfilled: "<warn>A seguir precisa ser %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
-      variable-not-found: "<error>Error: variável <highlight>%VARIABLENAME%</highlight> não encontrado. Informe isso ao proprietário do servidor."
+      variable-not-found: "<error>Erro: variável <highlight>%VARIABLENAME%</highlight> não encontrada. Informe isso ao proprietário do servidor."
       wrong-operator: "<error>Error: Variavel esta errada <highlight>%OPERATOR%/highlight> é inválido. Informe isso ao proprietário do servidor."
 objective-tracking:
   actionbar-progress-update:
@@ -168,12 +179,12 @@ titles:
 placeholders:
   questcooldownleftformatted:
     prefix: ''
-    minute: '1 minute'
-    minutes: '%MINUTES% minutes'
-    hour: '1 hour'
-    hours: '%HOURS% hours'
-    day: '1 day'
-    days: '%DAYS% days'
+    minute: '1 minuto'
+    minutes: '%MINUTES% minutos'
+    hour: '1 hora'
+    hours: '%HOURS% horas'
+    day: '1 dia'
+    days: '%DAYS% dias'
     no-cooldown: ''
 gui:
   main:
@@ -221,15 +232,15 @@ gui:
         name: "<negative>Cancelar a missão"
         lore:
           - ""
-          - "<veryUnimportant>Quer cancelar a missão agora?"
-          - "<veryUnimportant>pode ter uma punição."
+          - "<veryUnimportant>Cancelar uma missão pode"
+          - "<veryUnimportant>levar a punições."
         x: 0
         y: 2
       activequests:
-        name: "<highlight>Missão ativa"
+        name: "<highlight>Missões ativas"
         lore:
           - ""
-          - "<veryUnimportant>Mostra todos os seus"
+          - "<veryUnimportant>Mostra todas as suas"
           - "<veryUnimportant>missões ativas."
         x: 0
         y: 3
@@ -237,17 +248,17 @@ gui:
     title: '             <highlight2>Missões ativas'
     button:
       activeQuestButton:
-        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
+        name: "<highlight>%QUESTNAME% <positive>[ATIVA]"
         lore:
           - "<unimportant>Progresso: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
           - "<main>Clique para ver detalhes!"
-  reward-hidden-text: . <unimportant>[HIDDEN]
+  reward-hidden-text: . <unimportant>[OCULTO]
   availableQuests:
     title: '         <highlight2>Missões disponíveis'
     button:
       questPreview:
         name-if-not-accepted: "<highlight>%QUESTNAME%"
-        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
+        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACEITA]"
         lore:
           - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
           - "<main>Clique para abrir a Missão!"
@@ -261,7 +272,7 @@ gui:
     button:
       questPreview:
         name-if-not-accepted: "<highlight>%QUESTNAME%"
-        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
+        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACEITA]"
         lore:
           - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
           - "<main>Clique para visualizar a missão!"
@@ -269,24 +280,24 @@ gui:
     title: '  <highlight2>Missões ativas que você pode cancelar'
     button:
       abortQuestPreview:
-        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
+        name: "<highlight>%QUESTNAME% <positive>[ATIVA]"
         lore:
           - "<unimportant>Progresso: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Clique aqui para desistir da missão"
+          - "<negative>Clique para desistir da missão!"
   abortQuest:
     title: '         <negative>Confirmar cancelamento'
     button:
       confirmAbort:
-        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
+        name: "<highlight>%QUESTNAME% <positive>[ATIVA]"
         lore:
           - "<unimportant>Progresso: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Clique aqui para cancelar a missão <highlight>%QUESTNAME%</highlight>!"
+          - "<negative>Clique para cancelar a missão <highlight>%QUESTNAME%</highlight>!"
         x: 3
         y: 1
       cancelAbort:
-        name: "<positive>Clique para não cancelar a missão"
+        name: "<positive>Clique para NÃO cancelar essa missão"
         lore:
-          - "<positive>Cancelar esta ação."
+          - "<positive>e cancelar esta ação"
         x: 5
         y: 1
   previewQuest:
@@ -323,9 +334,9 @@ gui:
         x: 3
         y: 2
       cancelTake:
-        name: "<negative>Clique para não fazer esta missão"
+        name: "<negative>Clique para NÃO pegar esta missão"
         lore:
-          - "<negative>cancelar esta ação"
+          - "<negative>e cancelar esta ação"
         x: 5
         y: 2
   progress:
@@ -334,21 +345,21 @@ gui:
       unlockedObjective:
         name: "<highlight2>%ACTIVEOBJECTIVEID%. <highlight>%OBJECTIVENAME%"
         lore:
-          - "<main><BOLD>ATIVO</BOLD>"
+          - "<main><BOLD>ATIVA</BOLD>"
           - "<veryUnimportant>%WRAPPEDOBJECTIVEDESCRIPTION%"
           - "<unimportant>%OBJECTIVETASKDESCRIPTION%"
           - ""
           - "<unimportant>Progresso: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
         lore-if-description-empty:
-          - "<main><BOLD>ATIVO</BOLD>"
-          - "<veryUnimportant>sem descrição"
+          - "<main><BOLD>ATIVA</BOLD>"
+          - "<veryUnimportant>Sem descrição"
           - "<unimportant>%OBJECTIVETASKDESCRIPTION%"
           - ""
           - "<unimportant>Progresso: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
       lockedObjective:
-        name: "<highlight2>%ACTIVEOBJECTIVEID%. <unimportant><BOLD>[HIDDEN]"
+        name: "<highlight2>%ACTIVEOBJECTIVEID%. <unimportant><BOLD>[OCULTO]"
         lore:
-          - "<warn>Este objetivo ainda não foi"
+          - "<warn>Este objetivo ainda não"
           - "<warn>foi desbloqueado!"
       completedObjective:
         name: "<highlight2><strikethrough>%ACTIVEOBJECTIVEID%. <positive><strikethrough>%OBJECTIVENAME%"
@@ -357,10 +368,10 @@ gui:
           - "<veryUnimportant><strikethrough>%WRAPPEDOBJECTIVEDESCRIPTION%"
           - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVETASKDESCRIPTION%"
           - ""
-          - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
+          - "<unimportant><strikethrough>Progresso: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
         lore-if-description-empty:
           - "<positive><BOLD>CONCLUÍDA</BOLD>"
-          - "<veryUnimportant><strikethrough>sem descrição"
+          - "<veryUnimportant><strikethrough>Sem descrição"
           - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVETASKDESCRIPTION%"
           - ""
           - "<unimportant><strikethrough>Progresso: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
