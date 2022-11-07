@@ -53,16 +53,16 @@ chat:
     day: '<red>Cette quête est en attente ! Vous devez patienter encore <highlight>1 jour</highlight> avant de pouvoir l''accepter à nouveau.'
     days: '<red>Cette quête est en attente ! Vous devez patienter encore <highlight>%DAYS% jours</highlight> avant de pouvoir l''accepter à nouveau.'
   profiles:
-    list-current: '<highlight>Current profile: <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
-    list-other-heading: '<highlight>Other profiles:'
-    list-other-none: '  <main>You have no more profiles.'
-    list-other: '  <highlight>- <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
-    change-same-profile: '<error>You are already using that profile!'
-    change-profile-doesnt-exist: '<error>That profile does not exist.'
-    changed-successfully: '<success>You have successfully changed your profile from %OLDPROFILENAME% to <highlight>%NEWPROFILENAME%</highlight>!'
-    create-already-exists: '<error>A profile with the name <highlight>%NEWPROFILENAME%</highlight> already exists.'
-    create-invalid-characters: '<error>The profile name you provided contains invalid characters.'
-    created-successfully: '<success>You have successfully created the profile <highlight>%NEWPROFILENAME%</highlight>! To switch to it, use <highlight2>/nq profile change %NEWPROFILENAME%</highlight2>'
+    list-current: '<highlight>Profil actuel: <main>%PROFILENAME% (%QUESTPOINTS% points de quête)'
+    list-other-heading: '<highlight>Autres profils:'
+    list-other-none: '  <main>Vous n''avez plus de profils.'
+    list-other: '  <highlight>- <main>%PROFILENAME% (%QUESTPOINTS% points de quête)'
+    change-same-profile: '<error>Vous utilisez actuellement ce profil!'
+    change-profile-doesnt-exist: '<error>Ce profil n''existe pas.'
+    changed-successfully: '<success>Vous avez changé votre profil de %OLDPROFILENAME% à <highlight>%NEWPROFILENAME%</highlight> avec succès!'
+    create-already-exists: '<error>Un profil portant le nom <highlight>%NEWPROFILENAME%</highlight> existe déjà.'
+    create-invalid-characters: '<error>Le nom de profil que vous avez fourni contient des caractères non valides.'
+    created-successfully: '<success>Vous avez créé le profil <highlight>%NEWPROFILENAME%</highlight> avec succès! Pour basculer vers celui-ci, utilisez <highlight2>/nq profile change %NEWPROFILENAME%</highlight2>'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>
@@ -77,7 +77,7 @@ chat:
     subObjectivePrefixAppend: '    '
     hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[CACHÉ]
     description: '    <veryUnimportant>└─ <unimportant>Description: <main>%OBJECTIVEDESCRIPTION%'
-    progress: '    <veryUnimportant>└─ <unimportant>Progress: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
+    progress: '    <veryUnimportant>└─ <unimportant>Progrès: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
     successfully-completed: |2
 
       <CENTER><success>[Objectif terminé]
