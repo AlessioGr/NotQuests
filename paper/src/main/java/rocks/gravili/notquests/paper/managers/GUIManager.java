@@ -535,7 +535,11 @@ public class GUIManager {
                           ItemStackElement.of(
                               confirmTakeItemStack,
                               (clickHandler) -> {
-                                player.chat("/notquests take " + quest.getIdentifier());
+                                final String takeQuestResult =
+                                        main.getQuestPlayerManager().acceptQuest(player, quest, true, true);
+                                if (!takeQuestResult.equals("accepted")) {
+                                  main.sendMessage(player, takeQuestResult);
+                                }
                                 clickHandler.viewer().close();
                               }),
                           main.getLanguageManager().getInt("gui.previewQuest.button.confirmTake.x"),
