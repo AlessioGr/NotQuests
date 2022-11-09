@@ -71,6 +71,7 @@ repositories {
             includeGroup("com.github.AlessioGr.packetevents")
             includeGroup("com.github.TownyAdvanced")
             includeGroup("com.github.Zrips")
+            includeGroup("com.github.Slimefun")
         }
         metadataSources {
             artifact()
@@ -120,8 +121,9 @@ repositories {
         }
     }
 
-    maven("https://repo.incendo.org/content/repositories/snapshots"){
+    maven("https://oss.sonatype.org/content/repositories/snapshots") {
         content {
+            includeGroup("org.incendo.interfaces")
             includeGroup("cloud.commandframework")
         }
     }
@@ -171,12 +173,12 @@ dependencies {
     compileOnly("com.sk89q.worldedit:worldedit-core:7.3.0-SNAPSHOT")
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.3.0-SNAPSHOT")
 
-    compileOnly("com.github.TheBusyBiscuit:Slimefun4:RC-31")
+    compileOnly("com.github.Slimefun:Slimefun4:RC-32")
 
     compileOnly("net.luckperms:api:5.4")
 
     //compileOnly "com.github.NEZNAMY:TAB:2.9.2"
-    compileOnly("com.palmergames.bukkit.towny:towny:0.98.0.3")
+    compileOnly("com.github.TownyAdvanced:towny:0.98.2.0")
 
     compileOnly("com.github.Zrips:Jobs:v4.17.2")
 
@@ -189,8 +191,8 @@ dependencies {
     implementation("net.kyori:adventure-platform-bukkit:4.1.0")
 
     //CloudCommands
-    implementation("cloud.commandframework:cloud-paper:1.7.0")
-    implementation("cloud.commandframework:cloud-minecraft-extras:1.7.0")
+    implementation("cloud.commandframework:cloud-paper:1.8.0-SNAPSHOT")
+    implementation("cloud.commandframework:cloud-minecraft-extras:1.8.0-SNAPSHOT")
     //Else it errors:
     implementation("io.leangen.geantyref:geantyref:1.3.13")
 
