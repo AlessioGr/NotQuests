@@ -61,7 +61,12 @@ public class BetonQuestEvents implements Listener {
         final BetonQuest betonQuest = main.getIntegrationsManager().getBetonQuestManager().getBetonQuest();
 
         if(e.getConversation().getInterceptor().getClass() == betonQuest.getInterceptor("notquests") && main.getConversationManager() != null){
-            e.getProfile().getPlayer().ifPresent(player -> main.getConversationManager().removeOldMessages(player));
+            if(e.getProfile().getPlayer().isOnline()){
+                main.getConversationManager().removeOldMessages(
+                        e.getProfile().getPlayer().getPlayer()
+                );
+
+            }
         }
     }
 

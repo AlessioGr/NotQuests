@@ -47,7 +47,9 @@ public class NotQuestsInterceptor implements Interceptor, Listener {
       main.getConversationManager().getConversationChatHistory().put(profile.getProfileUUID(), hist);
     }
 
-    profile.getPlayer().ifPresent(player -> player.sendMessage(parsedMessage));
+    if(profile.getPlayer().isOnline()){
+      main.sendMessage(profile.getPlayer().getPlayer(), parsedMessage);
+    }
   }
 
   @Override
@@ -65,7 +67,10 @@ public class NotQuestsInterceptor implements Interceptor, Listener {
       main.getConversationManager().getConversationChatHistory().put(profile.getProfileUUID(), hist);
     }
 
-    profile.getPlayer().ifPresent(player -> player.sendMessage(parsedMessage));
+    if(profile.getPlayer().isOnline()){
+      main.sendMessage(profile.getPlayer().getPlayer(), parsedMessage);
+    }
+
   }
 
 
