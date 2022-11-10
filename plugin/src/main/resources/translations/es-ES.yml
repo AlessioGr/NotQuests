@@ -40,6 +40,7 @@ chat:
   quest-not-found-or-does-not-exist: <error>La misión <highlight>%QUESTNAME%</highlight> no fue encontrada o no está activa!
   active-quests-label: '<highlight>Misiones activas:'
   take-disabled: <error>Aceptar o previsualizar la misión <highlight>%QUESTNAME%</highlight> está deshabilitado.
+  abort-disabled: <error>Aborting the quest <highlight>%QUESTNAME%</highlight> is disabled.
   quest-not-active-error: '<error>Error: ¡<highlight>%QUESTNAME%</highlight> no es una misión activa!'
   force-add-active-quest-accepted: '<success>Se aceptó con éxito la misión (Forzada).'
   add-active-quest-player-object-not-found: '<warn>Error: El objeto del jugador no se encuentra. Por favor reporta esto al desarrollador del plugin.'
