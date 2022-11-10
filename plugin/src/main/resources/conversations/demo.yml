@@ -2,7 +2,7 @@ start: Atlas.specialgreeting,Atlas.greeting1
 Lines:
   Atlas:
     color: "<BLUE>"
-    delay: 100
+    delay: 200
     greeting1:
       text: "Hello traveler! I am atlas, the keeper of time!"
       next: Player.greeting1,Player.greeting2
@@ -34,6 +34,7 @@ Lines:
         - "action replaceThisWithTheNameOfYourAction"
         - "action anotherAction"
   Player:
+    delay: 200
     greeting1:
       text: "Nice to meet you! Why do you need to keep time?"
       next: Atlas.answer1
