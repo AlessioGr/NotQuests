@@ -36,6 +36,7 @@ chat:
   quest-not-found-or-does-not-exist: "<error>Задатак\n<highlight>%QUESTNAME%</highlight> није пронађен или није активан!"
   active-quests-label: '<highlight>Активни задаци:'
   take-disabled: "<error>Примање или преглед задатка\n<highlight>%QUESTNAME%</highlight> је онемогућен."
+  abort-disabled: <error>Aborting the quest <highlight>%QUESTNAME%</highlight> is disabled.
   quest-not-active-error: "<error>Грешка:\n<highlight>%QUESTNAME%</highlight> није активан задатак!"
   force-add-active-quest-accepted: '<success>Successfully accepted the quest (Forced).'
   add-active-quest-player-object-not-found: '<warn>Error: Player object not found. Please report this to the plugin developer.'
