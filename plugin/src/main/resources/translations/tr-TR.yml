@@ -40,6 +40,7 @@ chat:
   quest-not-found-or-does-not-exist: <error> <highlight>%QUESTNAME%</highlight> Görevi bulunamadı veya aktif değil!
   active-quests-label: '<highlight>Aktif görevler:'
   take-disabled: <error> <highlight>%QUESTNAME%</highlight> görevini kabul etme veya önizlemesi devre dışıdır.
+  abort-disabled: <error>Aborting the quest <highlight>%QUESTNAME%</highlight> is disabled.
   quest-not-active-error: '<error>Hata: <highlight>%QUESTNAME%</highlight> aktif bir görev değil!'
   force-add-active-quest-accepted: '<success>Görevi başarıyla kabul ettiniz (Zorla).'
   add-active-quest-player-object-not-found: '<warn>Hata: Oyuncu nesnesi bulunamadı. Lütfen bunu eklenti geliştiricisine bildirin.'
