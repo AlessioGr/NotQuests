@@ -40,6 +40,7 @@ chat:
   quest-not-found-or-does-not-exist: <error>La quête <highlight>%QUESTNAME%</highlight> est introuvable ou non active !
   active-quests-label: '<highlight>Quêtes actives :'
   take-disabled: <error>L'acceptation ou l'aperçu de la quête <highlight>%QUESTNAME%</highlight> est désactivée.
+  abort-disabled: <error>Aborting the quest <highlight>%QUESTNAME%</highlight> is disabled.
   quest-not-active-error: '<error>Erreur : <highlight>%QUESTNAME%</highlight> n''est pas une quête active !'
   force-add-active-quest-accepted: '<success>Quête acceptée avec succès (Forcé).'
   add-active-quest-player-object-not-found: '<warn>Erreur : Objet joueur introuvable (Player object not found). Merci d''aviser le développeur du plugin.'
