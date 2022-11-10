@@ -33,6 +33,7 @@ chat:
   quest-not-found-or-does-not-exist: <error>Η αποστολή <highlight>%QUESTNAME% <error>δεν βρέθηκε ή δεν είναι ενεργή!
   active-quests-label: '<warn>Ενεργές αποστολές:'
   take-disabled: <error>Η αποδοχή ή η προεπισκόπηση της αποστολής <highlight>%QUESTNAME%</highlight> είναι απενεργοποιημένη.
+  abort-disabled: <error>Aborting the quest <highlight>%QUESTNAME%</highlight> is disabled.
   quest-not-active-error: '<error>Σφάλμα: Η <highlight>%QUESTNAME% <error>δεν είναι ενεργή αποστολή!'
   force-add-active-quest-accepted: '<success>Successfully accepted the quest (Forced).'
   add-active-quest-player-object-not-found: '<warn>Error: Player object not found. Please report this to the plugin developer.'
