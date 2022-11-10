@@ -40,6 +40,7 @@ chat:
   quest-not-found-or-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> nicht gefunden oder nicht aktiv!
   active-quests-label: '<highlight>Aktive Quests:'
   take-disabled: <error>Das Akzeptieren oder Ansehen der Vorschau der Quest <highlight>%QUESTNAME%</highlight> wurde deaktiviert.
+  abort-disabled: <error>Aborting the quest <highlight>%QUESTNAME%</highlight> is disabled.
   quest-not-active-error: '<error>Fehler: <highlight>%QUESTNAME% <error>ist keine aktive Quest!'
   force-add-active-quest-accepted: '<success>Quest erfolgreich angenommen (Erzwungen).'
   add-active-quest-player-object-not-found: '<warn>Fehler. Spieler nicht gefunden. Bitte melde das an den Plugin-Entwickler.'
