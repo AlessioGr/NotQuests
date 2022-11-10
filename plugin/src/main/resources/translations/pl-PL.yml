@@ -40,6 +40,7 @@ chat:
   quest-not-found-or-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> nie został znaleziony bądź nie jest aktywny!
   active-quests-label: '<highlight>Aktywne questy:'
   take-disabled: <error>Akceptacja albo podgląd questa <highlight>%QUESTNAME%</highlight> zostały wyłączone.
+  abort-disabled: <error>Aborting the quest <highlight>%QUESTNAME%</highlight> is disabled.
   quest-not-active-error: '<error>Błąd: <highlight>%QUESTNAME%</highlight> nie jest aktywnym questem!'
   force-add-active-quest-accepted: '<success>Pomyślnie zaakceptował zadanie (siła).'
   add-active-quest-player-object-not-found: '<warn>Błąd: Nie znaleziono obiektu gracza. Proszę zgłosić to do twórcy wtyczki.'
