@@ -436,6 +436,7 @@ public class QuestManager {
                     final Quest quest = new Quest(main, questName, category);
                     quest.setMaxAccepts(category.getQuestsConfig().getInt("quests." + questName + ".maxAccepts", -1));
                     quest.setTakeEnabled(category.getQuestsConfig().getBoolean("quests." + questName + ".takeEnabled", true));
+                    quest.setAbortEnabled(category.getQuestsConfig().getBoolean("quests." + questName + ".abortEnabled", true));
                     quest.setAcceptCooldown(category.getQuestsConfig().getLong("quests." + questName + ".acceptCooldown", -1));
 
                     quest.setPredefinedProgressOrder(PredefinedProgressOrder.fromConfiguration(category.getQuestsConfig(), "quests." + questName + ".predefinedProgressOrder"), false);

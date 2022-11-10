@@ -51,7 +51,7 @@ public class ActiveQuestsVariable extends Variable<String[]> {
       return false;
     }
 
-    for (ActiveQuest acceptedQuest : questPlayer.getActiveQuests()) {
+    for (final ActiveQuest acceptedQuest : questPlayer.getActiveQuests()) {
       boolean foundQuest = false;
       for (int i = 0; i < newValue.length; i++) {
         if (newValue[i].equalsIgnoreCase(acceptedQuest.getQuestIdentifier())) {

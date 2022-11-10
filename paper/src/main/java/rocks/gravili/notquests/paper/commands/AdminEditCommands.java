@@ -263,6 +263,27 @@ public class AdminEditCommands {
                     }
                 }));
 
+        manager.command(editBuilder.literal("abortEnabled")
+                .argument(BooleanArgument.<CommandSender>newBuilder("Abort Enabled").withLiberal(true).build(),
+                        ArgumentDescription.of("Enabled by default. Yes / no"))
+                .meta(CommandMeta.DESCRIPTION, "Sets if players can abort the Quest using /notquests abort.")
+                .handler((context) -> {
+                    final Quest quest = context.get("quest");
+                    boolean abortEnabled = context.get("Abort Enabled");
+                    quest.setAbortEnabled(abortEnabled);
+                    if (abortEnabled) {
+                        context.getSender().sendMessage(main.parse(
+                                "<success>Quest aborting (/notquests abort) for the Quest <highlight>"
+                                        + quest.getIdentifier() + "</highlight> has been set to <highlight2>enabled</highlight2>!"
+                        ));
+                    } else {
+                        context.getSender().sendMessage(main.parse(
+                                "<success>Quest aborting (/notquests Abort) for the Quest <highlight>"
+                                        + quest.getIdentifier() + "</highlight> has been set to <highlight2>disabled</highlight2>!"
+                        ));
+                    }
+                }));
+
         manager.command(editBuilder.literal("takeItem")
 
                 .argument(ItemStackSelectionArgument.of("material", main), ArgumentDescription.of("Material of item displayed in the Quest take GUI."))

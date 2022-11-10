@@ -58,6 +58,8 @@ public class Quest extends ObjectiveHolder {
   private int maxAccepts = -1; // -1 or smaller => unlimited accepts
   private long acceptCooldown = -1; // Cooldown in minute. -1 or smaller => no cooldown.
   private boolean takeEnabled = true;
+  private boolean abortEnabled = true;
+
   private String displayName = "";
   private ItemStack takeItem = new ItemStack(Material.BOOK);
   private Category category;
@@ -319,11 +321,20 @@ public class Quest extends ObjectiveHolder {
     category.saveQuestsConfig();
   }
 
+  public final boolean isAbortEnabled() {
+    return abortEnabled;
+  }
+
+  public void setAbortEnabled(final boolean abortEnabled) {
+    this.abortEnabled = abortEnabled;
+    category.getQuestsConfig().set("quests." + questName + ".abortEnabled", abortEnabled);
+    category.saveQuestsConfig();
+  }
   public final boolean isTakeEnabled() {
     return takeEnabled;
   }
 
-  public void setTakeEnabled(boolean takeEnabled) {
+  public void setTakeEnabled(final boolean takeEnabled) {
     this.takeEnabled = takeEnabled;
     category.getQuestsConfig().set("quests." + questName + ".takeEnabled", takeEnabled);
     category.saveQuestsConfig();

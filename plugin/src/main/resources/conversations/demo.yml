@@ -2,6 +2,7 @@ start: Atlas.specialgreeting,Atlas.greeting1
 Lines:
   Atlas:
     color: "<BLUE>"
+    delay: 100
     greeting1:
       text: "Hello traveler! I am atlas, the keeper of time!"
       next: Player.greeting1,Player.greeting2

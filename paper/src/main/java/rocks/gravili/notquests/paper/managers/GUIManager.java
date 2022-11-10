@@ -628,6 +628,14 @@ public class GUIManager {
                           ItemStackElement.of(
                               confirmAbortItemStack,
                               (clickHandler) -> {
+                                if(!activeQuest.getQuest().isAbortEnabled()){
+                                  main.sendMessage(
+                                          player,
+                                          main.getLanguageManager()
+                                                  .getString("chat.abort-disabled", player, activeQuest));
+
+                                  return;
+                                }
                                 questPlayer.failQuest(activeQuest);
                                 main.sendMessage(
                                     player,

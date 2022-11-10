@@ -52,18 +52,19 @@ public class SendClickableText implements
   @Override
   public void sendOption(final String optionMessage, final Speaker speaker, final Player player, final QuestPlayer questPlayer, final
       Conversation conversation, final ConversationLine conversationLine, final ConversationPlayer conversationPlayer) {
+    final int optionNumber = conversationPlayer.getCurrentPlayerLines().indexOf(conversationLine) + 1;
     final String toSendString = main.getLanguageManager().getString("chat.conversations.answer-option-line-format", questPlayer, Map.of(
         "%SPEAKERCOLOR%", speaker.getColor(),
         "%SPEAKER%", speaker.getSpeakerDisplayName(),
         "%MESSAGE%", main.getUtilManager().applyPlaceholders(optionMessage, player),
-        "%OPTIONNUMBER%", ""+(conversationPlayer.getCurrentPlayerLines().indexOf(conversationLine) + 1)
+        "%OPTIONNUMBER%", ""+optionNumber
     ));
 
     final Component toSend =
         main.parse(toSendString)
             .clickEvent(
                 ClickEvent.runCommand(
-                    "/notquests continueConversation " + optionMessage))
+                    "/notquests continueConversation " + optionNumber))
             .hoverEvent(
                 HoverEvent.showText(
                     main.parse(
