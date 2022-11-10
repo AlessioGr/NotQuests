@@ -1044,13 +1044,18 @@ public class AdminCommands {
                 .handler((context) -> {
                     final boolean printToConsole = context.flags().contains("printToConsole");
 
-                    context.getSender().sendMessage(Component.empty());
-                    context.getSender().sendMessage(main.parse("<highlight>Critical errors which would cause NotQuests to disable itself:"));
 
                     if (!printToConsole) {
+                        context.getSender().sendMessage(Component.empty());
                         main.getDataManager().sendErrorsAndWarnings(context.getSender());
                     } else {
+                        main.getMain().getServer().getConsoleSender().sendMessage(Component.empty());
                         main.getDataManager().sendErrorsAndWarnings(main.getMain().getServer().getConsoleSender());
+                        context.getSender().sendMessage(
+                                main.parse(
+                                        "<success>Error and warnings have been printed to console successfully!"
+                                )
+                        );
                     }
                 }));
 

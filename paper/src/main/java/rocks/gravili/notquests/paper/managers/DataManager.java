@@ -2115,6 +2115,8 @@ public class DataManager {
 
     }*/
     public void sendErrorsAndWarnings(final CommandSender commandSender) {
+        commandSender.sendMessage(main.parse("<highlight>Critical errors which would cause NotQuests to disable itself:"));
+
         if (criticalErrors.isEmpty()) {
             commandSender.sendMessage(main.parse(
                     "<warn>No critical errors found. Please check your console log for any errors during startup."
