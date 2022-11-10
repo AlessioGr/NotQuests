@@ -34,6 +34,7 @@ chat:
   quest-not-found-or-does-not-exist: <RED>Quest <highlight>%QUESTNAME%</AQUA> nebyl nalezen, nebo není aktivní!
   active-quests-label: '<YELLOW>Aktivní questy:'
   take-disabled: <error>Accepting or previewing the quest <highlight>%QUESTNAME%</highlight> is disabled.
+  abort-disabled: <error>Aborting the quest <highlight>%QUESTNAME%</highlight> is disabled.
   quest-not-active-error: '<RED>Chyba: <highlight>%QUESTNAME%</AQUA> není aktivní Quest!'
   force-add-active-quest-accepted: '<success>Successfully accepted the quest (Forced).'
   add-active-quest-player-object-not-found: '<warn>Error: Player object not found. Please report this to the plugin developer.'

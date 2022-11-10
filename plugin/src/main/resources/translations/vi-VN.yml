@@ -34,6 +34,7 @@ chat:
   quest-not-found-or-does-not-exist: <error>Nhiệm vụ <highlight>%QUESTNAME% <error>không tìm thấy hoặc không hoạt động!
   active-quests-label: '<warn>Nhiệm vụ đã được hoạt động:'
   take-disabled: <error>Đồng ý hoặc xem trước nhiệm vụ <highlight>%QUESTNAME%</highlight> đã bị tắt.
+  abort-disabled: <error>Aborting the quest <highlight>%QUESTNAME%</highlight> is disabled.
   quest-not-active-error: '<error>Lỗi: <highlight>%QUESTNAME% <error>nhiệm vụ chưa được hoạt động!'
   force-add-active-quest-accepted: '<success>Đã chập nhận thành công nhiệm vụ (Bắt buộc).'
   add-active-quest-player-object-not-found: '<warn>Lỗi: Không tìm thấy người chơi. Vui lòng báo cáo điều này cho nhà phát triển plugin.'

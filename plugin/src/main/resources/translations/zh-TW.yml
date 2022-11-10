@@ -40,6 +40,7 @@ chat:
   quest-not-found-or-does-not-exist: <error>任務 <highlight>%QUESTNAME%</highlight> 不存在或者未激活！
   active-quests-label: '<highlight>進行中的任務：'
   take-disabled: <error>你不能接受或者預覽任務 <highlight>%QUESTNAME%</highlight>
+  abort-disabled: <error>Aborting the quest <highlight>%QUESTNAME%</highlight> is disabled.
   quest-not-active-error: '<error>錯誤: <highlight>%QUESTNAME%</highlight> 不是一個進行中的任務!'
   force-add-active-quest-accepted: '<success>已接受任務 (強制).'
   add-active-quest-player-object-not-found: '<warn>錯誤: 未搜尋到玩家. 請向插件開發人員回報.'

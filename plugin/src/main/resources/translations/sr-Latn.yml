@@ -40,6 +40,7 @@ chat:
   quest-not-found-or-does-not-exist: <error>Istraga <highlight>%QUESTNAME%</highlight> nije pronađena ili nije aktivna!
   active-quests-label: '<highlight>Aktivne istrage:'
   take-disabled: <error>Prihvaćanje ili pregledanje istrage <highlight>%QUESTNAME%</highlight> je onemogućeno.
+  abort-disabled: <error>Aborting the quest <highlight>%QUESTNAME%</highlight> is disabled.
   quest-not-active-error: '<error>Greška: <highlight>%QUESTNAME%</highlight> nije aktivna istraga!'
   force-add-active-quest-accepted: '<success>Uspješno prihvaćena istraga (Natjerano).'
   add-active-quest-player-object-not-found: '<warn>Greška: Objekt igrača nije pronađen. Molimo prijavite ovo developeru dodatka.'

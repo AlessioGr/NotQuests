@@ -40,6 +40,7 @@ chat:
   quest-not-found-or-does-not-exist: <error>квест <highlight>%QUESTNAME%</highlight> не найден или не активен!
   active-quests-label: '<highlight>активных заданий:'
   take-disabled: <error>Принятие или предпросмотр задания <highlight>%QUESTNAME%</highlight> отключены.
+  abort-disabled: <error>Aborting the quest <highlight>%QUESTNAME%</highlight> is disabled.
   quest-not-active-error: '<error>Ошибка: <highlight>%QUESTNAME%</highlight> не является активным квестом!'
   force-add-active-quest-accepted: '<success>Квест успешно принят (Принудительно).'
   add-active-quest-player-object-not-found: '<warn>Ошибка: Объект игрока не найден. Пожалуйста, сообщите об этом разработчику плагина.'
