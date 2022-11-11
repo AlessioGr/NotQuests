@@ -40,7 +40,7 @@ chat:
   quest-not-found-or-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> nicht gefunden oder nicht aktiv!
   active-quests-label: '<highlight>Aktive Quests:'
   take-disabled: <error>Das Akzeptieren oder Ansehen der Vorschau der Quest <highlight>%QUESTNAME%</highlight> wurde deaktiviert.
-  abort-disabled: <error>Aborting the quest <highlight>%QUESTNAME%</highlight> is disabled.
+  abort-disabled: <error>Das Abbrechen der Quest <highlight>%QUESTNAME%</highlight> wurde deaktiviert.
   quest-not-active-error: '<error>Fehler: <highlight>%QUESTNAME% <error>ist keine aktive Quest!'
   force-add-active-quest-accepted: '<success>Quest erfolgreich angenommen (Erzwungen).'
   add-active-quest-player-object-not-found: '<warn>Fehler. Spieler nicht gefunden. Bitte melde das an den Plugin-Entwickler.'
@@ -54,16 +54,16 @@ chat:
     day: '<red>Diese Quest ist auf Abklingzeit! Du musst noch <highlight>1 Tag</highlight> warten, bis du sie annehmen kannst.'
     days: '<red>Diese Quest ist auf Abklingzeit! Du musst noch <highlight>%DAYS% Tage</highlight> warten, bis du sie annehmen kannst.'
   profiles:
-    list-current: '<highlight>Current profile: <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
-    list-other-heading: '<highlight>Other profiles:'
-    list-other-none: '  <main>You have no more profiles.'
-    list-other: '  <highlight>- <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
-    change-same-profile: '<error>You are already using that profile!'
-    change-profile-doesnt-exist: '<error>That profile does not exist.'
-    changed-successfully: '<success>You have successfully changed your profile from %OLDPROFILENAME% to <highlight>%NEWPROFILENAME%</highlight>!'
-    create-already-exists: '<error>A profile with the name <highlight>%NEWPROFILENAME%</highlight> already exists.'
-    create-invalid-characters: '<error>The profile name you provided contains invalid characters.'
-    created-successfully: '<success>You have successfully created the profile <highlight>%NEWPROFILENAME%</highlight>! To switch to it, use <highlight2>/nq profile change %NEWPROFILENAME%</highlight2>'
+    list-current: '<highlight>Aktuelles Profil: <main>%PROFILENAME% (%QUESTPOINTS% Questpunkte)'
+    list-other-heading: '<highlight>Weitere Profile:'
+    list-other-none: '  <main>Du hast keine weiteren Profile.'
+    list-other: '  <highlight>- <main>%PROFILENAME% (%QUESTPOINTS% Questpunkte)'
+    change-same-profile: '<error>Du benutzt schon dieses Profil!'
+    change-profile-doesnt-exist: '<error>Dieses Profil existiert nicht.'
+    changed-successfully: '<success>Du hast dein Profil erfolgreich von %OLDPROFILENAME% auf<highlight>%NEWPROFILENAME%</highlight> geändert!'
+    create-already-exists: '<error>Es gibt schon ein Profil mit dem Namen <highlight>%NEWPROFILENAME%</highlight>.'
+    create-invalid-characters: '<error>Der Profilname hat ungültige Zeichen.'
+    created-successfully: '<success>Du hast das Profil <highlight>%NEWPROFILENAME%</highlight> erfolgreich erstellt! Um auf das Profil zu wechseln, führe <highlight2>/nq profile change %NEWPROFILENAME%</highlight2> aus'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>
