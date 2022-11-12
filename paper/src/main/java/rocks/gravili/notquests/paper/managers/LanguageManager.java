@@ -42,6 +42,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -324,6 +325,13 @@ public class LanguageManager {
         }
         return languageConfig;
     }
+
+
+    /*public final ItemStack getComponent(final String languageString, final Player targetPlayer, Object... internalPlaceholderObjects){
+        final String material = getString(languageString + ".material", targetPlayer, internalPlaceholderObjects);
+
+        return main.parse(getString(languageString, targetPlayer, internalPlaceholderObjects)).decoration(TextDecoration.ITALIC, false);
+    }*/
 
     public final Component getComponent(final String languageString, final Player targetPlayer, Object... internalPlaceholderObjects){
         return main.parse(getString(languageString, targetPlayer, internalPlaceholderObjects)).decoration(TextDecoration.ITALIC, false);
