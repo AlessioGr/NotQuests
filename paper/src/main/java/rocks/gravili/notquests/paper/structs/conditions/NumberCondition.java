@@ -178,12 +178,6 @@ public class NumberCondition extends Condition {
                 if (d <= numberRequirement) {
                     return "<YELLOW>You need <highlight>" + (numberRequirement+1 - d) + "</highlight> more " + cachedVariable.getPlural() + ".";
                 }
-            }else if (value instanceof Integer[] integerArray) {
-                for (final Integer i : integerArray) {
-                    if (i <= numberRequirement) {
-                        return "<YELLOW>You need <highlight>" + (numberRequirement+1.0 - i) + "</highlight> more " + cachedVariable.getPlural() + ".";
-                    }
-                }
             }else if(value instanceof Integer i){
                 if (i <= numberRequirement) {
                     return "<YELLOW>You need <highlight>" + (numberRequirement+1 - i) + "</highlight> more " + cachedVariable.getPlural() + ".";
@@ -205,12 +199,6 @@ public class NumberCondition extends Condition {
             }else if(value instanceof Double d){
                 if (d < numberRequirement) {
                     return "<YELLOW>You need <highlight>" + (numberRequirement - d) + "</highlight> more " + cachedVariable.getPlural() + ".";
-                }
-            }else if (value instanceof Integer[] integerArray) {
-                for (final Integer i : integerArray) {
-                    if (i < numberRequirement) {
-                        return "<YELLOW>You need <highlight>" + (numberRequirement - i) + "</highlight> more " + cachedVariable.getPlural() + ".";
-                    }
                 }
             }else if(value instanceof Integer i){
                 if (i < numberRequirement) {
@@ -234,12 +222,6 @@ public class NumberCondition extends Condition {
                 if (d >= numberRequirement) {
                     return "<YELLOW>You have <highlight>" + (d+1 - numberRequirement) + "</highlight> too many " + cachedVariable.getPlural() + ".";
                 }
-            }else if (value instanceof Integer[] integerArray) {
-                for (final Integer i : integerArray) {
-                    if (i >= numberRequirement) {
-                        return "<YELLOW>You have <highlight>" + (i+1 - numberRequirement) + "</highlight> too many " + cachedVariable.getPlural() + ".";
-                    }
-                }
             }else if(value instanceof Integer i){
                 if (i >= numberRequirement) {
                     return "<YELLOW>You have <highlight>" + (i+1 - numberRequirement) + "</highlight> too many " + cachedVariable.getPlural() + ".";
@@ -262,12 +244,6 @@ public class NumberCondition extends Condition {
                 if (d > numberRequirement) {
                     return "<YELLOW>You have <highlight>" + (d - numberRequirement) + "</highlight> too many " + cachedVariable.getPlural() + ".";
                 }
-            }else if (value instanceof Integer[] integerArray) {
-                for (final Integer i : integerArray) {
-                    if (i > numberRequirement) {
-                        return "<YELLOW>You have <highlight>" + (i - numberRequirement) + "</highlight> too many " + cachedVariable.getPlural() + ".";
-                    }
-                }
             }else if(value instanceof Integer i){
                 if (i > numberRequirement) {
                     return "<YELLOW>You have <highlight>" + (i - numberRequirement) + "</highlight> too many " + cachedVariable.getPlural() + ".";
@@ -289,12 +265,6 @@ public class NumberCondition extends Condition {
             }else if(value instanceof Double d){
                 if (d != numberRequirement) {
                     return "<YELLOW>You need EXACTLY <highlight>" + numberRequirement+ "</highlight> " + cachedVariable.getPlural() + " - no more or less.";
-                }
-            }else if (value instanceof Integer[] integerArray) {
-                for (final Integer i : integerArray) {
-                    if (i != numberRequirement) {
-                        return "<YELLOW>You need EXACTLY <highlight>" + numberRequirement+ "</highlight> " + cachedVariable.getPlural() + " - no more or less.";
-                    }
                 }
             }else if(value instanceof Integer i){
                 if (i != numberRequirement) {

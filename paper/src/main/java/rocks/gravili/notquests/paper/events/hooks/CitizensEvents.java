@@ -219,7 +219,7 @@ public class CitizensEvents implements Listener {
                             activeObjective.addProgress(1, nqNPC);
                             final String mmNpcName = main.getMiniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(npcToEscort.getName()));
                             player.sendMessage(main.parse(
-                                    main.getLanguageManager().getString("chat.objectives.taskCompletion.deliverItems.delivery-of-npc-complete", questPlayer,
+                                    main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.delivery-of-npc-complete", questPlayer,
                                             Map.of("%NPCNAME%", mmNpcName))
                             ));
                             handledObjective.set(true);

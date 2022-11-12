@@ -86,9 +86,6 @@ chat:
     successfully-completed-rewards-prefix: '    <highlight>Rewards:'
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
     successfully-completed-rewards-suffix: <EMPTY>
-    taskCompletion:
-      deliverItems:
-        delivery-of-npc-complete: '<GREEN>You have successfully delivered the NPC <highlight> %NPCNAME%'
     taskDescription:
       global:
         prefix: '    <veryUnimportant>└─ <unimportant>'
@@ -109,6 +106,7 @@ chat:
         deliver-to-npc-not-available: '      <GRAY>The delivery NPC is currently not available!'
         delivery-progress: '<GREEN>You have delivered <highlight> %ALLOBJECTIVESCOUNT% </highlight> items to <highlight> %NPCNAME%'
         delivery-items-progress: '<GREEN>You have delivered <highlight> %ITEMSTACKAMOUNT% </highlight> items to <highlight> %NPCNAME%'
+        delivery-of-npc-complete: '<GREEN>You have successfully delivered the NPC <highlight> %NPCNAME%'
       escortNPC:
         base: 'Escort <main>%NPCNAME%</main> to <main>%DESTINATIONNPCNAME%'
       fishItems:

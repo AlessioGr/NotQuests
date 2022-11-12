@@ -185,7 +185,7 @@ public class CitizensEvents implements Listener {
                                             npcToEscort.despawn();
                                         } else {
                                             audience.sendMessage(MiniMessage.miniMessage().deserialize(
-                                                    main.getLanguageManager().getString("chat.objectives.taskCompletion.deliverItems.delivery-of-npc-complete", questPlayer.getPlayer(),
+                                                    main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.delivery-of-npc-complete", questPlayer.getPlayer(),
                                                             Map.of("%NPCNAME%", npcToEscort.getName()))
                                             ));
                                         }
