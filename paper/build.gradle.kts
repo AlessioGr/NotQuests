@@ -163,7 +163,9 @@ dependencies {
     //compileOnly("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT!!")
     //implementation("de.themoep:inventorygui:1.5-SNAPSHOT")
 
-    compileOnly("net.citizensnpcs:citizens-main:2.0.30-SNAPSHOT")
+    //compileOnly("net.citizensnpcs:citizens-main:2.0.30-SNAPSHOT")
+    compileOnly(files("libs/citizens-2.0.30-8.jar"))
+
     compileOnly("me.clip:placeholderapi:2.11.2")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
 

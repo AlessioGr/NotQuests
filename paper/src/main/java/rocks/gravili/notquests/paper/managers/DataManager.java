@@ -1522,7 +1522,10 @@ public class DataManager {
 
         try{
             statement.executeUpdate(query);
-        }catch (Exception ignored){
+        }catch (Exception e){
+            if(main.getConfiguration().debug){
+                e.printStackTrace();
+            }
         }
     }
 
@@ -1545,7 +1548,7 @@ public class DataManager {
                 CREATE TABLE `ActiveObjectives` (`ObjectiveType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` DOUBLE, `ObjectiveID` INT(255), `HasBeenCompleted` BOOLEAN, `ProgressNeeded` DOUBLE, `Profile` varchar(200))
             """);
             statement.executeUpdate("""
-                INSERT INTO ActiveObjectives (ObjectiveType,QuestName,PlayerUUID,CurrentProgress,ObjectiveID,HasBeenCompleted,ProgressNeeded,Profile) SELECT ObjectiveType,QuestName,PlayerUUID,CurrentProgress,ObjectiveID,HasBeenCompleted,ProgressNeeded FROM ActiveObjectivesOld
+                INSERT INTO ActiveObjectives (ObjectiveType,QuestName,PlayerUUID,CurrentProgress,ObjectiveID,HasBeenCompleted,ProgressNeeded,Profile) VALUES ((SELECT ObjectiveType FROM ActiveObjectivesOld), (SELECT QuestName FROM ActiveObjectivesOld), (SELECT PlayerUUID FROM ActiveObjectivesOld), (SELECT CurrentProgress FROM ActiveObjectivesOld), (SELECT ObjectiveID FROM ActiveObjectivesOld), (SELECT HasBeenCompleted FROM ActiveObjectivesOld), (SELECT ProgressNeeded FROM ActiveObjectivesOld), 'default')
             """);
             statement.executeUpdate("""
                 DROP TABLE ActiveObjectivesOld
@@ -1562,7 +1565,7 @@ public class DataManager {
                 CREATE TABLE `QuestPlayerData` (`PlayerUUID` varchar(200), `QuestPoints` BIGINT(255), `Profile` varchar(200))
             """);
         statement.executeUpdate("""
-                INSERT INTO QuestPlayerData (PlayerUUID,QuestPoints,Profile) SELECT PlayerUUID,QuestPoints,Profile FROM QuestPlayerDataOld
+                INSERT INTO QuestPlayerData (PlayerUUID,QuestPoints,Profile) VALUES( (SELECT PlayerUUID FROM QuestPlayerDataOld),(SELECT QuestPoints FROM QuestPlayerDataOld), (SELECT Profile FROM QuestPlayerDataOld) )
             """);
         statement.executeUpdate("""
                 DROP TABLE QuestPlayerDataOld
@@ -1611,12 +1614,12 @@ public class DataManager {
 
 
             //Migrations
-            migrationAddProfileColumns(statement, "ALTER TABLE QuestPlayerData ADD COLUMN `Profile` VARCHAR NOT NULL DEFAULT 'default'");
-            migrationAddProfileColumns(statement, "ALTER TABLE ActiveQuests ADD COLUMN `Profile` VARCHAR NOT NULL DEFAULT 'default'");
-            migrationAddProfileColumns(statement, "ALTER TABLE CompletedQuests ADD COLUMN `Profile` VARCHAR NOT NULL DEFAULT 'default'");
-            migrationAddProfileColumns(statement, "ALTER TABLE ActiveObjectives ADD COLUMN `Profile` VARCHAR NOT NULL DEFAULT 'default'");
-            migrationAddProfileColumns(statement, "ALTER TABLE ActiveTriggers ADD COLUMN `Profile` VARCHAR NOT NULL DEFAULT 'default'");
-            migrationAddProfileColumns(statement, "ALTER TABLE Tags ADD COLUMN `Profile` VARCHAR NOT NULL DEFAULT 'default'");
+            migrationAddProfileColumns(statement, "ALTER TABLE QuestPlayerData ADD COLUMN `Profile` VARCHAR(200) NOT NULL DEFAULT 'default'");
+            migrationAddProfileColumns(statement, "ALTER TABLE ActiveQuests ADD COLUMN `Profile` VARCHAR(200) NOT NULL DEFAULT 'default'");
+            migrationAddProfileColumns(statement, "ALTER TABLE CompletedQuests ADD COLUMN `Profile` VARCHAR(200) NOT NULL DEFAULT 'default'");
+            migrationAddProfileColumns(statement, "ALTER TABLE ActiveObjectives ADD COLUMN `Profile` VARCHAR(200) NOT NULL DEFAULT 'default'");
+            migrationAddProfileColumns(statement, "ALTER TABLE ActiveTriggers ADD COLUMN `Profile` VARCHAR(200) NOT NULL DEFAULT 'default'");
+            migrationAddProfileColumns(statement, "ALTER TABLE Tags ADD COLUMN `Profile` VARCHAR(200) NOT NULL DEFAULT 'default'");
 
             if(hasToMigrateQuestPlayerDataTable){
                 migrateQuestPlayerDataTable(statement);
