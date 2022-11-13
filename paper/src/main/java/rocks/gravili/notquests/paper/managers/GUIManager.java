@@ -220,6 +220,7 @@ public class GUIManager {
             .build());
   }
 
+  //This should ONLY be used for NPC-induced GUIs. Otherwise, takeEnabled woud nreal
   public void showTakeQuestsGUI(QuestPlayer questPlayer, final ArrayList<Quest> quests) {
     if (main.getDataManager().isDisabled()) {
       main.getDataManager().sendPluginDisabledMessage(questPlayer.getPlayer());
