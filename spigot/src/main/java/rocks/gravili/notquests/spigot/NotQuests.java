@@ -18,12 +18,19 @@
 
 package rocks.gravili.notquests.spigot;
 
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.AdvancedPie;
 import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
+import rocks.gravili.notquests.common.NotQuestsMainAbstract;
 import rocks.gravili.notquests.spigot.conversation.ConversationEvents;
 import rocks.gravili.notquests.spigot.conversation.ConversationManager;
 import rocks.gravili.notquests.spigot.events.ArmorStandEvents;
@@ -47,7 +54,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-public class NotQuests {
+public class NotQuests implements NotQuestsMainAbstract<Component, CommandSender> {
     private static NotQuests instance;
     private final JavaPlugin main;
 
@@ -490,5 +497,24 @@ public class NotQuests {
 
     public IntegrationsManager getIntegrationsManager() {
         return integrationsManager;
+    }
+
+    @Override
+    public final Component parse(final String miniMessage){
+        return MiniMessage.miniMessage().deserialize(miniMessage);
+    }
+
+    @Override
+    public void sendMessage(final CommandSender sender, final String message){
+        if(!message.isBlank() && sender != null){
+            adventure().sender(sender).sendMessage(parse(message));
+        }
+    }
+
+    @Override
+    public void sendMessage(final CommandSender sender, final Component component){
+        if(!PlainTextComponentSerializer.plainText().serialize(component).isBlank() && sender != null){
+            adventure().sender(sender).sendMessage(component);
+        }
     }
 }

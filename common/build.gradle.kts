@@ -29,92 +29,12 @@ version = rootProject.version
 
 repositories {
     mavenCentral()
-
-    maven("https://papermc.io/repo/repository/maven-public/"){
-        content {
-            includeGroup("io.papermc.paper")
-            includeGroup("net.kyori")
-            includeGroup("io.papermc")
-        }
-    }
-
-    maven("https://repo.citizensnpcs.co/"){
-        content {
-            includeGroup("net.citizensnpcs")
-        }
-    }
-
-    maven("https://repo.extendedclip.com/content/repositories/placeholderapi/"){
-        content {
-            includeGroup("me.clip")
-        }
-    }
-
-    maven("https://jitpack.io"){
-        content {
-            includeGroup("com.github.MilkBowl")
-            includeGroup("com.github.TheBusyBiscuit")
-            includeGroup("com.github.retrooper")
-            includeGroup("com.github.retrooper.packetevents")
-            includeGroup("io.github.retrooper")
-            includeGroup("com.github.AlessioGr")
-            includeGroup("com.github.AlessioGr.packetevents")
-            includeGroup("com.github.TownyAdvanced")
-            includeGroup("com.github.Zrips")
-        }
-        metadataSources {
-            artifact()
-        }
-    }
-
-    maven("https://repo.minebench.de/"){
-        content {
-            includeGroup("de.themoep")
-        }
-    }
-
-    maven("https://mvn.lumine.io/repository/maven-public/"){
-        content {
-            includeGroup("io.lumine.xikage")
-        }
-    }
-
-    maven("https://betonquest.org/nexus/repository/betonquest/"){
-        content {
-            includeGroup("org.betonquest")
-        }
-        metadataSources {
-            artifact()
-        }
-    }
-
-    maven("https://maven.enginehub.org/repo/"){
-        content {
-            includeGroup("com.sk89q.worldedit")
-        }
-        metadataSources {
-            artifact()
-        }
-    }
-
-    maven("https://repo.incendo.org/content/repositories/snapshots"){
-        content {
-            includeGroup("org.incendo.interfaces")
-        }
-    }
-
-    maven("https://libraries.minecraft.net/"){
-        content {
-            includeGroup("com.mojang")
-        }
-    }
-
     //mavenLocal()
 
 }
 
 dependencies {
-
+    implementation("net.kyori:adventure-api:4.11.0")
     //implementation(project(":spigot"))
     //implementation(project(":paper"))
 
@@ -130,7 +50,11 @@ val shadowPath = "rocks.gravili.notquests"
 tasks.withType<ShadowJar> {
     minimize()
 
+    relocate("net.kyori", "$shadowPath.kyori")
+
     dependencies {
+        include(dependency("net.kyori:"))
+
 
     }
     //archiveBaseName.set("notquests")

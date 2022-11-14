@@ -150,7 +150,7 @@ repositories {
 
 
 dependencies {
-    //implementation project(':common')
+    implementation(project(path= ":common", configuration= "shadow"))
 
     implementation("org.bstats:bstats-bukkit:3.0.0")
     implementation("de.themoep:inventorygui:1.5-SNAPSHOT")

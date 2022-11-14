@@ -24,6 +24,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
+import rocks.gravili.notquests.common.managers.LogCategory;
 import rocks.gravili.notquests.paper.NotQuests;
 
 public class LogManager {

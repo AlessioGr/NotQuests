@@ -158,7 +158,7 @@ repositories {
 }
 
 dependencies {
-    //implementation project(':common')
+    implementation(project(path= ":common", configuration= "shadow"))
     paperDevBundle("1.19.2-R0.1-SNAPSHOT")
     //compileOnly("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT!!")
     //implementation("de.themoep:inventorygui:1.5-SNAPSHOT")

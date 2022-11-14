@@ -23,6 +23,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import rocks.gravili.notquests.common.managers.LogCategory;
 import rocks.gravili.notquests.spigot.NotQuests;
 
 import java.util.logging.Level;

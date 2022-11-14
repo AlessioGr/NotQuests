@@ -30,6 +30,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import rocks.gravili.notquests.common.managers.LogCategory;
 import rocks.gravili.notquests.spigot.NotQuests;
 import rocks.gravili.notquests.spigot.commands.NotQuestColors;
 import rocks.gravili.notquests.spigot.structs.Quest;

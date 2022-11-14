@@ -26,6 +26,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import rocks.gravili.notquests.common.managers.LogCategory;
 import rocks.gravili.notquests.spigot.NotQuests;
 import rocks.gravili.notquests.spigot.structs.ActiveObjective;
 import rocks.gravili.notquests.spigot.structs.ActiveQuest;

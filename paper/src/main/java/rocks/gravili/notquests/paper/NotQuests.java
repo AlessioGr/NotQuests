@@ -27,6 +27,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import rocks.gravili.notquests.common.NotQuestsMainAbstract;
 import rocks.gravili.notquests.paper.conversation.ConversationEvents;
 import rocks.gravili.notquests.paper.conversation.ConversationManager;
 import rocks.gravili.notquests.paper.events.ArmorStandEvents;
@@ -55,7 +56,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-public class NotQuests {
+public class NotQuests implements NotQuestsMainAbstract<Component, CommandSender> {
     private static NotQuests instance;
     private final JavaPlugin main;
 
@@ -540,17 +541,20 @@ public class NotQuests {
         return messageManager.getMiniMessage();
     }
 
-    public final Component parse(String miniMessage){
+    @Override
+    public final Component parse(final String miniMessage){
         return getMiniMessage().deserialize(miniMessage);
     }
 
-    public void sendMessage(CommandSender sender, String message){
+    @Override
+    public void sendMessage(final CommandSender sender, final String message){
         if(!message.isBlank() && sender != null){
             sender.sendMessage(parse(message));
         }
     }
 
-    public void sendMessage(CommandSender sender, Component component){
+    @Override
+    public void sendMessage(final CommandSender sender, final Component component){
         if(!PlainTextComponentSerializer.plainText().serialize(component).isBlank() && sender != null){
             sender.sendMessage(component);
         }

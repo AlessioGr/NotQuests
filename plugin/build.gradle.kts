@@ -119,6 +119,7 @@ repositories {
 dependencies {
     paperDevBundle("1.19.2-R0.1-SNAPSHOT")
 
+    implementation(project(path= ":common", configuration= "shadow"))
     implementation(project(path= ":spigot", configuration= "shadow"))
     implementation(project(path= ":paper", configuration= "shadow"))
 
