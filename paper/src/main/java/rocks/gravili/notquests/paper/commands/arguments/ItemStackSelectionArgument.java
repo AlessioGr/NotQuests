@@ -48,6 +48,7 @@ import rocks.gravili.notquests.paper.managers.items.NQItem;
  */
 public class ItemStackSelectionArgument<C> extends CommandArgument<C, ItemStackSelection> {
 
+    //TODO: Add way of setting optional amount per itemstack (ex. stone:5,dirt,diorite:71), then the amount in giveitemaction can be removed or made an optional flag
 
     protected ItemStackSelectionArgument(
             final boolean required,

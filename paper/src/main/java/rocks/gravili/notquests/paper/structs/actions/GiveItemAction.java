@@ -116,6 +116,7 @@ public class GiveItemAction extends Action {
 
     if (Bukkit.isPrimaryThread()) {
       for (final ItemStack itemStack : getItemStackSelection().toItemStackList()) {
+        itemStack.setAmount(getNqItemAmount());
         questPlayer.getPlayer().getInventory().addItem(itemStack);
       }
     } else {
@@ -124,6 +125,7 @@ public class GiveItemAction extends Action {
               main.getMain(),
               () -> {
                 for (final ItemStack itemStack : getItemStackSelection().toItemStackList()) {
+                  itemStack.setAmount(getNqItemAmount());
                   questPlayer.getPlayer().getInventory().addItem(itemStack);
                 }
               }); // TODO: Check if I can't just run it async if it already is async`?
@@ -140,9 +142,7 @@ public class GiveItemAction extends Action {
     getItemStackSelection()
         .saveToFileConfiguration(configuration, initialPath + ".specifics.itemStackSelection");
 
-    if (!getItemStackSelection().hasNQItem()) {
-      configuration.set(initialPath + ".specifics.nqitemamount", getNqItemAmount());
-    }
+    configuration.set(initialPath + ".specifics.nqitemamount", getNqItemAmount());
   }
 
   @Override
