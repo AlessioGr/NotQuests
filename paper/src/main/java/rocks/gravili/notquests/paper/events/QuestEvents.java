@@ -271,7 +271,7 @@ public class QuestEvents implements Listener {
 
             //Safety mechanism
             questPlayer.queueObjectiveCheck(activeObjective -> {
-                questPlayer.sendDebugMessage("Checking for PickupItemsObjective.");
+                questPlayer.sendDebugMessage("Checking for PickupItemsObjective in onInventoryClickEvent.");
                 if (activeObjective.getObjective() instanceof final PickupItemsObjective pickupItemsObjective) {
                     final ItemStackSelection itemStackSelection = pickupItemsObjective.getItemStackSelection();
                     questPlayer.sendDebugMessage("Found PickupItemsObjective.");
@@ -280,6 +280,7 @@ public class QuestEvents implements Listener {
 
                     if (pickupItemsObjective.isDeductIfItemIsRemovedFromInventory()) {
                         final InventoryType inventoryType = e.getInventory().getType();
+                        questPlayer.sendDebugMessage("InventoryType %s", inventoryType.toString());
                         if(inventoryType != InventoryType.PLAYER){
                             final ItemStack currentItem = e.getCurrentItem();
                             if(main.getUtilManager().isItemEmpty(currentItem)){

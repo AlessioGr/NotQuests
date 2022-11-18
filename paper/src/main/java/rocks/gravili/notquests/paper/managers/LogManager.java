@@ -70,7 +70,9 @@ public class LogManager {
   private void log(
       final Level level, final LogCategory logCategory, final String color, String message, final Object... interpolatedStrings) {
 
-    message = message.formatted((Object[]) interpolatedStrings);
+    if(interpolatedStrings.length > 0){
+      message = message.formatted((Object[]) interpolatedStrings);
+    }
 
     if (main.getConfiguration() == null || main.getConfiguration().isConsoleColorsEnabled()) {
       if (main.getConfiguration() != null && !main.getConfiguration().isConsoleColorsDownsampleColors()) {
