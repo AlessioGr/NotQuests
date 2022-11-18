@@ -183,7 +183,7 @@ public class QuestPlayerManager {
     }
     return foundQuestPlayer;
   }
-    public final @NotNull QuestPlayer getOrCreateQuestPlayer(@NotNull final UUID uuid) {
+  public final @NotNull QuestPlayer getOrCreateQuestPlayer(@NotNull final UUID uuid) {
     QuestPlayer foundQuestPlayer = getActiveQuestPlayer(uuid);
     if (foundQuestPlayer == null) {
       foundQuestPlayer = new QuestPlayer(main, uuid, "default");
@@ -200,15 +200,13 @@ public class QuestPlayerManager {
     return foundQuestPlayer;
   }
 
-  public final String createQuestPlayer(final UUID uuid, final String profile, final boolean setAsCurrentProfile) {
+  private String createQuestPlayer(final UUID uuid, final String profile, final boolean setAsCurrentProfile) {
     QuestPlayer questPlayer = getActiveQuestPlayer(uuid);
 
     if (questPlayer == null || !questPlayer.getProfile().equalsIgnoreCase(profile)) {
       questPlayer = new QuestPlayer(main, uuid, profile);
 
-      questPlayer.setFinishedLoadingGeneralData(true);
-      questPlayer.setFinishedLoadingTags(true);
-      questPlayer.setCurrentlyLoading(false);
+
 
       if(questPlayersAndUUIDs.containsKey(uuid)){
         questPlayersAndUUIDs.get(uuid).add(questPlayer);

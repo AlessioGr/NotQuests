@@ -115,6 +115,7 @@ public abstract class ActiveObjectiveHolder {
       final NQNPC nqnpc) {
 
     if (!getMain().getDataManager().isCurrentlyLoading() && !getQuestPlayer().isCurrentlyLoading()) {
+      main.getLogManager().debug("notifyActiveObjectiveCompleted: getDataManager().isCurrentlyLoading(): " + getMain().getDataManager().isCurrentlyLoading() + " getQuestPlayer().isCurrentlyLoading(): " + getQuestPlayer().isCurrentlyLoading());
       ObjectiveCompleteEvent objectiveCompleteEvent =
           new ObjectiveCompleteEvent(getQuestPlayer(), activeObjective, this);
       if (Bukkit.isPrimaryThread()) {
@@ -135,7 +136,7 @@ public abstract class ActiveObjectiveHolder {
       // Now execute the objective reward actions:
       String fullRewardString = "";
       int counterWithRewardNames = 0;
-      for (Action rewardAction : activeObjective.getObjective().getRewards()) {
+      for (final Action rewardAction : activeObjective.getObjective().getRewards()) {
         questPlayer.sendDebugMessage("Executing a rewardAction for an objective");
         main.getActionManager()
             .executeActionWithConditions(rewardAction, questPlayer, null, true, getObjectiveHolder());
