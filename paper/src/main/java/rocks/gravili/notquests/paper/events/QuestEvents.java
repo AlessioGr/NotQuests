@@ -78,7 +78,7 @@ import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.objectives.BreakBlocksObjective;
 import rocks.gravili.notquests.paper.structs.objectives.BreedObjective;
-import rocks.gravili.notquests.paper.structs.objectives.CollectItemsObjective;
+import rocks.gravili.notquests.paper.structs.objectives.PickupItemsObjective;
 import rocks.gravili.notquests.paper.structs.objectives.ConsumeItemsObjective;
 import rocks.gravili.notquests.paper.structs.objectives.CraftItemsObjective;
 import rocks.gravili.notquests.paper.structs.objectives.FishItemsObjective;
@@ -755,6 +755,7 @@ public class QuestEvents implements Listener {
             if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
                 return;
             }
+            //Safety mechanism
             questPlayer.queueObjectiveCheck(activeObjective -> {
                 questPlayer.sendDebugMessage("Checking for BreakBlocksObjective.");
                 if (activeObjective.getObjective() instanceof final BreakBlocksObjective breakBlocksObjective) {
@@ -770,6 +771,23 @@ public class QuestEvents implements Listener {
                     }
                 }
             });
+            //Safety mechanism
+            questPlayer.queueObjectiveCheck(activeObjective -> {
+                questPlayer.sendDebugMessage("Checking for PickupItemsObjective.");
+                if (activeObjective.getObjective() instanceof final PickupItemsObjective pickupItemsObjective) {
+                    final ItemStackSelection itemStackSelection = pickupItemsObjective.getItemStackSelection();
+                    questPlayer.sendDebugMessage("Found PickupItemsObjective.");
+
+                    if (itemStackSelection.checkIfIsIncluded(e.getBlock().getType())) {
+                        questPlayer.sendDebugMessage("Found right block.");
+                        if (pickupItemsObjective.isDeductIfItemIsPlaced()) {
+                            questPlayer.sendDebugMessage("Deducting from PickupItemsObjective!");
+                            activeObjective.removeProgress(1, false);
+                        }
+                    }
+                }
+            });
+
             questPlayer.queueObjectiveCheck(activeObjective -> {
                 if (activeObjective.getObjective() instanceof final PlaceBlocksObjective placeBlocksObjective) {
                     final ItemStackSelection itemStackSelection = placeBlocksObjective.getItemStackSelection();
@@ -832,9 +850,9 @@ public class QuestEvents implements Listener {
                 return;
             }
             questPlayer.queueObjectiveCheck(activeObjective -> {
-                if (activeObjective.getObjective() instanceof final CollectItemsObjective collectItemsObjective) {
+                if (activeObjective.getObjective() instanceof final PickupItemsObjective pickupItemsObjective) {
 
-                    final ItemStackSelection itemStackSelection = collectItemsObjective.getItemStackSelection();
+                    final ItemStackSelection itemStackSelection = pickupItemsObjective.getItemStackSelection();
 
                     //Check if the Material of the collected item is equal to the Material needed in the CollectItemsObjective
                     if (!itemStackSelection.checkIfIsIncluded(e.getItem().getItemStack())) {
@@ -860,12 +878,12 @@ public class QuestEvents implements Listener {
             return;
         }
         questPlayer.queueObjectiveCheck(activeObjective -> {
-            if (activeObjective.getObjective() instanceof final CollectItemsObjective collectItemsObjective) {
-                if (!collectItemsObjective.isDeductIfItemIsDropped()) {
+            if (activeObjective.getObjective() instanceof final PickupItemsObjective pickupItemsObjective) {
+                if (!pickupItemsObjective.isDeductIfItemIsDropped()) {
                     return;
                 }
 
-                final ItemStackSelection itemStackSelection = collectItemsObjective.getItemStackSelection();
+                final ItemStackSelection itemStackSelection = pickupItemsObjective.getItemStackSelection();
 
                 if(!itemStackSelection.checkIfIsIncluded(e.getItemDrop().getItemStack())){
                     return;

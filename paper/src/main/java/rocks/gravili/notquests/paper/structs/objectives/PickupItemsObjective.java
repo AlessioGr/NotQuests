@@ -32,12 +32,15 @@ import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelect
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
-public class CollectItemsObjective extends Objective {
+public class PickupItemsObjective extends Objective {
 
   private ItemStackSelection itemStackSelection;
   private boolean deductIfItemIsDropped = true;
+  private boolean deductIfItemIsPlaced = true;
+  private boolean deductIfItemIsRemovedFromInventory = true; //TODO: Implement
 
-  public CollectItemsObjective(NotQuests main) {
+
+  public PickupItemsObjective(NotQuests main) {
     super(main);
   }
 
@@ -59,22 +62,41 @@ public class CollectItemsObjective extends Objective {
                     .flagBuilder("doNotDeductIfItemIsDropped")
                     .withDescription(
                         ArgumentDescription.of(
-                            "Makes it so Quest progress is not removed if the item is dropped.")))
+                            "Makes it so Quest progress is NOT removed if the item is dropped.")))
+            .flag(
+                    manager
+                            .flagBuilder("doNotDeductIfItemIsPlaced")
+                            .withDescription(
+                                    ArgumentDescription.of(
+                                            "Makes it so Quest progress is NOT removed if the item is placed.")))
+                .flag(
+                        manager
+                                .flagBuilder("doNotDeductIfItemIsRemovedFromInventory")
+                                .withDescription(
+                                        ArgumentDescription.of(
+                                                "Makes it so Quest progress is NOT removed if the item is removed from inventory.")))
             .handler(
                 (context) -> {
                   final String amountExpression = context.get("amount");
                   final boolean deductIfItemIsDropped =
                       !context.flags().isPresent("doNotDeductIfItemIsDropped");
+                  final boolean deductIfItemIsPlaced =
+                          !context.flags().isPresent("doNotDeductIfItemIsPlaced");
+                  final boolean deductIfItemIsRemovedFromInventory =
+                          !context.flags().isPresent("doNotDeductIfItemIsRemovedFromInventory");
 
                   final ItemStackSelection itemStackSelection = context.get("materials");
 
-                  CollectItemsObjective collectItemsObjective = new CollectItemsObjective(main);
-                  collectItemsObjective.setItemStackSelection(itemStackSelection);
+                  PickupItemsObjective pickupItemsObjective = new PickupItemsObjective(main);
+                  pickupItemsObjective.setItemStackSelection(itemStackSelection);
 
-                  collectItemsObjective.setProgressNeededExpression(amountExpression);
-                  collectItemsObjective.setDeductIfItemIsDropped(deductIfItemIsDropped);
+                  pickupItemsObjective.setProgressNeededExpression(amountExpression);
+                  pickupItemsObjective.setDeductIfItemIsDropped(deductIfItemIsDropped);
+                  pickupItemsObjective.setDeductIfItemIsPlaced(deductIfItemIsPlaced);
+                  pickupItemsObjective.setDeductIfItemIsRemovedFromInventory(deductIfItemIsRemovedFromInventory);
 
-                  main.getObjectiveManager().addObjective(collectItemsObjective, context, level);
+
+                  main.getObjectiveManager().addObjective(pickupItemsObjective, context, level);
                 }));
   }
 
@@ -91,12 +113,12 @@ public class CollectItemsObjective extends Objective {
       final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
     return main.getLanguageManager()
         .getString(
-            "chat.objectives.taskDescription.collectItems.base",
+            "chat.objectives.taskDescription.pickupItems.base",
             questPlayer,
             activeObjective,
             Map.of(
-                "%ITEMTOCOLLECTTYPE%", getItemStackSelection().getAllMaterialsListedTranslated("main"),
-                "%ITEMTOCOLLECTNAME%", "",
+                "%ITEMTOPICKUPTYPE%", getItemStackSelection().getAllMaterialsListedTranslated("main"),
+                "%ITEMTOPICKUPNAME%", "",
                 "%(%", "",
                 "%)%", ""));
   }
@@ -107,6 +129,9 @@ public class CollectItemsObjective extends Objective {
         .saveToFileConfiguration(configuration, initialPath + ".specifics.itemStackSelection");
 
     configuration.set(initialPath + ".specifics.deductIfItemDropped", isDeductIfItemIsDropped());
+    configuration.set(initialPath + ".specifics.deductIfItemPlaced", isDeductIfItemIsPlaced());
+    configuration.set(initialPath + ".specifics.deductIfItemRemovedFromInventory", isDeductIfItemIsRemovedFromInventory());
+
   }
 
   @Override
@@ -118,7 +143,7 @@ public class CollectItemsObjective extends Objective {
     // Convert old to new
     if (configuration.contains(initialPath + ".specifics.nqitem")
         || configuration.contains(initialPath + ".specifics.itemToCollect.itemstack")) {
-      main.getLogManager().info("Converting old CollectItemsObjective to new one...");
+      main.getLogManager().info("Converting old PickupItemsObjective to new one...");
       final String nqItemName = configuration.getString(initialPath + ".specifics.nqitem", "");
 
       if (nqItemName.isBlank()) {
@@ -136,6 +161,10 @@ public class CollectItemsObjective extends Objective {
 
     deductIfItemIsDropped =
         configuration.getBoolean(initialPath + ".specifics.deductIfItemDropped", true);
+    deductIfItemIsPlaced =
+            configuration.getBoolean(initialPath + ".specifics.deductIfItemPlaced", true);
+    deductIfItemIsRemovedFromInventory =
+            configuration.getBoolean(initialPath + ".specifics.deductIfItemRemovedFromInventory", true);
   }
 
   @Override
@@ -155,5 +184,21 @@ public class CollectItemsObjective extends Objective {
 
   public void setDeductIfItemIsDropped(final boolean deductIfItemIsDropped) {
     this.deductIfItemIsDropped = deductIfItemIsDropped;
+  }
+
+  public final boolean isDeductIfItemIsPlaced() {
+    return deductIfItemIsPlaced;
+  }
+
+  public void setDeductIfItemIsPlaced(final boolean deductIfItemIsPlaced) {
+    this.deductIfItemIsPlaced = deductIfItemIsPlaced;
+  }
+
+  public final boolean isDeductIfItemIsRemovedFromInventory() {
+    return deductIfItemIsRemovedFromInventory;
+  }
+
+  public void setDeductIfItemIsRemovedFromInventory(final boolean deductIfItemIsRemovedFromInventory) {
+    this.deductIfItemIsRemovedFromInventory = deductIfItemIsRemovedFromInventory;
   }
 }

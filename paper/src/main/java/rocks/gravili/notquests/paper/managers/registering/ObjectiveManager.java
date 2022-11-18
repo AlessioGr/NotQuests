@@ -33,7 +33,7 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.ObjectiveSelector;
 import rocks.gravili.notquests.paper.structs.objectives.BreakBlocksObjective;
 import rocks.gravili.notquests.paper.structs.objectives.BreedObjective;
-import rocks.gravili.notquests.paper.structs.objectives.CollectItemsObjective;
+import rocks.gravili.notquests.paper.structs.objectives.PickupItemsObjective;
 import rocks.gravili.notquests.paper.structs.objectives.ConditionObjective;
 import rocks.gravili.notquests.paper.structs.objectives.ConsumeItemsObjective;
 import rocks.gravili.notquests.paper.structs.objectives.CraftItemsObjective;
@@ -85,7 +85,7 @@ public class ObjectiveManager {
     registerObjective("Condition", ConditionObjective.class);
     registerObjective("BreakBlocks", BreakBlocksObjective.class);
     registerObjective("PlaceBlocks", PlaceBlocksObjective.class);
-    registerObjective("CollectItems", CollectItemsObjective.class);
+    registerObjective("PickupItems", PickupItemsObjective.class);
     registerObjective("FishItems", FishItemsObjective.class);
 
     registerObjective("TriggerCommand", TriggerCommandObjective.class);

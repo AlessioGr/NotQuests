@@ -244,7 +244,14 @@ public class QuestManager {
                 continue;
             }
 
-            final String objectiveTypeString = config.getString( "objectiveType", "");
+            String objectiveTypeString = config.getString( "objectiveType", "");
+            //Migrate from 5.8.3 => 5.8.4
+            if(objectiveTypeString.equals("CollectItems")){
+                main.getLogManager().info("Migrating old CollectItems objectives to PickupItems objectives...");
+                objectiveTypeString = "PickupItems";
+                config.set("objectiveType", "PickupItems");
+                objectiveHolder.saveConfig();
+            }
 
             final Class<? extends Objective> objectiveType = main.getObjectiveManager().getObjectiveClass(objectiveTypeString);
 

@@ -120,17 +120,17 @@ public class CollectItemsObjective extends Objective {
         String itemType = isCollectAnyItem() ? "Any" : getItemToCollect().getType().name();
 
         if (!displayName.isBlank()) {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.collectItems.base", player)
+            return main.getLanguageManager().getString("chat.objectives.taskDescription.pickupItems.base", player)
                     .replace("%EVENTUALCOLOR%", eventualColor)
-                    .replace("%ITEMTOCOLLECTTYPE%", "" + itemType)
-                    .replace("%ITEMTOCOLLECTNAME%", "" + displayName)
+                    .replace("%ITEMTOPICKUPTYPE%", "" + itemType)
+                    .replace("%ITEMTOPICKUPNAME%", "" + displayName)
                     .replace("%(%", "(")
                     .replace("%)%", "<RESET>)");
         } else {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.collectItems.base", player)
+            return main.getLanguageManager().getString("chat.objectives.taskDescription.pickupItems.base", player)
                     .replace("%EVENTUALCOLOR%", eventualColor)
-                    .replace("%ITEMTOCOLLECTTYPE%", "" + itemType)
-                    .replace("%ITEMTOCOLLECTNAME%", "")
+                    .replace("%ITEMTOPICKUPTYPE%", "" + itemType)
+                    .replace("%ITEMTOPICKUPNAME%", "")
                     .replace("%(%", "")
                     .replace("%)%", "");
         }
