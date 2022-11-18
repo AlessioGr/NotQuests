@@ -24,7 +24,7 @@ plugins {
     id("com.github.johnrengelman.shadow")
     id("io.papermc.paperweight.userdev")
     id("xyz.jpenilla.run-paper")
-    id("net.minecrell.plugin-yml.bukkit") version "0.5.1"
+    id("net.minecrell.plugin-yml.bukkit") version "0.5.2"
 }
 
 group = "rocks.gravili.notquests"
@@ -143,6 +143,7 @@ tasks.withType<ShadowJar> {
     relocate("io.papermc.lib", "$shadowPath.paperlib")
 
     dependencies {
+        include(dependency(":common"))
         include(dependency(":spigot"))
         include(dependency(":paper"))
         include(dependency("io.papermc:paperlib:"))

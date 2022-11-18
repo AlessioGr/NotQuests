@@ -25,7 +25,7 @@ import cloud.commandframework.paper.PaperCommandManager;
 import java.util.ArrayList;
 import java.util.List;
 import org.betonquest.betonquest.BetonQuest;
-import org.betonquest.betonquest.api.config.QuestPackage;
+import org.betonquest.betonquest.api.config.quest.QuestPackage;
 import org.betonquest.betonquest.api.profiles.Profile;
 import org.betonquest.betonquest.config.Config;
 import org.betonquest.betonquest.exceptions.ObjectNotFoundException;
