@@ -261,13 +261,128 @@ public class QuestEvents implements Listener {
 
 
     @EventHandler
-    private void onSmeltEvent(InventoryClickEvent e) {
+    private void onInventoryClickEvent(InventoryClickEvent e) {
         final Entity entity = e.getWhoClicked();
         if (entity instanceof final Player player) {
             final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
             if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
                 return;
             }
+
+            //Safety mechanism
+            questPlayer.queueObjectiveCheck(activeObjective -> {
+                questPlayer.sendDebugMessage("Checking for PickupItemsObjective.");
+                if (activeObjective.getObjective() instanceof final PickupItemsObjective pickupItemsObjective) {
+                    final ItemStackSelection itemStackSelection = pickupItemsObjective.getItemStackSelection();
+                    questPlayer.sendDebugMessage("Found PickupItemsObjective.");
+
+
+
+                    if (pickupItemsObjective.isDeductIfItemIsRemovedFromInventory()) {
+                        final InventoryType inventoryType = e.getInventory().getType();
+                        if(inventoryType != InventoryType.PLAYER){
+                            final ItemStack currentItem = e.getCurrentItem();
+                            if(main.getUtilManager().isItemEmpty(currentItem)){
+                                //questPlayer.sendDebugMessage("Invalid item for smelt objective (1)");
+                                return;
+                            }
+
+                            if(!itemStackSelection.checkIfIsIncluded(currentItem)){
+                                //questPlayer.sendDebugMessage("Invalid item for smelt objective (2). CurrentItem: " + currentItem.getType().name() + " ItemToSmelt: " + smeltObjective.getItemToSmelt().getType().name());
+                                return;
+                            }
+
+                            questPlayer.sendDebugMessage("Valid item for smelt objective");
+
+
+                            int amount = currentItem.getAmount();
+                            final ItemStack cursor = e.getCursor();
+
+
+
+                            switch (e.getClick()) {
+                                case LEFT:
+                                    if (!main.getUtilManager().isItemEmpty(cursor)) {
+                                        questPlayer.sendDebugMessage("Inventory craft event: Cursor is not empty");
+
+                                        if (!cursor.isSimilar(currentItem)) {
+                                            amount = 0;
+                                        }
+                                        if (cursor.getAmount() + currentItem.getAmount() > cursor.getMaxStackSize()) {
+                                            amount = 0;
+                                        }
+                                    }
+                                    break;
+
+                                case RIGHT:
+                                    if (!main.getUtilManager().isItemEmpty(cursor)) {
+                                        questPlayer.sendDebugMessage("Inventory craft event: Cursor is not empty");
+
+                                        if (!cursor.isSimilar(currentItem)) {
+                                            amount = 0;
+                                        }
+                                        if (cursor.getAmount() + currentItem.getAmount() > cursor.getMaxStackSize()) {
+                                            amount = 0;
+                                        }
+                                    }
+                                    amount = (amount+1)/2;
+                                    break;
+                                case NUMBER_KEY:
+                                    //If the hotbar is full, the item will not be crafted but it will still trigger this event for some reason. That's
+                                    //why we manually have to set the amount to 0 here
+                                    if (player.getInventory().getItem(e.getHotbarButton()) != null) {
+                                        amount = 0;
+                                    }
+                                    break;
+
+                                case DROP:
+                                    if (!main.getUtilManager().isItemEmpty(cursor)) {
+                                        amount = 0;
+                                    }
+                                    amount = 1;
+                                    break;
+                                case CONTROL_DROP:
+                                    // If we are holding items, craft-via-drop fails (vanilla behavior)
+                                    // Cursor is either null or AIR
+                                    if (!main.getUtilManager().isItemEmpty(cursor)) {
+                                        amount = 0;
+                                    }
+
+                                    break;
+                                case SWAP_OFFHAND:
+                                    if(!main.getUtilManager().isItemEmpty(player.getInventory().getItemInOffHand())){
+                                        amount = 0;
+                                    }
+                                    break;
+                                case SHIFT_LEFT:
+                                case SHIFT_RIGHT:
+                                    if (amount == 0) {
+                                        break;
+                                    }
+
+                                    amount = Math.min(getInventorySpaceLeftForItem(player.getInventory(), currentItem ) ,amount);
+
+                                    break;
+                                default:
+                                    amount = 0;
+                            }
+
+
+                            questPlayer.sendDebugMessage("Amount: " + amount);
+
+                            if (amount == 0) {
+                                return;
+                            }
+                            questPlayer.sendDebugMessage("Deducting from PickupItemsObjective!");
+                            activeObjective.removeProgress(amount, false);
+                        }
+                    }
+
+
+
+                }
+            });
+
             questPlayer.queueObjectiveCheck(activeObjective -> {
                 if (activeObjective.getObjective() instanceof final SmeltObjective smeltObjective) {
                     final InventoryType inventoryType = e.getInventory().getType();
