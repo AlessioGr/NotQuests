@@ -95,8 +95,8 @@ chat:
         base: 'Romper bloques: <main>%BLOCKTOBREAK%'
       breed:
         base: 'Alimentar Mob: <main>%ENTITYTOBREED%'
-      collectItems:
-        base: 'Conseguir items: <main>%ITEMTOCOLLECTTYPE%%(%%ITEMTOCOLLECTNAME%%)%'
+      pickupItems:
+        base: 'Collect Items: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
       consumeItems:
         base: 'Consumir items: <main>%ITEMTOCONSUMETYPE%%(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
