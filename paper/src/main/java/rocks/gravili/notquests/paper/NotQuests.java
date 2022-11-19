@@ -56,7 +56,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-public class NotQuests implements NotQuestsMainAbstract<Component, CommandSender> {
+public class NotQuests extends NotQuestsMainAbstract<Component, CommandSender> {
     private static NotQuests instance;
     private final JavaPlugin main;
 
@@ -106,6 +106,7 @@ public class NotQuests implements NotQuestsMainAbstract<Component, CommandSender
     }
 
     public NotQuests(JavaPlugin main){
+        super();
         this.main = main;
     }
 

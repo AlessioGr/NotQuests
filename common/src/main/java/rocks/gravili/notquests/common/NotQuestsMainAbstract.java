@@ -1,12 +1,16 @@
 package rocks.gravili.notquests.common;
 
 
-public interface NotQuestsMainAbstract <ParsedMessage, Sender> {
 
-    ParsedMessage parse(final String unparsedMessage);
+public abstract class NotQuestsMainAbstract <ParsedMessage, Sender> {
+    public NotQuestsMainAbstract(){
 
-    void sendMessage(final Sender sender, final String message);
+    }
 
-    void sendMessage(final Sender sender, final ParsedMessage message);
+    public abstract ParsedMessage parse(final String unparsedMessage);
+
+    public abstract void sendMessage(final Sender sender, final String message);
+
+    public abstract void sendMessage(final Sender sender, final ParsedMessage message);
 
 }

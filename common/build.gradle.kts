@@ -34,26 +34,23 @@ repositories {
 }
 
 dependencies {
-    implementation("net.kyori:adventure-api:4.11.0")
-    //implementation(project(":spigot"))
-    //implementation(project(":paper"))
-
-    //compileOnly(files("libs/EliteMobs.jar"))
-    //compileOnly(files("libs/UClans-API.jar"))
-    //compileOnly(files("libs/ProjectKorra-1.9.2.jar"))
+    //implementation("net.kyori:adventure-api:4.11.0")
+    implementation("org.spongepowered:configurate-gson:4.1.2")
 }
 
 /**
  * Configure NotQuests for shading
  */
-val shadowPath = "rocks.gravili.notquests"
+val shadowPath = "rocks.gravili.notquests.shadow"
 tasks.withType<ShadowJar> {
     minimize()
 
-    relocate("net.kyori", "$shadowPath.kyori")
+    //relocate("net.kyori", "$shadowPath.kyori")
+    relocate("org.spongepowered.configurate", "$shadowPath.configurate")
 
     dependencies {
-        include(dependency("net.kyori:"))
+        //include(dependency("net.kyori:"))
+        include(dependency("org.spongepowered:"))
 
 
     }
