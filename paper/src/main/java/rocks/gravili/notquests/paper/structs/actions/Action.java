@@ -223,7 +223,7 @@ public abstract class Action {
         main.getActionManager().getActionClass(actionTypeString);
 
     if (actionType == null) {
-      throw new Exception("Action type " + actionTypeString + " could not be parsed.");
+      throw new Exception("Action type <highlight>'" + actionTypeString + "'</highlight> could not be parsed. Config path: " + initialPath + ".actionType");
     }
 
     final Action action;
