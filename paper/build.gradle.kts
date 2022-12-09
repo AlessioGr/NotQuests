@@ -159,7 +159,7 @@ repositories {
 
 dependencies {
     implementation(project(path= ":common", configuration= "shadow"))
-    paperDevBundle("1.19.2-R0.1-SNAPSHOT")
+    paperDevBundle("1.19.3-R0.1-SNAPSHOT")
     //compileOnly("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT!!")
     //implementation("de.themoep:inventorygui:1.5-SNAPSHOT")
 
@@ -170,7 +170,7 @@ dependencies {
     compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
 
 
-    compileOnly("io.lumine:Mythic-Dist:5.0.3-SNAPSHOT")
+    compileOnly("io.lumine:Mythic-Dist:5.2.0")
     compileOnly(files("libs/EliteMobs.jar"))
     compileOnly("com.github.UlrichBR:UClansV5-API:4.5")
     compileOnly(files("libs/ProjectKorra-1.10.0.jar"))
@@ -187,7 +187,7 @@ dependencies {
     compileOnly("net.luckperms:api:5.4")
 
     //compileOnly "com.github.NEZNAMY:TAB:2.9.2"
-    compileOnly("com.github.TownyAdvanced:towny:0.98.2.0")
+    compileOnly("com.github.TownyAdvanced:Towny:0.98.4.4")
 
     compileOnly("com.github.Zrips:Jobs:v4.17.2")
 
