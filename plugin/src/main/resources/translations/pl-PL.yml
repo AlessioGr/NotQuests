@@ -95,8 +95,8 @@ chat:
         base: 'Zniszcz bloki: <main>%BLOCKTOBREAK%'
       breed:
         base: 'Rozmnóż: <main>%ENTITYTOBREED%'
-      collectItems:
-        base: 'Zbierz przedmioty: <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
+      pickupItems:
+        base: 'Collect Items: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
       consumeItems:
         base: 'Spożyj: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:

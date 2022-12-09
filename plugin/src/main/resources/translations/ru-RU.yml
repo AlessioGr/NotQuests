@@ -95,8 +95,8 @@ chat:
         base: 'Сломать блоки: <main>%BLOCKTOBREAK%'
       breed:
         base: 'Breed Mobs: <main>%ENTITYTOBREED%'
-      collectItems:
-        base: 'Собрать предметы: <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
+      pickupItems:
+        base: 'Collect Items: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
       consumeItems:
         base: 'Использовать предметы: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:

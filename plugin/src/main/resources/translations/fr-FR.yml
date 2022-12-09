@@ -95,8 +95,8 @@ chat:
         base: 'Casser des blocs : <main>%BLOCKTOBREAK%'
       breed:
         base: 'Reproduire des créatures : <main>%ENTITYTOBREED%'
-      collectItems:
-        base: 'Amasser des items : <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
+      pickupItems:
+        base: 'Collect Items: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
       consumeItems:
         base: 'Utiliser des items : <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:

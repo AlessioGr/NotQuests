@@ -95,8 +95,8 @@ chat:
         base: 'Blöcke abbauen: <main>%BLOCKTOBREAK%'
       breed:
         base: 'Mobs züchten: <main>%ENTITYTOBREED%'
-      collectItems:
-        base: 'Items sammeln: <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
+      pickupItems:
+        base: 'Collect Items: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
       consumeItems:
         base: 'Items konsumieren: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:

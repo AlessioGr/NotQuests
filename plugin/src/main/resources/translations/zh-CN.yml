@@ -95,8 +95,8 @@ chat:
         base: '破坏方块：<main>%BLOCKTOBREAK%'
       breed:
         base: '繁殖生物：<main>%ENTITYTOBREED%'
-      collectItems:
-        base: '收集物品：<main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
+      pickupItems:
+        base: 'Collect Items: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
       consumeItems:
         base: '消耗物品：<main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
