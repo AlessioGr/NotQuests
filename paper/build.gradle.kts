@@ -199,7 +199,7 @@ dependencies {
     //Shaded
 
 
-    implementation("net.kyori:adventure-text-serializer-bungeecord:4.1.2") {
+    implementation("net.kyori:adventure-text-serializer-bungeecord:4.2.0") {
         exclude(group = "net.kyori", module = "adventure-api")
     }
 
