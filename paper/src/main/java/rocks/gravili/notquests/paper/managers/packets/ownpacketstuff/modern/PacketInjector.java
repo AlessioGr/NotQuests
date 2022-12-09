@@ -34,11 +34,11 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.BlockState;
-import org.bukkit.craftbukkit.v1_19_R1.CraftChunk;
-import org.bukkit.craftbukkit.v1_19_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_19_R1.block.CraftBlockState;
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftArmorStand;
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_19_R2.CraftChunk;
+import org.bukkit.craftbukkit.v1_19_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_19_R2.block.CraftBlockState;
+import org.bukkit.craftbukkit.v1_19_R2.entity.CraftArmorStand;
+import org.bukkit.craftbukkit.v1_19_R2.entity.CraftPlayer;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -243,9 +243,9 @@ public class PacketInjector {
     net.minecraft.world.entity.decoration.ArmorStand a=((CraftArmorStand)armorStand).getHandle();
     a.setCustomNameVisible(show);
 
-    ClientboundSetEntityDataPacket dataPck=new ClientboundSetEntityDataPacket(a.getId(),a.getEntityData(),true);
+    // ClientboundSetEntityDataPacket dataPck=new ClientboundSetEntityDataPacket(a.getId(),a.getEntityData(),true); //TODO: Fix. What the hell is a FriendlyByteBuf
 
-    connection.send(dataPck);
+    // connection.send(dataPck);
   }
 
 }
