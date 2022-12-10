@@ -1,15 +1,15 @@
 ---
 chat:
-  wrong-command-usage: <error>Wrong command usage!
-  missing-permission: '<error>No permission! Required permission node: <highlight>%PERMISSION%'
-  too-many-arguments: <error>Too many arguments!
+  wrong-command-usage: <error>間違ったコマンドの使用方法！
+  missing-permission: '<error>権限がありません! 権限が必要です: <highlight>%PERMISSION%'
+  too-many-arguments: <error>引数が多すぎます！
   quest-successfully-accepted: |2
 
     <CENTER><main>[Quest Accepted]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
-  quest-description: '<main>Quest description: <unimportant>%QUESTDESCRIPTION%'
-  quest-already-accepted: <error>Quest already accepted.
+  quest-description: '<main>クエストの説明: <unimportant>%QUESTDESCRIPTION%'
+  quest-already-accepted: <error>のクエストは既に承認されています。
   quest-failed: |2
 
     <CENTER><negative>[Quest Failed]
@@ -21,55 +21,55 @@ chat:
     <CENTER><positive>[Quest Completed]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
-  quest-completed-rewards-prefix: '    <highlight>Rewards:'
+  quest-completed-rewards-prefix: '    <highlight>報酬:'
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
-  quest-not-all-requirements-fulfilled: '<negative>You do not fulfill all the requirements this quest needs! Requirement still needed:'
-  action-not-all-conditions-fulfilled: '<negative>You do not fulfill all the conditions this action needs! Conditions still needed:'
-  missing-quest-description: <unimportant>This quest has no quest description.
-  objectives-label-after-quest-accepting: '<highlight>Objectives:'
+  quest-not-all-requirements-fulfilled: '<negative>このクエストに必要な条件をすべて満たしているわけではありません。必要条件:'
+  action-not-all-conditions-fulfilled: '<negative>このアクションが必要な条件をすべて満たしていない！条件はまだ必要です：'
+  missing-quest-description: <unimportant>クエストの説明がありません。
+  objectives-label-after-quest-accepting: '<highlight>目標:'
   questpoints:
-    query: <main>You currently have <highlight>%QUESTPOINTS%</highlight> quest points.
-    none: <error>Seems like you don't have any quest points!
+    query: <main>現在 <highlight>%QUESTPOINTS%</highlight> クエストポイントがあります。
+    none: <error>クエストポイントがありません！
     notify-when-changed:
-      set: '<main>Your quest points have been set to <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.'
-      add: '<highlight>+%QUESTPOINTSTOADD% <success>quest points!'
-      remove: '<highlight>-%QUESTPOINTSTOREMOVE% <negative>quest points!'
-  no-quests-accepted: <error>Seems like you don't have any active quests!
-  quest-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> does not exist!
-  quest-not-found-or-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> not found or not active!
-  active-quests-label: '<highlight>Active quests:'
-  take-disabled: <error>Accepting or previewing the quest <highlight>%QUESTNAME%</highlight> is disabled.
-  abort-disabled: <error>Aborting the quest <highlight>%QUESTNAME%</highlight> is disabled.
-  quest-not-active-error: '<error>Error: <highlight>%QUESTNAME%</highlight> is not an active Quest!'
-  force-add-active-quest-accepted: '<success>Successfully accepted the quest (Forced).'
-  add-active-quest-player-object-not-found: '<warn>Error: Player object not found. Please report this to the plugin developer.'
-  reached-max-accepts-limit: '<red>You have finished this quests too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
-  reached-max-active-quests-per-player-limit: '<red>You can not accept more than <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> Quests.'
+      set: '<main>クエストポイントが <highlight>%NEWQUESTPOINTSAMOUNT%に設定されました</highlight>。'
+      add: '<highlight>+%QUESTPOINTSTOADD% <success>クエストポイント！'
+      remove: '<highlight>-%QUESTPOINTSTOREMOVE% <negative>クエストポイント!'
+  no-quests-accepted: <error>あなたにアクティブなクエストがないようです！
+  quest-does-not-exist: <error>クエスト <highlight>%QUESTNAME%</highlight> は存在しません！
+  quest-not-found-or-does-not-exist: <error>クエスト <highlight>%QUESTNAME%</highlight> が見つからないか、アクティブではありません！
+  active-quests-label: '<highlight>有効なクエスト:'
+  take-disabled: <error>クエスト <highlight>%QUESTNAME%を承認またはプレビューする</highlight> は無効です。
+  abort-disabled: <error>クエスト <highlight>%QUESTNAME%を中断しています</highlight>  無効になっています
+  quest-not-active-error: '<error>エラー: <highlight>%QUESTNAME%</highlight> はアクティブなクエストではありません！'
+  force-add-active-quest-accepted: '<success>は任務を承認しました（強制）。'
+  add-active-quest-player-object-not-found: '<warn>エラー：プレイヤーオブジェクトが見つかりません。プラグイン開発者に報告してください。'
+  reached-max-accepts-limit: '<red>このクエストは既に何度も完了しています。 あなたはそれを受け入れることができます <red> <highlight>%MAXACCEPTS%</highlight> 回のみ。 しかし、あなたはすでに <highlight>%COMPLETEDAMOUNT%回受け入れています</highlight>'
+  reached-max-active-quests-per-player-limit: '<red> <highlight>%MAXACTIVEQUESTSPERPLAYER%個以上のクエストを受け付けることはできません</highlight>'
   quest-on-cooldown:
-    minute: '<red>This quest is on a cooldown! You have to wait another <highlight>1 minute</highlight> until you can take it again.'
-    minutes: '<red>This quest is on a cooldown! You have to wait another <highlight>%MINUTES% minutes</highlight> until you can take it again.'
-    hour: '<red>This quest is on a cooldown! You have to wait another <highlight>1 hour</highlight> until you can take it again.'
-    hours: '<red>This quest is on a cooldown! You have to wait another <highlight>%HOURS% hours</highlight> until you can take it again.'
-    day: '<red>This quest is on a cooldown! You have to wait another <highlight>1 day</highlight> until you can take it again.'
-    days: '<red>This quest is on a cooldown! You have to wait another <highlight>%DAYS% days</highlight> until you can take it again.'
+    minute: '<red>このクエストはクールダウン中です！また受け取れるまであと <highlight>１分</highlight> 待つ必要があります。'
+    minutes: '<red>このクエストはクールダウン中です！また <highlight>%MINUTES% 分</highlight> 待つ必要があります。'
+    hour: '<red>このクエストはクールダウン中です！また受け取れるまであと <highlight>1時間</highlight> 待つ必要があります。'
+    hours: '<red>このクエストはクールダウン中です！また <highlight>%HOURS% 時間</highlight> 待つ必要があります。'
+    day: '<red>このクエストはクールダウン中です！また受け取れるまであと <highlight>1日</highlight> 待つ必要があります。'
+    days: '<red>このクエストはクールダウン中です！また <highlight>%DAYS% 日</highlight> 待つ必要があります。'
   profiles:
-    list-current: '<highlight>Current profile: <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
-    list-other-heading: '<highlight>Other profiles:'
-    list-other-none: '  <main>You have no more profiles.'
-    list-other: '  <highlight>- <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
-    change-same-profile: '<error>You are already using that profile!'
-    change-profile-doesnt-exist: '<error>That profile does not exist.'
-    changed-successfully: '<success>You have successfully changed your profile from %OLDPROFILENAME% to <highlight>%NEWPROFILENAME%</highlight>!'
-    create-already-exists: '<error>A profile with the name <highlight>%NEWPROFILENAME%</highlight> already exists.'
-    create-invalid-characters: '<error>The profile name you provided contains invalid characters.'
-    created-successfully: '<success>You have successfully created the profile <highlight>%NEWPROFILENAME%</highlight>! To switch to it, use <highlight2>/nq profile change %NEWPROFILENAME%</highlight2>'
+    list-current: '<highlight>現在のプロファイル: <main>%PROFILENAME% (%QUESTPOINTS% クエストポイント)'
+    list-other-heading: '<highlight>その他のプロファイル:'
+    list-other-none: '  <main>プロフィールがありません。'
+    list-other: '  <highlight>現在のプロファイル: <main>%PROFILENAME% (%QUESTPOINTS% クエストポイント)'
+    change-same-profile: '<error>既にこのプロファイルを使用しています！'
+    change-profile-doesnt-exist: '<error>そのプロファイルは存在しません。'
+    changed-successfully: '<success>プロフィールを %OLDPROFILENAME% から <highlight>%NEWPROFILENAME%へ変更しました</highlight>'
+    create-already-exists: '<error> <highlight>%NEWPROFILENAME%</highlight> という名前のプロファイルはすでに存在しています。'
+    create-invalid-characters: '<error>入力したプロファイル名に無効な文字が含まれています。'
+    created-successfully: '<success>プロファイル <highlight>%NEWPROFILENAME%の作成に成功しました</highlight>!これに切り替えるには、 <highlight2>/nq profile change %NEWPROFILENAME%を使用します</highlight2>'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>
-      <main>Choose your answer:</main>
-    choose-answer-answer-hover-text: '<highlight>Click to answer'
-    ended-previous-conversation: '<main>You have ended your previous conversation!'
+      <main>回答を選択:</main>
+    choose-answer-answer-hover-text: '<highlight>クリックして回答'
+    ended-previous-conversation: '<main>あなたは以前の会話を終了しました！'
     speaker-line-format: '%SPEAKERCOLOR%[%SPEAKER%] <GRAY>%MESSAGE%'
     answer-option-line-format: ' <main>%OPTIONNUMBER%. <gray>%MESSAGE%'
   objectives:
@@ -77,14 +77,14 @@ chat:
     counterForObjectiveObjective: '<highlight>%OBJECTIVEIDWITHSUBID%.</highlight> <main>%OBJECTIVEHOLDERNAME%:'
     subObjectivePrefixAppend: '    '
     hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[HIDDEN]
-    description: '    <veryUnimportant>└─ <unimportant>Description: <main>%OBJECTIVEDESCRIPTION%'
-    progress: '    <veryUnimportant>└─ <unimportant>Progress: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
+    description: '    <veryUnimportant>└─ <unimportant>説明: <main>%OBJECTIVEDESCRIPTION%'
+    progress: '    <veryUnimportant>└─ <unimportant>進行度: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
     successfully-completed: |2
 
       <CENTER><success>[Objective Completed]
       <CENTER><highlight><bold>%OBJECTIVENAME%</bold> <RESET><main>(%QUESTNAME%)
       <EMPTY>
-    successfully-completed-rewards-prefix: '    <highlight>Rewards:'
+    successfully-completed-rewards-prefix: '    <highlight>報酬:'
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
     successfully-completed-rewards-suffix: <EMPTY>
     taskDescription:
@@ -92,74 +92,74 @@ chat:
         prefix: '    <veryUnimportant>└─ <unimportant>'
         suffix: ''
       breakBlocks:
-        base: 'Break Blocks: <main>%BLOCKTOBREAK%'
+        base: '破壊ブロック: <main>%BLOCKTOBREAK%'
       breed:
-        base: 'Breed Mobs: <main>%ENTITYTOBREED%'
+        base: 'モブ種: <main>%ENTITYTOBREED%'
       pickupItems:
-        base: 'Collect Items: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
+        base: 'アイテムを集める: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
       consumeItems:
-        base: 'Consume Items: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
+        base: 'アイテムを消費: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: 'Craft Items: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+        base: 'クラフトアイテム: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: 'Deliver Items: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
-        deliver-to-npc: '      <GRAY>Deliver it to <WHITE>%NPCNAME%'
-        deliver-to-npc-not-available: '      <GRAY>The delivery NPC is currently not available!'
+        base: 'アイテム配達: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
+        deliver-to-npc: '      <WHITE>%NPCNAME% <GRAY>に配達しました'
+        deliver-to-npc-not-available: '      <GRAY>配達NPCは現在利用できません！'
       escortNPC:
-        base: 'Escort <main>%NPCNAME%</main> to <main>%DESTINATIONNPCNAME%'
+        base: '<main>%NPCNAME%</main> を <main>%DESTINATIONNPCNAME% に護衛する'
       fishItems:
-        base: 'Fish Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
+        base: '魚のアイテム: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
       killMobs:
-        base: 'Kill mobs: <main>%MOBTOKILL%'
+        base: 'モブを倒す: <main>%MOBTOKILL%'
       otherQuest:
-        base: 'Complete Quest: <main>%OTHERQUESTNAME%'
+        base: 'クエストを完了してください: <main>%OTHERQUESTNAME%'
       placeBlocks:
-        base: 'Place Blocks: <main>%BLOCKTOPLACE%'
+        base: '場所ブロック: <main>%BLOCKTOPLACE%'
       reachLocation:
-        base: 'Reach Location: <main>%LOCATIONNAME%'
+        base: '到達場所: <main>%LOCATIONNAME%'
       talkToNPC:
-        base: 'Talk to <main>%NAME%'
-        npc-not-available: '    <GRAY>The target NPC is currently not available!'
+        base: '<main>%NAME% と話す'
+        npc-not-available: '    <GRAY>ターゲットのNPCは現在利用できません！'
       triggerCommand:
-        base: 'Goal: <main>%TRIGGERNAME%'
+        base: '目標:<main>%TRIGGERNAME%'
       killEliteMobs:
-        base: 'Kill Elite Mob: <main>%ELITEMOBNAME%'
-        any: 'Kill any Elite Mob!'
+        base: 'エリートモブを倒す: <main>%ELITEMOBNAME%'
+        any: 'エリートモブを倒せ！'
       runCommand:
-        base: 'Run command: <main>%COMMANDTORUN%'
+        base: 'コマンドを実行: <main>%COMMANDTORUN%'
       interact:
-        base: '%INTERACTTYPE% Location: <main>%COORDINATES% <main>in world %WORLDNAME%'
+        base: '%INTERACTTYPE% 場所: <main>%COORDINATES% <main>のワールド %WORLDNAME%'
       jump:
-        base: 'Jump <main>%AMOUNTOFJUMPS%</main> times'
+        base: '<main>%AMOUNTOFJUMPS%を</main> 回ジャンプ'
       objective:
         base: '%OBJECTIVEHOLDERNAME%'
       sneak:
-        base: 'Sneak <main>%AMOUNTOFSNEAKS%</main> times'
+        base: '<main>%AMOUNTOFSNEAKS%を</main> 回スニークする'
       smelt:
-        base: 'Smelt Items: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+        base: 'アイテムを精錬: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       openBuriedTreasure:
-        base: 'Open buried treasures'
+        base: '埋蔵された宝物を開く'
       shearSheep:
-        base: 'Shear <main>%AMOUNTOFSHEEP%</main> sheep'
+        base: '<main>%AMOUNTOFSHEEP%</main> 匹の羊を刈り取ろう'
       townyReachResidentCount:
-        base: 'Reach resident amount: <main>%AMOUNT%'
+        base: '居住者数に到達: <main>%AMOUNT%'
       townyNationReachTownCount:
-        base: 'Reach town amount with your nation: <main>%AMOUNT%'
+        base: '自分の国の数に達する: <main>%AMOUNT%'
       jobsRebornReachJobLevel:
-        base: 'Reach job level <main>%AMOUNT%</main> with job <main>%JOB%'
+        base: 'ジョブレベル <main>%AMOUNT%</main> でジョブ <main>%JOB% に達する'
       SlimefunResearch:
-        base: 'Spend on research'
+        base: '研究に費やします'
       ProjectKorraUseAbility:
-        base: 'Use Ability: <main>%ABILITY%'
+        base: '使用能力: <main>%ABILITY%'
       BetonQuestCompleteObjective:
-        base: 'Finish Objective: <main>%BETONQUESTOBJECTIVENAME%'
+        base: '完了目標: <main>%BETONQUESTOBJECTIVENAME%'
       ultimateJobsReachJobLevel:
-        base: 'Reach job level <main>%AMOUNT%</main> with job <main>%JOBID%'
+        base: 'ジョブ <main>%AMOUNT%</main> でジョブ <main>%JOBID% に達する'
   conditions:
     boolean:
-      not-fulfilled: "<warn>Following needs to be %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
-      variable-not-found: "<error>Error: variable <highlight>%VARIABLENAME%</highlight> not found. Report this to the Server owner."
-      wrong-operator: "<error>Error: variable operator <highlight>%OPERATOR%/highlight> is invalid. Report this to the Server owner."
+      not-fulfilled: "<warn>以下のことが必要です %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
+      variable-not-found: "<error>エラー: 変数 <highlight>%VARIABLENAME%</highlight> が見つかりません。サーバー所有者に報告してください。"
+      wrong-operator: "<error>エラー: 変数 <highlight>%OPERATOR% が見つかりません。サーバー所有者に報告してください。"
 objective-tracking:
   actionbar-progress-update:
     default: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
@@ -169,27 +169,27 @@ objective-tracking:
     only-one-max-progress: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
 titles:
   quest-accepted:
-    title: <main>Quest accepted
+    title: <main>のクエストが承認されました
     subtitle: <highlight>%QUESTNAME%
   quest-completed:
-    title: <positive>Quest Completed
+    title: <positive>クエスト完了
     subtitle: <highlight>%QUESTNAME%
   quest-failed:
-    title: <negative>Quest Failed
+    title: <negative>クエスト失敗
     subtitle: <highlight>%QUESTNAME%
 placeholders:
   questcooldownleftformatted:
     prefix: ''
-    minute: '1 minute'
-    minutes: '%MINUTES% minutes'
-    hour: '1 hour'
-    hours: '%HOURS% hours'
-    day: '1 day'
-    days: '%DAYS% days'
+    minute: '1 分'
+    minutes: '%MINUTES% 分'
+    hour: '1時間'
+    hours: '%HOURS% 時間'
+    day: '1日'
+    days: '%DAYS% 日'
     no-cooldown: ''
 gui:
   main:
-    title: '                <highlight2>Quests'
+    title: '                <highlight2>クエスト'
     backgroundFill:
       material: 'BLACK_STAINED_GLASS_PANE'
     background:
@@ -215,56 +215,56 @@ gui:
         maxY: 5
     button:
       questpoints:
-        name: "<highlight>Quest Points"
+        name: "<highlight>クエストポイント"
         lore:
-          - "<main>Current quest points: <highlight2>%QUESTPOINTS%"
+          - "<main>クエストポイント： <highlight2>%QUESTPOINTS%"
         x: 8
         y: 0
       takequest:
-        name: "<positive>Take a Quest"
+        name: "<positive>クエストを受ける"
         lore:
-          - "<unimportant>Start a new Quest!"
+          - "<unimportant>新しいクエストを開始！"
           - ""
-          - "<veryUnimportant>Some Quests cannot be"
-          - "<veryUnimportant>started like this."
+          - "<veryUnimportant>クエストはできません"
+          - "<veryUnimportant>このように始めました。"
         x: 0
         y: 1
       abortquest:
-        name: "<negative>Abort a Quest"
+        name: "<negative>クエストを中止しました"
         lore:
           - ""
-          - "<veryUnimportant>Aborting a Quest may"
-          - "<veryUnimportant>lead to punishments."
+          - "<veryUnimportant>クエストを中止するかもしれません"
+          - "<veryUnimportant>は罰につながります"
         x: 0
         y: 2
       activequests:
-        name: "<highlight>Active Quests"
+        name: "<highlight>有効なクエスト"
         lore:
           - ""
-          - "<veryUnimportant>Shows all of your"
-          - "<veryUnimportant>active Quests."
+          - "<veryUnimportant>全てを表示"
+          - "<veryUnimportant>有効なクエスト."
         x: 0
         y: 3
   activeQuests:
-    title: '             <highlight2>Active Quests'
+    title: '             <highlight2>有効なクエスト'
     button:
       activeQuestButton:
         name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
         lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<main>Click to see details!"
+          - "<unimportant>進行状況: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
+          - "<main>クリックして詳細を表示！"
   reward-hidden-text: . <unimportant>[HIDDEN]
   availableQuests:
-    title: '         <highlight2>Available Quests'
+    title: '         <highlight2>有効なクエスト'
     button:
       questPreview:
         name-if-not-accepted: "<highlight>%QUESTNAME%"
         name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
         lore:
           - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-          - "<main>Click to open Quest!"
+          - "<main>クリックしてクエストを開きます！"
   takeQuestChoose:
-    title: <highlight2>Which Quest do you want to take?
+    title: <highlight2>どのクエストを受け取りたいですか？
     size:
       minX: 3
       minY: 1
@@ -276,36 +276,36 @@ gui:
         name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
         lore:
           - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-          - "<main>Click to preview Quest!"
+          - "<main>クリックしてクエストをプレビュー！"
   abortQuestChoose:
-    title: '  <highlight2>Active Quests you can abort'
+    title: '  <highlight2>アクティブなクエストを中止できます'
     button:
       abortQuestPreview:
         name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
         lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Click to abort Quest!"
+          - "<unimportant>進行状況: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
+          - "<negative>クリックしてクエストを中止！"
   abortQuest:
-    title: '         <negative>Abort Confirmation'
+    title: '         <negative>中止の確認'
     button:
       confirmAbort:
         name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
         lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Click to abort the quest <highlight>%QUESTNAME%</highlight>!"
+          - "<unimportant>進行状況: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
+          - "<negative>クリックしてクエスト <highlight>%QUESTNAME%</highlight>"
         x: 3
         y: 1
       cancelAbort:
-        name: "<positive>Click to NOT abort this quest"
+        name: "<positive>クリックしてこのクエストを中止しない"
         lore:
-          - "<positive>and cancel this action"
+          - "<positive>とこの操作をキャンセル"
         x: 5
         y: 1
   previewQuest:
-    title: <highlight2>Quest Preview
+    title: <highlight2>クエストプレビュー
     button:
       description:
-        name: "<highlight>Description"
+        name: "<highlight>説明"
         lore:
           - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
         lore-if-empty:
@@ -313,15 +313,15 @@ gui:
         x: 2
         y: 0
       rewards:
-        name: "<positive>Rewards"
+        name: "<positive>報酬"
         lore:
           - "<WHITE>%QUESTREWARDS%"
         lore-if-empty:
-          - "<veryUnimportant>None or hidden"
+          - "<veryUnimportant>無いまたは非表示"
         x: 4
         y: 0
       requirements:
-        name: "<negative>Requirements"
+        name: "<negative>要件"
         lore:
           - "<WHITE>%QUESTREQUIREMENTS%"
         lore-if-empty:
@@ -331,48 +331,48 @@ gui:
       confirmTake:
         name: "<highlight>%QUESTNAME%"
         lore:
-          - "<positive>Click to take the quest <highlight>%QUESTNAME%"
+          - "<positive>クリックしてクエスト <highlight>%QUESTNAME% を受け取ります"
         x: 3
         y: 2
       cancelTake:
-        name: "<negative>Click to NOT take this quest"
+        name: "<negative>クリックしてクエストを受信しない"
         lore:
-          - "<negative>and cancel this action"
+          - "<negative>とこの操作をキャンセル"
         x: 5
         y: 2
   progress:
-    title: <highlight2>Details for Quest
+    title: <highlight2>クエスト詳細
     button:
       unlockedObjective:
         name: "<highlight2>%ACTIVEOBJECTIVEID%. <highlight>%OBJECTIVENAME%"
         lore:
-          - "<main><BOLD>ACTIVE</BOLD>"
+          - "<main><BOLD>アクティブ</BOLD>"
           - "<veryUnimportant>%WRAPPEDOBJECTIVEDESCRIPTION%"
           - "<unimportant>%OBJECTIVETASKDESCRIPTION%"
           - ""
-          - "<unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
+          - "<unimportant>進行状況: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
         lore-if-description-empty:
-          - "<main><BOLD>ACTIVE</BOLD>"
-          - "<veryUnimportant>No Description"
+          - "<main><BOLD>有効</BOLD>"
+          - "<veryUnimportant>説明なし"
           - "<unimportant>%OBJECTIVETASKDESCRIPTION%"
           - ""
-          - "<unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
+          - "<unimportant>進行状況: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
       lockedObjective:
         name: "<highlight2>%ACTIVEOBJECTIVEID%. <unimportant><BOLD>[HIDDEN]"
         lore:
-          - "<warn>This objective has not yet"
-          - "<warn>been unlocked!"
+          - "<warn>この目標はまだありません"
+          - "<warn>がアンロックされました！"
       completedObjective:
         name: "<highlight2><strikethrough>%ACTIVEOBJECTIVEID%. <positive><strikethrough>%OBJECTIVENAME%"
         lore:
-          - "<positive><BOLD>COMPLETED</BOLD>"
+          - "<positive><BOLD>完了</BOLD>"
           - "<veryUnimportant><strikethrough>%WRAPPEDOBJECTIVEDESCRIPTION%"
           - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVETASKDESCRIPTION%"
           - ""
-          - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
+          - "<unimportant><strikethrough>進行状況: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
         lore-if-description-empty:
-          - "<positive><BOLD>COMPLETED</BOLD>"
-          - "<veryUnimportant><strikethrough>No Description"
+          - "<positive><BOLD>完了</BOLD>"
+          - "<veryUnimportant><strikethrough>説明なし"
           - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVETASKDESCRIPTION%"
           - ""
-          - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
+          - "<unimportant><strikethrough>進行状況: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
