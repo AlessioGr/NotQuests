@@ -96,7 +96,7 @@ chat:
       breed:
         base: 'モブ種: <main>%ENTITYTOBREED%'
       pickupItems:
-        base: 'アイテムを集める: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
+        base: 'Pickup Items: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
       consumeItems:
         base: 'アイテムを消費: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
