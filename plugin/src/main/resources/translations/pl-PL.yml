@@ -40,7 +40,7 @@ chat:
   quest-not-found-or-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> nie został znaleziony bądź nie jest aktywny!
   active-quests-label: '<highlight>Aktywne questy:'
   take-disabled: <error>Akceptacja albo podgląd questa <highlight>%QUESTNAME%</highlight> zostały wyłączone.
-  abort-disabled: <error>Aborting the quest <highlight>%QUESTNAME%</highlight> is disabled.
+  abort-disabled: <error>Przerywanie questa <highlight>%QUESTNAME%</highlight> jest wyłączone.
   quest-not-active-error: '<error>Błąd: <highlight>%QUESTNAME%</highlight> nie jest aktywnym questem!'
   force-add-active-quest-accepted: '<success>Pomyślnie zaakceptował zadanie (siła).'
   add-active-quest-player-object-not-found: '<warn>Błąd: Nie znaleziono obiektu gracza. Proszę zgłosić to do twórcy wtyczki.'
@@ -54,16 +54,16 @@ chat:
     day: '<red>To zadanie jest odnawiane! Musisz poczekać następny <highlight>1 dzień</highlight> aby odebrać je ponownie.'
     days: '<red>To zadanie ma odnowienie! Musisz poczekać kolejne <highlight>%DAYS% dni</highlight> aby odebrać je ponownie.'
   profiles:
-    list-current: '<highlight>Current profile: <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
-    list-other-heading: '<highlight>Other profiles:'
-    list-other-none: '  <main>You have no more profiles.'
-    list-other: '  <highlight>- <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
-    change-same-profile: '<error>You are already using that profile!'
-    change-profile-doesnt-exist: '<error>That profile does not exist.'
-    changed-successfully: '<success>You have successfully changed your profile from %OLDPROFILENAME% to <highlight>%NEWPROFILENAME%</highlight>!'
-    create-already-exists: '<error>A profile with the name <highlight>%NEWPROFILENAME%</highlight> already exists.'
-    create-invalid-characters: '<error>The profile name you provided contains invalid characters.'
-    created-successfully: '<success>You have successfully created the profile <highlight>%NEWPROFILENAME%</highlight>! To switch to it, use <highlight2>/nq profile change %NEWPROFILENAME%</highlight2>'
+    list-current: '<highlight>Bieżący profil: <main>%PROFILENAME% (%QUESTPOINTS% punktów misji)'
+    list-other-heading: '<highlight>Inne profile:'
+    list-other-none: '  <main>Nie masz więcej profili.'
+    list-other: '  <highlight>- <main>%PROFILENAME% (%QUESTPOINTS% punktów misji)'
+    change-same-profile: '<error>Już używasz tego profilu!'
+    change-profile-doesnt-exist: '<error>Ten profil nie istnieje.'
+    changed-successfully: '<success>Pomyślnie zmieniłeś swój profil z %OLDPROFILENAME% na <highlight>%NEWPROFILENAME%</highlight>!'
+    create-already-exists: '<error>Profil o nazwie <highlight>%NEWPROFILENAME%</highlight> już istnieje.'
+    create-invalid-characters: '<error>Nazwa profilu, którą podałeś, zawiera nieprawidłowe znaki.'
+    created-successfully: '<success>Pomyślnie utworzyłeś profil <highlight>%NEWPROFILENAME%</highlight>! Aby na niego przełączyć, użyj <highlight2>/nq profile change %NEWPROFILENAME%</highlight2>'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>
@@ -77,8 +77,8 @@ chat:
     counterForObjectiveObjective: '<highlight>%OBJECTIVEIDWITHSUBID%.</highlight> <main>%OBJECTIVEHOLDERNAME%:'
     subObjectivePrefixAppend: '    '
     hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[UKRYTE]
-    description: '    <veryUnimportant>└─ <unimportant>Description: <main>%OBJECTIVEDESCRIPTION%'
-    progress: '    <veryUnimportant>└─ <unimportant>Progress: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
+    description: "    <veryUnimportant>└─\n<unimportant>Opis: <main>%OBJECTIVEDESCRIPTION%"
+    progress: "    <veryUnimportant>└─\n<unimportant>Postęp: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%"
     successfully-completed: |2
 
       <CENTER><success>[Ukończono Cel]
@@ -96,7 +96,7 @@ chat:
       breed:
         base: 'Rozmnóż: <main>%ENTITYTOBREED%'
       pickupItems:
-        base: 'Pickup Items: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
+        base: 'Podnieś Przedmioty: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
       consumeItems:
         base: 'Spożyj: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
@@ -119,7 +119,7 @@ chat:
         base: 'Pójdź do: <main>%LOCATIONNAME%'
       talkToNPC:
         base: 'Porozmawiaj z <main>%NAME%'
-        npc-not-available: '    <GRAY>The target NPC is currently not available!'
+        npc-not-available: '    <GRAY>Docelowy NPC jest obecnie niedostępny!'
       triggerCommand:
         base: 'Cel: <main>%TRIGGERNAME%'
       killEliteMobs:
@@ -140,11 +140,11 @@ chat:
       openBuriedTreasure:
         base: 'Otwórz zakopane skarby'
       shearSheep:
-        base: 'Shear <main>%AMOUNTOFSHEEP%</main> sheep'
+        base: 'Ostrzyż <main>%AMOUNTOFSHEEP%</main> owiec'
       townyReachResidentCount:
-        base: 'Reach resident amount: <main>%AMOUNT%'
+        base: 'Osiągnij liczbę mieszkańców: <main>%AMOUNT%'
       townyNationReachTownCount:
-        base: 'Reach town amount with your nation: <main>%AMOUNT%'
+        base: 'Osiągnij ilość miast w Twoim narodzie: <main>%AMOUNT%'
       jobsRebornReachJobLevel:
         base: 'Osiągnij <main>%AMOUNT%</main> poziom w pracy <main>%JOB%'
       SlimefunResearch:
