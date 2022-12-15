@@ -40,7 +40,7 @@ chat:
   quest-not-found-or-does-not-exist: <error>La misión <highlight>%QUESTNAME%</highlight> no fue encontrada o no está activa!
   active-quests-label: '<highlight>Misiones activas:'
   take-disabled: <error>Aceptar o previsualizar la misión <highlight>%QUESTNAME%</highlight> está deshabilitado.
-  abort-disabled: <error>Aborting the quest <highlight>%QUESTNAME%</highlight> is disabled.
+  abort-disabled: <error>Cancelar la misión <highlight>%QUESTNAME%</highlight> está deshabilitado.
   quest-not-active-error: '<error>Error: ¡<highlight>%QUESTNAME%</highlight> no es una misión activa!'
   force-add-active-quest-accepted: '<success>Se aceptó con éxito la misión (Forzada).'
   add-active-quest-player-object-not-found: '<warn>Error: El objeto del jugador no se encuentra. Por favor reporta esto al desarrollador del plugin.'
@@ -54,16 +54,16 @@ chat:
     day: '<red>¡Esta misión esta esta con tiempo de espera! Tienes que esperar <highlight>1 día</highlight> antes de hacer otra vez la mision.'
     days: '<red>¡Esta misión esta esta con tiempo de espera! Tienes que esperar <highlight>%DAYS%</highlight> antes de hacer otra vez la mision.'
   profiles:
-    list-current: '<highlight>Current profile: <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
-    list-other-heading: '<highlight>Other profiles:'
-    list-other-none: '  <main>You have no more profiles.'
-    list-other: '  <highlight>- <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
-    change-same-profile: '<error>You are already using that profile!'
-    change-profile-doesnt-exist: '<error>That profile does not exist.'
-    changed-successfully: '<success>You have successfully changed your profile from %OLDPROFILENAME% to <highlight>%NEWPROFILENAME%</highlight>!'
-    create-already-exists: '<error>A profile with the name <highlight>%NEWPROFILENAME%</highlight> already exists.'
-    create-invalid-characters: '<error>The profile name you provided contains invalid characters.'
-    created-successfully: '<success>You have successfully created the profile <highlight>%NEWPROFILENAME%</highlight>! To switch to it, use <highlight2>/nq profile change %NEWPROFILENAME%</highlight2>'
+    list-current: '<highlight>Perfil actual: <main>%PROFILENAME% (%QUESTPOINTS% puntos)'
+    list-other-heading: '<highlight>Otros perfiles:'
+    list-other-none: '  <main>No tienes más perfiles.'
+    list-other: '  <highlight>- <main>%PROFILENAME% (%QUESTPOINTS% puntos)'
+    change-same-profile: '<error>Ya estás usando ese perfil!'
+    change-profile-doesnt-exist: '<error>Ese perfil no existe.'
+    changed-successfully: '<success>Has cambiado tu perfil de %OLDPROFILENAME% a <highlight>%NEWPROFILENAME%</highlight> exitosamente!'
+    create-already-exists: '<error>Ya existe un perfil con el nombre <highlight>%NEWPROFILENAME%</highlight>.'
+    create-invalid-characters: '<error>El nombre de perfil ingresado tiene caracteres no válidos.'
+    created-successfully: '<success>Has creado el perfil <highlight>%NEWPROFILENAME%</highlight> exitosamente! Para cambiar a él, usa <highlight2>/nq profile change %NEWPROFILENAME%</highlight2>'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>
@@ -77,8 +77,8 @@ chat:
     counterForObjectiveObjective: '<highlight>%OBJECTIVEIDWITHSUBID%.</highlight> <main>%OBJECTIVEHOLDERNAME%:'
     subObjectivePrefixAppend: '    '
     hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[HIDDEN]
-    description: '    <veryUnimportant>└─ <unimportant>Description: <main>%OBJECTIVEDESCRIPTION%'
-    progress: '    <veryUnimportant>└─ <unimportant>Progress: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
+    description: '    <veryUnimportant>└─ <unimportant>Descrición: <main>%OBJECTIVEDESCRIPTION%'
+    progress: '    <veryUnimportant>└─ <unimportant>Progreso: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
     successfully-completed: |2
 
       <CENTER><success>[Objetivo Completado]
@@ -96,7 +96,7 @@ chat:
       breed:
         base: 'Alimentar Mob: <main>%ENTITYTOBREED%'
       pickupItems:
-        base: 'Pickup Items: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
+        base: 'Recolectar: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
       consumeItems:
         base: 'Consumir items: <main>%ITEMTOCONSUMETYPE%%(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
