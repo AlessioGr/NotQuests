@@ -256,7 +256,7 @@ public class QuestManager {
             final Class<? extends Objective> objectiveType = main.getObjectiveManager().getObjectiveClass(objectiveTypeString);
 
             if (objectiveType == null) {
-                main.getDataManager().disablePluginAndSaving("Error parsing objective Type of objective with ID <highlight>" + objectiveNumber + "</highlight>. Objective type: <highlight2>" + objectiveTypeString, objectiveHolder, category);
+                main.getDataManager().disablePluginAndSaving("Error parsing objective Type of objective with ID <highlight>" + objectiveNumber + "</highlight>. Objective type: <highlight2>" + objectiveTypeString + ". Objective class lookup returned null. This would mean, that the objective type you're trying to use in notquests is not registered.", objectiveHolder, category);
                 return;
             }
 
@@ -285,7 +285,7 @@ public class QuestManager {
             }
 
             if (objectiveID <= 0) {
-                main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading quests objective data (2). Objective ID: <highlight>" + objectiveNumber + "</higlight> Reason: Invalid objective ID - it needs to be bigger than 0: " + objectiveID, category, objectiveHolder);
+                main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading quests objective data (2). Objective ID: <highlight>" + objectiveNumber + "</highlight> Reason: Invalid objective ID - it needs to be bigger than 0: " + objectiveID, category, objectiveHolder);
                 return;
             }
 
@@ -302,7 +302,7 @@ public class QuestManager {
                 objective.load(objectiveHolder.getConfig(), initialPath + "." + objectiveNumber);
 
             } catch (Exception ex) {
-                main.getDataManager().disablePluginAndSaving("Error parsing objective Type of objective with ID <highlight>" + objectiveNumber + "</highlight>. Objective type: <highlight2>" + objectiveTypeString, objectiveHolder, category, ex);
+                main.getDataManager().disablePluginAndSaving("Error parsing objective of objective with ID <highlight>" + objectiveNumber + "</highlight>. Objective type: <highlight2>" + objectiveTypeString + "</highlight2>. Reason: an error occurred during objective loading,", objectiveHolder, category, ex);
                 return;
             }
 

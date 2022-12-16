@@ -185,15 +185,15 @@ dependencies {
 
 
     //Shaded
-    implementation("net.kyori:adventure-text-minimessage:4.11.0") {
+    implementation("net.kyori:adventure-text-minimessage:4.12.0") {
         exclude(group = "net.kyori", module = "adventure-api")
         exclude(group = "net.kyori", module = "adventure-bom")
     }
-    implementation("net.kyori:adventure-platform-bukkit:4.1.0")
+    implementation("net.kyori:adventure-platform-bukkit:4.1.2")
 
     //CloudCommands
-    implementation("cloud.commandframework:cloud-paper:1.8.0-SNAPSHOT")
-    implementation("cloud.commandframework:cloud-minecraft-extras:1.8.0-SNAPSHOT")
+    implementation("cloud.commandframework:cloud-paper:1.8.0")
+    implementation("cloud.commandframework:cloud-minecraft-extras:1.8.0")
     //Else it errors:
     implementation("io.leangen.geantyref:geantyref:1.3.13")
 
