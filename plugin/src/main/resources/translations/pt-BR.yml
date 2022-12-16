@@ -96,7 +96,7 @@ chat:
       breed:
         base: 'Reproduzir Criaturas: <main>%ENTITYTOBREED%'
       pickupItems:
-        base: 'Collect Items: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
+        base: 'Pickup Items: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
       consumeItems:
         base: 'Consumir Itens: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:

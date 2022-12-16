@@ -96,7 +96,7 @@ chat:
       breed:
         base: 'Mobs züchten: <main>%ENTITYTOBREED%'
       pickupItems:
-        base: 'Items aufheben: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
+        base: 'Pickup Items: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
       consumeItems:
         base: 'Items konsumieren: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
