@@ -20,6 +20,8 @@ package rocks.gravili.notquests.paper.structs.conditions;
 
 import java.util.ArrayList;
 import javax.annotation.Nullable;
+
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -137,7 +139,19 @@ public abstract class Condition {
   protected abstract String checkInternally(final QuestPlayer questPlayer);
 
   public final ConditionResult check(final QuestPlayer questPlayer) {
-    final String result = checkInternally(questPlayer);
+    final String result;
+    if(Bukkit.isPrimaryThread()){
+      result = checkInternally(questPlayer);
+    }else {
+      main.getLogManager().severe("Trying to get a condition result from a non-primary thread! This is may not work. Please report this to the developer!");
+      try {
+        result = checkInternally(questPlayer);
+      }catch (Exception e){
+        e.printStackTrace();
+        return new ConditionResult(false, "An error occurred while checking the condition. Please report this to the developer!");
+      }
+    }
+
 
     if (!isNegated()) {
       if (result.isBlank()) {
