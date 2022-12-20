@@ -60,7 +60,7 @@ public class QuestPlayerManager {
   /**
    * Saves the player data of a single player. If saving player data on quit is enabled, this would
    * run in saveData() of DataManager where it would loop through all the players
-   * @param player
+   * @param player player whose data should be saved (for all their different QuestPlayer profiles)
    */
   public void saveSinglePlayerData(final Player player) {
     if(player == null){
@@ -77,16 +77,14 @@ public class QuestPlayerManager {
     }
 
 
-    final ArrayList<QuestPlayer> questPlayersToLoad = new ArrayList<>();
-
-
-
     final List<QuestPlayer> allProfileQuestPlayersForQuestPlayers = getQuestPlayersForUUIDs().get(player.getUniqueId());
 
     if(allProfileQuestPlayersForQuestPlayers == null) {
       main.getLogManager().debug("Saving of single PlayerData for " + player.getName() + " has been skipped, because they don't have any quest players / profiles.");
       return;
     }
+
+    final ArrayList<QuestPlayer> questPlayersToLoad = new ArrayList<>();
 
     for(final QuestPlayer questPlayer : allProfileQuestPlayersForQuestPlayers){ //Error
       if (questPlayer == null) {
