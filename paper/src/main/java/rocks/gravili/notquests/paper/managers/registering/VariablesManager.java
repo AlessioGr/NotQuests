@@ -97,6 +97,7 @@ public class VariablesManager {
     registerVariable("CompletedQuests", CompletedQuestsVariable.class);
     registerVariable("CompletedObjectiveIDsOfQuest", CompletedObjectiveIDsOfQuestVariable.class);
     registerVariable("Permission", PermissionVariable.class);
+    registerVariable("Statistic", PlayerStatisticVariable.class);
     registerVariable("Name", PlayerNameVariable.class);
     registerVariable("Experience", PlayerExperienceVariable.class);
     registerVariable("ExperienceLevel", PlayerExperienceLevelVariable.class);
