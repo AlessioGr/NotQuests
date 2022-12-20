@@ -24,6 +24,8 @@ import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -177,13 +179,40 @@ public abstract class Variable<T> {
         return additionalStringArguments.getOrDefault(key, "");
     }
 
-    public abstract T getValue(final QuestPlayer questPlayer, final Object... objects);
+    public final T getValue(final QuestPlayer questPlayer, final Object... objects){
+        if(Bukkit.isPrimaryThread()){
+            return getValueInternally(questPlayer, objects);
+        }else {
+            main.getLogManager().severe("Trying to get a variable value from a non-primary thread! This is may not work. Please report this to the developer!");
+            T toReturn = null;
+            try {
+                toReturn = getValueInternally(questPlayer, objects);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            return toReturn;
+        }
+    }
+    public abstract T getValueInternally(final QuestPlayer questPlayer, final Object... objects);
 
     public final boolean setValue(final T newValue, final QuestPlayer questPlayer, final Object... objects) {
         if (!isCanSetValue()) {
             return false;
         }
-        final boolean result = setValueInternally(newValue, questPlayer, objects);
+
+        boolean result = false;
+        if(Bukkit.isPrimaryThread()){
+            result = setValueInternally(newValue, questPlayer, objects);
+        }else {
+            main.getLogManager().severe("Trying to set a variable value from a non-primary thread! This is may not work. Please report this to the developer!");
+            try {
+                result = setValueInternally(newValue, questPlayer, objects);
+            }catch (Exception e){
+                e.printStackTrace();
+                return false;
+            }
+        }
+
 
         if (questPlayer != null) {
             if(questPlayer.isHasActiveConditionObjectives() || questPlayer.isHasActiveVariableObjectives()){

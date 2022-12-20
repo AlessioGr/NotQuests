@@ -71,21 +71,21 @@ public class ContainerInventoryVariable extends Variable<ItemStack[]>{
     }
 
     @Override
-    public ItemStack[] getValue(QuestPlayer questPlayer, Object... objects) {
-        String worldName = getRequiredStringValue("world");
-        World world = Bukkit.getWorld(worldName);
-        double x = getRequiredNumberValue("x", questPlayer);
-        double y = getRequiredNumberValue("y", questPlayer);
-        double z = getRequiredNumberValue("z", questPlayer);
+    public final ItemStack[] getValue(final QuestPlayer questPlayer, final Object... objects) {
+        final String worldName = getRequiredStringValue("world");
+        final World world = Bukkit.getWorld(worldName);
+        final double x = getRequiredNumberValue("x", questPlayer);
+        final double y = getRequiredNumberValue("y", questPlayer);
+        final double z = getRequiredNumberValue("z", questPlayer);
         if (world == null) {
             main.getLogManager().warn("Error: cannot get value of chest inventory variable, because the world " + worldName + " does not exist.");
             return null;
         }
 
-        Location location = new Location(world, x, y, z);
-        Block block = location.getBlock();
+        final Location location = new Location(world, x, y, z);
+        final Block block = location.getBlock();
 
-        if (block.getState() instanceof Container container) {
+        if (block.getState() instanceof final Container container) {
             return container.getInventory().getStorageContents();
 
         }else{
@@ -96,24 +96,24 @@ public class ContainerInventoryVariable extends Variable<ItemStack[]>{
     }
 
     @Override
-    public boolean setValueInternally(ItemStack[] newValue, QuestPlayer questPlayer, Object... objects) {
-        String worldName = getRequiredStringValue("world");
-        World world = Bukkit.getWorld(worldName);
-        double x = getRequiredNumberValue("x", questPlayer);
-        double y = getRequiredNumberValue("y", questPlayer);
-        double z = getRequiredNumberValue("z", questPlayer);
+    public boolean setValueInternally(final ItemStack[] newValue, final QuestPlayer questPlayer, final Object... objects) {
+        final String worldName = getRequiredStringValue("world");
+        final World world = Bukkit.getWorld(worldName);
+        final double x = getRequiredNumberValue("x", questPlayer);
+        final double y = getRequiredNumberValue("y", questPlayer);
+        final double z = getRequiredNumberValue("z", questPlayer);
         if (world == null) {
             main.getLogManager().warn("Error: cannot set value of chest inventory variable, because the world " + worldName + " does not exist.");
             return false;
         }
 
-        Location location = new Location(world, x, y, z);
-        Block block = location.getBlock();
+        final Location location = new Location(world, x, y, z);
+        final Block block = location.getBlock();
 
-        if (block.getState() instanceof Container container) {
+        if (block.getState() instanceof final Container container) {
             if (getRequiredBooleanValue("add", questPlayer)) {
 
-                HashMap<Integer, ItemStack> left = container.getInventory().addItem(newValue);
+                final HashMap<Integer, ItemStack> left = container.getInventory().addItem(newValue);
                 if (!getRequiredBooleanValue("skipItemIfInventoryFull", questPlayer)) {
                     for (ItemStack leftItemStack : left.values()) {
                         world.dropItem(location, leftItemStack);
@@ -134,17 +134,17 @@ public class ContainerInventoryVariable extends Variable<ItemStack[]>{
 
 
     @Override
-    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
+    public final List<String> getPossibleValues(final QuestPlayer questPlayer, final Object... objects) {
         return null;
     }
 
     @Override
-    public String getPlural() {
+    public final String getPlural() {
         return "Container Inventory";
     }
 
     @Override
-    public String getSingular() {
+    public final String getSingular() {
         return "Container Inventory";
     }
 }
