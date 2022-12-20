@@ -30,7 +30,7 @@ public class ProjectKorraIsBenderVariable extends Variable<Boolean> {
   }
 
   @Override
-  public Boolean getValue(QuestPlayer questPlayer, Object... objects) {
+  public Boolean getValueInternally(QuestPlayer questPlayer, Object... objects) {
     if (!main.getIntegrationsManager().isProjectKorraEnabled()) {
       return null;
     }

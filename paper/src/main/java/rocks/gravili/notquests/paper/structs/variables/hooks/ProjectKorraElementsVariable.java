@@ -31,7 +31,7 @@ public class ProjectKorraElementsVariable extends Variable<String[]> {
   }
 
   @Override
-  public String[] getValue(QuestPlayer questPlayer, Object... objects) {
+  public String[] getValueInternally(QuestPlayer questPlayer, Object... objects) {
     if (!main.getIntegrationsManager().isProjectKorraEnabled()) {
       return null;
     }

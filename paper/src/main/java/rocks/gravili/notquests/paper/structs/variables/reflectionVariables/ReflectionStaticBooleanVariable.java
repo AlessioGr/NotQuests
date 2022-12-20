@@ -72,7 +72,7 @@ public class ReflectionStaticBooleanVariable extends Variable<Boolean> {
   }
 
   @Override
-  public Boolean getValue(QuestPlayer questPlayer, Object... objects) {
+  public Boolean getValueInternally(QuestPlayer questPlayer, Object... objects) {
     final String classPath = getRequiredStringValue("Class Path");
     final String fieldName = getRequiredStringValue("Field Name");
 

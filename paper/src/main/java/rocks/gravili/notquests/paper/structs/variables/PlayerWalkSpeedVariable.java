@@ -29,7 +29,7 @@ public class PlayerWalkSpeedVariable extends Variable<Float> {
   }
 
   @Override
-  public Float getValue(QuestPlayer questPlayer, Object... objects) {
+  public Float getValueInternally(QuestPlayer questPlayer, Object... objects) {
     if (questPlayer != null) {
       return questPlayer.getPlayer().getWalkSpeed();
     } else {

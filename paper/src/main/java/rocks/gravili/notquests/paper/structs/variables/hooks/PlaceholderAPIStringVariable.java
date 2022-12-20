@@ -56,7 +56,7 @@ public class PlaceholderAPIStringVariable extends Variable<String> {
   }
 
   @Override
-  public String getValue(QuestPlayer questPlayer, Object... objects) {
+  public String getValueInternally(QuestPlayer questPlayer, Object... objects) {
     if (questPlayer != null) {
       return PlaceholderAPI.setPlaceholders(
           questPlayer.getPlayer(), getRequiredStringValue("Placeholder"));

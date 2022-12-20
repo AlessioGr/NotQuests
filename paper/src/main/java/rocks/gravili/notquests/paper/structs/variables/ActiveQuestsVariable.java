@@ -31,7 +31,7 @@ public class ActiveQuestsVariable extends Variable<String[]> {
   }
 
   @Override
-  public String[] getValue(QuestPlayer questPlayer, Object... objects) {
+  public String[] getValueInternally(QuestPlayer questPlayer, Object... objects) {
     String[] activeQuests;
     if (questPlayer == null) {
       return null;

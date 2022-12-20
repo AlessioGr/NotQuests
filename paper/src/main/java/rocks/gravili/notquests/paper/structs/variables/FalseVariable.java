@@ -29,7 +29,7 @@ public class FalseVariable extends Variable<Boolean> {
   }
 
   @Override
-  public Boolean getValue(QuestPlayer questPlayer, Object... objects) {
+  public Boolean getValueInternally(QuestPlayer questPlayer, Object... objects) {
     return false;
   }
 

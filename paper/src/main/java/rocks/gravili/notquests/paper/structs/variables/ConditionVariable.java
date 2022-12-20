@@ -74,7 +74,7 @@ public class ConditionVariable extends Variable<Boolean> {
   }
 
   @Override
-  public Boolean getValue(QuestPlayer questPlayer, Object... objects) {
+  public Boolean getValueInternally(QuestPlayer questPlayer, Object... objects) {
     this.playerToEvaluate = questPlayer.getPlayer();
     this.questPlayerToEvaluate = questPlayer;
     initializeExpressionAndCachedVariable();

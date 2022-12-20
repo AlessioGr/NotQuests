@@ -55,7 +55,7 @@ public class IntegerTagVariable extends Variable<Integer> {
     }
 
     @Override
-    public final Integer getValue(final QuestPlayer questPlayer, final Object... objects) {
+    public final Integer getValueInternally(final QuestPlayer questPlayer, final Object... objects) {
         if (questPlayer == null) {
             return 0;
         }

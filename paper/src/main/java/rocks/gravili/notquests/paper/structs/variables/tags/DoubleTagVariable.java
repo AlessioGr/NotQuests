@@ -55,7 +55,7 @@ public class DoubleTagVariable extends Variable<Double> {
     }
 
     @Override
-    public Double getValue(final QuestPlayer questPlayer, final Object... objects) {
+    public Double getValueInternally(final QuestPlayer questPlayer, final Object... objects) {
         if (questPlayer == null) {
             return 0d;
         }

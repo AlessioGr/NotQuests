@@ -103,7 +103,14 @@ public abstract class Action {
   protected abstract void executeInternally(final QuestPlayer questPlayer, Object... objects);
 
   public void execute(final QuestPlayer questPlayer, Object... objects) {
-    execute(questPlayer, -1, objects);
+    if(Bukkit.isPrimaryThread()) {
+      execute(questPlayer, -1, objects);
+    }else {
+      main.getLogManager().debug("Action " + getActionName() + " was executed on a non-primary thread. Switching to primary thread (2)...");
+      Bukkit.getScheduler().runTask(main.getMain(), () -> {
+        execute(questPlayer, -1, objects);
+      });
+    }
   }
   public void execute(final QuestPlayer questPlayer, final int delayOverride, Object... objects) {
     if (main.getDataManager().isDisabled()) {
@@ -113,12 +120,18 @@ public abstract class Action {
       questPlayer.sendDebugMessage("Executing action " + getActionName());
     }
 
-    if(getExecutionDelay() == -1 && delayOverride == -1){
-      executeInternally(questPlayer, objects);
-    }else{
-      final long delayToUse = delayOverride == -1 ? getExecutionDelay()/50 : delayOverride/50;
-      Bukkit.getScheduler().runTaskLater(main.getMain(), () -> executeInternally(questPlayer, objects), delayToUse);
+    if(Bukkit.isPrimaryThread()) {
+      if(getExecutionDelay() == -1 && delayOverride == -1){
+        executeInternally(questPlayer, objects);
+      }else{
+        final long delayToUse = delayOverride == -1 ? getExecutionDelay()/50 : delayOverride/50;
+        Bukkit.getScheduler().runTaskLater(main.getMain(), () -> executeInternally(questPlayer, objects), delayToUse);
+      }
+    } else {
+      main.getLogManager().debug("Action " + getActionName() + " was executed on a non-primary thread. Switching to primary thread...");
+      Bukkit.getScheduler().runTask(main.getMain(), () -> execute(questPlayer, delayOverride, objects));
     }
+
   }
 
   public abstract void save(final FileConfiguration configuration, final String initialPath);

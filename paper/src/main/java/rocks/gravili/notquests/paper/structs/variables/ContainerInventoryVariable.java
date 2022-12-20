@@ -71,7 +71,7 @@ public class ContainerInventoryVariable extends Variable<ItemStack[]>{
     }
 
     @Override
-    public final ItemStack[] getValue(final QuestPlayer questPlayer, final Object... objects) {
+    public final ItemStack[] getValueInternally(final QuestPlayer questPlayer, final Object... objects) {
         final String worldName = getRequiredStringValue("world");
         final World world = Bukkit.getWorld(worldName);
         final double x = getRequiredNumberValue("x", questPlayer);

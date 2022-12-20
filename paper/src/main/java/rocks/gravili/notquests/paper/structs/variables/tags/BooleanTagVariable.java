@@ -55,7 +55,7 @@ public class BooleanTagVariable extends Variable<Boolean> {
     }
 
     @Override
-    public final Boolean getValue(final QuestPlayer questPlayer, final Object... objects) {
+    public final Boolean getValueInternally(final QuestPlayer questPlayer, final Object... objects) {
         if (questPlayer == null) {
             return false;
         }

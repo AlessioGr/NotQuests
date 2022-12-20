@@ -68,7 +68,7 @@ public class BlockVariable extends Variable<String> {
   }
 
   @Override
-  public String getValue(QuestPlayer questPlayer, Object... objects) {
+  public String getValueInternally(QuestPlayer questPlayer, Object... objects) {
     String worldName = getRequiredStringValue("world");
     World world = Bukkit.getWorld(worldName);
     double x = getRequiredNumberValue("x", questPlayer);

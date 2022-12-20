@@ -57,7 +57,7 @@ public class QuestReachedMaxAcceptsVariable extends Variable<Boolean> {
   }
 
   @Override
-  public Boolean getValue(QuestPlayer questPlayer, Object... objects) {
+  public Boolean getValueInternally(QuestPlayer questPlayer, Object... objects) {
     final Quest quest = main.getQuestManager().getQuest(getRequiredStringValue("Quest to check"));
 
     if (quest == null || questPlayer == null) {

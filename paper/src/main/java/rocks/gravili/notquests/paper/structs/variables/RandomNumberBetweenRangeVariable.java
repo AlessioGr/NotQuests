@@ -36,7 +36,7 @@ public class RandomNumberBetweenRangeVariable extends Variable<Integer> {
   }
 
   @Override
-  public Integer getValue(QuestPlayer questPlayer, Object... objects) {
+  public Integer getValueInternally(QuestPlayer questPlayer, Object... objects) {
     final Random r = new Random();
 
     int min = (int) Math.round(getRequiredNumberValue("min", questPlayer));

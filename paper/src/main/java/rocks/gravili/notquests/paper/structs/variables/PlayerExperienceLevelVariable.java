@@ -29,7 +29,7 @@ public class PlayerExperienceLevelVariable extends Variable<Integer> {
   }
 
   @Override
-  public Integer getValue(QuestPlayer questPlayer, Object... objects) {
+  public Integer getValueInternally(QuestPlayer questPlayer, Object... objects) {
     if (questPlayer != null) {
       return questPlayer.getPlayer().getLevel();
     } else {

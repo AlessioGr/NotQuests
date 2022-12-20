@@ -29,7 +29,7 @@ public class PlayerOpVariable extends Variable<Boolean> {
   }
 
   @Override
-  public Boolean getValue(QuestPlayer questPlayer, Object... objects) {
+  public Boolean getValueInternally(QuestPlayer questPlayer, Object... objects) {
     if (questPlayer != null) {
       return questPlayer.getPlayer().isOp();
     } else {

@@ -55,7 +55,7 @@ public class FloatTagVariable extends Variable<Float> {
     }
 
     @Override
-    public final Float getValue(final QuestPlayer questPlayer, final Object... objects) {
+    public final Float getValueInternally(final QuestPlayer questPlayer, final Object... objects) {
         if (questPlayer == null) {
             return 0f;
         }

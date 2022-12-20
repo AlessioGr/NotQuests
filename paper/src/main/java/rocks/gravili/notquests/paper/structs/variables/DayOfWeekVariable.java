@@ -32,7 +32,7 @@ public class DayOfWeekVariable extends Variable<String> {
   }
 
   @Override
-  public String getValue(QuestPlayer questPlayer, Object... objects) {
+  public String getValueInternally(QuestPlayer questPlayer, Object... objects) {
     DayOfWeek dayOfWeek = LocalDate.now().getDayOfWeek();
 
     return dayOfWeek.name().toLowerCase(Locale.ROOT);

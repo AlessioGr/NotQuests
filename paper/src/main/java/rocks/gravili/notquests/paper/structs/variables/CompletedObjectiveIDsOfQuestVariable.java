@@ -57,7 +57,7 @@ public class CompletedObjectiveIDsOfQuestVariable extends Variable<String[]> {
   }
 
   @Override
-  public String[] getValue(QuestPlayer questPlayer, Object... objects) {
+  public String[] getValueInternally(QuestPlayer questPlayer, Object... objects) {
     final String questName = getRequiredStringValue("QuestName");
 
     ActiveQuest foundQuest = null;

@@ -55,7 +55,7 @@ public class StringTagVariable extends Variable<String> {
     }
 
     @Override
-    public final String getValue(final QuestPlayer questPlayer, final Object... objects) {
+    public final String getValueInternally(final QuestPlayer questPlayer, final Object... objects) {
         if (questPlayer == null) {
             return "";
         }

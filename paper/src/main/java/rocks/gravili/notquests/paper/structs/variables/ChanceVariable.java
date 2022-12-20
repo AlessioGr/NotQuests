@@ -34,7 +34,7 @@ public class ChanceVariable extends Variable<Boolean> {
   }
 
   @Override
-  public Boolean getValue(QuestPlayer questPlayer, Object... objects) {
+  public Boolean getValueInternally(QuestPlayer questPlayer, Object... objects) {
     double chanceToHave = getRequiredNumberValue("chance", questPlayer);
 
     double random = Math.random() * 100;

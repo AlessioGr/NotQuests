@@ -30,7 +30,7 @@ public class PlayerExperienceVariable extends Variable<Integer> {
   }
 
   @Override
-  public Integer getValue(QuestPlayer questPlayer, Object... objects) {
+  public Integer getValueInternally(QuestPlayer questPlayer, Object... objects) {
     if (questPlayer != null) {
       return getPlayerExp(questPlayer.getPlayer());
     } else {

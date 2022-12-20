@@ -32,7 +32,7 @@ public class TownyNationTownCountVariable extends Variable<Integer> {
   }
 
   @Override
-  public Integer getValue(QuestPlayer questPlayer, Object... objects) {
+  public Integer getValueInternally(QuestPlayer questPlayer, Object... objects) {
     if (!main.getIntegrationsManager().isTownyEnabled()) {
       return 0;
     }

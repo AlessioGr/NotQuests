@@ -39,7 +39,7 @@ public class QuestPointsVariable extends Variable<Long> {
   }
 
   @Override
-  public Long getValue(QuestPlayer questPlayer, Object... objects) {
+  public Long getValueInternally(QuestPlayer questPlayer, Object... objects) {
     if (questPlayer == null) {
       return 0L;
     }

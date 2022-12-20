@@ -65,7 +65,7 @@ public class PlaceholderAPINumberVariable extends Variable<Double> {
   }
 
   @Override
-  public Double getValue(QuestPlayer questPlayer, Object... objects) {
+  public Double getValueInternally(QuestPlayer questPlayer, Object... objects) {
     if (questPlayer != null) {
       if (getRequiredStringValue("Placeholder") == null) {
         return 0D;

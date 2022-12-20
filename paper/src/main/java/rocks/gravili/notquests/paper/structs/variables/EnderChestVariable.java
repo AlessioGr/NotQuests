@@ -25,7 +25,7 @@ public class EnderChestVariable extends Variable<ItemStack[]>{
     }
 
     @Override
-    public ItemStack[] getValue(QuestPlayer questPlayer, Object... objects) {
+    public ItemStack[] getValueInternally(QuestPlayer questPlayer, Object... objects) {
         return questPlayer.getPlayer().getEnderChest().getContents();
     }
 

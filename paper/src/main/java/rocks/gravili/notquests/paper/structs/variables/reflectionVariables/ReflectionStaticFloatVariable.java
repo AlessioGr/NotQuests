@@ -72,7 +72,7 @@ public class ReflectionStaticFloatVariable extends Variable<Float> {
   }
 
   @Override
-  public Float getValue(QuestPlayer questPlayer, Object... objects) {
+  public Float getValueInternally(QuestPlayer questPlayer, Object... objects) {
     final String classPath = getRequiredStringValue("Class Path");
     final String fieldName = getRequiredStringValue("Field Name");
 

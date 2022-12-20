@@ -31,7 +31,7 @@ public class PlayerCurrentWorldVariable extends Variable<String> {
   }
 
   @Override
-  public String getValue(QuestPlayer questPlayer, Object... objects) {
+  public String getValueInternally(QuestPlayer questPlayer, Object... objects) {
     if (questPlayer != null) {
       return questPlayer.getPlayer().getWorld().getName();
     } else {

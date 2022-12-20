@@ -53,7 +53,7 @@ public class PermissionVariable extends Variable<Boolean> {
   }
 
   @Override
-  public Boolean getValue(QuestPlayer questPlayer, Object... objects) {
+  public Boolean getValueInternally(QuestPlayer questPlayer, Object... objects) {
     return questPlayer != null
         && questPlayer.getPlayer().hasPermission(getRequiredStringValue("Permission"));
   }

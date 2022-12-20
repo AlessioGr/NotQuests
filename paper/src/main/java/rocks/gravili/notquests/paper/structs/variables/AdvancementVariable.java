@@ -60,7 +60,7 @@ public class AdvancementVariable extends Variable<Boolean> {
   }
 
   @Override
-  public Boolean getValue(QuestPlayer questPlayer, Object... objects) {
+  public Boolean getValueInternally(QuestPlayer questPlayer, Object... objects) {
     NamespacedKey namespacedKey = NamespacedKey.fromString(getRequiredStringValue("Advancement"));
     if (namespacedKey == null) {
       return false;

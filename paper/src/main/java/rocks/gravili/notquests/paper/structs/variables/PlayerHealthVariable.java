@@ -33,7 +33,7 @@ public class PlayerHealthVariable extends Variable<Double> {
   }
 
   @Override
-  public Double getValue(QuestPlayer questPlayer, Object... objects) {
+  public Double getValueInternally(QuestPlayer questPlayer, Object... objects) {
     if (questPlayer != null) {
       return questPlayer.getPlayer().getHealth();
     } else {
