@@ -131,19 +131,21 @@ public class ItemStackSelection {
     this.any = configuration.getBoolean(initialPath + ".any");
   }
 
+  // TODO: translatedMaterialName doesnt work in gradients yet. Wait until minimessage fixed that
   public final String getAllMaterialsListedTranslated(String tag) {
+    tag = "#1985ff";
     if (any) {
-      return "Any";
+      return "<" + tag + ">Any</" + tag + ">";
     }
     final StringBuilder materialsString = new StringBuilder();
     for (final Material material : materials) {
-      materialsString.append(", ").append("<lang:" + material.translationKey() + ">");
+      materialsString.append(", ").append("<" + tag + "><lang:" + material.translationKey() + "></" + tag + ">");
     }
     for (final NQItem nqItem : nqItems) {
-      materialsString.append(", ").append( nqItem.getItemName());
+      materialsString.append(", ").append("<" + tag + ">" + nqItem.getItemName()+ "</" + tag + ">");
     }
     for (final ItemStack itemStack : itemStacks) {
-      materialsString.append(", ").append("<lang:" + itemStack.getType().translationKey() + ">");
+      materialsString.append(", ").append("<" + tag + "><lang:" + itemStack.getType().translationKey() + "></" + tag + ">");
     }
 
     return materialsString.length() >= 2
