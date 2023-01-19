@@ -91,14 +91,6 @@ repositories {
         }
     }
 
-    maven("https://betonquest.org/nexus/repository/betonquest/"){
-        content {
-            includeGroup("org.betonquest")
-        }
-        metadataSources {
-            artifact()
-        }
-    }
 
     maven("https://maven.enginehub.org/repo/"){
         content {
@@ -168,8 +160,6 @@ dependencies {
     compileOnly(files("libs/UClans-API.jar"))
     compileOnly(files("libs/ProjectKorra-1.9.2.jar"))
 
-
-    compileOnly("org.betonquest:betonquest:2.0.0-20220215.210836-148")
 
     compileOnly("com.sk89q.worldedit:worldedit-core:7.3.0-SNAPSHOT")
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.3.0-SNAPSHOT")

@@ -22,7 +22,6 @@ import org.bukkit.Bukkit;
 import rocks.gravili.notquests.spigot.NotQuests;
 import rocks.gravili.notquests.spigot.events.hooks.*;
 import rocks.gravili.notquests.spigot.managers.integrations.*;
-import rocks.gravili.notquests.spigot.managers.integrations.betonquest.BetonQuestManager;
 import rocks.gravili.notquests.spigot.managers.integrations.citizens.CitizensManager;
 import rocks.gravili.notquests.spigot.placeholders.QuestPlaceholders;
 
@@ -49,7 +48,6 @@ public class IntegrationsManager {
     private VaultManager vaultManager;
     private MythicMobsManager mythicMobsManager;
     private CitizensManager citizensManager;
-    private BetonQuestManager betonQuestManager;
     private WorldEditManager worldEditManager;
     private SlimefunManager slimefunManager;
     private LuckpermsManager luckpermsManager;
@@ -102,16 +100,6 @@ public class IntegrationsManager {
                 eliteMobsEnabled = true;
                 enabledIntegrations.add("EliteMobs");
                 main.getLogManager().info("EliteMobs found! Enabling EliteMobs support...");
-            }
-        }
-
-        //BetonQuest Hook
-        if (main.getConfiguration().isIntegrationBetonQuestEnabled()) {
-            if (main.getMain().getServer().getPluginManager().getPlugin("BetonQuest") != null && Objects.requireNonNull(main.getMain().getServer().getPluginManager().getPlugin("BetonQuest")).isEnabled()) {
-                betonQuestEnabled = true;
-                enabledIntegrations.add("BetonQuest");
-                main.getLogManager().info("BetonQuest found! Enabling BetonQuest support...");
-                betonQuestManager = new BetonQuestManager(main);
             }
         }
 
@@ -346,9 +334,6 @@ public class IntegrationsManager {
         return mythicMobsManager;
     }
 
-    public final BetonQuestManager getBetonQuestManager() {
-        return betonQuestManager;
-    }
 
     public final WorldEditManager getWorldEditManager() {
         return worldEditManager;
