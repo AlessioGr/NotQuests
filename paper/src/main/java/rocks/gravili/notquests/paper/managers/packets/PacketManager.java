@@ -32,6 +32,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.jetbrains.annotations.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.packets.ownpacketstuff.modern.PacketInjector;
 import rocks.gravili.notquests.paper.managers.packets.ownpacketstuff.reflection.ReflectionPacketInjector;
@@ -56,7 +57,8 @@ public class PacketManager implements Listener {
     return injector;
   }
 
-  public final PacketInjector getModernPacketInjector() {
+
+  public final @Nullable PacketInjector getModernPacketInjector() {
     return modernInjector;
   }
 
