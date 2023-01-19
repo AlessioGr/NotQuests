@@ -45,7 +45,9 @@ public class PlayerStatisticVariable extends Variable<Integer> {
 
                                     final ArrayList<String> suggestions = new ArrayList<>();
                                     for(final Statistic statistic : Statistic.values()) {
-                                        suggestions.add(statistic.name());
+                                        if(statistic.getType() == Statistic.Type.UNTYPED) {
+                                            suggestions.add(statistic.name());
+                                        }
                                     }
                                     suggestions.add("<Enter Statistic name>");
                                     return suggestions;
@@ -65,6 +67,7 @@ public class PlayerStatisticVariable extends Variable<Integer> {
                 main.getLogManager().severe("Tried to get statistic with name <highlight>" + statisticName + "</highlight2> when getting variable but it doesn't exist! This is not an error in NotQuests - you simply entered a statistic which does not exist. Please fix it!");
                 return null;
             }
+
             return questPlayer.getPlayer().getStatistic(statistic);
         } else {
             return null;
