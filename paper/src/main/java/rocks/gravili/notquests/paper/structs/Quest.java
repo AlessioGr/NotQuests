@@ -55,8 +55,12 @@ public class Quest extends ObjectiveHolder {
   private final ArrayList<Trigger> triggers; // Triggers for the quest
   private final CopyOnWriteArrayList<NQNPC> attachedNPCsWithQuestShowing;
   private final CopyOnWriteArrayList<NQNPC> attachedNPCsWithoutQuestShowing;
+  private int maxCompletions = -1; // -1 or smaller => unlimited completions
   private int maxAccepts = -1; // -1 or smaller => unlimited accepts
-  private long acceptCooldown = -1; // Cooldown in minute. -1 or smaller => no cooldown.
+  private int maxFails = -1; // -1 or smaller => unlimited fails
+
+
+  private long acceptCooldownComplete = -1; // Cooldown in minute. -1 or smaller => no cooldown.
   private boolean takeEnabled = true;
   private boolean abortEnabled = true;
 
@@ -311,13 +315,33 @@ public class Quest extends ObjectiveHolder {
 
 
 
+  public final int getMaxCompletions() {
+    return maxCompletions;
+  }
+
+  public void setMaxCompletions(int maxCompletions) {
+    this.maxCompletions = maxCompletions;
+    category.getQuestsConfig().set("quests." + questName + ".limits.completions", maxCompletions);
+    category.saveQuestsConfig();
+  }
+
   public final int getMaxAccepts() {
     return maxAccepts;
   }
 
   public void setMaxAccepts(int maxAccepts) {
     this.maxAccepts = maxAccepts;
-    category.getQuestsConfig().set("quests." + questName + ".maxAccepts", maxAccepts);
+    category.getQuestsConfig().set("quests." + questName + ".limits.accepts", maxAccepts);
+    category.saveQuestsConfig();
+  }
+
+  public final int getMaxFails() {
+    return maxFails;
+  }
+
+  public void setMaxFails(int maxFails) {
+    this.maxFails = maxFails;
+    category.getQuestsConfig().set("quests." + questName + ".limits.fails", maxFails);
     category.saveQuestsConfig();
   }
 
@@ -340,13 +364,13 @@ public class Quest extends ObjectiveHolder {
     category.saveQuestsConfig();
   }
 
-  public final long getAcceptCooldown() {
-    return acceptCooldown;
+  public final long getAcceptCooldownComplete() {
+    return acceptCooldownComplete;
   }
 
-  public void setAcceptCooldown(long cooldownInMinutes) {
-    this.acceptCooldown = cooldownInMinutes;
-    category.getQuestsConfig().set("quests." + questName + ".acceptCooldown", cooldownInMinutes);
+  public void setAcceptCooldownComplete(long cooldownInMinutes) {
+    this.acceptCooldownComplete = cooldownInMinutes;
+    category.getQuestsConfig().set("quests." + questName + ".acceptCooldown.complete", cooldownInMinutes);
     category.saveQuestsConfig();
   }
 

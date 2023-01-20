@@ -24,9 +24,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.structs.CompletedQuest;
-import rocks.gravili.notquests.paper.structs.Quest;
-import rocks.gravili.notquests.paper.structs.QuestPlayer;
+import rocks.gravili.notquests.paper.structs.*;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 import rocks.gravili.notquests.paper.structs.conditions.Condition.ConditionResult;
 
@@ -68,24 +66,52 @@ public class QuestAbleToAcceptVariable extends Variable<Boolean> {
     }
 
     if (questPlayer != null) {
-      int completedAmount = 0; // only needed for maxAccepts
 
-      long mostRecentAcceptTime = 0;
-      for (CompletedQuest completedQuest : questPlayer.getCompletedQuests()) {
+      int completedAmount = 0;
+      long mostRecentCompleteTime = 0;
+
+      int failedAmount = 0;
+      long mostRecentFailTime = 0;
+
+      int acceptedAmount = 0;
+      for (final CompletedQuest completedQuest : questPlayer.getCompletedQuests()) {
         if (completedQuest.getQuest().equals(quest)) {
           completedAmount += 1;
-          if (completedQuest.getTimeCompleted() > mostRecentAcceptTime) {
-            mostRecentAcceptTime = completedQuest.getTimeCompleted();
+          acceptedAmount += 1;
+          if (completedQuest.getTimeCompleted() > mostRecentCompleteTime) {
+            mostRecentCompleteTime = completedQuest.getTimeCompleted();
           }
         }
       }
-      final long acceptTimeDifference = System.currentTimeMillis() - mostRecentAcceptTime;
-      final long acceptTimeDifferenceMinutes =
-          TimeUnit.MILLISECONDS.toMinutes(acceptTimeDifference);
+      for (final FailedQuest failedQuest : questPlayer.getFailedQuests()) {
+        if (failedQuest.getQuest().equals(quest)) {
+          failedAmount += 1;
+          acceptedAmount += 1;
+          if (failedQuest.getTimeFailed() > mostRecentFailTime) {
+            mostRecentFailTime = failedQuest.getTimeFailed();
+          }
+        }
+      }
+      for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+        if (activeQuest.getQuest().equals(quest)) {
+          acceptedAmount += 1;
+        }
+      }
 
-      if (acceptTimeDifferenceMinutes < quest.getAcceptCooldown()
-          || quest.getMaxAccepts() == 0
-          || (quest.getMaxAccepts() > -1 && completedAmount >= quest.getMaxAccepts())) {
+
+
+
+
+      final long completeTimeDifference = System.currentTimeMillis() - mostRecentCompleteTime;
+      final long completeTimeDifferenceMinutes =
+          TimeUnit.MILLISECONDS.toMinutes(completeTimeDifference);
+
+      if (completeTimeDifferenceMinutes < quest.getAcceptCooldownComplete()
+          || quest.getMaxCompletions() == 0
+          || (quest.getMaxCompletions() > -1 && completedAmount >= quest.getMaxCompletions())
+          || (quest.getMaxAccepts() > -1 && acceptedAmount >= quest.getMaxAccepts())
+          || (quest.getMaxFails() > -1 && failedAmount >= quest.getMaxFails())
+      ) {
         return false;
       }
     } else {

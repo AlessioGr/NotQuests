@@ -300,6 +300,10 @@ public class QuestPlayerManager {
             SELECT QuestName, TimeCompleted FROM CompletedQuests
             WHERE PlayerUUID = ? AND Profile = ?;
           """);
+         final PreparedStatement failedQuestsPS = connection.prepareStatement("""
+            SELECT QuestName, TimeFailed FROM FailedQuests
+            WHERE PlayerUUID = ? AND Profile = ?;
+          """);
          final PreparedStatement activeQuestsPS = connection.prepareStatement("""
             SELECT QuestName FROM ActiveQuests
             WHERE PlayerUUID = ? AND Profile = ?;
@@ -334,6 +338,7 @@ public class QuestPlayerManager {
           uuid = UUID.fromString(questPlayerDataResult.getString("PlayerUUID"));
         }
         completedQuestsPS.setString(1, uuid.toString());
+        failedQuestsPS.setString(1, uuid.toString());
         activeQuestsPS.setString(1, uuid.toString());
         activeQuestTriggersPS.setString(1, uuid.toString());
         activeQuestObjectivesPS.setString(1, uuid.toString());
@@ -351,6 +356,7 @@ public class QuestPlayerManager {
         main.getLogManager().debug("Profile: %s", profile);
 
         completedQuestsPS.setString(2, profile);
+        failedQuestsPS.setString(2, profile);
         activeQuestsPS.setString(2, profile);
         activeQuestTriggersPS.setString(2, profile);
         activeQuestObjectivesPS.setString(2, profile);
@@ -424,7 +430,36 @@ public class QuestPlayerManager {
                                     + "</highlight> could not be loaded from database (requested for loading completed Quests)");
           }
         }
-        // completedQuestsResults.close();
+
+        // Failed Quests
+        final ResultSet failedQuestsResults = failedQuestsPS.executeQuery();
+
+        while (failedQuestsResults.next()) {
+          final String questName = failedQuestsResults.getString("QuestName");
+          final Quest quest = main.getQuestManager().getQuest(questName);
+          if (quest != null) {
+            final long timeFailed = failedQuestsResults.getLong("TimeFailed");
+            if (timeFailed > 0) {
+              final FailedQuest failedQuest =
+                      new FailedQuest(quest, questPlayer, timeFailed);
+              questPlayer.addFailedQuest(failedQuest);
+
+            } else {
+              main.getLogManager()
+                      .warn(
+                              "ERROR: TimeFailed from Quest with name <highlight>"
+                                      + questName
+                                      + "</highlight> could not be loaded from database (requested for loading failed Quests)");
+            }
+
+          } else {
+            main.getLogManager()
+                    .warn(
+                            "ERROR: Quest with name <highlight>"
+                                    + questName
+                                    + "</highlight> could not be loaded from database (requested for loading failed Quests)");
+          }
+        }
 
         // Active Quests
         ResultSet activeQuestsResults = activeQuestsPS.executeQuery();
@@ -698,6 +733,13 @@ public class QuestPlayerManager {
          """);
          final PreparedStatement insertIntoCompletedQuestsPS = connection.prepareStatement("""
             INSERT INTO CompletedQuests (QuestName, PlayerUUID, TimeCompleted, Profile) VALUES (?, ?, ?, ?);
+         """);
+
+         final PreparedStatement deleteFromFailedQuestsPS = connection.prepareStatement("""
+            DELETE FROM FailedQuests WHERE PlayerUUID = ? AND Profile = ?;
+         """);
+        final PreparedStatement insertIntoFailedQuestsPS = connection.prepareStatement("""
+            INSERT INTO FailedQuests (QuestName, PlayerUUID, TimeFailed, Profile) VALUES (?, ?, ?, ?);
          """)
     ) {
       for (final QuestPlayer questPlayer : questPlayers) {
@@ -770,6 +812,19 @@ public class QuestPlayerManager {
           insertIntoCompletedQuestsPS.setLong(3, completedQuest.getTimeCompleted());
           insertIntoCompletedQuestsPS.setString(4, profile);
           insertIntoCompletedQuestsPS.executeUpdate();
+        }
+
+        // Failed Quests
+        deleteFromFailedQuestsPS.setString(1, questPlayerUUID.toString());
+        deleteFromFailedQuestsPS.setString(2, profile);
+        deleteFromFailedQuestsPS.executeUpdate();
+
+        for (final FailedQuest failedQuest : questPlayer.getFailedQuests()) {
+          insertIntoFailedQuestsPS.setString(1, failedQuest.getQuest().getIdentifier());
+          insertIntoFailedQuestsPS.setString(2, questPlayerUUID.toString());
+          insertIntoFailedQuestsPS.setLong(3, failedQuest.getTimeFailed());
+          insertIntoFailedQuestsPS.setString(4, profile);
+          insertIntoFailedQuestsPS.executeUpdate();
         }
       }
     } catch (Exception e) {

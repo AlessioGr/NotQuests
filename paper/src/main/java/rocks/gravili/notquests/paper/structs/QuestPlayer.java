@@ -73,6 +73,9 @@ public class QuestPlayer {
     private final ArrayList<ActiveQuest> questsToComplete;
     private final ArrayList<ActiveQuest> questsToRemove;
     private final ArrayList<CompletedQuest> completedQuests; //has to accept multiple entries of the same value
+
+    private final ArrayList<FailedQuest> failedQuests; //has to accept multiple entries of the same value
+
     private final HashMap<String, Location> locationsAndBeacons, activeLocationAndBeams;
     //Tags
     private final HashMap<String, Object> tags;
@@ -104,6 +107,7 @@ public class QuestPlayer {
         questsToComplete = new ArrayList<>();
         questsToRemove = new ArrayList<>();
         completedQuests = new ArrayList<>();
+        failedQuests = new ArrayList<>();
 
         locationsAndBeacons = new HashMap<>();
         activeLocationAndBeams = new HashMap<>();
@@ -328,26 +332,28 @@ public class QuestPlayer {
 
     public final String getCooldownFormatted(final Quest quest) {
 
-        long mostRecentAcceptTime = 0;
-        for (CompletedQuest completedQuest : completedQuests) {
+        long mostRecentCompleteTime = 0;
+
+
+        for (final CompletedQuest completedQuest : getCompletedQuests()) {
             if (completedQuest.getQuest().equals(quest)) {
-                if (completedQuest.getTimeCompleted() > mostRecentAcceptTime) {
-                    mostRecentAcceptTime = completedQuest.getTimeCompleted();
+                if (completedQuest.getTimeCompleted() > mostRecentCompleteTime) {
+                    mostRecentCompleteTime = completedQuest.getTimeCompleted();
                 }
             }
         }
 
-        final long acceptTimeDifference = System.currentTimeMillis() - mostRecentAcceptTime;
-        final long acceptTimeDifferenceMinutes = TimeUnit.MILLISECONDS.toMinutes(acceptTimeDifference);
+        final long completeTimeDifference = System.currentTimeMillis() - mostRecentCompleteTime;
+        final long completeTimeDifferenceMinutes = TimeUnit.MILLISECONDS.toMinutes(completeTimeDifference);
 
 
-        final long timeToWaitInMinutes = quest.getAcceptCooldown() - acceptTimeDifferenceMinutes;
+        final long timeToWaitInMinutes = quest.getAcceptCooldownComplete() - completeTimeDifferenceMinutes;
         final double timeToWaitInHours = Math.round((timeToWaitInMinutes / 60f) * 10) / 10.0;
         final double timeToWaitInDays = Math.round((timeToWaitInHours / 24f) * 10) / 10.0;
 
         final String prefix = main.getLanguageManager().getString("placeholders.questcooldownleftformatted.prefix", this, quest);
         //Cooldown:
-        if (acceptTimeDifferenceMinutes >= quest.getAcceptCooldown()) {
+        if (completeTimeDifferenceMinutes >= quest.getAcceptCooldownComplete()) {
             return prefix + main.getLanguageManager().getString("placeholders.questcooldownleftformatted.no-cooldown", this, quest);
         } else {
             if (timeToWaitInMinutes < 60) {
@@ -400,134 +406,164 @@ public class QuestPlayer {
             }
         }
         int completedAmount = 0;
+        long mostRecentCompleteTime = 0;
 
-        long mostRecentAcceptTime = 0;
-        for (final CompletedQuest completedQuest : completedQuests) {
+        int failedAmount = 0;
+        long mostRecentFailTime = 0;
+
+        int acceptedAmount = 0;
+        for (final CompletedQuest completedQuest : getCompletedQuests()) {
             if (completedQuest.getQuestIdentifier().equals(activeQuest.getQuestIdentifier())) {
                 completedAmount += 1;
-                if (completedQuest.getTimeCompleted() > mostRecentAcceptTime) {
-                    mostRecentAcceptTime = completedQuest.getTimeCompleted();
+                acceptedAmount += 1;
+                if (completedQuest.getTimeCompleted() > mostRecentCompleteTime) {
+                    mostRecentCompleteTime = completedQuest.getTimeCompleted();
                 }
             }
         }
+        for (final FailedQuest failedQuest : getFailedQuests()) {
+            if (failedQuest.getQuestIdentifier().equals(activeQuest.getQuestIdentifier())) {
+                failedAmount += 1;
+                acceptedAmount += 1;
+                if (failedQuest.getTimeFailed() > mostRecentFailTime) {
+                    mostRecentFailTime = failedQuest.getTimeFailed();
+                }
+            }
+        }
+        for (final ActiveQuest activeQuest2 : getActiveQuests()) {
+            if (activeQuest.getQuestIdentifier().equals(activeQuest2.getQuestIdentifier())) {
+                acceptedAmount += 1;
+            }
+        }
 
-        final long acceptTimeDifference = System.currentTimeMillis() - mostRecentAcceptTime;
-        final long acceptTimeDifferenceMinutes = TimeUnit.MILLISECONDS.toMinutes(acceptTimeDifference);
+        final long completeTimeDifference = System.currentTimeMillis() - mostRecentCompleteTime;
+        final long completeTimeDifferenceMinutes = TimeUnit.MILLISECONDS.toMinutes(completeTimeDifference);
 
 
-        final long timeToWaitInMinutes = activeQuest.getQuest().getAcceptCooldown() - acceptTimeDifferenceMinutes;
+        final long timeToWaitInMinutes = activeQuest.getQuest().getAcceptCooldownComplete() - completeTimeDifferenceMinutes;
         final double timeToWaitInHours = Math.round((timeToWaitInMinutes / 60f) * 10) / 10.0;
         final double timeToWaitInDays = Math.round((timeToWaitInHours / 24f) * 10) / 10.0;
 
 
-        //Max Accepts:
-        if (activeQuest.getQuest().getMaxAccepts() <= -1 || completedAmount < activeQuest.getQuest().getMaxAccepts()) {
-            //Cooldown:
-            if (acceptTimeDifferenceMinutes >= activeQuest.getQuest().getAcceptCooldown()) {
-
-                //Requirements
-                final StringBuilder requirementsStillNeeded = new StringBuilder();
-                boolean allRequirementsFulfilled = true;
-
-                if (getPlayer() == null) {
-                    requirementsStillNeeded.append("\n").append(main.getLanguageManager().getString("chat.add-active-quest-player-object-not-found", (QuestPlayer) null, this, activeQuest));
-                }
-
-                for (final Condition condition : activeQuest.getQuest().getRequirements()) {
-                    final ConditionResult check = condition.check(this);
-                    if (!check.fulfilled()) {
-                        if(!condition.isHidden(this)) {
-                            requirementsStillNeeded.append("\n").append(check.message());
-                        }
-                        allRequirementsFulfilled = false;
-                    }
-                }
-
-
-                if (!allRequirementsFulfilled) {
-                    return main.getLanguageManager().getString("chat.quest-not-all-requirements-fulfilled", getPlayer()) + requirementsStillNeeded;
-                }
-
-
-
-
-
-                finishAddingQuest(activeQuest, triggerAcceptQuestTrigger, false);
-                if (sendQuestInfo) {
-                    final Player player = getPlayer();
-                    if (player != null) {
-
-                        if(!activeQuest.getQuest().getObjectives().isEmpty()){
-                            main.sendMessage(player, main.getLanguageManager().getString("chat.objectives-label-after-quest-accepting", player));
-                        }
-
-                        main.getQuestManager().sendActiveObjectivesAndProgress(this, activeQuest, 0);
-
-                        if (main.getConfiguration().visualTitleQuestSuccessfullyAccepted_enabled) {
-
-                            player.showTitle(
-                                    Title.title(main.parse(main.getLanguageManager().getString("titles.quest-accepted.title", player)),
-                                            main.parse(main.getLanguageManager().getString("titles.quest-accepted.subtitle", player, this, activeQuest)),
-                                            Title.Times.times(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
-                                    ));
-                        }
-
-
-                        player.playSound(player.getLocation(), Sound.ENTITY_EVOKER_PREPARE_SUMMON, SoundCategory.MASTER, 100, 2);
-
-
-                        if (!activeQuest.getQuest().getObjectiveHolderDescription().isBlank()) {
-                            main.sendMessage(player, main.getLanguageManager().getString("chat.quest-description", player, activeQuest));
-                        } else {
-                            main.sendMessage(player, main.getLanguageManager().getString("chat.missing-quest-description", player));
-                        }
-
-                        main.sendMessage(player, main.getLanguageManager().getString("chat.quest-successfully-accepted", player, activeQuest));
-
-
-                    }
-
-                }
-
-
-                return "accepted";
-            } else {
-                if (timeToWaitInMinutes < 60) {
-                    if(timeToWaitInMinutes == 1){
-                        return main.getLanguageManager().getString("chat.quest-on-cooldown.minute", getPlayer(), this, activeQuest);
-                    }else{
-                        return main.getLanguageManager().getString("chat.quest-on-cooldown.minutes", getPlayer(), this, activeQuest, Map.of(
-                                "%MINUTES%", ""+timeToWaitInMinutes
-                        ));
-                    }
-                } else {
-                    if (timeToWaitInHours < 24) {
-                        if (timeToWaitInHours == 1) {
-                            return main.getLanguageManager().getString("chat.quest-on-cooldown.hour", getPlayer(), this, activeQuest);
-                        } else {
-                            return main.getLanguageManager().getString("chat.quest-on-cooldown.hours", getPlayer(), this, activeQuest, Map.of(
-                                    "%HOURS%", ""+timeToWaitInHours
-                            ));
-                        }
-                    } else {
-                        if (timeToWaitInDays == 1) {
-                            return main.getLanguageManager().getString("chat.quest-on-cooldown.day", getPlayer(), this, activeQuest);
-
-                        } else {
-                            return main.getLanguageManager().getString("chat.quest-on-cooldown.days", getPlayer(), this, activeQuest, Map.of(
-                                    "%DAYS%", ""+timeToWaitInDays
-                            ));
-                        }
-                    }
-                }
-            }
-
-        } else {
-            return main.getLanguageManager().getString("chat.reached-max-accepts-limit", getPlayer(), this, activeQuest, Map.of(
-                    "%MAXACCEPTS%", ""+activeQuest.getQuest().getMaxAccepts(),
+        if(activeQuest.getQuest().getMaxCompletions() > -1 && completedAmount >= activeQuest.getQuest().getMaxCompletions()){
+            return main.getLanguageManager().getString("chat.reached-max-completions-limit", getPlayer(), this, activeQuest, Map.of(
+                    "%MAXCOMPLETIONS%", ""+activeQuest.getQuest().getMaxCompletions(),
                     "%COMPLETEDAMOUNT%", ""+completedAmount
             ));
         }
+        if(activeQuest.getQuest().getMaxAccepts() > -1 && acceptedAmount >= activeQuest.getQuest().getMaxAccepts()){
+            return main.getLanguageManager().getString("chat.reached-max-accepts-limit", getPlayer(), this, activeQuest, Map.of(
+                    "%MAXACCEPTS%", ""+activeQuest.getQuest().getMaxAccepts(),
+                    "%ACCEPTEDAMOUNT%", ""+acceptedAmount
+            ));
+        }
+        if(activeQuest.getQuest().getMaxFails() > -1 && failedAmount >= activeQuest.getQuest().getMaxFails()){
+            return main.getLanguageManager().getString("chat.reached-max-fails-limit", getPlayer(), this, activeQuest, Map.of(
+                    "%MAXFAILS%", ""+activeQuest.getQuest().getMaxFails(),
+                    "%FAILEDAMOUNT%", ""+failedAmount
+            ));
+        }
+
+        //Cooldown:
+        if (completeTimeDifferenceMinutes >= activeQuest.getQuest().getAcceptCooldownComplete()) {
+
+            //Requirements
+            final StringBuilder requirementsStillNeeded = new StringBuilder();
+            boolean allRequirementsFulfilled = true;
+
+            if (getPlayer() == null) {
+                requirementsStillNeeded.append("\n").append(main.getLanguageManager().getString("chat.add-active-quest-player-object-not-found", (QuestPlayer) null, this, activeQuest));
+            }
+
+            for (final Condition condition : activeQuest.getQuest().getRequirements()) {
+                final ConditionResult check = condition.check(this);
+                if (!check.fulfilled()) {
+                    if(!condition.isHidden(this)) {
+                        requirementsStillNeeded.append("\n").append(check.message());
+                    }
+                    allRequirementsFulfilled = false;
+                }
+            }
+
+
+            if (!allRequirementsFulfilled) {
+                return main.getLanguageManager().getString("chat.quest-not-all-requirements-fulfilled", getPlayer()) + requirementsStillNeeded;
+            }
+
+
+
+
+
+            finishAddingQuest(activeQuest, triggerAcceptQuestTrigger, false);
+            if (sendQuestInfo) {
+                final Player player = getPlayer();
+                if (player != null) {
+
+                    if(!activeQuest.getQuest().getObjectives().isEmpty()){
+                        main.sendMessage(player, main.getLanguageManager().getString("chat.objectives-label-after-quest-accepting", player));
+                    }
+
+                    main.getQuestManager().sendActiveObjectivesAndProgress(this, activeQuest, 0);
+
+                    if (main.getConfiguration().visualTitleQuestSuccessfullyAccepted_enabled) {
+
+                        player.showTitle(
+                                Title.title(main.parse(main.getLanguageManager().getString("titles.quest-accepted.title", player)),
+                                        main.parse(main.getLanguageManager().getString("titles.quest-accepted.subtitle", player, this, activeQuest)),
+                                        Title.Times.times(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
+                                ));
+                    }
+
+
+                    player.playSound(player.getLocation(), Sound.ENTITY_EVOKER_PREPARE_SUMMON, SoundCategory.MASTER, 100, 2);
+
+
+                    if (!activeQuest.getQuest().getObjectiveHolderDescription().isBlank()) {
+                        main.sendMessage(player, main.getLanguageManager().getString("chat.quest-description", player, activeQuest));
+                    } else {
+                        main.sendMessage(player, main.getLanguageManager().getString("chat.missing-quest-description", player));
+                    }
+
+                    main.sendMessage(player, main.getLanguageManager().getString("chat.quest-successfully-accepted", player, activeQuest));
+
+
+                }
+
+            }
+
+
+            return "accepted";
+        } else {
+            if (timeToWaitInMinutes < 60) {
+                if(timeToWaitInMinutes == 1){
+                    return main.getLanguageManager().getString("chat.quest-on-cooldown.minute", getPlayer(), this, activeQuest);
+                }else{
+                    return main.getLanguageManager().getString("chat.quest-on-cooldown.minutes", getPlayer(), this, activeQuest, Map.of(
+                            "%MINUTES%", ""+timeToWaitInMinutes
+                    ));
+                }
+            } else {
+                if (timeToWaitInHours < 24) {
+                    if (timeToWaitInHours == 1) {
+                        return main.getLanguageManager().getString("chat.quest-on-cooldown.hour", getPlayer(), this, activeQuest);
+                    } else {
+                        return main.getLanguageManager().getString("chat.quest-on-cooldown.hours", getPlayer(), this, activeQuest, Map.of(
+                                "%HOURS%", ""+timeToWaitInHours
+                        ));
+                    }
+                } else {
+                    if (timeToWaitInDays == 1) {
+                        return main.getLanguageManager().getString("chat.quest-on-cooldown.day", getPlayer(), this, activeQuest);
+
+                    } else {
+                        return main.getLanguageManager().getString("chat.quest-on-cooldown.days", getPlayer(), this, activeQuest, Map.of(
+                                "%DAYS%", ""+timeToWaitInDays
+                        ));
+                    }
+                }
+            }
+        }
+
 
     }
 
@@ -664,6 +700,9 @@ public class QuestPlayer {
 
     public final ArrayList<CompletedQuest> getCompletedQuests() {
         return completedQuests;
+    }
+    public final ArrayList<FailedQuest> getFailedQuests() {
+        return failedQuests;
     }
 
 
@@ -857,9 +896,10 @@ public class QuestPlayer {
 
     public void addCompletedQuest(final CompletedQuest completedQuest) {
         completedQuests.add(completedQuest);
-
     }
-
+    public void addFailedQuest(final FailedQuest failedQuest) {
+        failedQuests.add(failedQuest);
+    }
 
     public void failQuest(final ActiveQuest activeQuestToFail) {
         final ArrayList<ActiveQuest> activeQuestsCopy = new ArrayList<>(activeQuests);
@@ -869,6 +909,8 @@ public class QuestPlayer {
                 foundActiveQuest.fail();
                 questsToRemove.add(foundActiveQuest);
                 final Player player = getPlayer();
+
+                failedQuests.add(new FailedQuest(foundActiveQuest.getQuest(), this));
 
 
                 if (player != null) {
@@ -912,6 +954,24 @@ public class QuestPlayer {
     public final boolean hasCompletedQuest(final String questName) {
         for (final CompletedQuest completedQuest : completedQuests) {
             if (completedQuest.getQuestIdentifier() .equalsIgnoreCase(questName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public final boolean hasFailedQuest(final Quest quest) {
+        for (final FailedQuest failedQuest : failedQuests) {
+            if (failedQuest.getQuestIdentifier() .equalsIgnoreCase(quest.getIdentifier())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public final boolean hasFailedQuest(final String questName) {
+        for (final FailedQuest failedQuest : failedQuests) {
+            if (failedQuest.getQuestIdentifier() .equalsIgnoreCase(questName)) {
                 return true;
             }
         }

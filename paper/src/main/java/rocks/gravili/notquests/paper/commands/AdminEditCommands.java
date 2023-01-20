@@ -77,30 +77,30 @@ public class AdminEditCommands {
         this.manager = manager;
 
 
-        manager.command(editBuilder.literal("acceptCooldown", "cooldown")
+        manager.command(editBuilder.literal("acceptCooldown").literal("complete")
                 .literal("set")
-                .argument(DurationArgument.of("duration"), ArgumentDescription.of("New accept cooldown."))
+                .argument(DurationArgument.of("duration"), ArgumentDescription.of("New accept cooldown measured by quest completion time."))
                 .meta(CommandMeta.DESCRIPTION, "Sets the time players have to wait between accepting quests.")
                 .handler((context) -> {
                     final Quest quest = context.get("quest");
                     final Duration durationCooldown = context.get("duration");
                     final long cooldownInMinutes = durationCooldown.toMinutes();
 
-                    quest.setAcceptCooldown(cooldownInMinutes);
+                    quest.setAcceptCooldownComplete(cooldownInMinutes);
                     context.getSender().sendMessage(main.parse(
-                            "<success>Cooldown for Quest <highlight>" + quest.getIdentifier() + "</highlight> has been set to <highlight2>"
+                            "<success>Complete acceptCooldown for Quest <highlight>" + quest.getIdentifier() + "</highlight> has been set to <highlight2>"
                                     + durationCooldown.toDaysPart() + " days, " + durationCooldown.toHoursPart() + " hours, " + durationCooldown.toMinutesPart() + " minutes" + "</highlight2>!"
                     ));
                 }));
 
-        manager.command(editBuilder.literal("acceptCooldown", "cooldown")
+        manager.command(editBuilder.literal("acceptCooldown").literal("complete")
                 .literal("disable")
                 .meta(CommandMeta.DESCRIPTION, "Disables the wait time for players between accepting quests.")
                 .handler((context) -> {
                     final Quest quest = context.get("quest");
-                    quest.setAcceptCooldown(-1);
+                    quest.setAcceptCooldownComplete(-1);
                     context.getSender().sendMessage(main.parse(
-                            "<success>Cooldown for Quest <highlight>" + quest.getIdentifier() + "</highlight> has been set to <highlight2>disabled</highlight2>!"
+                            "<success>Complete acceptCooldown for Quest <highlight>" + quest.getIdentifier() + "</highlight> has been set to <highlight2>disabled</highlight2>!"
                     ));
                 }));
 
@@ -216,13 +216,38 @@ public class AdminEditCommands {
                 }));
 
 
-        manager.command(editBuilder.literal("maxAccepts")
+        manager.command(editBuilder.literal("limits").literal("completions")
+                .argument(IntegerArgument.<CommandSender>newBuilder("max. completions").withMin(-1).withSuggestionsProvider((context, lastString) -> {
+                    ArrayList<String> completions = new ArrayList<>();
+                    completions.add("<amount of maximum completions>");
+                    return completions;
+                }).build(), ArgumentDescription.of("Maximum amount of completions. Set to -1 for unlimited (default)."))
+                .meta(CommandMeta.DESCRIPTION, "Sets the maximum amount of times you can complete this Quest.")
+                .handler((context) -> {
+                    final Quest quest = context.get("quest");
+                    int maxCompletions = context.get("max. completions");
+                    if (maxCompletions > 0) {
+                        quest.setMaxCompletions(maxCompletions);
+                        context.getSender().sendMessage(main.parse(
+                                "<success>Maximum amount of completions for Quest <highlight>" + quest.getIdentifier() + "</highlight> has been set to <highlight2>"
+                                        + maxCompletions + "</highlight2>!"
+                        ));
+                    } else {
+                        quest.setMaxCompletions(-1);
+                        context.getSender().sendMessage(main.parse(
+                                "<success>Maximum amount of completions for Quest <highlight>" + quest.getIdentifier() + "</highlight> has been set to <highlight2>"
+                                        + "unlimited (default)</highlight2>!"
+                        ));
+                    }
+        }));
+
+        manager.command(editBuilder.literal("limits").literal("accepts")
                 .argument(IntegerArgument.<CommandSender>newBuilder("max. accepts").withMin(-1).withSuggestionsProvider((context, lastString) -> {
                     ArrayList<String> completions = new ArrayList<>();
                     completions.add("<amount of maximum accepts>");
                     return completions;
                 }).build(), ArgumentDescription.of("Maximum amount of accepts. Set to -1 for unlimited (default)."))
-                .meta(CommandMeta.DESCRIPTION, "Sets the maximum amount of times you can start/accept this Quest.")
+                .meta(CommandMeta.DESCRIPTION, "Sets the maximum amount of times you can accept this Quest.")
                 .handler((context) -> {
                     final Quest quest = context.get("quest");
                     int maxAccepts = context.get("max. accepts");
@@ -236,6 +261,31 @@ public class AdminEditCommands {
                         quest.setMaxAccepts(-1);
                         context.getSender().sendMessage(main.parse(
                                 "<success>Maximum amount of accepts for Quest <highlight>" + quest.getIdentifier() + "</highlight> has been set to <highlight2>"
+                                        + "unlimited (default)</highlight2>!"
+                        ));
+                    }
+                }));
+
+        manager.command(editBuilder.literal("limits").literal("fails")
+                .argument(IntegerArgument.<CommandSender>newBuilder("max. fails").withMin(-1).withSuggestionsProvider((context, lastString) -> {
+                    ArrayList<String> completions = new ArrayList<>();
+                    completions.add("<amount of maximum fails>");
+                    return completions;
+                }).build(), ArgumentDescription.of("Maximum amount of fails. Set to -1 for unlimited (default)."))
+                .meta(CommandMeta.DESCRIPTION, "Sets the maximum amount of times you can fail this Quest.")
+                .handler((context) -> {
+                    final Quest quest = context.get("quest");
+                    int maxFails = context.get("max. fails");
+                    if (maxFails > 0) {
+                        quest.setMaxFails(maxFails);
+                        context.getSender().sendMessage(main.parse(
+                                "<success>Maximum amount of fails for Quest <highlight>" + quest.getIdentifier() + "</highlight> has been set to <highlight2>"
+                                        + maxFails + "</highlight2>!"
+                        ));
+                    } else {
+                        quest.setMaxFails(-1);
+                        context.getSender().sendMessage(main.parse(
+                                "<success>Maximum amount of fails for Quest <highlight>" + quest.getIdentifier() + "</highlight> has been set to <highlight2>"
                                         + "unlimited (default)</highlight2>!"
                         ));
                     }

@@ -77,7 +77,7 @@ public class QuestOnCooldownVariable extends Variable<Boolean> {
     final long acceptTimeDifference = System.currentTimeMillis() - mostRecentAcceptTime;
     final long acceptTimeDifferenceMinutes = TimeUnit.MILLISECONDS.toMinutes(acceptTimeDifference);
 
-    return acceptTimeDifferenceMinutes < quest.getAcceptCooldown(); // on cooldown
+    return acceptTimeDifferenceMinutes < quest.getAcceptCooldownComplete(); // on cooldown
   }
 
   @Override

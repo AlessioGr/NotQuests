@@ -145,8 +145,10 @@ public class VariablesManager {
     registerVariable("TagDouble", DoubleTagVariable.class);
     registerVariable("TagString", StringTagVariable.class);
     registerVariable("QuestOnCooldown", QuestOnCooldownVariable.class);
-    registerVariable("QuestAbleToAcceptVariable", QuestAbleToAcceptVariable.class);
-    registerVariable("QuestReachedMaxAcceptsVariable", QuestReachedMaxAcceptsVariable.class);
+    registerVariable("QuestAbleToAccept", QuestAbleToAcceptVariable.class);
+    registerVariable("QuestReachedMaxAccepts", QuestReachedMaxAcceptsVariable.class);
+    registerVariable("QuestReachedMaxCompletions", QuestReachedMaxCompletionsVariable.class);
+    registerVariable("QuestReachedMaxFails", QuestReachedMaxFailsVariable.class);
 
     registerVariable("ItemInInventoryEnchantments", ItemInInventoryEnchantmentsVariable.class);
 

@@ -896,9 +896,10 @@ public class DataManager {
                 true
         ));
 
-        configuration.setQuestVisibilityEvaluationMaxAccepts(getGeneralConfigBoolean(
-                "gui.quest-visibility-evaluations.max-accepts.enabled",
-                true
+        configuration.setQuestVisibilityEvaluationLimits(getGeneralConfigBoolean(
+                "gui.quest-visibility-evaluations.limits.enabled",
+                true,
+                "max accepts, fails and max completions"
         ));
         configuration.setQuestVisibilityEvaluationAcceptCooldown(getGeneralConfigBoolean(
                 "gui.quest-visibility-evaluations.accept-cooldown.enabled",
@@ -1603,6 +1604,11 @@ public class DataManager {
                 CREATE TABLE IF NOT EXISTS `CompletedQuests` (`QuestName` varchar(200), `PlayerUUID` varchar(200), `TimeCompleted` BIGINT(255), `Profile` varchar(200))
              """);
 
+
+             final PreparedStatement createFailedQuestsTablePreparedStatement = connection.prepareStatement("""
+                CREATE TABLE IF NOT EXISTS `FailedQuests` (`QuestName` varchar(200), `PlayerUUID` varchar(200), `TimeFailed` BIGINT(255), `Profile` varchar(200))
+             """);
+
              final PreparedStatement createActiveTriggersTablePreparedStatement = connection.prepareStatement("""
                 CREATE TABLE IF NOT EXISTS `ActiveTriggers` (`TriggerType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` BIGINT(255), `TriggerID` INT(255), `Profile` varchar(200))
              """);
@@ -1640,6 +1646,11 @@ public class DataManager {
                 main.getLogManager().info(LogCategory.DATA, "Creating database table 'ActiveQuests' if it doesn't exist yet...");
             }
             createActiveQuestsTablePreparedStatement.executeUpdate();
+
+            if (main.getConfiguration().isVerboseStartupMessages()) {
+                main.getLogManager().info(LogCategory.DATA, "Creating database table 'FailedQuests' if it doesn't exist yet...");
+            }
+            createFailedQuestsTablePreparedStatement.executeUpdate();
 
             if (main.getConfiguration().isVerboseStartupMessages()) {
                 main.getLogManager().info(LogCategory.DATA, "Creating database table 'CompletedQuests' if it doesn't exist yet...");

@@ -23,12 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.structs.CompletedQuest;
-import rocks.gravili.notquests.paper.structs.Quest;
-import rocks.gravili.notquests.paper.structs.QuestPlayer;
+import rocks.gravili.notquests.paper.structs.*;
 
 /**
- * This variable is true if the amount of times the player has previously completed this Quest is
+ * This variable is true if the amount of times the player has previously accepted this Quest is
  * equal or higher than the Quests max accepts
  */
 public class QuestReachedMaxAcceptsVariable extends Variable<Boolean> {
@@ -70,15 +68,26 @@ public class QuestReachedMaxAcceptsVariable extends Variable<Boolean> {
       return true;
     }
 
-    int completedAmount = 0; // only needed for maxAccepts
+    int acceptedAmount = 0; // only needed for maxAccepts
 
-    for (CompletedQuest completedQuest : questPlayer.getCompletedQuests()) {
+    for (final CompletedQuest completedQuest : questPlayer.getCompletedQuests()) {
       if (completedQuest.getQuest().equals(quest)) {
-        completedAmount += 1;
+        acceptedAmount += 1;
       }
     }
 
-    return completedAmount >= quest.getMaxAccepts();
+    for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+      if (activeQuest.getQuest().equals(quest)) {
+        acceptedAmount += 1;
+      }
+    }
+    for (final FailedQuest failedQuest : questPlayer.getFailedQuests()) {
+      if (failedQuest.getQuest().equals(quest)) {
+        acceptedAmount += 1;
+      }
+    }
+
+    return acceptedAmount >= quest.getMaxAccepts();
   }
 
   @Override

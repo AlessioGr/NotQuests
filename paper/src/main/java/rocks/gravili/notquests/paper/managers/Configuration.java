@@ -68,7 +68,7 @@ public class Configuration {
   public boolean updateCheckerNotifyOpsInChat = true;
   public boolean showQuestItemAmount = false;
   public boolean showObjectiveItemAmount = true;
-  public boolean questVisibilityEvaluationMaxAccepts = false;
+  public boolean questVisibilityEvaluationLimits = false;
   public boolean questVisibilityEvaluationAlreadyAccepted = true;
   public boolean questVisibilityEvaluationAcceptCooldown = false;
   public boolean questVisibilityEvaluationConditions = false;
@@ -278,12 +278,12 @@ public class Configuration {
     this.configurationVersionPatch = Integer.parseInt(configurationVersionSplit[2]);
   }
 
-  public boolean isQuestVisibilityEvaluationMaxAccepts() {
-    return questVisibilityEvaluationMaxAccepts;
+  public boolean isQuestVisibilityEvaluationLimits() {
+    return questVisibilityEvaluationLimits;
   }
 
-  public void setQuestVisibilityEvaluationMaxAccepts(boolean questVisibilityEvaluationMaxAccepts) {
-    this.questVisibilityEvaluationMaxAccepts = questVisibilityEvaluationMaxAccepts;
+  public void setQuestVisibilityEvaluationLimits(boolean questVisibilityEvaluationLimits) {
+    this.questVisibilityEvaluationLimits = questVisibilityEvaluationLimits;
   }
 
   public boolean isDebug() {

@@ -40,13 +40,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.managers.npc.NQNPC;
-import rocks.gravili.notquests.paper.structs.ActiveObjective;
-import rocks.gravili.notquests.paper.structs.ActiveObjectiveHolder;
-import rocks.gravili.notquests.paper.structs.ActiveQuest;
-import rocks.gravili.notquests.paper.structs.CompletedQuest;
-import rocks.gravili.notquests.paper.structs.PredefinedProgressOrder;
-import rocks.gravili.notquests.paper.structs.Quest;
-import rocks.gravili.notquests.paper.structs.QuestPlayer;
+import rocks.gravili.notquests.paper.structs.*;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.actions.BooleanAction;
 import rocks.gravili.notquests.paper.structs.actions.ItemStackListAction;
@@ -441,10 +435,24 @@ public class QuestManager {
                     }
 
                     final Quest quest = new Quest(main, questName, category);
-                    quest.setMaxAccepts(category.getQuestsConfig().getInt("quests." + questName + ".maxAccepts", -1));
+                    if(category.getQuestsConfig().isInt("quests." + questName + ".maxAccepts")){ // Convert
+                        final int oldMaxAccepts = category.getQuestsConfig().getInt("quests." + questName + ".maxAccepts", -1);
+                        category.getQuestsConfig().set("quests." + questName + ".maxAccepts", null);
+                        category.getQuestsConfig().set("quests." + questName + ".limits.completions", oldMaxAccepts);
+                        category.saveQuestsConfig();
+                    }
+                    quest.setMaxCompletions(category.getQuestsConfig().getInt("quests." + questName + ".limits.completions", -1));
+                    quest.setMaxAccepts(category.getQuestsConfig().getInt("quests." + questName + ".limits.accepts", -1));
+                    quest.setMaxFails(category.getQuestsConfig().getInt("quests." + questName + ".limits.fails", -1));
                     quest.setTakeEnabled(category.getQuestsConfig().getBoolean("quests." + questName + ".takeEnabled", true));
                     quest.setAbortEnabled(category.getQuestsConfig().getBoolean("quests." + questName + ".abortEnabled", true));
-                    quest.setAcceptCooldown(category.getQuestsConfig().getLong("quests." + questName + ".acceptCooldown", -1));
+                    if(category.getQuestsConfig().isInt("quests." + questName + ".acceptCooldown")){ // Convert
+                        final int oldCooldown = category.getQuestsConfig().getInt("quests." + questName + ".acceptCooldown", -1);
+                        category.getQuestsConfig().set("quests." + questName + ".acceptCooldown", null);
+                        category.getQuestsConfig().set("quests." + questName + ".acceptCooldown.complete", oldCooldown);
+                        category.saveQuestsConfig();
+                    }
+                    quest.setAcceptCooldownComplete(category.getQuestsConfig().getLong("quests." + questName + ".acceptCooldown.complete", -1));
 
                     quest.setPredefinedProgressOrder(PredefinedProgressOrder.fromConfiguration(category.getQuestsConfig(), "quests." + questName + ".predefinedProgressOrder"), false);
 
@@ -1384,32 +1392,57 @@ public class QuestManager {
             }
 
 
-            if(main.getConfiguration().isQuestVisibilityEvaluationMaxAccepts() || main.getConfiguration().isQuestVisibilityEvaluationAcceptCooldown()){
+            if(main.getConfiguration().isQuestVisibilityEvaluationLimits() || main.getConfiguration().isQuestVisibilityEvaluationAcceptCooldown()){
                 int completedAmount = 0;
+                long mostRecentCompleteTime = 0;
 
-                long mostRecentAcceptTime = 0;
+                int failedAmount = 0;
+                long mostRecentFailTime = 0;
+
+                int acceptedAmount = 0;
                 if(questPlayer != null){
-                    for (CompletedQuest completedQuest : questPlayer.getCompletedQuests()) {
+                    for (final CompletedQuest completedQuest : questPlayer.getCompletedQuests()) {
                         if (completedQuest.getQuest().equals(quest)) {
                             completedAmount += 1;
-                            if (completedQuest.getTimeCompleted() > mostRecentAcceptTime) {
-                                mostRecentAcceptTime = completedQuest.getTimeCompleted();
+                            acceptedAmount += 1;
+                            if (completedQuest.getTimeCompleted() > mostRecentCompleteTime) {
+                                mostRecentCompleteTime = completedQuest.getTimeCompleted();
                             }
+                        }
+                    }
+                    for (final FailedQuest failedQuest : questPlayer.getFailedQuests()) {
+                        if (failedQuest.getQuest().equals(quest)) {
+                            failedAmount += 1;
+                            acceptedAmount += 1;
+                            if (failedQuest.getTimeFailed() > mostRecentFailTime) {
+                                mostRecentFailTime = failedQuest.getTimeFailed();
+                            }
+                        }
+                    }
+                    for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+                        if (activeQuest.getQuest().equals(quest)) {
+                            acceptedAmount += 1;
                         }
                     }
                 }
 
 
-                if(main.getConfiguration().isQuestVisibilityEvaluationMaxAccepts()) {
-                    if (quest.getMaxAccepts() > -1 && completedAmount >= quest.getMaxAccepts()) {
+                if(main.getConfiguration().isQuestVisibilityEvaluationLimits()) {
+                    if (quest.getMaxCompletions() > -1 && completedAmount >= quest.getMaxCompletions()) {
+                        continue questLoop;
+                    }
+                    if (quest.getMaxAccepts() > -1 && acceptedAmount >= quest.getMaxAccepts()) {
+                        continue questLoop;
+                    }
+                    if (quest.getMaxFails() > -1 && failedAmount >= quest.getMaxFails()) {
                         continue questLoop;
                     }
                 }
 
-                if(main.getConfiguration().isQuestVisibilityEvaluationAcceptCooldown()) {
-                    final long acceptTimeDifference = System.currentTimeMillis() - mostRecentAcceptTime;
+                if(main.getConfiguration().isQuestVisibilityEvaluationAcceptCooldown()) { // TODO: Cooldown for failed completed or accepted quests and potentially use questplayer.getcooldownformatted
+                    final long acceptTimeDifference = System.currentTimeMillis() - mostRecentCompleteTime;
                     final long acceptTimeDifferenceMinutes = TimeUnit.MILLISECONDS.toMinutes(acceptTimeDifference);
-                    if (acceptTimeDifferenceMinutes < quest.getAcceptCooldown()) {
+                    if (acceptTimeDifferenceMinutes < quest.getAcceptCooldownComplete()) {
                         continue questLoop;
                     }
                 }
