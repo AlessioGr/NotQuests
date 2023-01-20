@@ -44,7 +44,9 @@ chat:
   quest-not-active-error: '<error>Hata: <highlight>%QUESTNAME%</highlight> aktif bir görev değil!'
   force-add-active-quest-accepted: '<success>Görevi başarıyla kabul ettiniz (Zorla).'
   add-active-quest-player-object-not-found: '<warn>Hata: Oyuncu nesnesi bulunamadı. Lütfen bunu eklenti geliştiricisine bildirin.'
-  reached-max-accepts-limit: '<red>Bu görevi çoktan bitirdiniz. Sadece <highlight>%MAXACCEPTS%</highlight> Sadece 10 kez görevi tamamlayabilirsin, fakat sen zaten<highlight>%COMPLETEDAMOUNT%</highlight> kez tamamladın.'
+  reached-max-accepts-limit: '<red>You have accepted this quest too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%ACCEPTEDAMOUNT%</highlight> times.'
+  reached-max-fails-limit: '<red>You have failed this quest too many times already. You can only fail it <highlight>%MAXFAILS%</highlight> times, but you have already failed it <highlight>%FAILEDAMOUNT%</highlight> times.'
+  reached-max-completions-limit: '<red>You have completed this quest too many times already. You can only complete it <highlight>%MAXCOMPLETIONS%</highlight> times, but you have already completed it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
   reached-max-active-quests-per-player-limit: '<red> <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> fazla Görev kabul edemezsiniz.'
   quest-on-cooldown:
     minute: '<red>Bu görev bekleme süresinde! Tekrar alabilmeniz için <highlight>1 dakika</highlight> daha beklemeniz gerekiyor.'
