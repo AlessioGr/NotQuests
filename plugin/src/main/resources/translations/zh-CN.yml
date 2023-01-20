@@ -44,7 +44,9 @@ chat:
   quest-not-active-error: '<error>错误: <highlight>%QUESTNAME%</highlight> 好像还没有开始!'
   force-add-active-quest-accepted: '<success>已接受任务 (强制).'
   add-active-quest-player-object-not-found: '<warn>错误: 未找到玩家. 请向服务器管理员报告.'
-  reached-max-accepts-limit: '<red>你已达到任务完成次数上限. 你只能接受 <highlight>%MAXACCEPTS%</highlight> 次这个任务, 但你已经接受该任务 <highlight>%COMPLETEDAMOUNT%</highlight> 次.'
+  reached-max-accepts-limit: '<red>You have accepted this quest too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%ACCEPTEDAMOUNT%</highlight> times.'
+  reached-max-fails-limit: '<red>You have failed this quest too many times already. You can only fail it <highlight>%MAXFAILS%</highlight> times, but you have already failed it <highlight>%FAILEDAMOUNT%</highlight> times.'
+  reached-max-completions-limit: '<red>You have completed this quest too many times already. You can only complete it <highlight>%MAXCOMPLETIONS%</highlight> times, but you have already completed it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
   reached-max-active-quests-per-player-limit: '<red>您最多同时接受 <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> 个任务.'
   quest-on-cooldown:
     minute: '<red>任务冷却中! 您还需要等待 <highlight>1 分钟</highlight> 才能接受该任务.'
