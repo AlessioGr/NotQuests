@@ -1168,7 +1168,7 @@ public class AdminEditCommands {
           }));
 
 
-        manager.command(builder.literal("displayname")
+        manager.command(builder.literal("displayName")
                 .literal("show")
                 .meta(CommandMeta.DESCRIPTION, "Shows current objective displayname.")
                 .handler((context) -> {
@@ -1179,7 +1179,7 @@ public class AdminEditCommands {
                                     + objective.getDisplayName()
                     ));
                 }));
-        manager.command(builder.literal("displayname")
+        manager.command(builder.literal("displayName")
                 .literal("remove")
                 .meta(CommandMeta.DESCRIPTION, "Removes current objective displayname.")
                 .handler((context) -> {
@@ -1192,7 +1192,7 @@ public class AdminEditCommands {
                     ));
                 }));
 
-        manager.command(builder.literal("displayname")
+        manager.command(builder.literal("displayName")
                 .literal("set")
             .argument(MiniMessageSelector.<CommandSender>newBuilder("DisplayName", main).withPlaceholders().build(), ArgumentDescription.of("Quest display name"))
 
@@ -2249,7 +2249,7 @@ public class AdminEditCommands {
                     ));
                 }));
 
-        manager.command(builder.literal("displayname")
+        manager.command(builder.literal("displayName")
                 .literal("show")
                 .meta(CommandMeta.DESCRIPTION, "Shows current reward Display Name.")
                 .handler((context) -> {
@@ -2275,7 +2275,7 @@ public class AdminEditCommands {
                     }
                 }));
 
-        manager.command(builder.literal("displayname")
+        manager.command(builder.literal("displayName")
                 .literal("remove", "delete")
                 .meta(CommandMeta.DESCRIPTION, "Removes current reward Display Name.")
                 .handler((context) -> {
@@ -2298,7 +2298,7 @@ public class AdminEditCommands {
                     ));
                 }));
 
-        manager.command(builder.literal("displayname")
+        manager.command(builder.literal("displayName")
                 .literal("set")
                 .argument(MiniMessageSelector.<CommandSender>newBuilder("DisplayName", main).withPlaceholders().build(), ArgumentDescription.of("Reward display name"))
                 .meta(CommandMeta.DESCRIPTION, "Sets new reward Display Name. Only rewards with a Display Name will be displayed.")
@@ -2380,7 +2380,7 @@ public class AdminEditCommands {
                     ));
                 }));
 
-        manager.command(builder.literal("displayname")
+        manager.command(builder.literal("displayName")
                 .literal("show")
                 .meta(CommandMeta.DESCRIPTION, "Shows current reward Display Name.")
                 .handler((context) -> {
@@ -2405,7 +2405,7 @@ public class AdminEditCommands {
                     }
                 }));
 
-        manager.command(builder.literal("displayname")
+        manager.command(builder.literal("displayName")
                 .literal("remove", "delete")
                 .meta(CommandMeta.DESCRIPTION, "Removes current reward Display Name.")
                 .handler((context) -> {
@@ -2427,7 +2427,7 @@ public class AdminEditCommands {
                     ));
                 }));
 
-        manager.command(builder.literal("displayname")
+        manager.command(builder.literal("displayName")
                 .literal("set")
                 .argument(MiniMessageSelector.<CommandSender>newBuilder("DisplayName", main).withPlaceholders().build(), ArgumentDescription.of("Reward display name"))
                 .meta(CommandMeta.DESCRIPTION, "Sets new reward Display Name. Only rewards with a Display Name will be displayed.")
