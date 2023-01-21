@@ -64,20 +64,20 @@ public class QuestOnCooldownVariable extends Variable<Boolean> {
 
     // int completedAmount = 0; //only needed for maxAccepts
 
-    long mostRecentAcceptTime = 0;
-    for (CompletedQuest completedQuest : questPlayer.getCompletedQuests()) {
+    long mostRecentCompleteTime = 0;
+    for (final CompletedQuest completedQuest : questPlayer.getCompletedQuests()) {
       if (completedQuest.getQuest().equals(quest)) {
         // completedAmount += 1;
-        if (completedQuest.getTimeCompleted() > mostRecentAcceptTime) {
-          mostRecentAcceptTime = completedQuest.getTimeCompleted();
+        if (completedQuest.getTimeCompleted() > mostRecentCompleteTime) {
+          mostRecentCompleteTime = completedQuest.getTimeCompleted();
         }
       }
     }
 
-    final long acceptTimeDifference = System.currentTimeMillis() - mostRecentAcceptTime;
-    final long acceptTimeDifferenceMinutes = TimeUnit.MILLISECONDS.toMinutes(acceptTimeDifference);
+    final long completeTimeDifference = System.currentTimeMillis() - mostRecentCompleteTime;
+    final long completeTimeDifferenceMinutes = TimeUnit.MILLISECONDS.toMinutes(mostRecentCompleteTime);
 
-    return acceptTimeDifferenceMinutes < quest.getAcceptCooldownComplete(); // on cooldown
+    return mostRecentCompleteTime < quest.getAcceptCooldownComplete(); // on cooldown
   }
 
   @Override
