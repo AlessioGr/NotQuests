@@ -1294,7 +1294,8 @@ public class GUIManager {
             {
               for (final Category category : main.getDataManager().getCategories()) {
 
-                ItemStack itemStack = new ItemStack(Material.CHEST);
+                final ItemStack itemStack = category.getGuiItem();
+
                 ItemMeta itemMeta = itemStack.getItemMeta();
 
                 itemMeta.displayName(

@@ -38,23 +38,21 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.command.CommandSender;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Vector;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.ActiveQuestSelector;
-import rocks.gravili.notquests.paper.commands.arguments.CategorySelector;
-import rocks.gravili.notquests.paper.commands.arguments.ConditionSelector;
-import rocks.gravili.notquests.paper.commands.arguments.MiniMessageSelector;
-import rocks.gravili.notquests.paper.commands.arguments.QuestSelector;
+import rocks.gravili.notquests.paper.commands.arguments.*;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
+import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.managers.npc.NQNPC;
@@ -970,6 +968,47 @@ public class AdminCommands {
                             + category.getCategoryFullName() + "</highlight>! New display name: <highlight2>"
                             + category.getDisplayName()
                     ));
+                }));
+
+        manager.command(editCategoryBuilder.literal("guiItem")
+
+                .argument(ItemStackSelectionArgument.of("material", main), ArgumentDescription.of("Material of item displayed in the category GUI."))
+                .flag(
+                        manager.flagBuilder("glow")
+                                .withDescription(ArgumentDescription.of("Makes the item have the enchanted glow."))
+                )
+                .meta(CommandMeta.DESCRIPTION, "Sets the item displayed in the category GUI (default: book).")
+                .handler((context) -> {
+                    final Category category = context.get("category");
+                    final boolean glow = context.flags().isPresent("glow");
+
+                    final ItemStackSelection itemStackSelection= context.get("material");
+                    ItemStack guiItem = itemStackSelection.toFirstItemStack();
+                    if (guiItem == null) {
+                        guiItem = new ItemStack(Material.BOOK, 1);
+                    }
+
+                    if (glow) {
+                        guiItem.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 1);
+                        ItemMeta meta = guiItem.getItemMeta();
+                        if (meta == null) {
+                            meta = Bukkit.getItemFactory().getItemMeta(guiItem.getType());
+                        }
+                        if (meta != null) {
+                            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                            guiItem.setItemMeta(meta);
+                        }
+
+                    }
+
+
+                    category.setGuiItem(guiItem, true);
+                    context.getSender().sendMessage(main.parse(
+                            "<success>GUI Item for Category <highlight>" + category.getCategoryFullName()
+                                    + "</highlight> has been set to <highlight2>" + guiItem.getType().name() + "</highlight2>!"
+                    ));
+
+
                 }));
     }
 

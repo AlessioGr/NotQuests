@@ -22,7 +22,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
+
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.PredefinedProgressOrder;
 import rocks.gravili.notquests.paper.structs.Quest;
@@ -52,6 +55,9 @@ public class Category {
       itemsConfig;
   private Category parentCategory = null;
   private String displayName = "";
+
+  private ItemStack guiItem = new ItemStack(Material.CHEST);
+
 
   public Category(final NotQuests main, final String categoryName, final File categoryFolder) {
     this.main = main;
@@ -322,10 +328,23 @@ public class Category {
     }
   }
 
+
   public void removeDisplayName(boolean save) {
     this.displayName = "";
     if (save) {
       getCategoryConfig().set("displayName", null);
+      saveCategoryConfig();
+    }
+  }
+
+  public final ItemStack getGuiItem() {
+    return guiItem;
+  }
+
+  public void setGuiItem(final ItemStack guiItem, final boolean save) {
+    this.guiItem = guiItem;
+    if (save) {
+      getCategoryConfig().set("guiItem", guiItem);
       saveCategoryConfig();
     }
   }
@@ -392,5 +411,8 @@ public class Category {
     this.predefinedProgressOrder = PredefinedProgressOrder.fromConfiguration(getCategoryConfig(), "predefinedProgressOrder");
 
     this.conversationDelayInMS = getCategoryConfig().getInt("conversations.delay", 0);
+
+    this.guiItem = getCategoryConfig().getItemStack("guiItem", new ItemStack(Material.CHEST));
+
   }
 }

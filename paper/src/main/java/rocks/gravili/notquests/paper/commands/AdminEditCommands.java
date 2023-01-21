@@ -334,7 +334,7 @@ public class AdminEditCommands {
                     }
                 }));
 
-        manager.command(editBuilder.literal("takeItem")
+        manager.command(editBuilder.literal("guiItem")
 
                 .argument(ItemStackSelectionArgument.of("material", main), ArgumentDescription.of("Material of item displayed in the Quest take GUI."))
                 .flag(
@@ -347,29 +347,29 @@ public class AdminEditCommands {
                     final boolean glow = context.flags().isPresent("glow");
 
                     final ItemStackSelection itemStackSelection= context.get("material");
-                    ItemStack takeItem = itemStackSelection.toFirstItemStack();
-                    if (takeItem == null) {
-                        takeItem = new ItemStack(Material.BOOK, 1);
+                    ItemStack guiItem = itemStackSelection.toFirstItemStack();
+                    if (guiItem == null) {
+                        guiItem = new ItemStack(Material.BOOK, 1);
                     }
 
                     if (glow) {
-                        takeItem.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 1);
-                        ItemMeta meta = takeItem.getItemMeta();
+                        guiItem.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 1);
+                        ItemMeta meta = guiItem.getItemMeta();
                         if (meta == null) {
-                            meta = Bukkit.getItemFactory().getItemMeta(takeItem.getType());
+                            meta = Bukkit.getItemFactory().getItemMeta(guiItem.getType());
                         }
                         if (meta != null) {
                             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-                            takeItem.setItemMeta(meta);
+                            guiItem.setItemMeta(meta);
                         }
 
                     }
 
 
-                    quest.setTakeItem(takeItem);
+                    quest.setTakeItem(guiItem);
                     context.getSender().sendMessage(main.parse(
                             "<success>Take Item Material for Quest <highlight>" + quest.getIdentifier()
-                                    + "</highlight> has been set to <highlight2>" + takeItem.getType().name() + "</highlight2>!"
+                                    + "</highlight> has been set to <highlight2>" + guiItem.getType().name() + "</highlight2>!"
                     ));
 
 
