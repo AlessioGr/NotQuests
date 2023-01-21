@@ -73,6 +73,8 @@ public class BetonQuestManager {
           BQConditionsCondition.class); // notquests_requirement requirementtype string int
 
       betonQuest.registerInterceptor("notquests", NotQuestsInterceptor.class);
+
+      main.getLogManager().info("Registered BetonQuest interceptor: notquests");
     }
   }
 

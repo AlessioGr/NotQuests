@@ -6,10 +6,11 @@ import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.betonquest.betonquest.BetonQuest;
-import org.betonquest.betonquest.api.profiles.Profile;
+import org.betonquest.betonquest.api.profiles.OnlineProfile;
 import org.betonquest.betonquest.conversation.Conversation;
 import org.betonquest.betonquest.conversation.Interceptor;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -17,13 +18,13 @@ import rocks.gravili.notquests.paper.NotQuests;
 public class NotQuestsInterceptor implements Interceptor, Listener {
 
   protected final Conversation conv;
-  protected final Profile profile;
+  protected final Player player;
 
   private final NotQuests main;
 
-  public NotQuestsInterceptor(final Conversation conv, final Profile profile) {
+  public NotQuestsInterceptor(final Conversation conv, final OnlineProfile onlineProfile) {
     this.conv = conv;
-    this.profile = profile;
+    this.player = onlineProfile.getPlayer();
     Bukkit.getPluginManager().registerEvents(this, BetonQuest.getInstance());
     main = NotQuests.getInstance();
   }
@@ -41,14 +42,14 @@ public class NotQuestsInterceptor implements Interceptor, Listener {
 
     if (main.getConfiguration().deletePreviousConversations && main.getConversationManager() != null) {
       final ArrayList<Component> hist =
-          main.getConversationManager().getConversationChatHistory().getOrDefault(profile.getProfileUUID(), new ArrayList<>());
+          main.getConversationManager().getConversationChatHistory().getOrDefault(player.getUniqueId(), new ArrayList<>());
 
       hist.add(parsedMessage);
-      main.getConversationManager().getConversationChatHistory().put(profile.getProfileUUID(), hist);
+      main.getConversationManager().getConversationChatHistory().put(player.getUniqueId(), hist);
     }
 
-    if(profile.getPlayer().isOnline()){
-      main.sendMessage(profile.getPlayer().getPlayer(), parsedMessage);
+    if(player.isOnline()){
+      main.sendMessage(player, parsedMessage);
     }
   }
 
@@ -61,14 +62,14 @@ public class NotQuestsInterceptor implements Interceptor, Listener {
 
     if (main.getConfiguration().deletePreviousConversations && main.getConversationManager() != null) {
       final ArrayList<Component> hist =
-          main.getConversationManager().getConversationChatHistory().getOrDefault(profile.getProfileUUID(), new ArrayList<>());
+          main.getConversationManager().getConversationChatHistory().getOrDefault(player.getUniqueId(), new ArrayList<>());
 
       hist.add(parsedMessage);
-      main.getConversationManager().getConversationChatHistory().put(profile.getProfileUUID(), hist);
+      main.getConversationManager().getConversationChatHistory().put(player.getUniqueId(), hist);
     }
 
-    if(profile.getPlayer().isOnline()){
-      main.sendMessage(profile.getPlayer().getPlayer(), parsedMessage);
+    if(player.isOnline()){
+      main.sendMessage(player, parsedMessage);
     }
 
   }
