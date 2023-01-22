@@ -94,6 +94,7 @@ public class Configuration {
   // Particles
   private boolean citizensFocusingEnabled = true;
   private int citizensFocusingRotateTime = 14;
+  private boolean citizensFocusingCancelConversationWhenTooFar = true;
   private int citizensNPCQuestGiverIndicatorParticleSpawnInterval = 10;
   private int citizensNPCQuestGiverIndicatorParticleCount = 1;
   private Particle citizensNPCQuestGiverIndicatorParticleType = Particle.VILLAGER_ANGRY;
@@ -579,6 +580,14 @@ public class Configuration {
 
   public void setCitizensFocusingRotateTime(int citizensFocusingRotateTime) {
     this.citizensFocusingRotateTime = citizensFocusingRotateTime;
+  }
+
+  public boolean isCitizensFocusingCancelConversationWhenTooFar() {
+    return this.citizensFocusingCancelConversationWhenTooFar;
+  }
+
+  public void setCitizensFocusingCancelConversationWhenTooFar(boolean citizensFocusingCancelConversationWhenTooFar) {
+    this.citizensFocusingCancelConversationWhenTooFar = citizensFocusingCancelConversationWhenTooFar;
   }
 
   public int getCitizensNPCQuestGiverIndicatorParticleSpawnInterval() {

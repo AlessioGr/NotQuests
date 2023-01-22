@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.conversation.Conversation;
 import rocks.gravili.notquests.paper.conversation.ConversationPlayer;
@@ -51,7 +52,7 @@ public class ConversationFocus extends BukkitRunnable {
         // Cancel if conversation not active anymore
         assert main.getConversationManager() != null;
         final ConversationPlayer currentOpenConversationPlayer = main.getConversationManager().getOpenConversation(player.getUniqueId());
-        if(currentOpenConversationPlayer == null || currentOpenConversationPlayer.getConversation() == null || !currentOpenConversationPlayer.getConversation().getIdentifier().equals(conversation.getIdentifier()) ) {
+        if (currentOpenConversationPlayer == null || currentOpenConversationPlayer.getConversation() == null || !currentOpenConversationPlayer.getConversation().getIdentifier().equals(conversation.getIdentifier())) {
             this.cancel();
             return;
         }
@@ -61,6 +62,8 @@ public class ConversationFocus extends BukkitRunnable {
         // Cancel if player moves away too far from the original location
         if (this.player.getLocation().subtract(0, this.player.getLocation().getY(), 0).distanceSquared(this.baseLocation) > 0.04) {
             this.cancel();
+            if (main.getConfiguration().isCitizensFocusingCancelConversationWhenTooFar())
+                main.getConversationManager().stopConversation(currentOpenConversationPlayer);
             this.player.removePotionEffect(PotionEffectType.SLOW);
             return;
         }
@@ -84,7 +87,7 @@ public class ConversationFocus extends BukkitRunnable {
         } else if (this.state == FocusState.FOCUSING) {
             this.state = FocusState.DONE;
         }
-        
+
         this.previousLocation = this.player.getLocation();
 
         this.tick++;
@@ -94,9 +97,14 @@ public class ConversationFocus extends BukkitRunnable {
         final float[] newRotations = new float[4];
         newRotations[0] = this.player.getEyeLocation().getYaw();
         newRotations[1] = this.player.getEyeLocation().getPitch();
-        final Location vector = this.entity.getLocation().clone().add(0, this.entity.getHeight() - 0.2, 0).subtract(this.player.getEyeLocation().clone());
-        newRotations[2] = Location.normalizeYaw(vector.getYaw() + 180f);
-        newRotations[3] = vector.getPitch();
+        // - 0.2 : a magic value (get the eye's height of a fake player)
+        Vector entityPosition = this.entity.getLocation().clone().add(0, this.entity.getHeight() - 0.2, 0).toVector();
+        Vector playerPosition = this.player.getEyeLocation().toVector();
+
+        final Vector vector = playerPosition.subtract(entityPosition);
+        // 180f : a magic value (mojang hate geometry)
+        newRotations[2] = Location.normalizeYaw((float) (180f - Math.toDegrees(Math.atan2(vector.getX(), vector.getZ()))));
+        newRotations[3] = Location.normalizePitch((float) Math.toDegrees(Math.atan2(vector.getY(), Math.sqrt(vector.getX() * vector.getX() + vector.getZ() * vector.getZ()))));
         return newRotations;
     }
 

@@ -650,6 +650,13 @@ public class DataManager {
                 "Time to rotate the head to the NPC. This is in double ticks. 10 double ticks = 1 second."
         ));
 
+        configuration.setCitizensFocusingEnabled(getGeneralConfigBoolean(
+                "visual.citizensnpc.focusing.cancel-conversation-when-leaving",
+                true,
+                "If player is moving too far, the conversation is stopped."
+        ));
+
+
         //NPC particles Citizens
         configuration.setCitizensNPCQuestGiverIndicatorParticleEnabled(getGeneralConfigBoolean(
                 "visual.citizensnpc.quest-giver-indicator-particle.enabled",
