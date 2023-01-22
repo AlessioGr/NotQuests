@@ -41,6 +41,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.conversation.Conversation;
+import rocks.gravili.notquests.paper.managers.npc.ConversationFocus;
 import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.managers.npc.NQNPCID;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
@@ -260,6 +261,7 @@ public class CitizensEvents implements Listener {
             final Conversation foundConversation = main.getConversationManager().getConversationForNPC(nqNPC);
             if (foundConversation != null) {
                 main.getConversationManager().playConversation(questPlayer, foundConversation);
+                new ConversationFocus(player, npc.getEntity()).runTaskTimer(main.getMain(), 0, 2);
             }
         }
     }
