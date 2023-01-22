@@ -1,69 +1,71 @@
 ---
 chat:
-  wrong-command-usage: <error>Wrong command usage!
-  missing-permission: '<error>No permission! Required permission node: <highlight>%PERMISSION%'
-  too-many-arguments: <error>Too many arguments!
+  wrong-command-usage: <error>Uso del comando errato!
+  missing-permission: '<error>Nessun permesso! Nodo di permesso richiesto: <highlight>%PERMISSION%'
+  too-many-arguments: <error>Troppi argomenti!
   quest-successfully-accepted: |2
 
-    <CENTER><main>[Quest Accepted]
+    <CENTER><main>[Missione accettata]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
-  quest-description: '<main>Quest description: <unimportant>%QUESTDESCRIPTION%'
-  quest-already-accepted: <error>Quest already accepted.
+  quest-description: '<main>Descrizione della missione: <unimportant>%QUESTDESCRIPTION%'
+  quest-already-accepted: <error>Missione già accettata.
   quest-failed: |2
 
-    <CENTER><negative>[Quest Failed]
+    <CENTER><negative>[Missione fallita]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
   quest-aborted: ''
   quest-completed-and-rewards-given: |2
 
-    <CENTER><positive>[Quest Completed]
+    <CENTER><positive>[Missione Completata]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
-  quest-completed-rewards-prefix: '    <highlight>Rewards:'
+  quest-completed-rewards-prefix: '    <highlight>Ricompense:'
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
-  quest-not-all-requirements-fulfilled: '<negative>You do not fulfill all the requirements this quest needs! Requirement still needed:'
-  action-not-all-conditions-fulfilled: '<negative>You do not fulfill all the conditions this action needs! Conditions still needed:'
-  missing-quest-description: <unimportant>This quest has no quest description.
-  objectives-label-after-quest-accepting: '<highlight>Objectives:'
+  quest-not-all-requirements-fulfilled: '<negative>Non soddisfi tutti i requisiti richiesti da questa missione! Requisiti richiesti:'
+  action-not-all-conditions-fulfilled: '<negative>Non soddisfi tutte le condizioni di cui questa azione ha bisogno! Condizioni ancora necessarie:'
+  missing-quest-description: <unimportant>Questa missione non ha alcuna descrizione.
+  objectives-label-after-quest-accepting: '<highlight>Obbiettivi:'
   questpoints:
-    query: <main>You currently have <highlight>%QUESTPOINTS%</highlight> quest points.
-    none: <error>Seems like you don't have any quest points!
+    query: <main>Al momento hai <highlight>%QUESTPOINTS%</highlight> punti missione.
+    none: <error>Sembra che tu non abbia punti di missione!
     notify-when-changed:
-      set: '<main>Your quest points have been set to <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.'
-      add: '<highlight>+%QUESTPOINTSTOADD% <success>quest points!'
-      remove: '<highlight>-%QUESTPOINTSTOREMOVE% <negative>quest points!'
-  no-quests-accepted: <error>Seems like you don't have any active quests!
-  quest-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> does not exist!
-  quest-not-found-or-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> not found or not active!
-  active-quests-label: '<highlight>Active quests:'
-  take-disabled: <error>Accepting or previewing the quest <highlight>%QUESTNAME%</highlight> is disabled.
-  abort-disabled: <error>Aborting the quest <highlight>%QUESTNAME%</highlight> is disabled.
-  quest-not-active-error: '<error>Error: <highlight>%QUESTNAME%</highlight> is not an active Quest!'
-  force-add-active-quest-accepted: '<success>Successfully accepted the quest (Forced).'
-  add-active-quest-player-object-not-found: '<warn>Error: Player object not found. Please report this to the plugin developer.'
-  reached-max-accepts-limit: '<red>You have finished this quests too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
-  reached-max-active-quests-per-player-limit: '<red>You can not accept more than <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> Quests.'
+      set: '<main>I tuoi punti missione sono stati impostati a <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.'
+      add: '<highlight>+%QUESTPOINTSTOADD% <success>punti missione!'
+      remove: '<highlight>-%QUESTPOINTSTOREMOVE% <negative>punti missione!'
+  no-quests-accepted: <error>Sembra che tu non abbia nessuna missione attiva!
+  quest-does-not-exist: <error>Missione <highlight>%QUESTNAME%</highlight> inesistente!
+  quest-not-found-or-does-not-exist: <error>Missione <highlight>%QUESTNAME%</highlight> non trovata o non attiva!
+  active-quests-label: '<highlight>Missioni attive:'
+  take-disabled: <error>Accettare o visualizzare in anteprima la missione <highlight>%QUESTNAME%</highlight> è disabilitato.
+  abort-disabled: <error>L'interruzione della missione <highlight>%QUESTNAME%</highlight> è disabilitata.
+  quest-not-active-error: '<error>Errore: <highlight>%QUESTNAME%</highlight> non è una missione attiva!'
+  force-add-active-quest-accepted: '<success>La missione è stata accettata con successo (forzata).'
+  add-active-quest-player-object-not-found: 'Errore <warn>: oggetto giocatore non trovato. Si prega di segnalarlo allo sviluppatore del plugin.'
+  reached-max-accepts-limit: '<red>You have accepted this quest too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%ACCEPTEDAMOUNT%</highlight> times.'
+  reached-max-fails-limit: '<red>You have failed this quest too many times already. You can only fail it <highlight>%MAXFAILS%</highlight> times, but you have already failed it <highlight>%FAILEDAMOUNT%</highlight> times.'
+  reached-max-completions-limit: '<red>You have completed this quest too many times already. You can only complete it <highlight>%MAXCOMPLETIONS%</highlight> times, but you have already completed it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
+  reached-max-active-quests-per-player-limit: '<red>Non puoi accettare più di <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> Missioni.'
   quest-on-cooldown:
-    minute: '<red>This quest is on a cooldown! You have to wait another <highlight>1 minute</highlight> until you can take it again.'
-    minutes: '<red>This quest is on a cooldown! You have to wait another <highlight>%MINUTES% minutes</highlight> until you can take it again.'
-    hour: '<red>This quest is on a cooldown! You have to wait another <highlight>1 hour</highlight> until you can take it again.'
-    hours: '<red>This quest is on a cooldown! You have to wait another <highlight>%HOURS% hours</highlight> until you can take it again.'
-    day: '<red>This quest is on a cooldown! You have to wait another <highlight>1 day</highlight> until you can take it again.'
-    days: '<red>This quest is on a cooldown! You have to wait another <highlight>%DAYS% days</highlight> until you can take it again.'
+    minute: '<red>Questa missione è in fase di ricarica! Devi aspettare un altro <highlight>minuto</highlight> fino a quando non potrai riprenderla.'
+    minutes: '<red>Questa missione è in fase di ricarica! Devi aspettare altri <highlight>%MINUTES% minuti</highlight> fino a quando non puoi prenderla di nuovo.'
+    hour: '<red>Questa missione è in fase di ricarica! Devi aspettare un''altra <highlight>ora</highlight> fino a quando non potrai riprenderla.'
+    hours: '<red>Questa missione è in fase di ricarica! Devi aspettare <highlight>%HOURS% ore</highlight> fino a quando non potrai prenderla di nuovo.'
+    day: '<red>Questa missione è in fase di ricarica! Devi aspettare un altro <highlight>giorno</highlight> fino a quando non potrai riprenderla.'
+    days: '<red>Questa missione è in fase di raffreddamento! Devi aspettare<highlight>%DAYS% giorni</highlight> fino a quando non potrai riprenderla.'
   profiles:
-    list-current: '<highlight>Current profile: <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
-    list-other-heading: '<highlight>Other profiles:'
-    list-other-none: '  <main>You have no more profiles.'
-    list-other: '  <highlight>- <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
-    change-same-profile: '<error>You are already using that profile!'
-    change-profile-doesnt-exist: '<error>That profile does not exist.'
-    changed-successfully: '<success>You have successfully changed your profile from %OLDPROFILENAME% to <highlight>%NEWPROFILENAME%</highlight>!'
-    create-already-exists: '<error>A profile with the name <highlight>%NEWPROFILENAME%</highlight> already exists.'
-    create-invalid-characters: '<error>The profile name you provided contains invalid characters.'
-    created-successfully: '<success>You have successfully created the profile <highlight>%NEWPROFILENAME%</highlight>! To switch to it, use <highlight2>/nq profile change %NEWPROFILENAME%</highlight2>'
+    list-current: '<highlight>Profilo attuale: <main>%PROFILENAME% (%QUESTPOINTS% punti missione)'
+    list-other-heading: '<highlight>Altri profili:'
+    list-other-none: '  <main>Non hai altri profili.'
+    list-other: '  <highlight>- <main>%PROFILENAME% (%QUESTPOINTS% punti missione)'
+    change-same-profile: '<error>Stai già usando questo profilo!'
+    change-profile-doesnt-exist: '<error>Questo profilo non esiste.'
+    changed-successfully: '<success>Hai cambiato con successo il tuo profilo da %OLDPROFILENAME% a <highlight>%NEWPROFILENAME%</highlight>!'
+    create-already-exists: '<error>Un profilo con il nome <highlight>%NEWPROFILENAME%</highlight> esiste già.'
+    create-invalid-characters: '<error>Il nome del profilo fornito contiene caratteri non validi.'
+    created-successfully: '<success>Hai creato con successo il profilo <highlight>%NEWPROFILENAME%</highlight>! Per passare ad esso, usa <highlight2>/nq profile change %NEWPROFILENAME%</highlight2>'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>

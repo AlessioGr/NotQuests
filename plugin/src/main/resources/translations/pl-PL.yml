@@ -44,7 +44,9 @@ chat:
   quest-not-active-error: '<error>Błąd: <highlight>%QUESTNAME%</highlight> nie jest aktywnym questem!'
   force-add-active-quest-accepted: '<success>Pomyślnie zaakceptował zadanie (siła).'
   add-active-quest-player-object-not-found: '<warn>Błąd: Nie znaleziono obiektu gracza. Proszę zgłosić to do twórcy wtyczki.'
-  reached-max-accepts-limit: '<red>Już skończyłeś te zadania zbyt wiele razy. Możesz zaakceptować tylko <highlight>%MAXACCEPTS%</highlight> razy, ale już zaakceptowałeś to <highlight>%COMPLETEDAMOUNT%</highlight> razy.'
+  reached-max-accepts-limit: '<red>You have accepted this quest too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%ACCEPTEDAMOUNT%</highlight> times.'
+  reached-max-fails-limit: '<red>You have failed this quest too many times already. You can only fail it <highlight>%MAXFAILS%</highlight> times, but you have already failed it <highlight>%FAILEDAMOUNT%</highlight> times.'
+  reached-max-completions-limit: '<red>You have completed this quest too many times already. You can only complete it <highlight>%MAXCOMPLETIONS%</highlight> times, but you have already completed it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
   reached-max-active-quests-per-player-limit: '<red>Nie możesz zaakceptować więcej niż <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> Zadań.'
   quest-on-cooldown:
     minute: '<red>To zadanie ma odnowienie! Musisz poczekać jeszcze <highlight>1 minutę</highlight>, aby odebrać je ponownie.'

@@ -44,7 +44,9 @@ chat:
   quest-not-active-error: '<error>Greška: <highlight>%QUESTNAME%</highlight> nije aktivna istraga!'
   force-add-active-quest-accepted: '<success>Uspješno prihvaćena istraga (Natjerano).'
   add-active-quest-player-object-not-found: '<warn>Greška: Objekt igrača nije pronađen. Molimo prijavite ovo developeru dodatka.'
-  reached-max-accepts-limit: '<red>Previše si puta završio ovu istragu. Možeš je prihvatiti <highlight>%MAXACCEPTS%</highlight> puta, a ti si je prihvatio <highlight>%COMPLETEDAMOUNT%</highlight> puta.'
+  reached-max-accepts-limit: '<red>You have accepted this quest too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%ACCEPTEDAMOUNT%</highlight> times.'
+  reached-max-fails-limit: '<red>You have failed this quest too many times already. You can only fail it <highlight>%MAXFAILS%</highlight> times, but you have already failed it <highlight>%FAILEDAMOUNT%</highlight> times.'
+  reached-max-completions-limit: '<red>You have completed this quest too many times already. You can only complete it <highlight>%MAXCOMPLETIONS%</highlight> times, but you have already completed it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
   reached-max-active-quests-per-player-limit: '<red>Ne možeš prihvatiti više od <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> istraga.'
   quest-on-cooldown:
     minute: '<red>Ova istraga je na hlađenju. Moraš čekati još <highlight>1 minutu</highlight> dok je ne možeš ponovno uzeti.'

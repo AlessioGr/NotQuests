@@ -44,7 +44,9 @@ chat:
   quest-not-active-error: '<error>エラー: <highlight>%QUESTNAME%</highlight> はアクティブなクエストではありません！'
   force-add-active-quest-accepted: '<success>は任務を承認しました（強制）。'
   add-active-quest-player-object-not-found: '<warn>エラー：プレイヤーオブジェクトが見つかりません。プラグイン開発者に報告してください。'
-  reached-max-accepts-limit: '<red>このクエストは既に何度も完了しています。 あなたはそれを受け入れることができます <red> <highlight>%MAXACCEPTS%</highlight> 回のみ。 しかし、あなたはすでに <highlight>%COMPLETEDAMOUNT%回受け入れています</highlight>'
+  reached-max-accepts-limit: '<red>You have accepted this quest too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%ACCEPTEDAMOUNT%</highlight> times.'
+  reached-max-fails-limit: '<red>You have failed this quest too many times already. You can only fail it <highlight>%MAXFAILS%</highlight> times, but you have already failed it <highlight>%FAILEDAMOUNT%</highlight> times.'
+  reached-max-completions-limit: '<red>You have completed this quest too many times already. You can only complete it <highlight>%MAXCOMPLETIONS%</highlight> times, but you have already completed it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
   reached-max-active-quests-per-player-limit: '<red> <highlight>%MAXACTIVEQUESTSPERPLAYER%個以上のクエストを受け付けることはできません</highlight>'
   quest-on-cooldown:
     minute: '<red>このクエストはクールダウン中です！また受け取れるまであと <highlight>１分</highlight> 待つ必要があります。'

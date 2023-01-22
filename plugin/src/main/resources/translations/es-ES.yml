@@ -44,7 +44,9 @@ chat:
   quest-not-active-error: '<error>Error: ¡<highlight>%QUESTNAME%</highlight> no es una misión activa!'
   force-add-active-quest-accepted: '<success>Se aceptó con éxito la misión (Forzada).'
   add-active-quest-player-object-not-found: '<warn>Error: El objeto del jugador no se encuentra. Por favor reporta esto al desarrollador del plugin.'
-  reached-max-accepts-limit: '<red>Tu ya terminaste esta mision muchas veces. Tu solo puedes aceptar esta misión <highlight>%MAXACCEPTS%</highlight> veces, pero ya lo has terminado <highlight>%COMPLETEDAMOUNT%</highlight> veces.'
+  reached-max-accepts-limit: '<red>You have accepted this quest too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%ACCEPTEDAMOUNT%</highlight> times.'
+  reached-max-fails-limit: '<red>You have failed this quest too many times already. You can only fail it <highlight>%MAXFAILS%</highlight> times, but you have already failed it <highlight>%FAILEDAMOUNT%</highlight> times.'
+  reached-max-completions-limit: '<red>You have completed this quest too many times already. You can only complete it <highlight>%MAXCOMPLETIONS%</highlight> times, but you have already completed it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
   reached-max-active-quests-per-player-limit: '<red>No puede aceptar más de <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> Misiones.'
   quest-on-cooldown:
     minute: '<red>¡Esta misión esta esta con tiempo de espera! Tienes que esperar <highlight>1 minuto</highlight> antes de hacer otra vez la mision.'

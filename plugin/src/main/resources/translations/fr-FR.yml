@@ -44,7 +44,9 @@ chat:
   quest-not-active-error: '<error>Erreur : <highlight>%QUESTNAME%</highlight> n''est pas une quête active !'
   force-add-active-quest-accepted: '<success>Quête acceptée avec succès (Forcé).'
   add-active-quest-player-object-not-found: '<warn>Erreur : Objet joueur introuvable (Player object not found). Merci d''aviser le développeur du plugin.'
-  reached-max-accepts-limit: '<red>Vous avez déjà complété cette quête trop souvent. Vous ne pouvez seulement l''accepter <highlight>%MAXACCEPTS%</highlight> fois, mais vous l''avez acceptée <highlight>%COMPLETEDAMOUNT%</highlight> fois.'
+  reached-max-accepts-limit: '<red>You have accepted this quest too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%ACCEPTEDAMOUNT%</highlight> times.'
+  reached-max-fails-limit: '<red>You have failed this quest too many times already. You can only fail it <highlight>%MAXFAILS%</highlight> times, but you have already failed it <highlight>%FAILEDAMOUNT%</highlight> times.'
+  reached-max-completions-limit: '<red>You have completed this quest too many times already. You can only complete it <highlight>%MAXCOMPLETIONS%</highlight> times, but you have already completed it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
   reached-max-active-quests-per-player-limit: '<red>Vous ne pouvez pas accepter plus de <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> quêtes.'
   quest-on-cooldown:
     minute: '<red>Cette quête est en attente ! Vous devez patienter encore <highlight>1 minute</highlight> avant de pouvoir l''accepter à nouveau.'

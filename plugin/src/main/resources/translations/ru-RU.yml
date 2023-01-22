@@ -44,7 +44,9 @@ chat:
   quest-not-active-error: '<error>Ошибка: <highlight>%QUESTNAME%</highlight> не является активным квестом!'
   force-add-active-quest-accepted: '<success>Квест успешно принят (Принудительно).'
   add-active-quest-player-object-not-found: '<warn>Ошибка: Объект игрока не найден. Пожалуйста, сообщите об этом разработчику плагина.'
-  reached-max-accepts-limit: '<red>Вы уже слишком много раз выполнили это задание. Вы можете принять его только <highlight>%MAXACCEPTS%</highlight> раз(а), а вы уже приняли его <highlight>%COMPLETEDAMOUNT%</highlight> раз.'
+  reached-max-accepts-limit: '<red>You have accepted this quest too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%ACCEPTEDAMOUNT%</highlight> times.'
+  reached-max-fails-limit: '<red>You have failed this quest too many times already. You can only fail it <highlight>%MAXFAILS%</highlight> times, but you have already failed it <highlight>%FAILEDAMOUNT%</highlight> times.'
+  reached-max-completions-limit: '<red>You have completed this quest too many times already. You can only complete it <highlight>%MAXCOMPLETIONS%</highlight> times, but you have already completed it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
   reached-max-active-quests-per-player-limit: '<red>Вы не можете принять больше <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> квестов.'
   quest-on-cooldown:
     minute: '<red>Данное задание на откате! Подождите <highlight>1 минуту</highlight> до тех пор, пока вы не сможете взять его снова.'

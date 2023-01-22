@@ -44,7 +44,9 @@ chat:
   quest-not-active-error: '<error>錯誤: <highlight>%QUESTNAME%</highlight> 不是一個進行中的任務!'
   force-add-active-quest-accepted: '<success>已接受任務 (強制).'
   add-active-quest-player-object-not-found: '<warn>錯誤: 未搜尋到玩家. 請向插件開發人員回報.'
-  reached-max-accepts-limit: '<red>你已經到達該任務的完成次數上限. 你知能接受該任務 <highlight>%MAXACCEPTS%</highlight> 次, 但你已經接受該任務 <highlight>%COMPLETEDAMOUNT%</highlight> 次.'
+  reached-max-accepts-limit: '<red>You have accepted this quest too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%ACCEPTEDAMOUNT%</highlight> times.'
+  reached-max-fails-limit: '<red>You have failed this quest too many times already. You can only fail it <highlight>%MAXFAILS%</highlight> times, but you have already failed it <highlight>%FAILEDAMOUNT%</highlight> times.'
+  reached-max-completions-limit: '<red>You have completed this quest too many times already. You can only complete it <highlight>%MAXCOMPLETIONS%</highlight> times, but you have already completed it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
   reached-max-active-quests-per-player-limit: '<red>您最多只能同時接受 <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> 個任務.'
   quest-on-cooldown:
     minute: '<red>任務還在冷卻中! 你需要再等待 <highlight>1 分鐘</highlight> 才能再次接受該任務.'

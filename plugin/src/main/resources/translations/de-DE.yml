@@ -44,7 +44,9 @@ chat:
   quest-not-active-error: '<error>Fehler: <highlight>%QUESTNAME% <error>ist keine aktive Quest!'
   force-add-active-quest-accepted: '<success>Quest erfolgreich angenommen (Erzwungen).'
   add-active-quest-player-object-not-found: '<warn>Fehler. Spieler nicht gefunden. Bitte melde das an den Plugin-Entwickler.'
-  reached-max-accepts-limit: '<red>Du hast diese Quest schon zu oft abgeschlossen. Du darfst sie nur <highlight>%MAXACCEPTS%</highlight> mal abschließen, aber du hast sie schon <highlight>%COMPLETEDAMOUNT%</highlight> mal abgeschlossen.'
+  reached-max-accepts-limit: '<red>You have accepted this quest too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%ACCEPTEDAMOUNT%</highlight> times.'
+  reached-max-fails-limit: '<red>You have failed this quest too many times already. You can only fail it <highlight>%MAXFAILS%</highlight> times, but you have already failed it <highlight>%FAILEDAMOUNT%</highlight> times.'
+  reached-max-completions-limit: '<red>You have completed this quest too many times already. You can only complete it <highlight>%MAXCOMPLETIONS%</highlight> times, but you have already completed it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
   reached-max-active-quests-per-player-limit: '<red>Du darfst nicht mehr als <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> Quests gleichzeitig aktiv haben.'
   quest-on-cooldown:
     minute: '<red>Diese Quest ist auf Abklingzeit! Du musst noch <highlight>1 Minute</highlight> warten, bis du sie annehmen kannst.'

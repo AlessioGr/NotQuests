@@ -40,11 +40,13 @@ chat:
   quest-not-found-or-does-not-exist: <error>任务 <highlight>%QUESTNAME%</highlight> 不存在或还未开始!
   active-quests-label: '<highlight>进行中的任务:'
   take-disabled: <error>你不能接受或预览任务 <highlight>%QUESTNAME%</highlight>.
-  abort-disabled: <error>Aborting the quest <highlight>%QUESTNAME%</highlight> is disabled.
+  abort-disabled: <error>终止任务 <highlight>%QUESTNAME%</highlight> 已禁用.
   quest-not-active-error: '<error>错误: <highlight>%QUESTNAME%</highlight> 好像还没有开始!'
   force-add-active-quest-accepted: '<success>已接受任务 (强制).'
   add-active-quest-player-object-not-found: '<warn>错误: 未找到玩家. 请向服务器管理员报告.'
-  reached-max-accepts-limit: '<red>你已达到任务完成次数上限. 你只能接受 <highlight>%MAXACCEPTS%</highlight> 次这个任务, 但你已经接受该任务 <highlight>%COMPLETEDAMOUNT%</highlight> 次.'
+  reached-max-accepts-limit: '<red>你已经接受这个任务太多次了. 你只能接受 <highlight>%MAXACCEPTS%</highlight> 次, 但你已经接受了 <highlight>%ACCEPTEDAMOUNT%</highlight> 次.'
+  reached-max-fails-limit: '<red>你已经在这个任务上失败太多次了. 你只能失败 <highlight>%MAXFAILS%</highlight> 次, 但你已经失败了 <highlight>%FAILEDAMOUNT%</highlight> 次.'
+  reached-max-completions-limit: '<red>你已经完成这个任务太多次了. 你只能完成 <highlight>%MAXCOMPLETIONS%</highlight> 次, 但你已经完成了 <highlight>%COMPLETEDAMOUNT%</highlight> 次.'
   reached-max-active-quests-per-player-limit: '<red>您最多同时接受 <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> 个任务.'
   quest-on-cooldown:
     minute: '<red>任务冷却中! 您还需要等待 <highlight>1 分钟</highlight> 才能接受该任务.'
@@ -54,16 +56,16 @@ chat:
     day: '<red>任务冷却中! 您还需要等待 <highlight>1 天</highlight> 才能接受该任务.'
     days: '<red>任务冷却中! 您还需要等待 <highlight>%DAYS% 天</highlight> 才能接受该任务.'
   profiles:
-    list-current: '<highlight>Current profile: <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
-    list-other-heading: '<highlight>Other profiles:'
-    list-other-none: '  <main>You have no more profiles.'
-    list-other: '  <highlight>- <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
-    change-same-profile: '<error>You are already using that profile!'
-    change-profile-doesnt-exist: '<error>That profile does not exist.'
-    changed-successfully: '<success>You have successfully changed your profile from %OLDPROFILENAME% to <highlight>%NEWPROFILENAME%</highlight>!'
-    create-already-exists: '<error>A profile with the name <highlight>%NEWPROFILENAME%</highlight> already exists.'
-    create-invalid-characters: '<error>The profile name you provided contains invalid characters.'
-    created-successfully: '<success>You have successfully created the profile <highlight>%NEWPROFILENAME%</highlight>! To switch to it, use <highlight2>/nq profile change %NEWPROFILENAME%</highlight2>'
+    list-current: '<highlight>当前个人资料: <main>%PROFILENAME% (%QUESTPOINTS% 任务点数)'
+    list-other-heading: '<highlight>其它个人资料:'
+    list-other-none: '  <main>你没有其它个人资料.'
+    list-other: '  <highlight>- <main>%PROFILENAME% (%QUESTPOINTS% 任务点数)'
+    change-same-profile: '<error>你已经在使用这个个人资料了!'
+    change-profile-doesnt-exist: '<error>这个个人资料不存在.'
+    changed-successfully: '<success>你成功将个人资料由 %OLDPROFILENAME% 切换到了 <highlight>%NEWPROFILENAME%</highlight>!'
+    create-already-exists: '<error>一个名为 <highlight>%NEWPROFILENAME%</highlight> 的个人资料已经存在了.'
+    create-invalid-characters: '<error>个人资料名称包含无效字符.'
+    created-successfully: '<success>你成功创建了个人资料 <highlight>%NEWPROFILENAME%</highlight>! 想要切换个人资料, 使用<highlight2>/nq profile change %NEWPROFILENAME%</highlight2>'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>
@@ -77,8 +79,8 @@ chat:
     counterForObjectiveObjective: '<highlight>%OBJECTIVEIDWITHSUBID%.</highlight> <main>%OBJECTIVEHOLDERNAME%:'
     subObjectivePrefixAppend: '    '
     hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[已隐藏]
-    description: '    <veryUnimportant>└─ <unimportant>Description: <main>%OBJECTIVEDESCRIPTION%'
-    progress: '    <veryUnimportant>└─ <unimportant>Progress: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
+    description: '    <veryUnimportant>└─ <unimportant>描述: <main>%OBJECTIVEDESCRIPTION%'
+    progress: '    <veryUnimportant>└─ <unimportant>进度: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
     successfully-completed: |2
 
       <CENTER><success>[目标已完成]
@@ -96,7 +98,7 @@ chat:
       breed:
         base: '繁殖生物：<main>%ENTITYTOBREED%'
       pickupItems:
-        base: 'Pickup Items: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
+        base: '捡拾物品: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
       consumeItems:
         base: '消耗物品：<main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
@@ -119,7 +121,7 @@ chat:
         base: '到达任务地点：<main>%LOCATIONNAME%'
       talkToNPC:
         base: '与 <main>%NAME% <unimportant>对话'
-        npc-not-available: '    <GRAY>The target NPC is currently not available!'
+        npc-not-available: '    <GRAY>目标NPC当前不可用!'
       triggerCommand:
         base: '目标：<main>%TRIGGERNAME%'
       killEliteMobs:

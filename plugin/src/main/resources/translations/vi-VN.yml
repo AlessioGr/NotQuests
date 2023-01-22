@@ -38,7 +38,9 @@ chat:
   quest-not-active-error: '<error>Lỗi: <highlight>%QUESTNAME% <error>nhiệm vụ chưa được hoạt động!'
   force-add-active-quest-accepted: '<success>Đã chập nhận thành công nhiệm vụ (Bắt buộc).'
   add-active-quest-player-object-not-found: '<warn>Lỗi: Không tìm thấy người chơi. Vui lòng báo cáo điều này cho nhà phát triển plugin.'
-  reached-max-accepts-limit: "<red>Bạn đã hoàn thành nhiệm vụ này quá nhiều lần rồi. Bạn chỉ có thể chấp nhận nó\n<highlight>%MAXACCEPTS%</highlight> lần, nhưng bạn đã chấp nhận nó rồi\n<highlight>%COMPLETEDAMOUNT%</highlight>lần thành công."
+  reached-max-accepts-limit: '<red>You have accepted this quest too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%ACCEPTEDAMOUNT%</highlight> times.'
+  reached-max-fails-limit: '<red>You have failed this quest too many times already. You can only fail it <highlight>%MAXFAILS%</highlight> times, but you have already failed it <highlight>%FAILEDAMOUNT%</highlight> times.'
+  reached-max-completions-limit: '<red>You have completed this quest too many times already. You can only complete it <highlight>%MAXCOMPLETIONS%</highlight> times, but you have already completed it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
   reached-max-active-quests-per-player-limit: '<red>Bạn không thể chấp nhận nhiều hơn <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> nhiệm vụ.'
   quest-on-cooldown:
     minute: '<red>Nhiệm vụ này đang trong thời gian chờ! Bạn phải đợi khoảng <highlight>1 phút</highlight> cho đến khi bạn có thể làm nhiệm vụ đó.'
