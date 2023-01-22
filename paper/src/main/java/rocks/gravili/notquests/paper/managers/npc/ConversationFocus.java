@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import rocks.gravili.notquests.paper.NotQuests;
 
 import java.util.Arrays;
 
@@ -21,14 +22,14 @@ public class ConversationFocus extends BukkitRunnable {
     private int tick;
     private final float tickToRotate;
 
-    public ConversationFocus(Player player, Entity entity) {
+    public ConversationFocus(NotQuests main, Player player, Entity entity) {
         this.player = player;
         this.baseLocation = player.getLocation().clone();
         this.baseLocation.setY(0d);
         this.previousLocation = player.getLocation().clone();
         this.entity = entity;
         this.state = FocusState.FOCUSING;
-        this.tickToRotate = 7f;
+        this.tickToRotate = main.getDataManager().getConfiguration().getCitizensFocusingRotateTime() / 2f;
         this.getRotation();
     }
 

@@ -261,7 +261,8 @@ public class CitizensEvents implements Listener {
             final Conversation foundConversation = main.getConversationManager().getConversationForNPC(nqNPC);
             if (foundConversation != null) {
                 main.getConversationManager().playConversation(questPlayer, foundConversation);
-                new ConversationFocus(player, npc.getEntity()).runTaskTimer(main.getMain(), 0, 2);
+                if (main.getDataManager().getConfiguration().isCitizensFocusingEnabled())
+                    new ConversationFocus(main, player, npc.getEntity()).runTaskTimer(main.getMain(), 0, 2);
             }
         }
     }
