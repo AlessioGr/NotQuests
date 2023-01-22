@@ -92,6 +92,8 @@ public class Configuration {
   private int maxActiveQuestsPerPlayer = -1;
   private boolean armorStandPreventEditing = true;
   // Particles
+  private boolean citizensFocusingEnabled = true;
+  private int citizensFocusingRotateTime = 14;
   private int citizensNPCQuestGiverIndicatorParticleSpawnInterval = 10;
   private int citizensNPCQuestGiverIndicatorParticleCount = 1;
   private Particle citizensNPCQuestGiverIndicatorParticleType = Particle.VILLAGER_ANGRY;
@@ -561,6 +563,22 @@ public class Configuration {
 
   public void setUpdateCheckerNotifyOpsInChat(boolean updateCheckerNotifyOpsInChat) {
     this.updateCheckerNotifyOpsInChat = updateCheckerNotifyOpsInChat;
+  }
+
+  public boolean isCitizensFocusingEnabled() {
+    return this.citizensFocusingEnabled;
+  }
+
+  public void setCitizensFocusingEnabled(boolean citizensFocusingEnabled) {
+    this.citizensFocusingEnabled = citizensFocusingEnabled;
+  }
+
+  public int getCitizensFocusingRotateTime() {
+    return this.citizensFocusingRotateTime;
+  }
+
+  public void setCitizensFocusingRotateTime(int citizensFocusingRotateTime) {
+    this.citizensFocusingRotateTime = citizensFocusingRotateTime;
   }
 
   public int getCitizensNPCQuestGiverIndicatorParticleSpawnInterval() {

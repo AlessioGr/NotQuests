@@ -638,6 +638,18 @@ public class DataManager {
                 "The language of NotQuests. Examples: 'en-US', 'de-DE'. Check the plugins/NotQuests/languages folder for available languages"
         ));
 
+        configuration.setCitizensFocusingEnabled(getGeneralConfigBoolean(
+                "visual.citizensnpc.focusing.enabled",
+                true,
+                "Better NPC interaction. If this is set to true, the player will look at the NPC when they talk to it."
+        ));
+
+        configuration.setCitizensFocusingRotateTime(getGeneralConfigInt(
+                "visual.citizensnpc.focusing.rotate-time",
+                14,
+                "Time to rotate the head to the NPC. This is in double ticks. 10 double ticks = 1 second."
+        ));
+
         //NPC particles Citizens
         configuration.setCitizensNPCQuestGiverIndicatorParticleEnabled(getGeneralConfigBoolean(
                 "visual.citizensnpc.quest-giver-indicator-particle.enabled",

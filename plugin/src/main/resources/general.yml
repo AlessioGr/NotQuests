@@ -101,6 +101,9 @@ visual:
     max-previous-arguments-displayed: 2
   #This controls the particle above the heads of Citizen NPCs with Quests attached to them
   citizensnpc:
+    focusing:
+      enabled: true
+      rotate-time: 14
     quest-giver-indicator-particle:
       enabled: true
       type: VILLAGER_ANGRY
