@@ -169,7 +169,7 @@ public class ConversationManager {
       stopConversation(openConversation);
     }
 
-    ConversationPlayer conversationPlayer =
+    final ConversationPlayer conversationPlayer =
         new ConversationPlayer(main, questPlayer, player, conversation);
     openConversations.put(questPlayer.getUniqueId(), conversationPlayer);
 

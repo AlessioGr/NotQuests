@@ -7,12 +7,14 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.conversation.Conversation;
+import rocks.gravili.notquests.paper.conversation.ConversationPlayer;
 
 import java.util.Arrays;
 
 public class ConversationFocus extends BukkitRunnable {
 
-
+    private final NotQuests main;
     private final Player player;
     private final Location baseLocation;
     private Location previousLocation;
@@ -22,7 +24,12 @@ public class ConversationFocus extends BukkitRunnable {
     private int tick;
     private final float tickToRotate;
 
-    public ConversationFocus(NotQuests main, Player player, Entity entity) {
+    private final PotionEffect potionEffect;
+
+    private final Conversation conversation;
+
+    public ConversationFocus(final NotQuests main, final Player player, final Entity entity, final Conversation conversation) {
+        this.main = main;
         this.player = player;
         this.baseLocation = player.getLocation().clone();
         this.baseLocation.setY(0d);
@@ -30,7 +37,10 @@ public class ConversationFocus extends BukkitRunnable {
         this.entity = entity;
         this.state = FocusState.FOCUSING;
         this.tickToRotate = main.getDataManager().getConfiguration().getCitizensFocusingRotateTime() / 2f;
-        this.getRotation();
+        this.rotations = this.getRotation();
+        this.conversation = conversation;
+
+        this.potionEffect = new PotionEffect(PotionEffectType.SLOW, 4, 2, false, false);
     }
 
     @Override
@@ -39,7 +49,16 @@ public class ConversationFocus extends BukkitRunnable {
             this.cancel();
             return;
         }
-        this.player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 4, 2, false, false));
+
+        // Cancel if conversation not active anymore
+        final ConversationPlayer currentOpenConversationPlayer = main.getConversationManager().getOpenConversation(player.getUniqueId());
+        if(currentOpenConversationPlayer == null || currentOpenConversationPlayer.getConversation() == null || currentOpenConversationPlayer.getConversation().getIdentifier() != conversation.getIdentifier() ) {
+            this.cancel();
+            return;
+        }
+
+
+        this.player.addPotionEffect(potionEffect);
         if (this.player.getLocation().subtract(0, this.player.getLocation().getY(), 0).distanceSquared(this.baseLocation) > 0.04) {
             this.cancel();
             this.player.removePotionEffect(PotionEffectType.SLOW);
@@ -54,7 +73,7 @@ public class ConversationFocus extends BukkitRunnable {
         if (this.state == FocusState.WAITING && this.tick == 5) {
             this.state = FocusState.FOCUSING;
             this.tick = -1;
-            this.getRotation();
+            this.rotations = this.getRotation();
         } else if (this.state == FocusState.FOCUSING && this.tick <= this.tickToRotate) {
             Location target = this.player.getLocation().clone();
             target.setYaw((1 - this.tick / this.tickToRotate) * this.rotations[0] + (this.tick / this.tickToRotate) * this.rotations[2]);
@@ -68,13 +87,14 @@ public class ConversationFocus extends BukkitRunnable {
         this.tick++;
     }
 
-    private void getRotation() {
-        this.rotations = new float[4];
-        this.rotations[0] = this.player.getEyeLocation().getYaw();
-        this.rotations[1] = this.player.getEyeLocation().getPitch();
-        Location vector = this.entity.getLocation().clone().add(0, this.entity.getHeight() - 0.2, 0).subtract(this.player.getEyeLocation().clone());
-        this.rotations[2] = Location.normalizeYaw(vector.getYaw() + 180f);
-        this.rotations[3] = vector.getPitch();
+    private float[] getRotation() {
+        final float[] newRotations = new float[4];
+        newRotations[0] = this.player.getEyeLocation().getYaw();
+        newRotations[1] = this.player.getEyeLocation().getPitch();
+        final Location vector = this.entity.getLocation().clone().add(0, this.entity.getHeight() - 0.2, 0).subtract(this.player.getEyeLocation().clone());
+        newRotations[2] = Location.normalizeYaw(vector.getYaw() + 180f);
+        newRotations[3] = vector.getPitch();
+        return newRotations;
     }
 
     enum FocusState {

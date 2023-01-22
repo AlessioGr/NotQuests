@@ -338,4 +338,8 @@ public class ConversationPlayer {
   public final ArrayList<ConversationLine> getCurrentPlayerLines() {
     return currentPlayerLines;
   }
+
+  public final Conversation getConversation(){
+    return conversation;
+  }
 }
