@@ -96,7 +96,7 @@ public class ConversationFocus extends BukkitRunnable {
         newRotations[1] = this.player.getEyeLocation().getPitch();
         final Location vector = this.entity.getLocation().clone().add(0, this.entity.getHeight() - 0.2, 0).subtract(this.player.getEyeLocation().clone());
         newRotations[2] = Location.normalizeYaw(vector.getYaw() + 180f);
-        newRotations[3] = vector.getPitch();
+        newRotations[3] = Location.normalizeYaw(- vector.getPitch());
         return newRotations;
     }
 
