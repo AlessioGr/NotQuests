@@ -10,8 +10,6 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.conversation.Conversation;
 import rocks.gravili.notquests.paper.conversation.ConversationPlayer;
 
-import java.util.Arrays;
-
 public class ConversationFocus extends BukkitRunnable {
 
     private final NotQuests main;
@@ -51,8 +49,9 @@ public class ConversationFocus extends BukkitRunnable {
         }
 
         // Cancel if conversation not active anymore
+        assert main.getConversationManager() != null;
         final ConversationPlayer currentOpenConversationPlayer = main.getConversationManager().getOpenConversation(player.getUniqueId());
-        if(currentOpenConversationPlayer == null || currentOpenConversationPlayer.getConversation() == null || currentOpenConversationPlayer.getConversation().getIdentifier() != conversation.getIdentifier() ) {
+        if(currentOpenConversationPlayer == null || currentOpenConversationPlayer.getConversation() == null || !currentOpenConversationPlayer.getConversation().getIdentifier().equals(conversation.getIdentifier()) ) {
             this.cancel();
             return;
         }
