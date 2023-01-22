@@ -56,19 +56,22 @@ public class ConversationFocus extends BukkitRunnable {
             return;
         }
 
-
         this.player.addPotionEffect(potionEffect);
+
+        // Cancel if player moves away too far from the original location
         if (this.player.getLocation().subtract(0, this.player.getLocation().getY(), 0).distanceSquared(this.baseLocation) > 0.04) {
             this.cancel();
             this.player.removePotionEffect(PotionEffectType.SLOW);
             return;
         }
+
         if (this.player.getLocation().getYaw() != this.previousLocation.getYaw() || this.player.getLocation().getPitch() != this.previousLocation.getPitch()) {
             this.tick = 0;
             this.state = FocusState.WAITING;
             this.previousLocation = this.player.getLocation();
             return;
         }
+
         if (this.state == FocusState.WAITING && this.tick == 5) {
             this.state = FocusState.FOCUSING;
             this.tick = -1;
@@ -81,6 +84,7 @@ public class ConversationFocus extends BukkitRunnable {
         } else if (this.state == FocusState.FOCUSING) {
             this.state = FocusState.DONE;
         }
+        
         this.previousLocation = this.player.getLocation();
 
         this.tick++;
