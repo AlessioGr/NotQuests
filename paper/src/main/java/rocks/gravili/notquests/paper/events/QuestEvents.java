@@ -647,6 +647,8 @@ public class QuestEvents implements Listener {
 
     @EventHandler
     public void onPlayerConsumeItem(PlayerItemConsumeEvent e) {
+        if (main.getConversationManager() == null)
+            return;
         final ConversationPlayer currentOpenConversationPlayer = main.getConversationManager().getOpenConversation(e.getPlayer().getUniqueId());
         if (currentOpenConversationPlayer != null)
             e.setCancelled(true);
@@ -679,10 +681,12 @@ public class QuestEvents implements Listener {
         if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
             return;
         }
-        final ConversationPlayer currentOpenConversationPlayer = main.getConversationManager().getOpenConversation(player.getUniqueId());
-        if (currentOpenConversationPlayer != null) {
-            e.setCancelled(true);
-            return;
+        if (main.getConversationManager() != null) {
+            final ConversationPlayer currentOpenConversationPlayer = main.getConversationManager().getOpenConversation(player.getUniqueId());
+            if (currentOpenConversationPlayer != null) {
+                e.setCancelled(true);
+                return;
+            }
         }
 
         questPlayer.queueObjectiveCheck(activeObjective -> {
