@@ -685,7 +685,6 @@ public class QuestEvents implements Listener {
             final ConversationPlayer currentOpenConversationPlayer = main.getConversationManager().getOpenConversation(player.getUniqueId());
             if (currentOpenConversationPlayer != null) {
                 e.setCancelled(true);
-                return;
             }
         }
 
