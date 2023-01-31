@@ -104,6 +104,7 @@ visual:
     focusing:
       enabled: true
       rotate-time: 14
+      cancel-conversation-when-leaving: true
     quest-giver-indicator-particle:
       enabled: true
       type: VILLAGER_ANGRY
