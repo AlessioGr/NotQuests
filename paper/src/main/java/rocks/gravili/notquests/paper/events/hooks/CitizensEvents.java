@@ -191,19 +191,6 @@ public class CitizensEvents implements Listener {
             }
         });
         questPlayer.queueObjectiveCheck(activeObjective -> {
-            if (activeObjective.getObjective() instanceof final TalkToNPCObjective talkToNPCObjective) {
-                if (nqNPC.equals(talkToNPCObjective.getNPCtoTalkTo())) {
-                    activeObjective.addProgress(1, nqNPC);
-                    final String mmNpcName = main.getMiniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(npc.getName().replace("§","&")));
-
-                    player.sendMessage(main.parse(
-                        "<GREEN>You talked to <highlight>" +mmNpcName
-                    ));
-                    handledObjective.set(true);
-                }
-            }
-        });
-        questPlayer.queueObjectiveCheck(activeObjective -> {
             if (activeObjective.getObjective() instanceof final EscortNPCObjective escortNPCObjective) {
                 if (escortNPCObjective.getNpcToEscortToID() == npc.getId()) {
                     final NPC npcToEscort = CitizensAPI.getNPCRegistry().getById(escortNPCObjective.getNpcToEscortID());
@@ -260,7 +247,7 @@ public class CitizensEvents implements Listener {
         if(main.getConversationManager() != null){
             final Conversation foundConversation = main.getConversationManager().getConversationForNPC(nqNPC);
             if (foundConversation != null) {
-                main.getConversationManager().playConversation(questPlayer, foundConversation);
+                main.getConversationManager().playConversation(questPlayer, foundConversation, nqNPC);
                 if (main.getDataManager().getConfiguration().isCitizensFocusingEnabled())
                     new ConversationFocus(main, player, npc.getEntity(), foundConversation).runTaskTimer(main.getMain(), 0, 2);
             }

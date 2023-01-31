@@ -24,6 +24,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.conversation.interactionhandlers.ConversationInteractionHandler;
+import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
@@ -33,17 +34,19 @@ public class ConversationPlayer {
   private final NotQuests main;
   private final QuestPlayer questPlayer;
   private final Player player;
+  private final NQNPC npc;
 
   private final Conversation conversation;
   private final ArrayList<ConversationLine> currentPlayerLines;
 
   public ConversationPlayer(
-      final NotQuests main, final QuestPlayer questPlayer, final Player player, final Conversation conversation) {
+      final NotQuests main, final QuestPlayer questPlayer, final Player player, final Conversation conversation, final NQNPC npc) {
     this.main = main;
     this.questPlayer = questPlayer;
     this.player = player;
 
     this.conversation = conversation;
+    this.npc = npc;
 
     currentPlayerLines = new ArrayList<>();
   }
@@ -53,7 +56,7 @@ public class ConversationPlayer {
         findConversationLinesWhichFulfillsCondition(conversation.getStartingLines());
     if (conversationLinesWhichFulfillsCondition == null
         || conversationLinesWhichFulfillsCondition.isEmpty()) {
-      main.getConversationManager().stopConversation(this);
+      main.getConversationManager().stopConversation(this, true);
       return;
     }
 
@@ -86,7 +89,7 @@ public class ConversationPlayer {
           "Next of <highlight>"
               + currentLine.getFullIdentifier()
               + "</highlight> is empty. Ending conversation...");
-      main.getConversationManager().stopConversation(this);
+      main.getConversationManager().stopConversation(this, true);
       return false;
     } else {
       if (next.size() == 1) {
@@ -313,7 +316,7 @@ public class ConversationPlayer {
     if (next == null || next.isEmpty()) {
       questPlayer.sendDebugMessage("Clearing currentPlayerLines (1)");
       currentPlayerLines.clear();
-      main.getConversationManager().stopConversation(this);
+      main.getConversationManager().stopConversation(this, true);
     } else {
       questPlayer.sendDebugMessage("Clearing currentPlayerLines (2)");
       currentPlayerLines.clear();
@@ -341,5 +344,9 @@ public class ConversationPlayer {
 
   public final Conversation getConversation(){
     return conversation;
+  }
+
+  public NQNPC getNpc() {
+    return this.npc;
   }
 }

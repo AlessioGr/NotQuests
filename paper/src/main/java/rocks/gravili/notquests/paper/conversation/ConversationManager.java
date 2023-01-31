@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -51,6 +52,7 @@ import rocks.gravili.notquests.paper.structs.conditions.Condition;
 import rocks.gravili.notquests.paper.structs.conditions.ListCondition;
 import rocks.gravili.notquests.paper.structs.conditions.NumberCondition;
 import rocks.gravili.notquests.paper.structs.conditions.StringCondition;
+import rocks.gravili.notquests.paper.structs.objectives.TalkToNPCObjective;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
 
@@ -158,7 +160,7 @@ public class ConversationManager {
     return testConversation;
   }
 
-  public void playConversation(final QuestPlayer questPlayer, final Conversation conversation) {
+  public void playConversation(final QuestPlayer questPlayer, final Conversation conversation, NQNPC npc) {
     final Player player = questPlayer.getPlayer();
     final ConversationPlayer openConversation = getOpenConversation(questPlayer.getUniqueId());
     if (openConversation != null) {
@@ -166,11 +168,11 @@ public class ConversationManager {
           player,
           main.getLanguageManager()
               .getString("chat.conversations.ended-previous-conversation", player, conversation));
-      stopConversation(openConversation);
+      stopConversation(openConversation, false);
     }
 
     final ConversationPlayer conversationPlayer =
-        new ConversationPlayer(main, questPlayer, player, conversation);
+        new ConversationPlayer(main, questPlayer, player, conversation, npc);
     openConversations.put(questPlayer.getUniqueId(), conversationPlayer);
 
     conversationPlayer.play();
@@ -535,7 +537,7 @@ public class ConversationManager {
     return conversations;
   }
 
-  public void stopConversation(final ConversationPlayer conversationPlayer) {
+  public void stopConversation(final ConversationPlayer conversationPlayer, boolean acceptQuest) {
     if (openConversations.containsKey(conversationPlayer.getQuestPlayer().getUniqueId())) {
       if (!openConversations
           .get(conversationPlayer.getQuestPlayer().getUniqueId())
@@ -545,6 +547,21 @@ public class ConversationManager {
             .sendDebugMessage(
                 "Skipping stopping conversation, as the conversation you tried to stop is already stopped and some other conversation is running instead.");
         return;
+      }
+
+      if (conversationPlayer.getNpc() != null && acceptQuest) {
+        conversationPlayer.getQuestPlayer().queueObjectiveCheck(activeObjective -> {
+          if (activeObjective.getObjective() instanceof final TalkToNPCObjective talkToNPCObjective) {
+            if (conversationPlayer.getNpc().equals(talkToNPCObjective.getNPCtoTalkTo())) {
+              activeObjective.addProgress(1, conversationPlayer.getNpc());
+              final String mmNpcName = main.getMiniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(conversationPlayer.getNpc().getName().replace("§", "&")));
+
+              conversationPlayer.getQuestPlayer().getPlayer().sendMessage(main.parse(
+                      "<GREEN>You talked to <highlight>" + mmNpcName
+              ));
+            }
+          }
+        });
       }
       conversationPlayer.getQuestPlayer().sendDebugMessage("Stopping conversation...");
       openConversations.remove(conversationPlayer.getQuestPlayer().getUniqueId());

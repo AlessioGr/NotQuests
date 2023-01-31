@@ -108,10 +108,10 @@ public class StartConversationAction extends Action {
     if (isEndPrevious() && openConversation != null) {
       questPlayer.sendDebugMessage(
           "(StartConversationAction) endPrevious is true: stopping previous conversation");
-      main.getConversationManager().stopConversation(openConversation);
+      main.getConversationManager().stopConversation(openConversation, false);
     }
 
-    main.getConversationManager().playConversation(questPlayer, foundConversation);
+    main.getConversationManager().playConversation(questPlayer, foundConversation, null);
   }
 
   @Override

@@ -216,7 +216,8 @@ public class AdminConversationCommands {
                         .sendMessage(main.parse("<main>Playing test conversation..."));
                     conversationManager.playConversation(
                         main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()),
-                        conversationManager.createTestConversation());
+                        conversationManager.createTestConversation(),
+                            null);
                   }));
     }
 
@@ -313,7 +314,8 @@ public class AdminConversationCommands {
                                   + "</highlight> conversation..."));
                   conversationManager.playConversation(
                       main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()),
-                      foundConversation);
+                      foundConversation,
+                          null);
                 }));
 
     final Command.Builder<CommandSender> conversationEditBuilder =
