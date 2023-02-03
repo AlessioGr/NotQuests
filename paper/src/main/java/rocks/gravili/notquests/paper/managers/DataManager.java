@@ -640,7 +640,7 @@ public class DataManager {
 
         configuration.setCitizensFocusingEnabled(getGeneralConfigBoolean(
                 "visual.citizensnpc.focusing.enabled",
-                false,
+                true,
                 "Better NPC interaction. If this is set to true, the player will look at the NPC when they talk to it."
         ));
 
