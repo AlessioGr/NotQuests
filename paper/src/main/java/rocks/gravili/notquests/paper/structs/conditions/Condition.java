@@ -141,10 +141,13 @@ public abstract class Condition {
    */
   protected abstract String checkInternally(final QuestPlayer questPlayer);
 
+  public final boolean canCheckAsync() { // TODO: Make some conditions work async
+    return false;
+  }
 
   public final ConditionResult check(final QuestPlayer questPlayer) {
     final String result;
-    if(Bukkit.isPrimaryThread()){
+    if(Bukkit.isPrimaryThread() || canCheckAsync()){
       result = checkInternally(questPlayer);
     }else {
 
