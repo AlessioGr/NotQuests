@@ -413,7 +413,7 @@ public class UserCommands {
         builder
             .literal("continueConversation")
             .senderType(Player.class)
-             .hidden()
+            .hidden()
              .argument(IntegerArgument.<CommandSender>newBuilder("optionID").withMin(1).withSuggestionsProvider(
                                 (context, lastString) -> {
                                     final List<String> allArgs = context.getRawInput();
