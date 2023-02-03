@@ -441,6 +441,7 @@ public class UserCommands {
                                     return completions;
              }), ArgumentDescription.of("Option message to continue conversation"))
             .meta(CommandMeta.DESCRIPTION, "Selects an answer for the currently open conversation")
+             .meta(CommandMeta.HIDDEN, true)
             .handler(
                 (context) -> {
                   if(main.getConversationManager() == null){
