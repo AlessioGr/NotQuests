@@ -19,6 +19,9 @@
 package rocks.gravili.notquests.paper.structs.conditions;
 
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import javax.annotation.Nullable;
 
 import org.bukkit.Bukkit;
@@ -138,17 +141,22 @@ public abstract class Condition {
    */
   protected abstract String checkInternally(final QuestPlayer questPlayer);
 
+  public final boolean canCheckAsync() { // TODO: Make some conditions work async
+    return false;
+  }
+
   public final ConditionResult check(final QuestPlayer questPlayer) {
     final String result;
-    if(Bukkit.isPrimaryThread()){
+    if(Bukkit.isPrimaryThread() || canCheckAsync()){
       result = checkInternally(questPlayer);
     }else {
-      main.getLogManager().severe("Trying to get a condition result from a non-primary thread! This is may not work. Please report this to the developer!");
+
       try {
-        result = checkInternally(questPlayer);
+        result = Bukkit.getScheduler().callSyncMethod(main.getMain(), () -> checkInternally(questPlayer)).get();
+        main.getLogManager().info("Async result: "+ result);
       }catch (Exception e){
         e.printStackTrace();
-        return new ConditionResult(false, "An error occurred while checking the condition. Please report this to the developer!");
+        return new ConditionResult(false, "An error occurred while checking the condition (from async thread). Please report this to the developer!");
       }
     }
 

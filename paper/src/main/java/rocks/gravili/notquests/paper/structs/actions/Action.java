@@ -112,6 +112,11 @@ public abstract class Action {
       });
     }
   }
+
+  public final boolean canExecuteAsync() { // TODO: Make some actions work async
+    return false;
+  }
+
   public void execute(final QuestPlayer questPlayer, final int delayOverride, Object... objects) {
     if (main.getDataManager().isDisabled()) {
       return;
@@ -120,7 +125,7 @@ public abstract class Action {
       questPlayer.sendDebugMessage("Executing action " + getActionName());
     }
 
-    if(Bukkit.isPrimaryThread()) {
+    if(Bukkit.isPrimaryThread() || canExecuteAsync()) {
       if(getExecutionDelay() == -1 && delayOverride == -1){
         executeInternally(questPlayer, objects);
       }else{
