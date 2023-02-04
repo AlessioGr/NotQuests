@@ -1032,7 +1032,7 @@ public class QuestManager {
         return rewards.toString();
     }
 
-    public final ArrayList<String> getQuestRewardsList(final Quest quest, final QuestPlayer questPlayer) {
+    public final ArrayList<String> getQuestRewardsList(final Quest quest, final QuestPlayer questPlayer) { //TODO: Customizability for colors
         ArrayList<String> rewards = new ArrayList<>();
         int counter = 1;
         for (final Action reward : quest.getRewards()) {
