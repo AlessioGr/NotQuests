@@ -42,7 +42,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /** Code copied from net.kyori.adventure.text.minimessage.tag.standard */
-public abstract class AbstractColorChangingTag implements Modifying, Examinable {
+abstract class AbstractColorChangingTag implements Modifying, Examinable {
+
+
+  private static final ComponentFlattener LENGTH_CALCULATOR = ComponentFlattener.builder()
+          .mapper(TextComponent.class, TextComponent::content)
+          .unknownMapper(x -> "_") // every unknown component gets a single colour
+          .build();
 
   private boolean visited;
   private int size = 0;
@@ -55,8 +61,7 @@ public abstract class AbstractColorChangingTag implements Modifying, Examinable 
   @Override
   public final void visit(final @NotNull Node current, final int depth) {
     if (this.visited) {
-      throw new IllegalStateException(
-          "Color changing tag instances cannot be re-used, return a new one for each resolve");
+      throw new IllegalStateException("Color changing tag instances cannot be re-used, return a new one for each resolve");
     }
 
     if (current instanceof ValueNode) {
@@ -66,9 +71,7 @@ public abstract class AbstractColorChangingTag implements Modifying, Examinable 
       final TagNode tag = (TagNode) current;
       if (tag.tag() instanceof Inserting) {
         // ComponentTransformation.apply() returns the value of the component placeholder
-        ComponentFlattener.textOnly()
-            .flatten(
-                ((Inserting) tag.tag()).value(), s -> this.size += s.codePointCount(0, s.length()));
+        LENGTH_CALCULATOR.flatten(((Inserting) tag.tag()).value(), s -> this.size += s.codePointCount(0, s.length()));
       }
     }
   }
@@ -82,8 +85,7 @@ public abstract class AbstractColorChangingTag implements Modifying, Examinable 
 
   @Override
   public final Component apply(final @NotNull Component current, final int depth) {
-    if ((this.disableApplyingColorDepth != -1 && depth > this.disableApplyingColorDepth)
-        || current.style().color() != null) {
+    if ((this.disableApplyingColorDepth != -1 && depth > this.disableApplyingColorDepth) || current.style().color() != null) {
       if (this.disableApplyingColorDepth == -1 || depth < this.disableApplyingColorDepth) {
         this.disableApplyingColorDepth = depth;
       }
@@ -109,14 +111,18 @@ public abstract class AbstractColorChangingTag implements Modifying, Examinable 
 
       // apply
       final int[] holder = new int[1];
-      for (final PrimitiveIterator.OfInt it = content.codePoints().iterator(); it.hasNext(); ) {
+      for (final PrimitiveIterator.OfInt it = content.codePoints().iterator(); it.hasNext();) {
         holder[0] = it.nextInt();
-        final Component comp = Component.text(new String(holder, 0, 1), this.color());
+        final Component comp = Component.text(new String(holder, 0, 1), current.style().color(this.color()));
         this.advanceColor();
         parent.append(comp);
       }
 
       return parent.build();
+    } else if (!(current instanceof TextComponent)) {
+      final Component ret = current.children(Collections.emptyList()).colorIfAbsent(this.color());
+      this.advanceColor();
+      return ret;
     }
 
     return Component.empty().mergeStyle(current);
@@ -126,7 +132,9 @@ public abstract class AbstractColorChangingTag implements Modifying, Examinable 
 
   protected abstract void init();
 
-  /** Advance the active color. */
+  /**
+   * Advance the active color.
+   */
   protected abstract void advanceColor();
 
   /**
