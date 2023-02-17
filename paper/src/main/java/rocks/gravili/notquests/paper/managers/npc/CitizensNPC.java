@@ -126,7 +126,7 @@ public class CitizensNPC extends NQNPC {
   }
 
   @Override
-  public boolean isFromCitizens() {
+  public boolean canWalk() {
     return true;
   }
 }
