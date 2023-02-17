@@ -144,13 +144,13 @@ public class QuestGiverNPCTrait extends Trait {
           npcHolo.setVisible(false);
           npcHolo.setSmall(true);
           npcHolo.setCustomNameVisible(false);
-          npcHolo.customName(main.getMiniMessage().deserialize(npcHoloText));
+          npcHolo.customName(main.parse(npcHoloText));
           npcEntity.addPassenger(npcHolo);
           //notQuests.getQuestManager().getQuestsFromListWithVisibilityEvaluations()
 
         } else {
           if (npcEntity.getPassengers().get(0) instanceof final ArmorStand npcHolo) {
-            npcHolo.customName(main.getMiniMessage().deserialize(npcHoloText));
+            npcHolo.customName(main.parse(npcHoloText));
             for (final Entity e : npcEntity.getNearbyEntities(16, 16, 16)) {
               if (e instanceof final Player player) {
                 final QuestPlayer qp = main.getQuestPlayerManager().getActiveQuestPlayer(e.getUniqueId());
