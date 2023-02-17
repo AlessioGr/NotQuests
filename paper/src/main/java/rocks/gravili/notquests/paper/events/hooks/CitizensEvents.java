@@ -186,7 +186,7 @@ public class CitizensEvents implements Listener {
                         }
 
                     }
-
+                    player.updateInventory();
                 }
             }
         });
