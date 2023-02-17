@@ -35,7 +35,6 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.conversation.interactionhandlers.SendClickableText;
 import rocks.gravili.notquests.paper.conversation.interactionhandlers.ConversationInteractionHandler;
 import rocks.gravili.notquests.paper.managers.data.Category;
-import rocks.gravili.notquests.paper.managers.npc.CitizensNPC;
 import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.actions.Action;
@@ -546,7 +545,7 @@ public class ConversationManager {
                 "Skipping stopping conversation, as the conversation you tried to stop is already stopped and some other conversation is running instead.");
         return;
       }
-      if (conversationPlayer.getNpc() != null && conversationPlayer.getNpc() instanceof CitizensNPC) {
+      if (conversationPlayer.getNpc() != null && conversationPlayer.getNpc().isFromCitizens()) {
         if (CONVERSATIONS_IN_PROGRESS.containsKey(conversationPlayer.getNpc().getID().getIntegerID())) {
           CONVERSATIONS_IN_PROGRESS.get(conversationPlayer.getNpc().getID().getIntegerID()).remove(conversationPlayer.getQuestPlayer().getUniqueId());
           if (CONVERSATIONS_IN_PROGRESS.get(conversationPlayer.getNpc().getID().getIntegerID()).size() == 0) {

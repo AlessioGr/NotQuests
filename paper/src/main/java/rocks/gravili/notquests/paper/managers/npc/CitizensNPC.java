@@ -124,4 +124,9 @@ public class CitizensNPC extends NQNPC {
     }
     return cachedNPC.getEntity();
   }
+
+  @Override
+  public boolean isFromCitizens() {
+    return true;
+  }
 }

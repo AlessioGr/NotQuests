@@ -57,4 +57,8 @@ public abstract class NQNPC { //TODO: Even though I'm trying to pool NPC names, 
 
   public abstract Entity getEntity();
 
+  public boolean isFromCitizens() {
+    return false;
+  }
+
 }
