@@ -126,26 +126,26 @@ public class ConversationManager {
     testConversation.addSpeaker(playerSpeaker, false);
 
     final ConversationLine gustav1 =
-        new ConversationLine(gustav, "gustav1", "Hello, I'm Gustav! What's your name?");
+        new ConversationLine(gustav, "gustav1", List.of("Hello, I'm Gustav! What's your name?"));
 
-    final ConversationLine player1 = new ConversationLine(playerSpeaker, "player1", "I'm player!");
+    final ConversationLine player1 = new ConversationLine(playerSpeaker, "player1", List.of("I'm player!"));
     final ConversationLine player2 =
-        new ConversationLine(playerSpeaker, "player2", "None of your business!");
+        new ConversationLine(playerSpeaker, "player2", List.of("None of your business!"));
 
     gustav1.addNext(player1);
     gustav1.addNext(player2);
 
-    final ConversationLine gustav2 = new ConversationLine(gustav, "gustav2", "Nice to meet you!");
-    final ConversationLine gustav3 = new ConversationLine(gustav, "gustav3", "Yeah, fuck you!");
+    final ConversationLine gustav2 = new ConversationLine(gustav, "gustav2", List.of("Nice to meet you!"));
+    final ConversationLine gustav3 = new ConversationLine(gustav, "gustav3", List.of("Yeah, fuck you!"));
 
     final ConversationLine player3 =
-        new ConversationLine(playerSpeaker, "player2", "That was mean...");
+        new ConversationLine(playerSpeaker, "player2", List.of("That was mean..."));
     gustav3.addNext(player3);
 
-    final ConversationLine gustav4 = new ConversationLine(gustav, "gustav3", "You are mean too!");
+    final ConversationLine gustav4 = new ConversationLine(gustav, "gustav3", List.of("You are mean too!"));
     player3.addNext(gustav4);
 
-    final ConversationLine gustav5 = new ConversationLine(gustav, "gustav3", "I don't like you!");
+    final ConversationLine gustav5 = new ConversationLine(gustav, "gustav3", List.of("I don't like you!"));
 
     gustav4.addNext(gustav5);
 
@@ -324,6 +324,13 @@ public class ConversationManager {
       for (final String starterLine : starterLines.split(",")) {
         final String initialLine = "Lines." + starterLine;
         final String message = config.getString(initialLine + ".text", "/skip/");
+        final List<String> messages = new ArrayList<>();
+        if ((message.isBlank() || message.equals("/skip/")) && config.get(initialLine + ".texts") != null)
+          messages.addAll(config.getStringList(initialLine + ".texts"));
+        else if (message.isBlank())
+          messages.add("/skip/");
+        else
+          messages.add(message);
         final ArrayList<Action> actions =
             parseActionString(config.getStringList(initialLine + ".actions"));
         final boolean shouting = config.getBoolean(initialLine + ".shout", false);
@@ -345,9 +352,9 @@ public class ConversationManager {
 
         // Construct the ConversationLine
         final ConversationLine startLine =
-            new ConversationLine(foundSpeaker, starterLine.split("\\.")[1], message);
+            new ConversationLine(foundSpeaker, starterLine.split("\\.")[1], messages);
 
-        if(message.equals("/skip/")){
+        if(messages.get(0).equals("/skip/")){
           startLine.setSkipMessage(true);
         }
 
@@ -416,6 +423,13 @@ public class ConversationManager {
           final String initialLine = "Lines." + nextLineFullIdentifier;
 
           final String message = config.getString(initialLine + ".text", "/next/");
+          final List<String> messages = new ArrayList<>();
+          if ((message.isBlank() || message.equals("/next/")) && config.get(initialLine + ".texts") != null)
+            messages.addAll(config.getStringList(initialLine + ".texts"));
+          else if (message.isBlank())
+            messages.add("/next/");
+          else
+            messages.add(message);
           final String next = config.getString(initialLine + ".next", "");
           final ArrayList<Action> actions =
               parseActionString(config.getStringList(initialLine + ".actions"));
@@ -481,9 +495,9 @@ public class ConversationManager {
           }
 
           ConversationLine newLine =
-              new ConversationLine(foundSpeaker, nextLineFullIdentifier.split("\\.")[1], message);
+              new ConversationLine(foundSpeaker, nextLineFullIdentifier.split("\\.")[1], messages);
 
-          if(message.equals("/skip/")){
+          if(messages.get(0).equals("/next/")){
             newLine.setSkipMessage(true);
           }
 
@@ -970,7 +984,7 @@ public class ConversationManager {
     toReturn
         .append(beginningSpaces)
         .append("  <unimportant>Message:</unimportant> <main>")
-        .append(conversationLine.getMessage())
+        .append(conversationLine.getMessages())
         .append("<RESET>\n");
 
     if (conversationLine.getNext().size() >= 1) {
