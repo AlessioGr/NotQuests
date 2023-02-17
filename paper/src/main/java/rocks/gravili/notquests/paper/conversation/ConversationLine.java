@@ -19,12 +19,15 @@
 package rocks.gravili.notquests.paper.conversation;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 
 public class ConversationLine {
   private final Speaker speaker;
-  private final String message; // minimessage
+  private final List<String> messages; // minimessage
   private final ArrayList<ConversationLine> next;
   private final ArrayList<Action> actions;
   private final ArrayList<Condition> conditions;
@@ -36,10 +39,10 @@ public class ConversationLine {
 
   private int delayInMS;
 
-  public ConversationLine(final Speaker speaker, final String identifier, final String message) {
+  public ConversationLine(final Speaker speaker, final String identifier, final List<String> messages) {
     this.speaker = speaker;
     this.identifier = identifier;
-    this.message = message;
+    this.messages = messages;
     next = new ArrayList<>();
     conditions = new ArrayList<>();
     actions = new ArrayList<>();
@@ -64,11 +67,20 @@ public class ConversationLine {
     return identifier;
   }
 
-  public final String getMessage() {
+  public final List<String> getMessages() {
     if (isShouting()) {
-      return "<bold>" + message + "</bold>";
+      return this.messages.stream().map(s -> "<bold>" + s + "</bold>").toList();
     } else {
-      return message;
+      return this.messages;
+    }
+  }
+
+  public final String getOneMessage() {
+    int random = ThreadLocalRandom.current().nextInt(this.messages.size());
+    if (isShouting()) {
+      return "<bold>" + this.messages.get(random) + "</bold>";
+    } else {
+      return this.messages.get(random);
     }
   }
 

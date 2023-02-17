@@ -254,7 +254,7 @@ public class ConversationPlayer {
   public void sendLine(final ConversationLine conversationLine, final boolean deletePrevious) {
     if(!conversationLine.isSkipMessage()){
       for(final ConversationInteractionHandler interactionHandler : main.getConversationManager().getInteractionHandlers()){
-        interactionHandler.sendText(conversationLine.getMessage(), conversationLine.getSpeaker(), player, questPlayer, conversation, conversationLine, deletePrevious, this);
+        interactionHandler.sendText(conversationLine.getOneMessage(), conversationLine.getSpeaker(), player, questPlayer, conversation, conversationLine, deletePrevious, this);
       }
     }
 
@@ -275,7 +275,7 @@ public class ConversationPlayer {
    */
   public void sendOptionLine(final ConversationLine conversationLine) {
     for(final ConversationInteractionHandler interactionHandler : main.getConversationManager().getInteractionHandlers()){
-      interactionHandler.sendOption(conversationLine.getMessage(), conversationLine.getSpeaker(), player, questPlayer, conversation, conversationLine, this);
+      interactionHandler.sendOption(conversationLine.getOneMessage(), conversationLine.getSpeaker(), player, questPlayer, conversation, conversationLine, this);
     }
   }
 
