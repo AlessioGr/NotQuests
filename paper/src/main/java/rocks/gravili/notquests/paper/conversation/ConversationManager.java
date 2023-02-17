@@ -545,7 +545,7 @@ public class ConversationManager {
                 "Skipping stopping conversation, as the conversation you tried to stop is already stopped and some other conversation is running instead.");
         return;
       }
-      if (conversationPlayer.getNpc() != null && conversationPlayer.getNpc().canWalk()) {
+      if (conversationPlayer.getNpc() != null) {
         if (this.conversationsInProgress.containsKey(conversationPlayer.getNpc().getID().getIntegerID())) {
           this.conversationsInProgress.get(conversationPlayer.getNpc().getID().getIntegerID()).remove(conversationPlayer.getQuestPlayer().getUniqueId());
           if (this.conversationsInProgress.get(conversationPlayer.getNpc().getID().getIntegerID()).size() == 0) {

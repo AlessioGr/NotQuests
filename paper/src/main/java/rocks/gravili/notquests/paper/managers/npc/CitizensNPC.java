@@ -124,9 +124,4 @@ public class CitizensNPC extends NQNPC {
     }
     return cachedNPC.getEntity();
   }
-
-  @Override
-  public boolean canWalk() {
-    return true;
-  }
 }
