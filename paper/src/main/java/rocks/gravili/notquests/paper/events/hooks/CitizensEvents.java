@@ -261,17 +261,18 @@ public class CitizensEvents implements Listener {
         main.getQuestManager().sendQuestsPreviewOfQuestShownNPCs(nqNPC, questPlayer);
 
         //Conversations
-        if(main.getConversationManager() != null){
+        ConversationManager manager = main.getConversationManager();
+        if(manager != null){
             final Conversation foundConversation = main.getConversationManager().getConversationForNPC(nqNPC);
             if (foundConversation != null) {
                 // Cancel NPC's movement
                 npc.getNavigator().cancelNavigation();
                 npc.getNavigator().setPaused(true);
-                ConversationManager.CONVERSATIONS_IN_PROGRESS.putIfAbsent(npc.getId(), new ArrayList<>());
-                ConversationManager.CONVERSATIONS_IN_PROGRESS.get(npc.getId()).add(player.getUniqueId());
+                manager.getConversationsInProgress().putIfAbsent(npc.getId(), new ArrayList<>());
+                manager.getConversationsInProgress().get(npc.getId()).add(player.getUniqueId());
                 new BukkitRunnable(){
                     public void run() {
-                        if (!ConversationManager.CONVERSATIONS_IN_PROGRESS.containsKey(nqNPC.getID().getIntegerID())) {
+                        if (!manager.getConversationsInProgress().containsKey(nqNPC.getID().getIntegerID())) {
                             npc.getNavigator().setPaused(false);
                             this.cancel();
                         }
@@ -280,7 +281,7 @@ public class CitizensEvents implements Listener {
                 // Try to cancel player's movement
                 player.getLocation().setDirection(new Vector(0, 0, 0));
                 player.setVelocity(new Vector(0, 0, 0));
-                main.getConversationManager().playConversation(questPlayer, foundConversation, nqNPC);
+                manager.playConversation(questPlayer, foundConversation, nqNPC);
                 if (main.getDataManager().getConfiguration().isCitizensFocusingEnabled())
                     new ConversationFocus(main, player, npc.getEntity(), foundConversation).runTaskTimer(main.getMain(), 0, 2);
             }

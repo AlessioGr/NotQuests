@@ -52,7 +52,7 @@ import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
 
 public class ConversationManager {
 
-  public static final Map<Integer, List<UUID>> CONVERSATIONS_IN_PROGRESS = new HashMap<>();
+  private final Map<Integer, List<UUID>> conversationsInProgress = new HashMap<>();
 
   final ArrayList<ConversationLine> linesForOneFile = new ArrayList<>();
   final HashMap<UUID, ArrayList<Component>> chatHistory;
@@ -546,10 +546,10 @@ public class ConversationManager {
         return;
       }
       if (conversationPlayer.getNpc() != null && conversationPlayer.getNpc().isFromCitizens()) {
-        if (CONVERSATIONS_IN_PROGRESS.containsKey(conversationPlayer.getNpc().getID().getIntegerID())) {
-          CONVERSATIONS_IN_PROGRESS.get(conversationPlayer.getNpc().getID().getIntegerID()).remove(conversationPlayer.getQuestPlayer().getUniqueId());
-          if (CONVERSATIONS_IN_PROGRESS.get(conversationPlayer.getNpc().getID().getIntegerID()).size() == 0) {
-            CONVERSATIONS_IN_PROGRESS.remove(conversationPlayer.getNpc().getID().getIntegerID());
+        if (this.conversationsInProgress.containsKey(conversationPlayer.getNpc().getID().getIntegerID())) {
+          this.conversationsInProgress.get(conversationPlayer.getNpc().getID().getIntegerID()).remove(conversationPlayer.getQuestPlayer().getUniqueId());
+          if (this.conversationsInProgress.get(conversationPlayer.getNpc().getID().getIntegerID()).size() == 0) {
+            this.conversationsInProgress.remove(conversationPlayer.getNpc().getID().getIntegerID());
           }
         }
       }
@@ -1044,5 +1044,9 @@ public class ConversationManager {
 
     // maybe this won't send the huge, 1-component-chat-history again
     allConversationHistory.add(collectiveComponent);
+  }
+
+  public Map<Integer, List<UUID>> getConversationsInProgress() {
+    return this.conversationsInProgress;
   }
 }
