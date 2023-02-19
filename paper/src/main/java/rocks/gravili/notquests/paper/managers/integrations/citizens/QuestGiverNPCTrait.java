@@ -228,7 +228,11 @@ public class QuestGiverNPCTrait extends Trait {
   // Run code when the NPC is despawned. This is called before the entity actually despawns so
   // npc.getEntity() is still valid.
   @Override
-  public void onDespawn() {}
+  public void onDespawn() {
+    if(getNPC().getEntity() != null){
+      getNPC().getEntity().getPassengers().forEach(Entity::remove);
+    }
+  }
 
   // Run code when the NPC is spawned. Note that npc.getEntity() will be null until this method is
   // called.
