@@ -20,12 +20,8 @@ package rocks.gravili.notquests.paper.conversation;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
+import java.util.*;
+
 import net.kyori.adventure.text.Component;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
@@ -55,6 +51,9 @@ import rocks.gravili.notquests.paper.structs.variables.Variable;
 import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
 
 public class ConversationManager {
+
+  private final Map<Integer, List<UUID>> activeConversationsOfNPCWithPlayerCache = new HashMap<>();
+
   final ArrayList<ConversationLine> linesForOneFile = new ArrayList<>();
   final HashMap<UUID, ArrayList<Component>> chatHistory;
   final HashMap<UUID, ArrayList<Component>> conversationChatHistory;
@@ -158,7 +157,7 @@ public class ConversationManager {
     return testConversation;
   }
 
-  public void playConversation(final QuestPlayer questPlayer, final Conversation conversation) {
+  public void playConversation(final QuestPlayer questPlayer, final Conversation conversation, NQNPC npc) {
     final Player player = questPlayer.getPlayer();
     final ConversationPlayer openConversation = getOpenConversation(questPlayer.getUniqueId());
     if (openConversation != null) {
@@ -170,7 +169,7 @@ public class ConversationManager {
     }
 
     final ConversationPlayer conversationPlayer =
-        new ConversationPlayer(main, questPlayer, player, conversation);
+        new ConversationPlayer(main, questPlayer, player, conversation, npc);
     openConversations.put(questPlayer.getUniqueId(), conversationPlayer);
 
     conversationPlayer.play();
@@ -560,6 +559,15 @@ public class ConversationManager {
                 "Skipping stopping conversation, as the conversation you tried to stop is already stopped and some other conversation is running instead.");
         return;
       }
+      if (conversationPlayer.getNpc() != null) {
+        if (this.activeConversationsOfNPCWithPlayerCache.containsKey(conversationPlayer.getNpc().getID().getIntegerID())) {
+          this.activeConversationsOfNPCWithPlayerCache.get(conversationPlayer.getNpc().getID().getIntegerID()).remove(conversationPlayer.getQuestPlayer().getUniqueId());
+          if (this.activeConversationsOfNPCWithPlayerCache.get(conversationPlayer.getNpc().getID().getIntegerID()).size() == 0) {
+            this.activeConversationsOfNPCWithPlayerCache.remove(conversationPlayer.getNpc().getID().getIntegerID());
+          }
+        }
+      }
+
       conversationPlayer.getQuestPlayer().sendDebugMessage("Stopping conversation...");
       openConversations.remove(conversationPlayer.getQuestPlayer().getUniqueId());
     }
@@ -1050,5 +1058,9 @@ public class ConversationManager {
 
     // maybe this won't send the huge, 1-component-chat-history again
     allConversationHistory.add(collectiveComponent);
+  }
+
+  public Map<Integer, List<UUID>> getActiveConversationsOfNPCWithPlayerCache() {
+    return this.activeConversationsOfNPCWithPlayerCache;
   }
 }
