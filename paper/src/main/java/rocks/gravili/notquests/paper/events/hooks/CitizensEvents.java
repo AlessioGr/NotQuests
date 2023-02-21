@@ -268,11 +268,11 @@ public class CitizensEvents implements Listener {
                 // Cancel NPC's movement
                 npc.getNavigator().cancelNavigation();
                 npc.getNavigator().setPaused(true);
-                manager.getConversationsInProgress().putIfAbsent(npc.getId(), new ArrayList<>());
-                manager.getConversationsInProgress().get(npc.getId()).add(player.getUniqueId());
+                manager.getActiveConversationsOfNPCWithPlayerCache().putIfAbsent(npc.getId(), new ArrayList<>());
+                manager.getActiveConversationsOfNPCWithPlayerCache().get(npc.getId()).add(player.getUniqueId());
                 new BukkitRunnable(){
                     public void run() {
-                        if (!manager.getConversationsInProgress().containsKey(nqNPC.getID().getIntegerID())) {
+                        if (!manager.getActiveConversationsOfNPCWithPlayerCache().containsKey(nqNPC.getID().getIntegerID())) {
                             npc.getNavigator().setPaused(false);
                             this.cancel();
                         }
