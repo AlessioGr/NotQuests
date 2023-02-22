@@ -24,6 +24,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.conversation.interactionhandlers.ConversationInteractionHandler;
+import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
@@ -33,15 +34,17 @@ public class ConversationPlayer {
   private final NotQuests main;
   private final QuestPlayer questPlayer;
   private final Player player;
+  private final NQNPC npc;
 
   private final Conversation conversation;
   private final ArrayList<ConversationLine> currentPlayerLines;
 
   public ConversationPlayer(
-      final NotQuests main, final QuestPlayer questPlayer, final Player player, final Conversation conversation) {
+      final NotQuests main, final QuestPlayer questPlayer, final Player player, final Conversation conversation, NQNPC npc) {
     this.main = main;
     this.questPlayer = questPlayer;
     this.player = player;
+    this.npc = npc;
 
     this.conversation = conversation;
 
@@ -341,5 +344,9 @@ public class ConversationPlayer {
 
   public final Conversation getConversation(){
     return conversation;
+  }
+
+  public NQNPC getNpc() {
+    return this.npc;
   }
 }

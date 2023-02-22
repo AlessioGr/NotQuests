@@ -111,7 +111,7 @@ public class StartConversationAction extends Action {
       main.getConversationManager().stopConversation(openConversation);
     }
 
-    main.getConversationManager().playConversation(questPlayer, foundConversation);
+    main.getConversationManager().playConversation(questPlayer, foundConversation, null);
   }
 
   @Override

@@ -18,6 +18,7 @@
 
 package rocks.gravili.notquests.paper.events.hooks;
 
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 import net.citizensnpcs.api.CitizensAPI;
@@ -39,8 +40,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.conversation.Conversation;
+import rocks.gravili.notquests.paper.conversation.ConversationManager;
 import rocks.gravili.notquests.paper.managers.npc.ConversationFocus;
 import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.managers.npc.NQNPCID;
@@ -257,10 +261,27 @@ public class CitizensEvents implements Listener {
         main.getQuestManager().sendQuestsPreviewOfQuestShownNPCs(nqNPC, questPlayer);
 
         //Conversations
-        if(main.getConversationManager() != null){
+        ConversationManager manager = main.getConversationManager();
+        if(manager != null){
             final Conversation foundConversation = main.getConversationManager().getConversationForNPC(nqNPC);
             if (foundConversation != null) {
-                main.getConversationManager().playConversation(questPlayer, foundConversation);
+                // Cancel NPC's movement
+                npc.getNavigator().cancelNavigation();
+                npc.getNavigator().setPaused(true);
+                manager.getActiveConversationsOfNPCWithPlayerCache().putIfAbsent(npc.getId(), new ArrayList<>());
+                manager.getActiveConversationsOfNPCWithPlayerCache().get(npc.getId()).add(player.getUniqueId());
+                new BukkitRunnable(){
+                    public void run() {
+                        if (!manager.getActiveConversationsOfNPCWithPlayerCache().containsKey(nqNPC.getID().getIntegerID())) {
+                            npc.getNavigator().setPaused(false);
+                            this.cancel();
+                        }
+                    }
+                }.runTaskTimer(this.main.getMain(), 0L, 30L);
+                // Try to cancel player's movement
+                player.getLocation().setDirection(new Vector(0, 0, 0));
+                player.setVelocity(new Vector(0, 0, 0));
+                manager.playConversation(questPlayer, foundConversation, nqNPC);
                 if (main.getDataManager().getConfiguration().isCitizensFocusingEnabled())
                     new ConversationFocus(main, player, npc.getEntity(), foundConversation).runTaskTimer(main.getMain(), 0, 2);
             }
