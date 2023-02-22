@@ -18,6 +18,7 @@
 
 package rocks.gravili.notquests.paper;
 
+import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
@@ -35,6 +36,9 @@ import rocks.gravili.notquests.paper.events.InventoryEvents;
 import rocks.gravili.notquests.paper.events.QuestEvents;
 import rocks.gravili.notquests.paper.events.TriggerEvents;
 import rocks.gravili.notquests.paper.events.notquests.NotQuestsFullyLoadedEvent;
+import rocks.gravili.notquests.paper.gui.GuiService;
+import rocks.gravili.notquests.paper.gui.propertytype.ActionPropertyType;
+import rocks.gravili.notquests.paper.gui.propertytype.ConditionPropertyType;
 import rocks.gravili.notquests.paper.managers.*;
 import rocks.gravili.notquests.paper.managers.integrations.IntegrationsManager;
 import rocks.gravili.notquests.paper.managers.integrations.bstats.Metrics;
@@ -85,6 +89,7 @@ public class NotQuests extends NotQuestsMainAbstract<Component, CommandSender> {
     private WebManager webManager;
 
     //Registering Managers
+    private GuiService guiService;
     private ObjectiveManager objectiveManager;
     private ConditionsManager conditionsManager;
     private ActionManager actionManager;
@@ -162,6 +167,10 @@ public class NotQuests extends NotQuestsMainAbstract<Component, CommandSender> {
         //Create a new instance of the Performance Manager which will be re-used everywhere
         performanceManager = new PerformanceManager(this);
 
+        //Load all guis
+        Gui.registerProperty("actions", ActionPropertyType::of);
+        Gui.registerProperty("conditions", ConditionPropertyType::of);
+        reloadGuis();
 
         actionsYMLManager = new ActionsYMLManager(this);
         conditionsYMLManager = new ConditionsYMLManager(this);
@@ -282,6 +291,17 @@ public class NotQuests extends NotQuestsMainAbstract<Component, CommandSender> {
         }
         getLogManager().info("Initial loading has completed!");
 
+    }
+
+
+    /**
+     * Loads all guis located in the gui folder
+     * Use this for refreshing guis after making changes in the gui files
+     */
+    public void reloadGuis() {
+        guiService = new GuiService(this);
+        guiService.saveDefaultGuis();
+        guiService.loadAllGuis();
     }
 
     public void setupBStats() {
@@ -569,4 +589,7 @@ public class NotQuests extends NotQuestsMainAbstract<Component, CommandSender> {
         return npcManager;
     }
 
+    public GuiService getGuiService() {
+        return guiService;
+    }
 }

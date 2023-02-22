@@ -213,7 +213,9 @@ dependencies {
     }
     //Else it errors:
     implementation("io.leangen.geantyref:geantyref:1.3.13")
-    //Interfaces
+    //Interfaces + InventoryFramework
+    implementation("com.github.stefvanschie.inventoryframework:IF:0.10.8")
+
     implementation("org.incendo.interfaces:interfaces-core:1.0.0-SNAPSHOT")
 
     implementation("org.incendo.interfaces:interfaces-paper:1.0.0-SNAPSHOT") {
@@ -288,6 +290,7 @@ tasks.withType<ShadowJar> {
     relocate("net.kyori.adventure.text.serializer.bungeecord", "$shadowPath.kyori.bungeecord")
 
 
+    relocate("com.github.stefvanschie.inventoryframework", "$shadowPath.if")
     relocate("org.incendo.interfaces", "$shadowPath.interfaces")
 
     relocate("redempt.crunch", "$shadowPath.crunch")
@@ -315,6 +318,8 @@ tasks.withType<ShadowJar> {
         //include(dependency('io.github.retrooper.packetevents:')
 
         include(dependency("com.github.AlessioGr.packetevents:"))
+
+        include(dependency("com.github.stefvanschie.inventoryframework:"))
         include(dependency("org.incendo.interfaces:"))
 
         //include(dependency('net.kyori:adventure-platform-bukkit:')

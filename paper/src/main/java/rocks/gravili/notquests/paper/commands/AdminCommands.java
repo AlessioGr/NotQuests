@@ -33,6 +33,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
+import com.gamingmesh.jobs.economy.PaymentData;
+import com.github.retrooper.packetevents.protocol.packettype.PacketType;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -275,6 +278,11 @@ public class AdminCommands {
                         context.getSender().sendMessage(main.parse("<success>Your debug mode has been enabled."));
                     }
 
+                }));
+
+        manager.command(builder.literal("testgui")
+                .handler((context) -> {
+                    main.getGuiService().showGui("testgui", (Player) context.getSender());
                 }));
 
         manager.command(builder.literal("progress")
@@ -641,6 +649,15 @@ public class AdminCommands {
                 .meta(CommandMeta.DESCRIPTION, "Reload the languages from conversations files.")
                 .handler((context) -> {
                     main.getLanguageManager().loadLanguageConfig(false);
+                    context.getSender().sendMessage(Component.empty());
+                    context.getSender().sendMessage(main.parse("<success>Languages have been reloaded."));
+                }));
+
+        manager.command(builder.literal("reload", "load")
+                .literal("guis")
+                .meta(CommandMeta.DESCRIPTION, "Reload the guis from gui files.")
+                .handler((context) -> {
+                    main.reloadGuis();
                     context.getSender().sendMessage(Component.empty());
                     context.getSender().sendMessage(main.parse("<success>Languages have been reloaded."));
                 }));
