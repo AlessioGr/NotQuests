@@ -1175,6 +1175,19 @@ public class DataManager {
                 "Inventory slot in which the journal should appear."
         ));
 
+
+        configuration.setObjectiveUnlockConditionsCheckOnAnyAction(getGeneralConfigBoolean(
+                "general.objectives.unlock-conditions-checks.any-action",
+                true,
+                "If set to true, the unlock conditions will be checked every time any action runs for that player"
+        ));
+
+        configuration.setObjectiveUnlockConditionsCheckRegularInterval(getGeneralConfigInt(
+                "general.objectives.unlock-conditions-checks.regular-interval",
+                -1,
+                "If set to a positive number, the unlock conditions will be checked every X seconds for that player. -1 = disabled"
+        ));
+
         configuration.setVerboseStartupMessages( configuration.isDebug()|| getGeneralConfigBoolean(
                 "logging.verbose-startup-messages",
                 true,
