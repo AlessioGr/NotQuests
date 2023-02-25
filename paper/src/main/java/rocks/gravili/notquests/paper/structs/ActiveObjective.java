@@ -121,7 +121,7 @@ public class ActiveObjective extends ActiveObjectiveHolder {
         return unlocked;
     }
 
-    public void updateUnlocked(final boolean notifyPlayer, final boolean triggerAcceptQuestTrigger) { //TODO: This is currently only done when: plugin startup, quest accept, another objective of that quest is completed. This should also be checked elsewhere like in a regular interval to check conditions like idk, Money conditions, more regularly. Or maybe via othr events or sth. If regularly, the check delay (and thus performance) should be configurable in the general.yml
+    public void updateUnlocked(final boolean notifyPlayer, final boolean triggerAcceptQuestTrigger) {
         getQuestPlayer().sendDebugMessage("Updating if objective is unlocked...");
 
         //First check the quests PredefinedProgressOrder
