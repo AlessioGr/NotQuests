@@ -32,7 +32,7 @@ java {
 repositories {
     mavenCentral()
 
-    maven("https://papermc.io/repo/repository/maven-public/"){
+    maven(" https://repo.papermc.io/repository/maven-public/"){
         content {
             includeGroup("io.papermc.paper")
             includeGroup("net.kyori")
@@ -182,8 +182,8 @@ dependencies {
     implementation("net.kyori:adventure-platform-bukkit:4.1.2")
 
     //CloudCommands
-    implementation("cloud.commandframework:cloud-paper:1.8.1")
-    implementation("cloud.commandframework:cloud-minecraft-extras:1.8.1")
+    implementation("cloud.commandframework:cloud-paper:1.8.2")
+    implementation("cloud.commandframework:cloud-minecraft-extras:1.8.2")
     //Else it errors:
     implementation("io.leangen.geantyref:geantyref:1.3.13")
 

@@ -36,7 +36,7 @@ java {
 repositories {
     mavenCentral()
 
-    maven("https://papermc.io/repo/repository/maven-public/") {
+    maven("https://repo.papermc.io/repository/maven-public/") {
         content {
             includeGroup("io.papermc.paper")
             includeGroup("net.kyori")
@@ -205,10 +205,10 @@ dependencies {
     }
 
     //CloudCommands
-    implementation("cloud.commandframework:cloud-paper:1.8.1") {
+    implementation("cloud.commandframework:cloud-paper:1.8.2") {
         exclude(group = "net.kyori", module = "adventure-api")
     }
-    implementation("cloud.commandframework:cloud-minecraft-extras:1.8.1") {
+    implementation("cloud.commandframework:cloud-minecraft-extras:1.8.2") {
         exclude(group = "net.kyori", module = "adventure-api")
     }
     //Else it errors:
