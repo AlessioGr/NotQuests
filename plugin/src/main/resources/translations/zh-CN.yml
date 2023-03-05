@@ -104,9 +104,11 @@ chat:
       craftItems:
         base: '制作物品：<main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: '交付物品：<main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
+        base: 'Deliver Items: <main>%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%(%'
         deliver-to-npc: '      <GRAY>把物品递交给 <WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>负责收取物品的NPC暂时不在!'
+      enchant:
+        base: 'Enchant Items with %ENCHANTMENT%: <main>%ITEMTOENCHANTTYPE% %(%%ITEMTOENCHANTNAME%%(%'
       escortNPC:
         base: '护送 <main>%NPCNAME%</main> to <main>%DESTINATIONNPCNAME%'
       fishItems:
