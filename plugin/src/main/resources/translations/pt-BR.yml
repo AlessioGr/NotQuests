@@ -40,12 +40,12 @@ chat:
   quest-not-found-or-does-not-exist: <error>Missão <highlight>%QUESTNAME%</highlight> não encontrada ou não ativa!
   active-quests-label: '<highlight>Missões ativas:'
   take-disabled: <error>Aceitando ou visualizando a missão <highlight>%QUESTNAME%</highlight> está desabilitado.
-  abort-disabled: <error>Aborting the quest <highlight>%QUESTNAME%</highlight> is disabled.
+  abort-disabled: <error>Cancelando a missão <highlight>%QUESTNAME%</highlight> está desabilitada.
   quest-not-active-error: '<error>Erro: <highlight>%QUESTNAME%</highlight> não é uma missão ativa!'
   force-add-active-quest-accepted: '<success>Aceitou a missão com sucesso (Forçada).'
   add-active-quest-player-object-not-found: '<warn>Error: Objeto do jogador não encontrado. Por favor, informe isso ao desenvolvedor do plugin.'
-  reached-max-accepts-limit: '<red>You have accepted this quest too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%ACCEPTEDAMOUNT%</highlight> times.'
-  reached-max-fails-limit: '<red>You have failed this quest too many times already. You can only fail it <highlight>%MAXFAILS%</highlight> times, but you have already failed it <highlight>%FAILEDAMOUNT%</highlight> times.'
+  reached-max-accepts-limit: '<red>Você já terminou essas missões muitas vezes. Você só pode aceitar <highlight>%MAXACCEPTS%</highlight> vezes, mas você já aceitou<highlight>%ACCEPTEDAMOUNT%</highlight> vezes.'
+  reached-max-fails-limit: '<red>Você já terminou essas missões muitas vezes. Você só pode aceitar <highlight>%MAXFAILS%</highlight> vezes, mas você já aceitou<highlight>%FAILEDAMOUNT%</highlight> vezes.'
   reached-max-completions-limit: '<red>You have completed this quest too many times already. You can only complete it <highlight>%MAXCOMPLETIONS%</highlight> times, but you have already completed it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
   reached-max-active-quests-per-player-limit: '<red>Você não pode aceitar mais de <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> Missões.'
   quest-on-cooldown:
@@ -104,9 +104,11 @@ chat:
       craftItems:
         base: 'Criar Itens: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: 'Entregar Itens: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
+        base: 'Deliver Items: <main>%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%(%'
         deliver-to-npc: '      <GRAY>Entregue para <WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>O NPC de entrega não está disponível no momento!'
+      enchant:
+        base: 'Enchant Items with %ENCHANTMENT%: <main>%ITEMTOENCHANTTYPE% %(%%ITEMTOENCHANTNAME%%(%'
       escortNPC:
         base: 'Escolte <main>%NPCNAME%</main> para <main>%DESTINATIONNPCNAME%'
       fishItems:
