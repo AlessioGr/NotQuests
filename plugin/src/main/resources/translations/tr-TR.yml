@@ -104,9 +104,11 @@ chat:
       craftItems:
         base: 'Eşyaları Üret: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: 'Eşyaları Teslim et: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
+        base: 'Deliver Items: <main>%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%(%'
         deliver-to-npc: '      <GRAY> <WHITE>%NPCNAME% teslim et'
         deliver-to-npc-not-available: '      <GRAY>Teslimat NPC''si şu anda mevcut değil!'
+      enchant:
+        base: 'Enchant Items with %ENCHANTMENT%: <main>%ITEMTOENCHANTTYPE% %(%%ITEMTOENCHANTNAME%%(%'
       escortNPC:
         base: '<main>%NPCNAME%</main> <main>%DESTINATIONNPCNAME% kadar eşlik edin'
       fishItems:
