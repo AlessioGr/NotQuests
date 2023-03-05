@@ -104,9 +104,11 @@ chat:
       craftItems:
         base: 'Fabricar Items: <main>%ITEMTOCRAFTTYPE%%(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: 'Entregar Items: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
+        base: 'Deliver Items: <main>%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%(%'
         deliver-to-npc: '      <GRAY>Entregarlo a <WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>¡El NPC al que tienes entregar no esta disponible!'
+      enchant:
+        base: 'Enchant Items with %ENCHANTMENT%: <main>%ITEMTOENCHANTTYPE% %(%%ITEMTOENCHANTNAME%%(%'
       escortNPC:
         base: 'Escolta al NPC <main>%NPCNAME%</main> hacia <main>%DESTINATIONNPCNAME%'
       fishItems:
