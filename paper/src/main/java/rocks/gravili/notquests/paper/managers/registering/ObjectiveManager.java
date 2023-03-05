@@ -31,31 +31,7 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.ObjectiveSelector;
-import rocks.gravili.notquests.paper.structs.objectives.BreakBlocksObjective;
-import rocks.gravili.notquests.paper.structs.objectives.BreedObjective;
-import rocks.gravili.notquests.paper.structs.objectives.PickupItemsObjective;
-import rocks.gravili.notquests.paper.structs.objectives.ConditionObjective;
-import rocks.gravili.notquests.paper.structs.objectives.ConsumeItemsObjective;
-import rocks.gravili.notquests.paper.structs.objectives.CraftItemsObjective;
-import rocks.gravili.notquests.paper.structs.objectives.DeliverItemsObjective;
-import rocks.gravili.notquests.paper.structs.objectives.FishItemsObjective;
-import rocks.gravili.notquests.paper.structs.objectives.InteractObjective;
-import rocks.gravili.notquests.paper.structs.objectives.JumpObjective;
-import rocks.gravili.notquests.paper.structs.objectives.KillMobsObjective;
-import rocks.gravili.notquests.paper.structs.objectives.NumberVariableObjective;
-import rocks.gravili.notquests.paper.structs.objectives.Objective;
-import rocks.gravili.notquests.paper.structs.objectives.ObjectiveHolder;
-import rocks.gravili.notquests.paper.structs.objectives.ObjectiveObjective;
-import rocks.gravili.notquests.paper.structs.objectives.OpenBuriedTreasureObjective;
-import rocks.gravili.notquests.paper.structs.objectives.OtherQuestObjective;
-import rocks.gravili.notquests.paper.structs.objectives.PlaceBlocksObjective;
-import rocks.gravili.notquests.paper.structs.objectives.ReachLocationObjective;
-import rocks.gravili.notquests.paper.structs.objectives.RunCommandObjective;
-import rocks.gravili.notquests.paper.structs.objectives.ShearSheepObjective;
-import rocks.gravili.notquests.paper.structs.objectives.SmeltObjective;
-import rocks.gravili.notquests.paper.structs.objectives.SneakObjective;
-import rocks.gravili.notquests.paper.structs.objectives.TalkToNPCObjective;
-import rocks.gravili.notquests.paper.structs.objectives.TriggerCommandObjective;
+import rocks.gravili.notquests.paper.structs.objectives.*;
 import rocks.gravili.notquests.paper.structs.objectives.hooks.betonquest.BetonQuestObjectiveStateChangeObjective;
 import rocks.gravili.notquests.paper.structs.objectives.hooks.citizens.EscortNPCObjective;
 import rocks.gravili.notquests.paper.structs.objectives.hooks.elitemobs.KillEliteMobsObjective;
@@ -96,6 +72,8 @@ public class ObjectiveManager {
     registerObjective("TalkToNPC", TalkToNPCObjective.class);
     registerObjective("EscortNPC", EscortNPCObjective.class);
     registerObjective("CraftItems", CraftItemsObjective.class);
+    registerObjective("Enchant", EnchantObjective.class);
+
     registerObjective(
         "KillEliteMobs", KillEliteMobsObjective.class); // TODO: only if EliteMobs enabled?
     registerObjective("ReachLocation", ReachLocationObjective.class);

@@ -29,6 +29,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -36,6 +37,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
@@ -65,6 +67,7 @@ import rocks.gravili.notquests.paper.structs.triggers.types.WorldLeaveTrigger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import static rocks.gravili.notquests.paper.commands.NotQuestColors.debugHighlightGradient;
 
@@ -1240,7 +1243,7 @@ public class QuestEvents implements Listener {
                 conversationPlayer.chooseOption(foundCurrentPlayerLine);
                 return true;
             }
-        } else {
+        } else if(questPlayer != null) {
             questPlayer.sendDebugMessage("Tried to choose conversation option, but the conversationPlayer was not found! Active conversationPlayers count: <highlight>" + main.getConversationManager().getOpenConversations().size());
             questPlayer.sendDebugMessage("All active conversationPlayers: <highlight>" + main.getConversationManager().getOpenConversations().toString());
             questPlayer.sendDebugMessage("Current QuestPlayer Object: <highlight>" + questPlayer);
@@ -1410,6 +1413,41 @@ public class QuestEvents implements Listener {
             });
             questPlayer.checkQueuedObjectives();
         }
+    }
+
+
+    // Enchants
+    @EventHandler
+    public void onEnchantItem(final EnchantItemEvent e) {
+        final Player player = e.getEnchanter();
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
+        if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
+            return;
+        }
+        questPlayer.queueObjectiveCheck(activeObjective -> {
+            if (activeObjective.getObjective() instanceof final EnchantObjective enchantObjective) {
+                final ItemStack item = e.getItem();
+                final Map<Enchantment, Integer> enchantments = e.getEnchantsToAdd();
+
+                if(!enchantObjective.getItemStackSelection().checkIfIsIncluded(item)) {
+                    return;
+                }
+
+
+                for (final Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
+                    final Enchantment enchantment = entry.getKey();
+                    final int level = entry.getValue();
+                    if (enchantObjective.getEnchantment().equalsIgnoreCase(enchantment.getKey().getKey())) {
+                        if (enchantObjective.getMinLevel() <= level && enchantObjective.getMaxLevel() >= level) {
+                            activeObjective.addProgress(1);
+                            return;
+                        }
+                    }
+                }
+
+            }
+        });
+        questPlayer.checkQueuedObjectives();
     }
 
 
