@@ -56,7 +56,7 @@ public class GiveItemAction extends Action {
                 ArgumentDescription.of(
                     "Material of the item which the player should receive. If you use 'hand', the item you are holding in your main hand will be used."))
             .argument(
-                IntegerArgument.<CommandSender>newBuilder("amount").withMin(1),
+                IntegerArgument.<CommandSender>builder("amount").withMin(1),
                 ArgumentDescription.of("Amount of items which the player will receive."))
             .handler(
                 (context) -> {

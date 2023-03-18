@@ -19,7 +19,7 @@
 plugins {
     `java-library`
     `maven-publish`
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("com.github.johnrengelman.shadow")
     id("io.papermc.paperweight.userdev")
     id("xyz.jpenilla.run-paper")
 }
@@ -34,7 +34,7 @@ java {
 repositories {
     mavenCentral()
 
-    maven("https://papermc.io/repo/repository/maven-public/") {
+    maven("https://repo.papermc.io/repository/maven-public/") {
         content {
             includeGroup("io.papermc.paper")
             includeGroup("net.kyori")
@@ -142,7 +142,7 @@ repositories {
 
 dependencies {
     implementation(project(path= ":common", configuration= "shadow"))
-    paperDevBundle("1.19.3-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.19.3-R0.1-SNAPSHOT")
 
     compileOnly(files("libs/citizens-2.0.30-8.jar"))
 
@@ -155,7 +155,7 @@ dependencies {
     compileOnly("com.github.UlrichBR:UClansV5-API:4.5")
     compileOnly(files("libs/ProjectKorra-1.10.0.jar"))
 
-    compileOnly(files("libs/BetonQuest-2.0.0-539.jar"))
+    compileOnly(files("libs/BetonQuest-2.0.0-574.jar"))
 
     compileOnly("com.sk89q.worldedit:worldedit-core:7.3.0-SNAPSHOT")
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.3.0-SNAPSHOT")
@@ -178,10 +178,10 @@ dependencies {
     }
 
     //CloudCommands
-    implementation("cloud.commandframework:cloud-paper:1.8.0") {
+    implementation("cloud.commandframework:cloud-paper:1.8.2") {
         exclude(group = "net.kyori", module = "adventure-api")
     }
-    implementation("cloud.commandframework:cloud-minecraft-extras:1.8.0") {
+    implementation("cloud.commandframework:cloud-minecraft-extras:1.8.2") {
         exclude(group = "net.kyori", module = "adventure-api")
     }
     //Else it errors:

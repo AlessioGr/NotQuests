@@ -23,7 +23,7 @@ plugins {
     id("com.github.johnrengelman.shadow")
     id("io.papermc.paperweight.userdev")
     id("xyz.jpenilla.run-paper")
-    id("net.minecrell.plugin-yml.bukkit") version "0.5.2"
+    id("net.minecrell.plugin-yml.bukkit") version "0.5.3"
 }
 
 group = "rocks.gravili.notquests"
@@ -32,7 +32,7 @@ version = rootProject.version
 repositories {
     mavenCentral()
 
-    maven("https://papermc.io/repo/repository/maven-public/"){
+    maven(" https://repo.papermc.io/repository/maven-public/"){
         content {
             includeGroup("io.papermc.paper")
             includeGroup("net.kyori")
@@ -116,7 +116,7 @@ repositories {
 }
 
 dependencies {
-    paperDevBundle("1.19.3-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.19.3-R0.1-SNAPSHOT")
 
     implementation(project(path= ":common", configuration= "shadow"))
     implementation(project(path= ":spigot", configuration= "shadow"))

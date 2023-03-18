@@ -29,6 +29,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -36,6 +37,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
@@ -65,6 +67,7 @@ import rocks.gravili.notquests.paper.structs.triggers.types.WorldLeaveTrigger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import static rocks.gravili.notquests.paper.commands.NotQuestColors.debugHighlightGradient;
 
@@ -75,101 +78,94 @@ public class QuestEvents implements Listener {
     private final HashMap<QuestPlayer, String> beaconsToUpdate;
 
     int beaconCounter = 0;
+    int objectiveUnlockConditionCheckCounter = 0;
     int conditionObjectiveCounter = 0;
 
 
     public QuestEvents(NotQuests main) {
         this.main = main;
         beaconsToUpdate = new HashMap<>();
-        if(main.getConfiguration().getBeamMode().equals("end_gateway")){
-            Bukkit.getScheduler().scheduleSyncRepeatingTask(main.getMain(), () -> { //Main Loop
-                if(main.getDataManager().isDisabled()){
+
+
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(main.getMain(), () -> { //Main Loop
+            if(main.getDataManager().isDisabled()){
+                return;
+            }
+            if(!main.getConfiguration().getBeamMode().equals("end_gateway")){
+                beaconsToUpdate.clear();
+            }
+
+            final boolean updateBeacons;
+            beaconCounter++;
+            if(beaconCounter >= 4){
+                beaconCounter = 0;
+                updateBeacons = true;
+            }
+            else{
+                updateBeacons = false;
+            }
+
+            final boolean updateConditionObjectives;
+            conditionObjectiveCounter++;
+            if(conditionObjectiveCounter >= 2){
+                updateConditionObjectives = true;
+                conditionObjectiveCounter = 0;
+            }
+            else{
+                updateConditionObjectives = false;
+            }
+
+            final boolean updateObjectiveUnlockConditions;
+            if(main.getConfiguration().getObjectiveUnlockConditionsCheckRegularInterval() > 0) {
+                objectiveUnlockConditionCheckCounter++;
+                if(objectiveUnlockConditionCheckCounter >= main.getConfiguration().getObjectiveUnlockConditionsCheckRegularInterval()){
+                    objectiveUnlockConditionCheckCounter = 0;
+                    updateObjectiveUnlockConditions = true;
+                } else {
+                    updateObjectiveUnlockConditions = false;
+                }
+            }else {
+                updateObjectiveUnlockConditions = false;
+            }
+
+
+
+            for(final Player player : Bukkit.getOnlinePlayers()) {
+                final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
+                if(questPlayer == null){
                     return;
                 }
-                for(final Player player : Bukkit.getOnlinePlayers()) {
-                    final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
-                    if(questPlayer == null){
-                        return;
-                    }
 
-                    if(questPlayer.getBossBar() != null){
-                        questPlayer.increaseBossBarTimeByOneSecond();
-                    }
-
-                    beaconCounter++;
-                    if(beaconCounter >= 4){
-                        questPlayer.updateBeaconLocations(player);
-                        beaconCounter = 0;
-                    }
-
-                    conditionObjectiveCounter++;
-                    if(conditionObjectiveCounter >= 2){
-                        questPlayer.updateConditionObjectives(player);
-                        conditionObjectiveCounter = 0;
-                    }
-
-
-
-
+                if(questPlayer.getBossBar() != null){
+                    questPlayer.increaseBossBarTimeByOneSecond();
                 }
 
-            }, 0L, 20L); //0 Tick initial delay, 20 Tick (1 Second) between repeats
-        }else{
-            Bukkit.getScheduler().scheduleSyncRepeatingTask(main.getMain(), new Runnable() {
-                @Override
-                public void run() {
-                   /* if(main.getDataManager().isDisabled()){
-                        return;
-                    }
-                    for(QuestPlayer questPlayer : beaconsToUpdate.keySet()) {
-                        String locationName = beaconsToUpdate.get(questPlayer);
-                        final Player player = questPlayer.getPlayer();
-
-
-
-                    final Location newBeaconLocation = beaconsToUpdate.get(questPlayer).newLocation();
-                    //Add Beacon to new chunk
-                    BlockState beaconBlockState = newBeaconLocation.getBlock().getState();
-                    beaconBlockState.setType(Material.BEACON);
-
-                    BlockState ironBlockState = newBeaconLocation.getBlock().getState();
-                    ironBlockState.setType(Material.IRON_BLOCK);
-
-                    player.sendBlockChange(newBeaconLocation, beaconBlockState.getBlockData());
-                    player.sendBlockChange(newBeaconLocation.add(-1,-1,-1), ironBlockState.getBlockData());
-                    player.sendBlockChange(newBeaconLocation.add(1,0,0), ironBlockState.getBlockData());
-                    player.sendBlockChange(newBeaconLocation.add(1,0,0), ironBlockState.getBlockData());
-                    player.sendBlockChange(newBeaconLocation.add(0,0,1), ironBlockState.getBlockData());
-                    player.sendBlockChange(newBeaconLocation.add(-1,0,0), ironBlockState.getBlockData());
-                    player.sendBlockChange(newBeaconLocation.add(-1,0,0), ironBlockState.getBlockData());
-                    player.sendBlockChange(newBeaconLocation.add(0,0,1), ironBlockState.getBlockData());
-                    player.sendBlockChange(newBeaconLocation.add(1,0,0), ironBlockState.getBlockData());
-                    player.sendBlockChange(newBeaconLocation.add(1,0,0), ironBlockState.getBlockData());
-
-
-                    questPlayer.getActiveLocationsAndBeacons().put(locationName, newBeaconLocation.add(-1, 1, -1));*/
-
-                        /*Location locationToRemove = questPlayer.getActiveLocationsAndBeacons().get(locationName);
-
-                        //player.sendMessage("Scheduled Beacon Removal");
-
-                        questPlayer.getActiveLocationsAndBeacons().remove(locationName);
+                if(main.getConfiguration().getBeamMode().equals("end_gateway")){
+                    if(updateBeacons){
                         questPlayer.updateBeaconLocations(player);
-                        if(locationToRemove != null){
-                            questPlayer.scheduleBeaconRemovalAt(locationToRemove, player);
-                        }
-
-
-                        //main.sendMessage(player, "<positive>Added new Beacon");
-
-                    }*/
-                    if(!main.getConfiguration().getBeamMode().equals("end_gateway")){
-                        beaconsToUpdate.clear();
                     }
-
                 }
-            }, 0L, 80L); //0 Tick initial delay, 20 Tick (1 Second) between repeats
-        }
+
+
+                if(updateConditionObjectives){
+                    questPlayer.updateConditionObjectives(player);
+                }
+
+
+
+
+                // Check unlock objectives
+                if(updateObjectiveUnlockConditions) {
+                    for(final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+                        activeQuest.updateObjectivesUnlocked(true, true);
+                    }
+                }
+
+
+
+            }
+
+        }, 0L, 20L); //0 Tick initial delay, 20 Tick (1 Second) between repeats
 
     }
 
@@ -1247,7 +1243,7 @@ public class QuestEvents implements Listener {
                 conversationPlayer.chooseOption(foundCurrentPlayerLine);
                 return true;
             }
-        } else {
+        } else if(questPlayer != null) {
             questPlayer.sendDebugMessage("Tried to choose conversation option, but the conversationPlayer was not found! Active conversationPlayers count: <highlight>" + main.getConversationManager().getOpenConversations().size());
             questPlayer.sendDebugMessage("All active conversationPlayers: <highlight>" + main.getConversationManager().getOpenConversations().toString());
             questPlayer.sendDebugMessage("Current QuestPlayer Object: <highlight>" + questPlayer);
@@ -1417,6 +1413,41 @@ public class QuestEvents implements Listener {
             });
             questPlayer.checkQueuedObjectives();
         }
+    }
+
+
+    // Enchants
+    @EventHandler
+    public void onEnchantItem(final EnchantItemEvent e) {
+        final Player player = e.getEnchanter();
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
+        if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
+            return;
+        }
+        questPlayer.queueObjectiveCheck(activeObjective -> {
+            if (activeObjective.getObjective() instanceof final EnchantObjective enchantObjective) {
+                final ItemStack item = e.getItem();
+                final Map<Enchantment, Integer> enchantments = e.getEnchantsToAdd();
+
+                if(!enchantObjective.getItemStackSelection().checkIfIsIncluded(item)) {
+                    return;
+                }
+
+
+                for (final Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
+                    final Enchantment enchantment = entry.getKey();
+                    final int level = entry.getValue();
+                    if (enchantObjective.getEnchantment().equalsIgnoreCase(enchantment.getKey().getKey())) {
+                        if (enchantObjective.getMinLevel() <= level && enchantObjective.getMaxLevel() >= level) {
+                            activeObjective.addProgress(1);
+                            return;
+                        }
+                    }
+                }
+
+            }
+        });
+        questPlayer.checkQueuedObjectives();
     }
 
 

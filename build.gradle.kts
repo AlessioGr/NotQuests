@@ -22,20 +22,20 @@ plugins {
     `java-library`
     `maven-publish`
     id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("io.papermc.paperweight.userdev") version "1.4.1"
+    id("io.papermc.paperweight.userdev") version "1.5.3"
     id("xyz.jpenilla.run-paper") version "2.0.1" // Adds runServer and runMojangMappedServer tasks for testing
 }
 
 
 group = "rocks.gravili.notquests"
-version = "5.13.1"
+version = "5.14.0"
 
 
 repositories {
 }
 
 dependencies {
-    paperDevBundle("1.19.3-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.19.3-R0.1-SNAPSHOT")
 }
 
 /**

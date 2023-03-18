@@ -25,6 +25,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
+import rocks.gravili.notquests.paper.structs.ActiveObjective;
+import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
@@ -131,10 +133,19 @@ public abstract class Action {
       }else{
         final long delayToUse = delayOverride == -1 ? getExecutionDelay()/50 : delayOverride/50;
         Bukkit.getScheduler().runTaskLater(main.getMain(), () -> executeInternally(questPlayer, objects), delayToUse);
+        return;
       }
     } else {
       main.getLogManager().debug("Action " + getActionName() + " was executed on a non-primary thread. Switching to primary thread...");
       Bukkit.getScheduler().runTask(main.getMain(), () -> execute(questPlayer, delayOverride, objects));
+      return;
+    }
+
+    // Potentially unlock objectives
+    if(questPlayer != null && main.getConfiguration().isObjectiveUnlockConditionsCheckOnAnyAction()) {
+      for(final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+        activeQuest.updateObjectivesUnlocked(true, true);
+      }
     }
 
   }

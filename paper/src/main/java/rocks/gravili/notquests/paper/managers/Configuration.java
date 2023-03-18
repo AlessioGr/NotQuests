@@ -127,6 +127,12 @@ public class Configuration {
 
   private boolean integrationZNPCsEnabled = true;
 
+
+  private boolean objectiveUnlockConditionsCheckOnAnyAction = true;
+
+  private int objectiveUnlockConditionsCheckRegularInterval = -1;
+
+
   public boolean isIntegrationZNPCsEnabled() {
     return integrationZNPCsEnabled;
   }
@@ -1207,4 +1213,19 @@ public class Configuration {
   }
 
 
+  public boolean isObjectiveUnlockConditionsCheckOnAnyAction() {
+    return objectiveUnlockConditionsCheckOnAnyAction;
+  }
+
+  public void setObjectiveUnlockConditionsCheckOnAnyAction(boolean objectiveUnlockConditionsCheckOnAnyAction) {
+    this.objectiveUnlockConditionsCheckOnAnyAction = objectiveUnlockConditionsCheckOnAnyAction;
+  }
+
+  public int getObjectiveUnlockConditionsCheckRegularInterval() {
+    return objectiveUnlockConditionsCheckRegularInterval;
+  }
+
+  public void setObjectiveUnlockConditionsCheckRegularInterval(int objectiveUnlockConditionsCheckRegularInterval) {
+    this.objectiveUnlockConditionsCheckRegularInterval = objectiveUnlockConditionsCheckRegularInterval;
+  }
 }
