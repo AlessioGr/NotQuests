@@ -205,7 +205,6 @@ dependencies {
  */
 val shadowPath = "rocks.gravili.notquests.spigot.shadow"
 tasks.withType<ShadowJar> {
-    minimize()
 
     //exclude('com.mojang:brigadier')
     relocate("net.kyori", "$shadowPath.kyori")
@@ -264,6 +263,7 @@ tasks {
     }
 
     compileJava {
+        dependsOn(project(":common").tasks["assemble"])
         options.encoding = Charsets.UTF_8.name()
         options.release.set(17)
     }

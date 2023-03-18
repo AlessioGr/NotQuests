@@ -29,6 +29,8 @@ import cloud.commandframework.bukkit.parsers.WorldArgument;
 import cloud.commandframework.bukkit.parsers.selector.SinglePlayerSelectorArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
+
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -52,6 +54,7 @@ import org.bukkit.util.Vector;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.spongepowered.configurate.ConfigurateException;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.*;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
@@ -278,11 +281,6 @@ public class AdminCommands {
                         context.getSender().sendMessage(main.parse("<success>Your debug mode has been enabled."));
                     }
 
-                }));
-
-        manager.command(builder.literal("testgui")
-                .handler((context) -> {
-                    main.getGuiService().showGui("testgui", (Player) context.getSender());
                 }));
 
         manager.command(builder.literal("progress")
@@ -626,13 +624,14 @@ public class AdminCommands {
 
                     main.getDataManager().loadGeneralConfig();
                     main.getLanguageManager().loadLanguageConfig(false);
+                    main.reloadGuis();
                     if(main.getConversationManager() != null) {
                       main.getConversationManager().loadConversationsFromConfig();
                     }else{
                       context.getSender().sendMessage("<error> Loading conversations has been skipped: ConversationManager is null");
                     }
                     context.getSender().sendMessage(Component.empty());
-                    context.getSender().sendMessage(main.parse("<success>NotQuests general.yml, language configuration and conversations have been re-loaded. <unimportant>If you want to reload more, please use the ServerUtils plugin (available on spigot) or restart the server. This reload command does not reload the quests file or the database."));
+                    context.getSender().sendMessage(main.parse("<success>NotQuests general.yml, language configuration, guis and conversations have been re-loaded. <unimportant>If you want to reload more, please use the ServerUtils plugin (available on spigot) or restart the server. This reload command does not reload the quests file or the database."));
                 }));
 
         manager.command(builder.literal("reload", "load")
@@ -659,7 +658,7 @@ public class AdminCommands {
                 .handler((context) -> {
                     main.reloadGuis();
                     context.getSender().sendMessage(Component.empty());
-                    context.getSender().sendMessage(main.parse("<success>Languages have been reloaded."));
+                    context.getSender().sendMessage(main.parse("<success>Guis have been reloaded."));
                 }));
 
         manager.command(builder.literal("reload", "load")

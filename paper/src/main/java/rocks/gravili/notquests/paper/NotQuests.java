@@ -18,7 +18,6 @@
 
 package rocks.gravili.notquests.paper;
 
-import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
@@ -37,8 +36,6 @@ import rocks.gravili.notquests.paper.events.QuestEvents;
 import rocks.gravili.notquests.paper.events.TriggerEvents;
 import rocks.gravili.notquests.paper.events.notquests.NotQuestsFullyLoadedEvent;
 import rocks.gravili.notquests.paper.gui.GuiService;
-import rocks.gravili.notquests.paper.gui.propertytype.ActionPropertyType;
-import rocks.gravili.notquests.paper.gui.propertytype.ConditionPropertyType;
 import rocks.gravili.notquests.paper.managers.*;
 import rocks.gravili.notquests.paper.managers.integrations.IntegrationsManager;
 import rocks.gravili.notquests.paper.managers.integrations.bstats.Metrics;
@@ -167,10 +164,6 @@ public class NotQuests extends NotQuestsMainAbstract<Component, CommandSender> {
         //Create a new instance of the Performance Manager which will be re-used everywhere
         performanceManager = new PerformanceManager(this);
 
-        //Load all guis
-        Gui.registerProperty("actions", ActionPropertyType::of);
-        Gui.registerProperty("conditions", ConditionPropertyType::of);
-        reloadGuis();
 
         actionsYMLManager = new ActionsYMLManager(this);
         conditionsYMLManager = new ConditionsYMLManager(this);
@@ -190,7 +183,7 @@ public class NotQuests extends NotQuestsMainAbstract<Component, CommandSender> {
 
         updateManager = new UpdateManager(this);
 
-        guiManager = new GUIManager(this);
+        reloadGuis();
 
         /*
          * Tell the Data Manager: Hey, NPCs have not been loaded yet. If this is set to false, the plugin will
@@ -222,6 +215,8 @@ public class NotQuests extends NotQuestsMainAbstract<Component, CommandSender> {
         conditionsManager = new ConditionsManager(this);
         actionManager = new ActionManager(this);
         triggerManager = new TriggerManager(this);
+
+        guiManager = new GUIManager(this);
 
         variablesManager.alreadyFullRegisteredVariables.addAll(variablesManager.getVariableIdentifiers());
 
@@ -300,7 +295,7 @@ public class NotQuests extends NotQuestsMainAbstract<Component, CommandSender> {
      */
     public void reloadGuis() {
         guiService = new GuiService(this);
-        guiService.saveDefaultGuis();
+        guiService.saveAllDefaultGuis();
         guiService.loadAllGuis();
     }
 

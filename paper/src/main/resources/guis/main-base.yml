@@ -1,0 +1,43 @@
+title: gui.testgui.title
+type: TAB
+structure:
+  - "F F F F F F F F F"
+  - "1 W F X X X X X X"
+  - "2 W F X X X X X X"
+  - "3 W F X X X X X X"
+  - "F W F X X X X X X"
+  - "F F F X X X X X X"
+
+icons:
+  F:
+    type: BLANK
+    displayName: EMPTY
+    material: BLACK_STAINED_GLASS_PANE
+  1:
+    type: TAB
+    displayName: gui.testgui.icon.tab1.name
+    material: DIAMOND_BLOCK
+    properties:
+      tabindex: 0
+  2:
+    type: TAB
+    displayName: gui.testgui.icon.tab2.name
+    material: DIAMOND_BLOCK
+    properties:
+      tabindex: 1
+  3:
+    type: TAB
+    displayName: gui.testgui.icon.tab3.name
+    material: DIAMOND_BLOCK
+    properties:
+      tabindex: 2
+  W:
+    type: BLANK
+    displayName: EMPTY
+    material: WHITE_STAINED_GLASS_PANE
+  X:
+    type: ACTION
+    displayName: gui.testgui.icon.listeditem.name
+    material: %QUEST_ITEM_MATERIAL%
+    properties:
+      paginated: true

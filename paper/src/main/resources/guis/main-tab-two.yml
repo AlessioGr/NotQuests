@@ -1,0 +1,15 @@
+title: gui.testgui.title
+type: PAGED_ITEMS
+structure:
+  - "X X X X X X"
+  - "X X X X X X"
+  - "X X X X X X"
+  - "X X X X X X"
+  - "X X X X X X"
+icons:
+  X:
+    type: ACTION
+    displayName: gui.testgui.icon.listeditem.name
+    material: %QUEST_ITEM_MATERIAL%
+    properties:
+      paginated: true

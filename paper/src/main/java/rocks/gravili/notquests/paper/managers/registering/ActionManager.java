@@ -87,6 +87,7 @@ public class ActionManager {
     registerAction("PlaySound", PlaySoundAction.class);
 
     registerAction("OpenGui", OpenGuiAction.class);
+    registerAction("CloseInventory", CloseInventoryAction.class);
 
 
     registerAction("Number", NumberAction.class);

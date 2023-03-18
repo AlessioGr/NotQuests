@@ -1,248 +1,161 @@
 package rocks.gravili.notquests.paper.gui;
 
-import com.github.stefvanschie.inventoryframework.exception.XMLLoadException;
-import com.github.stefvanschie.inventoryframework.gui.type.*;
-import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
-import com.github.stefvanschie.inventoryframework.gui.type.util.NamedGui;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import de.studiocode.inventoryaccess.component.AdventureComponentWrapper;
+import de.studiocode.invui.window.impl.single.SimpleWindow;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+import org.spongepowered.configurate.CommentedConfigurationNode;
+import org.spongepowered.configurate.ConfigurateException;
+import org.spongepowered.configurate.serialize.SerializationException;
+import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.gui.icon.Button;
+import rocks.gravili.notquests.paper.gui.icon.Icon;
+import rocks.gravili.notquests.paper.gui.typeserializer.IconTypeSerializer;
+import rocks.gravili.notquests.paper.gui.typeserializer.ItemTypeSerializer;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.logging.Level;
 
 public class GuiService {
     private final NotQuests notQuests;
-
-    // TODO: add a config variable for that
-    private static final String EMPTY_DISPLAYNAME_KEYWORD = "EMPTY";
-    private final GuiActions guiActions;
-    private final Map<String, Gui> guis;
+    private final Map<String, CustomGui> guis;
+    private final Set<String> knownProperties;
 
     public GuiService(NotQuests notQuests) {
         this.notQuests = notQuests;
         this.guis = new HashMap<>();
-        this.guiActions = new GuiActions(notQuests);
+        this.knownProperties = new HashSet<>();
     }
 
-    /**
-     * Saves all default guis to the guis folder of the plugin
-     */
-    public void saveDefaultGuis() {
-        saveDefaultGui("testgui");
-    }
+    public void showGui(String guiName, Player player, GuiContext guiContext) {
 
-    /**
-     * Saves a gui with the specified name from the resources folder to the guis folder of the plugin
-     * @param name the name of the gui that should be saved
-     */
-    public void saveDefaultGui(String name){
-        notQuests.getMain().saveResource(Paths.get("guis/", name + ".xml").toString(), false);
-    }
-
-    /**
-     * Loads a Gui from an XML file located in a specified folder
-     * @param guisFolder the folder in which the gui is located
-     * @param fileName the name of the gui file. The name is also used to identify the gui later on
-     */
-    public void loadGui(Path guisFolder, String fileName) {
-        var guiPath = guisFolder.resolve(fileName);
-        Gui gui = null;
-        try (InputStream inputStream = Files.newInputStream(guiPath)) {
-            gui = Gui.load(guiActions, inputStream);
-            var guiName = fileName.replace(".xml", "");
-            guis.put(guiName, gui);
-        } catch (IOException e) {
-            notQuests.getLogManager().warn("Failed to load gui with name ' " + fileName + "' See below for more information", e);
-            e.printStackTrace();
-        } catch (XMLLoadException e) {
-            notQuests.getLogManager().warn("Failed to load gui with name ' " + fileName + "'", e);
-            notQuests.getLogManager().warn("Type: Error in XML syntax, see below for more information ");
-            e.printStackTrace();
+        var customGui = guis.get(guiName);
+        if (customGui == null) {
+            notQuests.getLogManager().info("Failed showing gui '" + guiName + "' to player " + player.getName());
+            return;
         }
+        var title = new AdventureComponentWrapper(notQuests.getLanguageManager().getComponent(customGui.getPathToTitle(), player, guiContext.getAsObjectArray()));
+        var window = new SimpleWindow(player, title, customGui.buildGui(notQuests, guiContext));
+        window.show();
     }
 
-    /**
-     * Loads all guis found in the predefined folder into the gui storage
-     */
+    public void saveAllDefaultGuis() {
+        saveDefaultGui("main-base");
+        saveDefaultGui("main-tab-one");
+        saveDefaultGui("main-tab-two");
+        saveDefaultGui("main-tab-three");
+    }
+
+    public void saveDefaultGui(String guiName) {
+        notQuests.getMain().saveResource("guis/" + guiName + ".yml", false);
+    }
+
     public void loadAllGuis() {
         var guisFolder = notQuests.getMain().getDataFolder().toPath().resolve(Paths.get("guis"));
 
         var fileNames = guisFolder.toFile().list();
 
         if (fileNames == null) {
-            saveDefaultGuis();
-            loadAllGuis();
+            notQuests.getLogManager().warn("No guis found");
             return;
         }
 
-        Arrays.stream(fileNames).filter(fileName -> fileName.endsWith(".xml")).forEach(fileName -> {
+        Arrays.stream(fileNames).filter(fileName -> fileName.endsWith(".yml")).forEach(fileName -> {
+            notQuests.getLogManager().info("Found gui file: " + fileName + "");
+            notQuests.getLogManager().info("Attempting to load gui from file...");
             loadGui(guisFolder, fileName);
         });
     }
 
-    /**
-     * Opens the first gui matching the given name for the player
-     * @param guiName the nome of the gui that should be opened
-     * @param player the player to open the gui for
-     */
-    public void showGui(String guiName, Player player) {
-        var firstMatch = guis.get(guiName);
+    public void loadGui(Path path, String name) {
+        var guiName = name.replace(".yml", "");
+        var guiPath = path.resolve(Paths.get(name));
+        var yamlLoader = YamlConfigurationLoader.builder()
+                .path(guiPath)
+                .defaultOptions(opts -> opts.serializers(build -> build.register(Button.class, new IconTypeSerializer())))
+                .defaultOptions(opts -> opts.serializers(build -> build.register(Icon.class, new ItemTypeSerializer())))
+                .build();
 
-        if (firstMatch == null) {
-            // TODO: Error message
+        CommentedConfigurationNode rootNode = null;
+
+        try {
+            rootNode = yamlLoader.load();
+        } catch (ConfigurateException e) {
+            notQuests.getLogManager().warn("Failed loading gui '" + name + "'", e);
+            notQuests.getMain().getLogger().log(Level.WARNING, "Error:", e);
+
             return;
         }
 
-        var gui = firstMatch.copy();
+        List<String> structure = null;
 
-        var langManager = notQuests.getLanguageManager();
-
-        // Replace title path with actual title
-        if (gui instanceof NamedGui namedGui) {
-            var title = LegacyComponentSerializer.legacySection().serialize(langManager.getComponent(namedGui.getTitle(), player));
-            namedGui.setTitle(title);
+        try {
+            structure = rootNode.node("structure").getList(String.class);
+        } catch (SerializationException e) {
+            notQuests.getLogManager().warn("An error occurred while loading the gui " + name);
+            notQuests.getMain().getLogger().log(Level.WARNING, "ERROR:", e);
         }
 
-        /*
-        CRAFTING TABLE: replace display name and lore for all items
-         */
-        if (gui instanceof CraftingTableGui craftingTableGui) {
-            craftingTableGui.getInputComponent().getPanes().forEach(
-                    pane -> pane.getItems().forEach(
-                            guiItem -> {
-                                var itemStack = getWithReplacedLoreAndDisplayName(guiItem.getItem(), player);
-                                guiItem.setItem(itemStack);
-                            }
-                    )
-
-            );
-            craftingTableGui.getOutputComponent().getPanes().forEach(
-                    pane -> pane.getItems().forEach(
-                            guiItem -> {
-                                var itemStack = getWithReplacedLoreAndDisplayName(guiItem.getItem(), player);
-                                guiItem.setItem(itemStack);
-                            }
-                    )
-            );
+        if (structure == null) {
+            notQuests.getLogManager().warn("An error occurred while loading the gui " + name);
+            notQuests.getLogManager().warn("ERROR: No structure specified");
+            return;
         }
 
-        /*
-        CHEST: replace display name and lore for all items
-         */
-        if (gui instanceof ChestGui chestGui) {
-            chestGui.getInventoryComponent().getPanes().forEach(
-                    pane -> pane.getItems().forEach(
-                            guiItem -> {
-                                var itemStack = getWithReplacedLoreAndDisplayName(guiItem.getItem(), player);
-                                guiItem.setItem(itemStack);
-                            }
-                    )
-            );
+        var type = rootNode.node("type").getString();
+        if (type == null) {
+            type = "NORMAL";
         }
 
-        /*
-        HOPPER: replace display name and lore for all items
-         */
-        if (gui instanceof HopperGui hopperGui) {
-            hopperGui.getSlotsComponent().getPanes().forEach(
-                    pane -> pane.getItems().forEach(
-                            guiItem -> {
-                                var itemStack = getWithReplacedLoreAndDisplayName(guiItem.getItem(), player);
-                                guiItem.setItem(itemStack);
-                            }
-                    )
-            );
+        var pathToTitle = rootNode.node("title").getString();
+
+        // Load gui "tabs"
+        var additionalGuis = List.of("");
+
+        try {
+            additionalGuis = rootNode.node("additionalguis").getList(String.class);
+        } catch (SerializationException e) {
+            notQuests.getLogManager().warn("An error occurred while loading the gui " + name);
+            notQuests.getMain().getLogger().log(Level.WARNING, "Error:", e);
         }
 
-        /*
-        DROPPER: replace display name and lore for all items
-         */
-        if (gui instanceof DropperGui dropperGui) {
-            dropperGui.getContentsComponent().getPanes().forEach(
-                    pane -> pane.getItems().forEach(
-                            guiItem -> {
-                                var itemStack = getWithReplacedLoreAndDisplayName(guiItem.getItem(), player);
-                                guiItem.setItem(itemStack);
-                            }
 
-                    )
-            );
-        }
+        var iconsMap = rootNode.node("icons").childrenMap();
+        var icons = new HashMap<Character, Button>();
+        iconsMap.forEach((key, node) -> {
+            try {
+                var icon = iconsMap.get(key).get(Button.class);
+                icons.put(String.valueOf(key).charAt(0), icon);
+            } catch (SerializationException | IllegalArgumentException e) {
+                notQuests.getLogManager().warn("An error occurred while loading the gui " + name);
+                notQuests.getMain().getLogger().log(Level.WARNING, "Error:", e);
+            }
 
-        // TODO: Implement missing gui types
+        });
 
-        // Important for the changes to take effect
-        gui.update();
+        var itemsMap = rootNode.node("items").childrenMap();
+        var items = new HashMap<String, Icon>();
+        itemsMap.forEach((key, node) -> {
+            try {
+                var item = itemsMap.get(key).get(Icon.class);
+                items.put(String.valueOf(key), item);
+            } catch (SerializationException e) {
+                notQuests.getLogManager().warn("An error occurred while loading the gui " + name);
+                notQuests.getMain().getLogger().log(Level.WARNING, "Error:", e);
+            }
 
-        // Open the gui for the player
-        gui.show(player);
+        });
+
+        icons.forEach((key, icon) -> icon.registerIcons(items));
+
+        var customGui = new CustomGui(structure.toArray(String[]::new), pathToTitle, type, icons, additionalGuis);
+
+        guis.put(guiName, customGui);
     }
 
-
-    /**
-     * Replace display name and lore for given item
-     * @param itemStack the item to replace lore and display name
-     * @param player the player which the placeholders should be replaced for
-     * @return the item with new lore and display name
-     */
-    private ItemStack getWithReplacedLoreAndDisplayName(ItemStack itemStack, Player player) {
-        var newLore = fetchLore(itemStack, player);
-        itemStack.lore(newLore);
-
-        var displayName = fetchDisplayName(itemStack, player);
-        var itemMeta = itemStack.getItemMeta();
-        itemMeta.displayName(displayName);
-        itemStack.setItemMeta(itemMeta);
-
-        return itemStack;
-    }
-
-    /**
-     * Retrieve the lore of an item assuming the current first lore line is a path to the actual lore
-     * @param itemStack the item for which we are looking for the lore
-     * @param player the player for whom we want to replace the placeholders in the lore
-     * @return the new lore as a component list with all placeholder replaced
-     */
-    private List<Component> fetchLore(ItemStack itemStack, Player player) {
-        var currentLore = itemStack.lore();
-        if (currentLore == null) {
-            return Collections.emptyList();
-        }
-        var loreConfigPath = PlainTextComponentSerializer.plainText().serialize(currentLore.get(0));
-        return notQuests.getLanguageManager().getComponentList(loreConfigPath, player);
-    }
-
-    /**
-     * Retrieve the display name of an item assuming that the current display name is a path to the actual name
-     * @param itemStack the item for which we are looking for the display name
-     * @param player the player for whom we want to replace the placeholders in the display name
-     * @return the new lore as a component list with all placeholder replaced
-     */
-    private Component fetchDisplayName(ItemStack itemStack, Player player) {
-        var currentDisplayName = itemStack.displayName();
-
-        var displayNameAsString = PlainTextComponentSerializer.plainText().serialize(currentDisplayName).replace("[", "").replace("]", "");
-
-        if (displayNameAsString.equalsIgnoreCase(EMPTY_DISPLAYNAME_KEYWORD)) {
-            return Component.empty();
-        }
-
-        return notQuests.getLanguageManager().getComponent(displayNameAsString, player);
-    }
-
-    /**
-     * Returns a with all guis and their names
-     * @return A map with all guis, identified by their names
-     */
-    public final Map<String, Gui> getGuis() {
+    public Map<String, CustomGui> getGuis() {
         return guis;
     }
 }

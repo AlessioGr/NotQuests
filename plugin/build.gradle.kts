@@ -16,7 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
     `java-library`
@@ -123,10 +122,7 @@ dependencies {
     implementation(project(path= ":spigot", configuration= "shadow"))
     implementation(project(path= ":paper", configuration= "shadow"))
 
-    //implementation(project(":spigot"))
-    //implementation(project(":paper"))
 
-    //compileOnly("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT")
 
     implementation("io.papermc:paperlib:1.0.7")
 }
@@ -135,38 +131,9 @@ dependencies {
  * Configure NotQuests for shading
  */
 val shadowPath = "rocks.gravili.notquests"
-tasks.withType<ShadowJar> {
-    minimize()
-
-    //relocate("rocks.gravili.notquests.spigot", "$shadowPath.spigot")
-    //relocate("rocks.gravili.notquests.paper", "$shadowPath.paper")
-    relocate("io.papermc.lib", "$shadowPath.paperlib")
-
-    dependencies {
-        include(dependency(":common"))
-        include(dependency(":spigot"))
-        include(dependency(":paper"))
-        include(dependency("io.papermc:paperlib:"))
-    }
-    //archiveBaseName.set("notquests")
-    archiveClassifier.set("")
-    //archiveClassifier.set(null)
-}
-/*processResources {
-    def props = [version: version]
-    inputs.properties props
-    filteringCharset 'UTF-8'
-    filesMatching('plugin.yml') {
-        expand props
-    }
-}*/
 
 
 tasks {
-    // Run reobfJar on build
-    //build {
-    //    dependsOn(shadowJar)
-    //}
 
     build {
         dependsOn(reobfJar)
@@ -176,32 +143,38 @@ tasks {
         options.encoding = Charsets.UTF_8.name()
         options.release.set(17)
     }
+
     javadoc {
         options.encoding = Charsets.UTF_8.name()
     }
+
     processResources {
         filteringCharset = Charsets.UTF_8.name()
     }
+
+    shadowJar {
+        relocate("io.papermc.lib", "$shadowPath.paperlib")
+
+        archiveClassifier.set("")
+    }
+
     runServer {
         // Configure the Minecraft version for our task.
         // This is the only required configuration besides applying the plugin.
         // Your plugin's jar (or shadowJar if present) will be used automatically.
         minecraftVersion("1.19")
     }
-}
 
-/*publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            groupId = "rocks.gravili.notquests"
-            artifactId = "NotQuests"
-            version = "4.0.0-dev"
-
-            from(components["java"])
+    register<Copy>("copyToServer") {
+        val path = System.getenv("PLUGIN_DIR")
+        if (path.toString().isEmpty()) {
+            println("No environment variable PLUGIN_DIR set")
+            return@register
         }
+        from(reobfJar)
+        destinationDir = File(path.toString())
     }
-}*/
-
+}
 
 publishing {
     repositories {
