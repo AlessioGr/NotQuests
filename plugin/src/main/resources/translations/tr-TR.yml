@@ -44,9 +44,9 @@ chat:
   quest-not-active-error: '<error>Hata: <highlight>%QUESTNAME%</highlight> aktif bir görev değil!'
   force-add-active-quest-accepted: '<success>Görevi başarıyla kabul ettiniz (Zorla).'
   add-active-quest-player-object-not-found: '<warn>Hata: Oyuncu nesnesi bulunamadı. Lütfen bunu eklenti geliştiricisine bildirin.'
-  reached-max-accepts-limit: '<red>You have accepted this quest too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%ACCEPTEDAMOUNT%</highlight> times.'
-  reached-max-fails-limit: '<red>You have failed this quest too many times already. You can only fail it <highlight>%MAXFAILS%</highlight> times, but you have already failed it <highlight>%FAILEDAMOUNT%</highlight> times.'
-  reached-max-completions-limit: '<red>You have completed this quest too many times already. You can only complete it <highlight>%MAXCOMPLETIONS%</highlight> times, but you have already completed it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
+  reached-max-accepts-limit: '<red>Bu görevi zaten defalarca kabul ettin. Görevi yalnızca <highlight>%MAXACCEPTS%</highlight> kez kabul edebilirsiniz, fakat siz <highlight>%ACCEPTEDAMOUNT%</highlight> kez kabul ettiniz.'
+  reached-max-fails-limit: '<red>Bu görevde zaten birçok kez başarısız oldun. Sadece <highlight>%MAXFAILS%</highlight> kez başarısız olabilirsin, fakat sen zaten <highlight>%FAILEDAMOUNT%</highlight> kez başarısız oldun.'
+  reached-max-completions-limit: '<red>Bu görevi zaten birçok kez tamamladınız. Yalnızca <highlight>%MAXCOMPLETIONS%</highlight> kez tamamlayabilirsiniz, fakat siz zaten <highlight>%COMPLETEDAMOUNT%</highlight> kez tamamladınız.'
   reached-max-active-quests-per-player-limit: '<red> <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> fazla Görev kabul edemezsiniz.'
   quest-on-cooldown:
     minute: '<red>Bu görev bekleme süresinde! Tekrar alabilmeniz için <highlight>1 dakika</highlight> daha beklemeniz gerekiyor.'
@@ -104,11 +104,11 @@ chat:
       craftItems:
         base: 'Eşyaları Üret: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: 'Deliver Items: <main>%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%(%'
+        base: 'Eşyaları Teslim et: <main>%ITEMTODELIVERTYPE% (%%ITEMTODELIVERNAME%%(%'
         deliver-to-npc: '      <GRAY> <WHITE>%NPCNAME% teslim et'
         deliver-to-npc-not-available: '      <GRAY>Teslimat NPC''si şu anda mevcut değil!'
       enchant:
-        base: 'Enchant Items with %ENCHANTMENT%: <main>%ITEMTOENCHANTTYPE% %(%%ITEMTOENCHANTNAME%%(%'
+        base: 'Eşyaları %ENCHANTMENT% ile Büyüleyin: <main>%ITEMTOENCHANTTYPE% %(%%ITEMTOENCHANTNAME%%(%'
       escortNPC:
         base: '<main>%NPCNAME%</main> <main>%DESTINATIONNPCNAME% kadar eşlik edin'
       fishItems:
