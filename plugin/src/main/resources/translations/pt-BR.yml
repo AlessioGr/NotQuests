@@ -46,7 +46,7 @@ chat:
   add-active-quest-player-object-not-found: '<warn>Error: Objeto do jogador não encontrado. Por favor, informe isso ao desenvolvedor do plugin.'
   reached-max-accepts-limit: '<red>Você já terminou essas missões muitas vezes. Você só pode aceitar <highlight>%MAXACCEPTS%</highlight> vezes, mas você já aceitou<highlight>%ACCEPTEDAMOUNT%</highlight> vezes.'
   reached-max-fails-limit: '<red>Você já terminou essas missões muitas vezes. Você só pode aceitar <highlight>%MAXFAILS%</highlight> vezes, mas você já aceitou<highlight>%FAILEDAMOUNT%</highlight> vezes.'
-  reached-max-completions-limit: '<red>You have completed this quest too many times already. You can only complete it <highlight>%MAXCOMPLETIONS%</highlight> times, but you have already completed it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
+  reached-max-completions-limit: '<red>Você já terminou essas missões muitas vezes. Você só pode aceitar <highlight>%MAXCOMPLETIONS%</highlight> vezes, mas você já aceitou<highlight>%COMPLETEDAMOUNT%</highlight> vezes.'
   reached-max-active-quests-per-player-limit: '<red>Você não pode aceitar mais de <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> Missões.'
   quest-on-cooldown:
     minute: '<red>Esta missão está em uma espera! Você precisa esperar mais <highlight>1 minuto</highlight> até você poder tentar novamente.'
@@ -56,16 +56,16 @@ chat:
     day: '<red>Esta missão está em uma espera! Você precisa esperar mais <highlight>1 dia</highlight> até você poder tentar novamente.'
     days: '<red>Esta missão está em uma espera! Você precisa esperar mais <highlight>%DAYS% dias</highlight> até você poder tentar novamente.'
   profiles:
-    list-current: '<highlight>Current profile: <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
-    list-other-heading: '<highlight>Other profiles:'
-    list-other-none: '  <main>You have no more profiles.'
-    list-other: '  <highlight>- <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
-    change-same-profile: '<error>You are already using that profile!'
-    change-profile-doesnt-exist: '<error>That profile does not exist.'
-    changed-successfully: '<success>You have successfully changed your profile from %OLDPROFILENAME% to <highlight>%NEWPROFILENAME%</highlight>!'
-    create-already-exists: '<error>A profile with the name <highlight>%NEWPROFILENAME%</highlight> already exists.'
-    create-invalid-characters: '<error>The profile name you provided contains invalid characters.'
-    created-successfully: '<success>You have successfully created the profile <highlight>%NEWPROFILENAME%</highlight>! To switch to it, use <highlight2>/nq profile change %NEWPROFILENAME%</highlight2>'
+    list-current: '<highlight>Perfil atual: <main>%PROFILENAME% (%QUESTPOINTS% pontos de missão)'
+    list-other-heading: '<highlight>Outros perfis:'
+    list-other-none: '  <main>Você não tem mais perfis.'
+    list-other: '  <highlight>Perfil atual: <main>%PROFILENAME% (%QUESTPOINTS% pontos de missão)'
+    change-same-profile: '<error>Você já está usando esse perfil!'
+    change-profile-doesnt-exist: '<error>Esse perfil não existe.'
+    changed-successfully: '<success>Você alterou seu perfil com sucesso de %OLDPROFILENAME% para <highlight>%NEWPROFILENAME%</highlight>!'
+    create-already-exists: 'Um perfil para <error>com o nome <highlight>%NEWPROFILENAME%</highlight> já existe.'
+    create-invalid-characters: '<error>O nome do perfil que você forneceu contém caracteres inválidos.'
+    created-successfully: '<success>Você criou com sucesso o perfil <highlight>%NEWPROFILENAME%</highlight>! Para mudar para ele, use <highlight2>/nq perfil mudança %NEWPROFILENAME%</highlight2>'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>
@@ -98,17 +98,17 @@ chat:
       breed:
         base: 'Reproduzir Criaturas: <main>%ENTITYTOBREED%'
       pickupItems:
-        base: 'Pickup Items: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
+        base: 'Pegar Itens: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
       consumeItems:
         base: 'Consumir Itens: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
         base: 'Criar Itens: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: 'Deliver Items: <main>%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%(%'
+        base: 'Entregar Itens: <main>%ITEMTODELIVERTYPE% (%%ITEMTODELIVERNAME%%(%'
         deliver-to-npc: '      <GRAY>Entregue para <WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>O NPC de entrega não está disponível no momento!'
       enchant:
-        base: 'Enchant Items with %ENCHANTMENT%: <main>%ITEMTOENCHANTTYPE% %(%%ITEMTOENCHANTNAME%%(%'
+        base: 'Encante itens com %ENCHANTMENT%: <main>%ITEMTOENCHANTTYPE% %(%%ITEMTOENCHANTNAME%%(%'
       escortNPC:
         base: 'Escolte <main>%NPCNAME%</main> para <main>%DESTINATIONNPCNAME%'
       fishItems:
