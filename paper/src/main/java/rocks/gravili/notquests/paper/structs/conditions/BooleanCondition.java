@@ -78,7 +78,9 @@ public class BooleanCondition extends Condition {
             manager.command(main.getVariablesManager().registerVariableCommands(variableString, builder)
                     .argument(StringArgument.<CommandSender>newBuilder("operator").withSuggestionsProvider((context, lastString) -> {
                         ArrayList<String> completions = new ArrayList<>();
+                        completions.add("and");
                         completions.add("equals");
+                        completions.add("or");
 
 
                         final List<String> allArgs = context.getRawInput();
@@ -182,7 +184,7 @@ public class BooleanCondition extends Condition {
                 if (booleanRequirement != bool) {
                     return main.getLanguageManager().getString("chat.conditions.boolean.not-fulfilled", questPlayer.getPlayer(), questPlayer, Map.of(
                             "%OPERATOR%", getOperator(),
-                            "%BOOLEANREQUIREMENT%", ""+booleanRequirement,
+                            "%BOOLEANREQUIREMENT%", String.valueOf(booleanRequirement),
                             "%VARIABLESINGULAR%", cachedVariable.getSingular(),
                             "%VARIABLEPLURAL%", cachedVariable.getPlural()
                     ));
@@ -191,7 +193,47 @@ public class BooleanCondition extends Condition {
                 if (booleanRequirement != (boolean)value) {
                     return main.getLanguageManager().getString("chat.conditions.boolean.not-fulfilled", questPlayer.getPlayer(), questPlayer, Map.of(
                             "%OPERATOR%", getOperator(),
-                            "%BOOLEANREQUIREMENT%", ""+booleanRequirement,
+                            "%BOOLEANREQUIREMENT%", String.valueOf(booleanRequirement),
+                            "%VARIABLESINGULAR%", cachedVariable.getSingular(),
+                            "%VARIABLEPLURAL%", cachedVariable.getPlural()
+                    ));
+                }
+            }
+        } else if(getOperator().equalsIgnoreCase("or")){
+            if(value instanceof Boolean bool){
+                if (!booleanRequirement && !bool) {
+                    return main.getLanguageManager().getString("chat.conditions.boolean.not-fulfilled", questPlayer.getPlayer(), questPlayer, Map.of(
+                            "%OPERATOR%", getOperator(),
+                            "%BOOLEANREQUIREMENT%", String.valueOf(false),
+                            "%VARIABLESINGULAR%", cachedVariable.getSingular(),
+                            "%VARIABLEPLURAL%", cachedVariable.getPlural()
+                    ));
+                }
+            }else{
+                if (!booleanRequirement && !(boolean)value) {
+                    return main.getLanguageManager().getString("chat.conditions.boolean.not-fulfilled", questPlayer.getPlayer(), questPlayer, Map.of(
+                            "%OPERATOR%", getOperator(),
+                            "%BOOLEANREQUIREMENT%", String.valueOf(false),
+                            "%VARIABLESINGULAR%", cachedVariable.getSingular(),
+                            "%VARIABLEPLURAL%", cachedVariable.getPlural()
+                    ));
+                }
+            }
+        } else if(getOperator().equalsIgnoreCase("and")){
+            if(value instanceof Boolean bool){
+                if (!booleanRequirement || !bool) {
+                    return main.getLanguageManager().getString("chat.conditions.boolean.not-fulfilled", questPlayer.getPlayer(), questPlayer, Map.of(
+                            "%OPERATOR%", getOperator(),
+                            "%BOOLEANREQUIREMENT%", String.valueOf(false),
+                            "%VARIABLESINGULAR%", cachedVariable.getSingular(),
+                            "%VARIABLEPLURAL%", cachedVariable.getPlural()
+                    ));
+                }
+            }else{
+                if (!booleanRequirement || !(boolean)value) {
+                    return main.getLanguageManager().getString("chat.conditions.boolean.not-fulfilled", questPlayer.getPlayer(), questPlayer, Map.of(
+                            "%OPERATOR%", getOperator(),
+                            "%BOOLEANREQUIREMENT%", String.valueOf(false),
                             "%VARIABLESINGULAR%", cachedVariable.getSingular(),
                             "%VARIABLEPLURAL%", cachedVariable.getPlural()
                     ));
