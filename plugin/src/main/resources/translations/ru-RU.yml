@@ -40,32 +40,32 @@ chat:
   quest-not-found-or-does-not-exist: <error>квест <highlight>%QUESTNAME%</highlight> не найден или не активен!
   active-quests-label: '<highlight>активных заданий:'
   take-disabled: <error>Принятие или предпросмотр задания <highlight>%QUESTNAME%</highlight> отключены.
-  abort-disabled: <error>Aborting the quest <highlight>%QUESTNAME%</highlight> is disabled.
+  abort-disabled: <error>Принятие или предпросмотр задания <highlight>%QUESTNAME%</highlight> отключены.
   quest-not-active-error: '<error>Ошибка: <highlight>%QUESTNAME%</highlight> не является активным квестом!'
   force-add-active-quest-accepted: '<success>Квест успешно принят (Принудительно).'
   add-active-quest-player-object-not-found: '<warn>Ошибка: Объект игрока не найден. Пожалуйста, сообщите об этом разработчику плагина.'
-  reached-max-accepts-limit: '<red>You have accepted this quest too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%ACCEPTEDAMOUNT%</highlight> times.'
-  reached-max-fails-limit: '<red>You have failed this quest too many times already. You can only fail it <highlight>%MAXFAILS%</highlight> times, but you have already failed it <highlight>%FAILEDAMOUNT%</highlight> times.'
-  reached-max-completions-limit: '<red>You have completed this quest too many times already. You can only complete it <highlight>%MAXCOMPLETIONS%</highlight> times, but you have already completed it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
+  reached-max-accepts-limit: '<red>Вы уже слишком много раз выполнили это задание. Вы можете принять его только <highlight>%MAXACCEPTS%</highlight> раз(а), а вы уже приняли его <highlight>%ACCEPTEDAMOUNT%</highlight> раз.'
+  reached-max-fails-limit: '<red>Вы уже слишком много раз выполнили это задание. Вы можете принять его только <highlight>%MAXFAILS%</highlight> раз(а), а вы уже приняли его <highlight>%FAILEDAMOUNT%</highlight> раз.'
+  reached-max-completions-limit: '<red>Вы уже слишком много раз выполнили это задание. Вы можете принять его только <highlight>%MAXCOMPLETIONS%</highlight> раз(а), а вы уже приняли его <highlight>%COMPLETEDAMOUNT%</highlight> раз.'
   reached-max-active-quests-per-player-limit: '<red>Вы не можете принять больше <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> квестов.'
   quest-on-cooldown:
     minute: '<red>Данное задание на откате! Подождите <highlight>1 минуту</highlight> до тех пор, пока вы не сможете взять его снова.'
     minutes: '<red>Данное задание на откате! Подождите <highlight>%MINUTES%</highlight> до тех пор, пока вы не сможете взять его снова.'
     hour: '<red>Откат в выполнении этого задания! Вам нужно подождать <highlight>1 час</highlight> до тех пор, пока вы не сможете взять его снова.'
-    hours: '<red>This quest is on a cooldown! You have to wait another <highlight>%HOURS% hours</highlight> until you can take it again.'
-    day: '<red>This quest is on a cooldown! You have to wait another <highlight>1 day</highlight> until you can take it again.'
-    days: '<red>This quest is on a cooldown! You have to wait another <highlight>%DAYS% days</highlight> until you can take it again.'
+    hours: '<red>Откат в задании! Вы должны подождать <highlight>%HOURS% часов</highlight>, пока вы не сможете выполнить это снова.'
+    day: '<red>Откат в выполнении этого задания! Вам нужно подождать <highlight>1 час</highlight> до тех пор, пока вы не сможете взять его снова.'
+    days: '<red>Откат в задании! Вы должны подождать <highlight>%DAYS% дней</highlight>, пока вы не сможете взять его снова.'
   profiles:
-    list-current: '<highlight>Current profile: <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
-    list-other-heading: '<highlight>Other profiles:'
-    list-other-none: '  <main>You have no more profiles.'
-    list-other: '  <highlight>- <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
-    change-same-profile: '<error>You are already using that profile!'
-    change-profile-doesnt-exist: '<error>That profile does not exist.'
-    changed-successfully: '<success>You have successfully changed your profile from %OLDPROFILENAME% to <highlight>%NEWPROFILENAME%</highlight>!'
-    create-already-exists: '<error>A profile with the name <highlight>%NEWPROFILENAME%</highlight> already exists.'
-    create-invalid-characters: '<error>The profile name you provided contains invalid characters.'
-    created-successfully: '<success>You have successfully created the profile <highlight>%NEWPROFILENAME%</highlight>! To switch to it, use <highlight2>/nq profile change %NEWPROFILENAME%</highlight2>'
+    list-current: '<highlight>Текущий профиль: <main>%PROFILENAME% (%QUESTPOINTS% очков)'
+    list-other-heading: '<highlight>Прочие профили:'
+    list-other-none: '  <main>У вас больше нет профилей.'
+    list-other: '  <highlight>Текущий профиль: <main>%PROFILENAME% (%QUESTPOINTS% очков)'
+    change-same-profile: '<error>Вы уже используете этот профиль!'
+    change-profile-doesnt-exist: '<error>Такого профиля не существует.'
+    changed-successfully: '<success>Вы успешно изменили ваш профиль с %OLDPROFILENAME% на <highlight>%NEWPROFILENAME%</highlight>!'
+    create-already-exists: '<error>Профиль с именем <highlight>%NEWPROFILENAME%</highlight> уже существует.'
+    create-invalid-characters: '<error>Имя профиля содержит недопустимые символы.'
+    created-successfully: '<success>Вы успешно создали профиль <highlight>%NEWPROFILENAME%</highlight>! Чтобы переключиться на него, используйте профиль <highlight2>/nq изменить %NEWPROFILENAME%</highlight2>'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>
@@ -79,11 +79,11 @@ chat:
     counterForObjectiveObjective: '<highlight>%OBJECTIVEIDWITHSUBID%.</highlight> <main>%OBJECTIVEHOLDERNAME%:'
     subObjectivePrefixAppend: '    '
     hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[HIDDEN]
-    description: '    <veryUnimportant>└─ <unimportant>Description: <main>%OBJECTIVEDESCRIPTION%'
-    progress: '    <veryUnimportant>└─ <unimportant>Progress: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
+    description: '    <veryUnimportant>└─ <unimportant>Описание: <main>%OBJECTIVEDESCRIPTION%'
+    progress: '    <veryUnimportant>└─ <unimportant>Прогресс: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
     successfully-completed: |2
 
-      <CENTER><success>[Objective Completed]
+      <CENTER><success>[Цель выполнена]
       <CENTER><highlight><bold>%OBJECTIVENAME%</bold> <RESET><main>(%QUESTNAME%)
       <EMPTY>
     successfully-completed-rewards-prefix: '    <highlight>награда:'
@@ -96,31 +96,31 @@ chat:
       breakBlocks:
         base: 'Сломать блоки: <main>%BLOCKTOBREAK%'
       breed:
-        base: 'Breed Mobs: <main>%ENTITYTOBREED%'
+        base: 'Разводите мобов: <main>%ENTITYTOBREED%'
       pickupItems:
-        base: 'Pickup Items: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
+        base: 'Использовать предметы: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
       consumeItems:
         base: 'Использовать предметы: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
         base: 'Создать Предметы: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: 'Deliver Items: <main>%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%(%'
-        deliver-to-npc: '      <GRAY>Deliver it to <WHITE>%NPCNAME%'
-        deliver-to-npc-not-available: '      <GRAY>The delivery NPC is currently not available!'
+        base: 'Принести Предметы: <main>%ITEMTODELIVERTYPE% (%%ITEMTODELIVERNAME%%(%'
+        deliver-to-npc: '      <GRAY>Доставить к<WHITE>%NPCNAME%'
+        deliver-to-npc-not-available: '      <GRAY>доставка к NPC в настоящее время недоступна!'
       enchant:
-        base: 'Enchant Items with %ENCHANTMENT%: <main>%ITEMTOENCHANTTYPE% %(%%ITEMTOENCHANTNAME%%(%'
+        base: 'Зачаровать предметы с %ENCHANTMENT%: <main>%ITEMTOENCHANTTYPE% %(%%ITEMTOENCHANTNAME%%%'
       escortNPC:
-        base: 'Escort <main>%NPCNAME%</main> to <main>%DESTINATIONNPCNAME%'
+        base: 'Сопроводить <main>%NPCNAME%</main> в <main>%DESTINATIONNPCNAME%'
       fishItems:
-        base: 'Fish Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
+        base: 'Использовать предметы: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
       killMobs:
-        base: 'Kill mobs: <main>%MOBTOKILL%'
+        base: 'Убить мобов: <main>%MOBTOKILL%'
       otherQuest:
-        base: 'Complete Quest: <main>%OTHERQUESTNAME%'
+        base: 'Завершить квест: <main>%OTHERQUESTNAME%'
       placeBlocks:
-        base: 'Place Blocks: <main>%BLOCKTOPLACE%'
+        base: 'Сломать блоки: <main>%BLOCKTOPLACE%'
       reachLocation:
-        base: 'Reach Location: <main>%LOCATIONNAME%'
+        base: 'Введите местоположение: <main>%LOCATIONNAME%'
       talkToNPC:
         base: 'Talk to <main>%NAME%'
         npc-not-available: '    <GRAY>The target NPC is currently not available!'
@@ -146,7 +146,7 @@ chat:
       shearSheep:
         base: 'Shear <main>%AMOUNTOFSHEEP%</main> sheep'
       townyReachResidentCount:
-        base: 'Reach resident amount: <main>%AMOUNT%'
+        base: 'Достигнут лимит: <main>%AMOUNT%'
       townyNationReachTownCount:
         base: 'Reach town amount with your nation: <main>%AMOUNT%'
       jobsRebornReachJobLevel:
@@ -161,9 +161,9 @@ chat:
         base: 'Reach job level <main>%AMOUNT%</main> with job <main>%JOBID%'
   conditions:
     boolean:
-      not-fulfilled: "<warn>Following needs to be %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
-      variable-not-found: "<error>Error: variable <highlight>%VARIABLENAME%</highlight> not found. Report this to the Server owner."
-      wrong-operator: "<error>Error: variable operator <highlight>%OPERATOR%/highlight> is invalid. Report this to the Server owner."
+      not-fulfilled: "<warn>Нужно %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
+      variable-not-found: "<error>Ошибка: переменная <highlight>%VARIABLENAME%</highlight> не найдена. Сообщите об этом владельцу сервера."
+      wrong-operator: "<error>Ошибка: переменная <highlight>%OPERATOR% не найдена. Сообщите об этом владельцу сервера."
 objective-tracking:
   actionbar-progress-update:
     default: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
@@ -176,7 +176,7 @@ titles:
     title: <main>Задание принято
     subtitle: <highlight>%QUESTNAME%
   quest-completed:
-    title: <positive>Quest Completed
+    title: <positive>Задание выполнено
     subtitle: <highlight>%QUESTNAME%
   quest-failed:
     title: <negative>Задание провалено
@@ -230,15 +230,15 @@ gui:
           - "<unimportant>Начните новый квест!"
           - ""
           - "<veryUnimportant>некоторые задания не могут быть"
-          - "<veryUnimportant>started like this."
+          - "<veryUnimportant>Нравится."
         x: 0
         y: 1
       abortquest:
         name: "<negative>Отмена Задания"
         lore:
           - ""
-          - "<veryUnimportant>Aborting a Quest may"
-          - "<veryUnimportant>lead to punishments."
+          - "<veryUnimportant>Отменяет задание"
+          - "<veryUnimportant>Ведут к наказаниям."
         x: 0
         y: 2
       activequests:
@@ -268,7 +268,7 @@ gui:
           - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
           - "<main>Нажмите, чтобы открыть квест!"
   takeQuestChoose:
-    title: <highlight2>Which Quest do you want to take?
+    title: <highlight2>Какие задания вы хотите взять?
     size:
       minX: 3
       minY: 1
@@ -287,7 +287,7 @@ gui:
       abortQuestPreview:
         name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
         lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
+          - "<unimportant>Прогресс: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
           - "<negative>Нажмите, чтобы прервать Квест!"
   abortQuest:
     title: '         <negative>Подтверждение отмены'
@@ -295,21 +295,21 @@ gui:
       confirmAbort:
         name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
         lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Click to abort the quest <highlight>%QUESTNAME%</highlight>!"
+          - "<unimportant>Прогресс: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
+          - "<negative>Нажмите, чтобы прервать задание <highlight>%QUESTNAME%</highlight>!"
         x: 3
         y: 1
       cancelAbort:
-        name: "<positive>Click to NOT abort this quest"
+        name: "<positive>Нажмите, чтобы НЕ прервать это задание"
         lore:
-          - "<positive>and cancel this action"
+          - "<positive>и отменить это действие"
         x: 5
         y: 1
   previewQuest:
-    title: <highlight2>Quest Preview
+    title: <highlight2>Очки Заданий
     button:
       description:
-        name: "<highlight>Description"
+        name: "<highlight>Описание"
         lore:
           - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
         lore-if-empty:
@@ -321,7 +321,7 @@ gui:
         lore:
           - "<WHITE>%QUESTREWARDS%"
         lore-if-empty:
-          - "<veryUnimportant>None or hidden"
+          - "<veryUnimportant>Не скрыто"
         x: 4
         y: 0
       requirements:
@@ -335,17 +335,17 @@ gui:
       confirmTake:
         name: "<highlight>%QUESTNAME%"
         lore:
-          - "<positive>Click to take the quest <highlight>%QUESTNAME%"
+          - "<positive>Нажмите, чтобы выполнить задание <highlight>%QUESTNAME%"
         x: 3
         y: 2
       cancelTake:
-        name: "<negative>Click to NOT take this quest"
+        name: "<negative>Нажмите, чтобы НЕ выполнять это задание"
         lore:
-          - "<negative>and cancel this action"
+          - "<negative>и отменить это действие"
         x: 5
         y: 2
   progress:
-    title: <highlight2>Details for Quest
+    title: <highlight2>Подробности для задания
     button:
       unlockedObjective:
         name: "<highlight2>%ACTIVEOBJECTIVEID%. <highlight>%OBJECTIVENAME%"
@@ -354,29 +354,29 @@ gui:
           - "<veryUnimportant>%WRAPPEDOBJECTIVEDESCRIPTION%"
           - "<unimportant>%OBJECTIVETASKDESCRIPTION%"
           - ""
-          - "<unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
+          - "<unimportant>Прогресс: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
         lore-if-description-empty:
-          - "<main><BOLD>ACTIVE</BOLD>"
+          - "<main><BOLD>АКТИВНОЕ</BOLD>"
           - "<veryUnimportant>Нет описания"
           - "<unimportant>%OBJECTIVETASKDESCRIPTION%"
           - ""
-          - "<unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
+          - "<unimportant>Прогресс: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
       lockedObjective:
         name: "<highlight2>%ACTIVEOBJECTIVEID%. <unimportant><BOLD>[HIDDEN]"
         lore:
-          - "<warn>This objective has not yet"
-          - "<warn>been unlocked!"
+          - "<warn>Эта цель еще не достигнута"
+          - "<warn>был разблокирован!"
       completedObjective:
         name: "<highlight2><strikethrough>%ACTIVEOBJECTIVEID%. <positive><strikethrough>%OBJECTIVENAME%"
         lore:
-          - "<positive><BOLD>COMPLETED</BOLD>"
+          - "<positive><BOLD>ЗАВЕРШЕНО</BOLD>"
           - "<veryUnimportant><strikethrough>%WRAPPEDOBJECTIVEDESCRIPTION%"
           - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVETASKDESCRIPTION%"
           - ""
-          - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
+          - "<unimportant><strikethrough>Прогресс: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
         lore-if-description-empty:
-          - "<positive><BOLD>COMPLETED</BOLD>"
-          - "<veryUnimportant><strikethrough>No Description"
+          - "<positive><BOLD>ЗАВЕРШЕНО</BOLD>"
+          - "<veryUnimportant><strikethrough>Без описания"
           - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVETASKDESCRIPTION%"
           - ""
-          - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
+          - "<unimportant><strikethrough>Прогресс: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
