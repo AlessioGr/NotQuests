@@ -284,7 +284,7 @@ gui:
           - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
           - "<negative>Click to abort Quest!"
   abortQuest:
-    title: '         <RED>Potvrzení zrušení'
+    title: '         <negative>Abbruch-Bestätigung'
     button:
       confirmAbort:
         name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
