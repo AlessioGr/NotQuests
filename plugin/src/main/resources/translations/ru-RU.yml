@@ -122,43 +122,43 @@ chat:
       reachLocation:
         base: 'Введите местоположение: <main>%LOCATIONNAME%'
       talkToNPC:
-        base: 'Talk to <main>%NAME%'
-        npc-not-available: '    <GRAY>The target NPC is currently not available!'
+        base: 'Поговорить с <main>%NAME%'
+        npc-not-available: '    <GRAY>доставка к NPC в настоящее время недоступна!'
       triggerCommand:
-        base: 'Goal: <main>%TRIGGERNAME%'
+        base: 'Цель: <main>%TRIGGERNAME%'
       killEliteMobs:
-        base: 'Kill Elite Mob: <main>%ELITEMOBNAME%'
-        any: 'Kill any Elite Mob!'
+        base: 'Убить Элитного Моба: <main>%ELITEMOBNAME%'
+        any: 'Убейте Элитного Моба!'
       runCommand:
-        base: 'Run command: <main>%COMMANDTORUN%'
+        base: 'Выполнить команду: <main>%COMMANDTORUN%'
       interact:
-        base: '%INTERACTTYPE% Location: <main>%COORDINATES% <main>in world %WORLDNAME%'
+        base: '%INTERACTTYPE% Расположение: <main>%COORDINATES% <main>в мире %WORLDNAME%'
       jump:
-        base: 'Jump <main>%AMOUNTOFJUMPS%</main> times'
+        base: 'Прыгнуть <main>%AMOUNTOFJUMPS%</main> раз'
       objective:
         base: '%OBJECTIVEHOLDERNAME%'
       sneak:
-        base: 'Sneak <main>%AMOUNTOFSNEAKS%</main> times'
+        base: 'Прыгнуть <main>%AMOUNTOFSNEAKS%</main> раз'
       smelt:
-        base: 'Smelt Items: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+        base: 'Создать Предметы: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       openBuriedTreasure:
-        base: 'Open buried treasures'
+        base: 'Открытые захороненные сокровища'
       shearSheep:
-        base: 'Shear <main>%AMOUNTOFSHEEP%</main> sheep'
+        base: 'Прыгнуть <main>%AMOUNTOFSHEEP%</main> раз'
       townyReachResidentCount:
         base: 'Достигнут лимит: <main>%AMOUNT%'
       townyNationReachTownCount:
-        base: 'Reach town amount with your nation: <main>%AMOUNT%'
+        base: 'Достигните уровня города вместе со своей нацией: <main>%AMOUNT%'
       jobsRebornReachJobLevel:
-        base: 'Reach job level <main>%AMOUNT%</main> with job <main>%JOB%'
+        base: 'Достигните уровня работы <main>%AMOUNT%</main> с заданием <main>%JOB%'
       SlimefunResearch:
-        base: 'Spend on research'
+        base: 'Расходы на исследования'
       ProjectKorraUseAbility:
-        base: 'Use Ability: <main>%ABILITY%'
+        base: 'Использовать способность: <main>%ABILITY%'
       BetonQuestCompleteObjective:
-        base: 'Finish Objective: <main>%BETONQUESTOBJECTIVENAME%'
+        base: 'Закончить задание: <main>%BETONQUESTOBJECTIVENAME%'
       ultimateJobsReachJobLevel:
-        base: 'Reach job level <main>%AMOUNT%</main> with job <main>%JOBID%'
+        base: 'Достигните уровня работы <main>%AMOUNT%</main> с заданием <main>%JOBID%'
   conditions:
     boolean:
       not-fulfilled: "<warn>Нужно %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
