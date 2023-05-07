@@ -120,7 +120,7 @@ Admin Commands - Quest Editing:
 
 
 **Requirements to run this:**
-- Paper 1.17.1 - 1.19.3
+- Paper 1.17.1 - 1.19.4
 - Java 17
 
 
