@@ -205,10 +205,10 @@ dependencies {
     }
 
     //CloudCommands
-    implementation("cloud.commandframework:cloud-paper:1.8.2") {
+    implementation("cloud.commandframework:cloud-paper:1.8.3") {
         exclude(group = "net.kyori", module = "adventure-api")
     }
-    implementation("cloud.commandframework:cloud-minecraft-extras:1.8.2") {
+    implementation("cloud.commandframework:cloud-minecraft-extras:1.8.3") {
         exclude(group = "net.kyori", module = "adventure-api")
     }
     //Else it errors:
