@@ -246,7 +246,7 @@ dependencies {
     compileOnly(files("libs/znpc-servers-3.9.jar"))
 
 
-    implementation("com.github.Redempt:Crunch:1.1.2")
+    implementation("com.github.Redempt:Crunch:1.1.3")
 
 
     implementation("com.fasterxml.jackson.core:jackson-core:2.13.3")
