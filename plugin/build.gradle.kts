@@ -120,7 +120,6 @@ dependencies {
     paperweight.paperDevBundle("1.19.4-R0.1-SNAPSHOT")
 
     implementation(project(path= ":common", configuration= "shadow"))
-    implementation(project(path= ":spigot", configuration= "shadow"))
     implementation(project(path= ":paper", configuration= "shadow"))
 
     //implementation(project(":spigot"))
@@ -144,7 +143,6 @@ tasks.withType<ShadowJar> {
 
     dependencies {
         include(dependency(":common"))
-        include(dependency(":spigot"))
         include(dependency(":paper"))
         include(dependency("io.papermc:paperlib:"))
     }

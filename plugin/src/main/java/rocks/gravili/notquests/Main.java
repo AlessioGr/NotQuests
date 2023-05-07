@@ -35,7 +35,6 @@ public final class Main extends JavaPlugin {
     private static Main instance;
 
     private rocks.gravili.notquests.paper.NotQuests notQuests;
-    private rocks.gravili.notquests.spigot.NotQuests notQuestsSpigot;
 
 
     @Override
@@ -43,11 +42,8 @@ public final class Main extends JavaPlugin {
         instance = this;
     }
 
-    public final rocks.gravili.notquests.paper.NotQuests getNotQuests(){
+    public rocks.gravili.notquests.paper.NotQuests getNotQuests(){
         return notQuests;
-    }
-    public final rocks.gravili.notquests.spigot.NotQuests getNotQuestsSpigot(){
-        return notQuestsSpigot;
     }
 
     public static Main getInstance() {
@@ -66,18 +62,13 @@ public final class Main extends JavaPlugin {
             notQuests = new rocks.gravili.notquests.paper.NotQuests(instance);
             notQuests.onLoad();
         }else{
-            getLogger().log(Level.INFO, "Loading NotQuests Spigot...");
-
-            notQuestsSpigot = new rocks.gravili.notquests.spigot.NotQuests(instance);
-            notQuestsSpigot.onLoad();
+            getLogger().log(Level.SEVERE, "NotQuests version v5.15.0 or higher is no longer compatible with Spigot. In order to use Spigot, please use NotQuests v5.14.0 or lower. The reason for that is that Spigot is missing a lot of features that are required for NotQuests to work. Please use Paper instead. There is no reason to use Spigot. No good server nowadays uses Spigot. The only reason to use Spigot is because you don't know about Paper. No support is given to Spigot servers.");
+            return;
         }
 
         if(notQuests != null){
             getLogger().log(Level.INFO, "Enabling NotQuests Paper...");
             notQuests.onEnable();
-        }else{
-            getLogger().log(Level.INFO, "Enabling NotQuests Spigot...");
-            notQuestsSpigot.onEnable();
         }
 
         /*getLogger().log(Level.INFO, "NotQuests has started. It will start loading in 5 seconds. Why the delay? Because spigot's load order system is broken. It does not work correctly. Without the delay, some integrations will stop working.");
@@ -121,8 +112,6 @@ public final class Main extends JavaPlugin {
     public void onDisable() {
         if(notQuests != null){
             notQuests.onDisable();
-        }else{
-            notQuestsSpigot.onDisable();
         }
 
     }
