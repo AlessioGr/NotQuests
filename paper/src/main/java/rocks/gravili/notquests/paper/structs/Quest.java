@@ -319,59 +319,71 @@ public class Quest extends ObjectiveHolder {
     return maxCompletions;
   }
 
-  public void setMaxCompletions(int maxCompletions) {
+  public void setMaxCompletions(final int maxCompletions, final boolean save) {
     this.maxCompletions = maxCompletions;
-    category.getQuestsConfig().set("quests." + questName + ".limits.completions", maxCompletions);
-    category.saveQuestsConfig();
+    if(save){
+      category.getQuestsConfig().set("quests." + questName + ".limits.completions", maxCompletions);
+      category.saveQuestsConfig();
+    }
   }
 
   public final int getMaxAccepts() {
     return maxAccepts;
   }
 
-  public void setMaxAccepts(int maxAccepts) {
+  public void setMaxAccepts(int maxAccepts, final boolean save) {
     this.maxAccepts = maxAccepts;
-    category.getQuestsConfig().set("quests." + questName + ".limits.accepts", maxAccepts);
-    category.saveQuestsConfig();
+    if(save){
+      category.getQuestsConfig().set("quests." + questName + ".limits.accepts", maxAccepts);
+      category.saveQuestsConfig();
+    }
   }
 
   public final int getMaxFails() {
     return maxFails;
   }
 
-  public void setMaxFails(int maxFails) {
+  public void setMaxFails(int maxFails, final boolean save) {
     this.maxFails = maxFails;
-    category.getQuestsConfig().set("quests." + questName + ".limits.fails", maxFails);
-    category.saveQuestsConfig();
+    if(save){
+      category.getQuestsConfig().set("quests." + questName + ".limits.fails", maxFails);
+      category.saveQuestsConfig();
+    }
   }
 
   public final boolean isAbortEnabled() {
     return abortEnabled;
   }
 
-  public void setAbortEnabled(final boolean abortEnabled) {
+  public void setAbortEnabled(final boolean abortEnabled, final boolean save) {
     this.abortEnabled = abortEnabled;
-    category.getQuestsConfig().set("quests." + questName + ".abortEnabled", abortEnabled);
-    category.saveQuestsConfig();
+    if(save){
+      category.getQuestsConfig().set("quests." + questName + ".abortEnabled", abortEnabled);
+      category.saveQuestsConfig();
+    }
   }
   public final boolean isTakeEnabled() {
     return takeEnabled;
   }
 
-  public void setTakeEnabled(final boolean takeEnabled) {
+  public void setTakeEnabled(final boolean takeEnabled, final boolean save) {
     this.takeEnabled = takeEnabled;
-    category.getQuestsConfig().set("quests." + questName + ".takeEnabled", takeEnabled);
-    category.saveQuestsConfig();
+    if(save){
+      category.getQuestsConfig().set("quests." + questName + ".takeEnabled", takeEnabled);
+      category.saveQuestsConfig();
+    }
   }
 
   public final long getAcceptCooldownComplete() {
     return acceptCooldownComplete;
   }
 
-  public void setAcceptCooldownComplete(long cooldownInMinutes) {
+  public void setAcceptCooldownComplete(long cooldownInMinutes, final boolean save) {
     this.acceptCooldownComplete = cooldownInMinutes;
-    category.getQuestsConfig().set("quests." + questName + ".acceptCooldown.complete", cooldownInMinutes);
-    category.saveQuestsConfig();
+    if(save) {
+      category.getQuestsConfig().set("quests." + questName + ".acceptCooldown.complete", cooldownInMinutes);
+      category.saveQuestsConfig();
+    }
   }
 
 
@@ -565,11 +577,13 @@ public class Quest extends ObjectiveHolder {
     return takeItem;
   }
 
-  public void setTakeItem(final ItemStack takeItem) {
+  public void setTakeItem(final ItemStack takeItem, final boolean save) {
     if (takeItem != null) {
       this.takeItem = takeItem;
-      category.getQuestsConfig().set("quests." + questName + ".takeItem", takeItem);
-      category.saveQuestsConfig();
+      if(save) {
+        category.getQuestsConfig().set("quests." + questName + ".takeItem", takeItem);
+        category.saveQuestsConfig();
+      }
     }
   }
 
