@@ -44,9 +44,9 @@ chat:
   quest-not-active-error: '<error>Erreur : <highlight>%QUESTNAME%</highlight> n''est pas une quête active !'
   force-add-active-quest-accepted: '<success>Quête acceptée avec succès (Forcé).'
   add-active-quest-player-object-not-found: '<warn>Erreur : Objet joueur introuvable (Player object not found). Merci d''aviser le développeur du plugin.'
-  reached-max-accepts-limit: '<red>You have accepted this quest too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%ACCEPTEDAMOUNT%</highlight> times.'
-  reached-max-fails-limit: '<red>You have failed this quest too many times already. You can only fail it <highlight>%MAXFAILS%</highlight> times, but you have already failed it <highlight>%FAILEDAMOUNT%</highlight> times.'
-  reached-max-completions-limit: '<red>You have completed this quest too many times already. You can only complete it <highlight>%MAXCOMPLETIONS%</highlight> times, but you have already completed it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
+  reached-max-accepts-limit: '<red>Vous avez déjà accepté cette quête trop souvent. Vous ne pouvez l''accepter que <highlight>%MAXACCEPTS%</highlight> fois, mai vous l''avez acceptée <highlight>%ACCEPTEDAMOUNT%</highlight> fois.'
+  reached-max-fails-limit: '<red>Vous avez déjà échoué cette quête trop souvent. Vous ne pouvez l''échouer que <highlight>%MAXFAILS%</highlight> fois, mai vous l''avez échouée <highlight>%FAILEDAMOUNT%</highlight> fois.'
+  reached-max-completions-limit: '<red>Vous avez déjà complété cette quête trop souvent. Vous ne pouvez la compléter que <highlight>%MAXCOMPLETIONS%</highlight> fois, mai vous l''avez complétée <highlight>%COMPLETEDAMOUNT%</highlight> fois.'
   reached-max-active-quests-per-player-limit: '<red>Vous ne pouvez pas accepter plus de <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> quêtes.'
   quest-on-cooldown:
     minute: '<red>Cette quête est en attente ! Vous devez patienter encore <highlight>1 minute</highlight> avant de pouvoir l''accepter à nouveau.'
@@ -98,15 +98,17 @@ chat:
       breed:
         base: 'Reproduire des créatures : <main>%ENTITYTOBREED%'
       pickupItems:
-        base: 'Pickup Items: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
+        base: 'Ramasser des items: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
       consumeItems:
         base: 'Utiliser des items : <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
         base: 'Fabriquer des items : <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: 'Livrer des items : <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
+        base: 'Livrer des items: <main>%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%(%'
         deliver-to-npc: '      <GRAY>Livrez-le à <WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>Le PNJ de livraison n''est actuellement pas disponible!'
+      enchant:
+        base: 'Enchanter des items avec %ENCHANTMENT%: <main>%ITEMTOENCHANTTYPE% %(%%ITEMTOENCHANTNAME%%(%'
       escortNPC:
         base: 'Escorter <main>%NPCNAME%</main> à <main>%DESTINATIONNPCNAME%'
       fishItems:
