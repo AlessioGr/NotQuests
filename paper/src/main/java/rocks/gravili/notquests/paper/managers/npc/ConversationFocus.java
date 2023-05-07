@@ -60,7 +60,9 @@ public class ConversationFocus extends BukkitRunnable {
         this.player.addPotionEffect(potionEffect);
 
         // Cancel if player moves away too far from the original location
-        if (this.player.getLocation().subtract(0, this.player.getLocation().getY(), 0).distanceSquared(this.baseLocation) > 0.04) {
+
+        if (!this.player.getLocation().getWorld().getUID().equals(this.baseLocation.getWorld().getUID())
+                || this.player.getLocation().subtract(0, this.player.getLocation().getY(), 0).distanceSquared(this.baseLocation) > 0.04) {
             this.cancel();
             if (main.getConfiguration().isCitizensFocusingCancelConversationWhenTooFar()){
                 main.sendMessage(
