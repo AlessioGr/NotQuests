@@ -127,7 +127,7 @@ dependencies {
 
     //compileOnly("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT")
 
-    implementation("io.papermc:paperlib:1.0.7")
+    implementation("io.papermc:paperlib:1.0.8")
 }
 
 /**
