@@ -60,7 +60,7 @@ public class Quest extends ObjectiveHolder {
   private int maxFails = -1; // -1 or smaller => unlimited fails
 
 
-  private long acceptCooldownComplete = -1; // Cooldown in minute. -1 or smaller => no cooldown.
+  private long acceptCooldownComplete = -1; // Cooldown in minutes. -1 or smaller => no cooldown.
   private boolean takeEnabled = true;
   private boolean abortEnabled = true;
 
