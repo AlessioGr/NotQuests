@@ -869,7 +869,7 @@ public class QuestManager {
 
             for (Quest quest : questsAttachedToNPC) {
 
-                Component acceptComponent = main.parse("<GREEN>**[CHOOSE]")
+                Component acceptComponent = main.parse("<GREEN>[CHOOSE]")
                         .clickEvent(ClickEvent.runCommand("/nquests preview " + quest.getIdentifier()))
                         .hoverEvent(HoverEvent.showText(main.parse("<GREEN>Click to preview/choose the quest <highlight>" + quest.getDisplayNameOrIdentifier())));
 
@@ -919,7 +919,7 @@ public class QuestManager {
 
             for (final Quest quest : questsAttachedToNPC) {
 
-                Component acceptComponent = main.parse("<GREEN>**[CHOOSE]")
+                Component acceptComponent = main.parse("<GREEN>[CHOOSE]")
                         .clickEvent(ClickEvent.runCommand("/nquests preview " + quest.getIdentifier()))
                         .hoverEvent(HoverEvent.showText(main.parse("<GREEN>Click to preview/choose the quest <highlight>" + quest.getDisplayNameOrIdentifier())));
 
