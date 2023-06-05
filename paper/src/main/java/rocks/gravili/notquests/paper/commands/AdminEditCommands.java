@@ -86,7 +86,7 @@ public class AdminEditCommands {
                     final Duration durationCooldown = context.get("duration");
                     final long cooldownInMinutes = durationCooldown.toMinutes();
 
-                    quest.setAcceptCooldownComplete(cooldownInMinutes);
+                    quest.setAcceptCooldownComplete(cooldownInMinutes, true);
                     context.getSender().sendMessage(main.parse(
                             "<success>Complete acceptCooldown for Quest <highlight>" + quest.getIdentifier() + "</highlight> has been set to <highlight2>"
                                     + durationCooldown.toDaysPart() + " days, " + durationCooldown.toHoursPart() + " hours, " + durationCooldown.toMinutesPart() + " minutes" + "</highlight2>!"
@@ -98,7 +98,7 @@ public class AdminEditCommands {
                 .meta(CommandMeta.DESCRIPTION, "Disables the wait time for players between accepting quests.")
                 .handler((context) -> {
                     final Quest quest = context.get("quest");
-                    quest.setAcceptCooldownComplete(-1);
+                    quest.setAcceptCooldownComplete(-1, true);
                     context.getSender().sendMessage(main.parse(
                             "<success>Complete acceptCooldown for Quest <highlight>" + quest.getIdentifier() + "</highlight> has been set to <highlight2>disabled</highlight2>!"
                     ));
@@ -227,13 +227,13 @@ public class AdminEditCommands {
                     final Quest quest = context.get("quest");
                     int maxCompletions = context.get("max. completions");
                     if (maxCompletions > 0) {
-                        quest.setMaxCompletions(maxCompletions);
+                        quest.setMaxCompletions(maxCompletions, true);
                         context.getSender().sendMessage(main.parse(
                                 "<success>Maximum amount of completions for Quest <highlight>" + quest.getIdentifier() + "</highlight> has been set to <highlight2>"
                                         + maxCompletions + "</highlight2>!"
                         ));
                     } else {
-                        quest.setMaxCompletions(-1);
+                        quest.setMaxCompletions(-1, true);
                         context.getSender().sendMessage(main.parse(
                                 "<success>Maximum amount of completions for Quest <highlight>" + quest.getIdentifier() + "</highlight> has been set to <highlight2>"
                                         + "unlimited (default)</highlight2>!"
@@ -252,13 +252,13 @@ public class AdminEditCommands {
                     final Quest quest = context.get("quest");
                     int maxAccepts = context.get("max. accepts");
                     if (maxAccepts > 0) {
-                        quest.setMaxAccepts(maxAccepts);
+                        quest.setMaxAccepts(maxAccepts, true);
                         context.getSender().sendMessage(main.parse(
                                 "<success>Maximum amount of accepts for Quest <highlight>" + quest.getIdentifier() + "</highlight> has been set to <highlight2>"
                                         + maxAccepts + "</highlight2>!"
                         ));
                     } else {
-                        quest.setMaxAccepts(-1);
+                        quest.setMaxAccepts(-1, true);
                         context.getSender().sendMessage(main.parse(
                                 "<success>Maximum amount of accepts for Quest <highlight>" + quest.getIdentifier() + "</highlight> has been set to <highlight2>"
                                         + "unlimited (default)</highlight2>!"
@@ -277,13 +277,13 @@ public class AdminEditCommands {
                     final Quest quest = context.get("quest");
                     int maxFails = context.get("max. fails");
                     if (maxFails > 0) {
-                        quest.setMaxFails(maxFails);
+                        quest.setMaxFails(maxFails, true);
                         context.getSender().sendMessage(main.parse(
                                 "<success>Maximum amount of fails for Quest <highlight>" + quest.getIdentifier() + "</highlight> has been set to <highlight2>"
                                         + maxFails + "</highlight2>!"
                         ));
                     } else {
-                        quest.setMaxFails(-1);
+                        quest.setMaxFails(-1, true);
                         context.getSender().sendMessage(main.parse(
                                 "<success>Maximum amount of fails for Quest <highlight>" + quest.getIdentifier() + "</highlight> has been set to <highlight2>"
                                         + "unlimited (default)</highlight2>!"
@@ -299,7 +299,7 @@ public class AdminEditCommands {
                 .handler((context) -> {
                     final Quest quest = context.get("quest");
                     boolean takeEnabled = context.get("Take Enabled");
-                    quest.setTakeEnabled(takeEnabled);
+                    quest.setTakeEnabled(takeEnabled, true);
                     if (takeEnabled) {
                         context.getSender().sendMessage(main.parse(
                                  "<success>Quest taking (/notquests take) for the Quest <highlight>"
@@ -320,7 +320,7 @@ public class AdminEditCommands {
                 .handler((context) -> {
                     final Quest quest = context.get("quest");
                     boolean abortEnabled = context.get("Abort Enabled");
-                    quest.setAbortEnabled(abortEnabled);
+                    quest.setAbortEnabled(abortEnabled, true);
                     if (abortEnabled) {
                         context.getSender().sendMessage(main.parse(
                                 "<success>Quest aborting (/notquests abort) for the Quest <highlight>"
@@ -366,7 +366,7 @@ public class AdminEditCommands {
                     }
 
 
-                    quest.setTakeItem(guiItem);
+                    quest.setTakeItem(guiItem, true);
                     context.getSender().sendMessage(main.parse(
                             "<success>Take Item Material for Quest <highlight>" + quest.getIdentifier()
                                     + "</highlight> has been set to <highlight2>" + guiItem.getType().name() + "</highlight2>!"

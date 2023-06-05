@@ -18,7 +18,7 @@ chat:
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
   quest-not-all-requirements-fulfilled: '<negative>You do not fulfill all the requirements this quest needs! Requirement still needed:'
-  action-not-all-conditions-fulfilled: '<negative>You do not fulfill all the conditions this action needs! Conditions still needed:'
+  action-not-all-conditions-fulfilled: '<negative>Δεν πληρείτε όλες τις προϋποθέσεις που χρειάζεται αυτή η ενέργεια! Απαιτούνται ακόμα προϋποθέσεις:'
   missing-quest-description: <warn>Αυτή η αποστολή δεν έχει περιγραφή.
   objectives-label-after-quest-accepting: '<main>Στόχοι:'
   questpoints:
@@ -36,7 +36,7 @@ chat:
   abort-disabled: <error>Aborting the quest <highlight>%QUESTNAME%</highlight> is disabled.
   quest-not-active-error: '<error>Σφάλμα: Η <highlight>%QUESTNAME% <error>δεν είναι ενεργή αποστολή!'
   force-add-active-quest-accepted: '<success>Successfully accepted the quest (Forced).'
-  add-active-quest-player-object-not-found: '<warn>Error: Player object not found. Please report this to the plugin developer.'
+  add-active-quest-player-object-not-found: '<warn>Σφάλμα: Το αντικείμενο του παίκτη δε βρέθηκε. Αναφέρετέ το στον προγραμματιστή του πρόσθετου.'
   reached-max-accepts-limit: '<red>You have accepted this quest too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%ACCEPTEDAMOUNT%</highlight> times.'
   reached-max-fails-limit: '<red>You have failed this quest too many times already. You can only fail it <highlight>%MAXFAILS%</highlight> times, but you have already failed it <highlight>%FAILEDAMOUNT%</highlight> times.'
   reached-max-completions-limit: '<red>You have completed this quest too many times already. You can only complete it <highlight>%MAXCOMPLETIONS%</highlight> times, but you have already completed it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
@@ -51,13 +51,13 @@ chat:
   profiles:
     list-current: '<highlight>Current profile: <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
     list-other-heading: '<highlight>Other profiles:'
-    list-other-none: '  <main>You have no more profiles.'
+    list-other-none: '  <main>Δεν έχετε άλλα προφίλ.'
     list-other: '  <highlight>- <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
     change-same-profile: '<error>You are already using that profile!'
-    change-profile-doesnt-exist: '<error>That profile does not exist.'
-    changed-successfully: '<success>You have successfully changed your profile from %OLDPROFILENAME% to <highlight>%NEWPROFILENAME%</highlight>!'
-    create-already-exists: '<error>A profile with the name <highlight>%NEWPROFILENAME%</highlight> already exists.'
-    create-invalid-characters: '<error>The profile name you provided contains invalid characters.'
+    change-profile-doesnt-exist: '<error>Αυτό το προφίλ δεν υπάρχει.'
+    changed-successfully: '<success>Έχετε αλλάξει με επιτυχία το προφίλ σας από %OLDPROFILENAME% σε <highlight>%NEWPROFILENAME%</highlight>!'
+    create-already-exists: '<error>Υπάρχει ήδη ένα προφίλ με το όνομα <highlight>%NEWPROFILENAME%</highlight>.'
+    create-invalid-characters: '<error>Το όνομα προφίλ που δώσατε περιέχει μη έγκυρους χαρακτήρες.'
     created-successfully: '<success>You have successfully created the profile <highlight>%NEWPROFILENAME%</highlight>! To switch to it, use <highlight2>/nq profile change %NEWPROFILENAME%</highlight2>'
   conversations:
     choose-answer-prefix: |-
@@ -97,9 +97,11 @@ chat:
       craftItems:
         base: 'Craft Items: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: 'Deliver Items: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
+        base: 'Deliver Items: <main>%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%(%'
         deliver-to-npc: '      <GRAY>Deliver it to <WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>The delivery NPC is currently not available!'
+      enchant:
+        base: 'Enchant Items with %ENCHANTMENT%: <main>%ITEMTOENCHANTTYPE% %(%%ITEMTOENCHANTNAME%%(%'
       escortNPC:
         base: 'Escort <main>%NPCNAME%</main> to <main>%DESTINATIONNPCNAME%'
       fishItems:

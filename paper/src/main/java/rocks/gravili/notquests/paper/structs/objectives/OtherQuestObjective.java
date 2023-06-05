@@ -84,7 +84,7 @@ public class OtherQuestObjective extends Objective {
             "chat.objectives.taskDescription.otherQuest.base",
             questPlayer,
             activeObjective,
-            Map.of("%OTHERQUESTNAME%", getOtherQuest().getIdentifier()));
+            Map.of("%OTHERQUESTNAME%", getOtherQuest().getDisplayNameOrIdentifier()));
   }
 
   @Override

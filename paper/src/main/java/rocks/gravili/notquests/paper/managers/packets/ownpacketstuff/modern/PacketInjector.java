@@ -27,6 +27,7 @@ import net.minecraft.network.protocol.game.*;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import org.bukkit.Chunk;
@@ -34,11 +35,11 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.BlockState;
-import org.bukkit.craftbukkit.v1_19_R2.CraftChunk;
-import org.bukkit.craftbukkit.v1_19_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_19_R2.block.CraftBlockState;
-import org.bukkit.craftbukkit.v1_19_R2.entity.CraftArmorStand;
-import org.bukkit.craftbukkit.v1_19_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_19_R3.CraftChunk;
+import org.bukkit.craftbukkit.v1_19_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_19_R3.block.CraftBlockState;
+import org.bukkit.craftbukkit.v1_19_R3.entity.CraftArmorStand;
+import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -112,7 +113,7 @@ public class PacketInjector {
   }
 
   public Connection getConnection(ServerGamePacketListenerImpl serverGamePacketListener) {
-    return serverGamePacketListener.getConnection();
+    return serverGamePacketListener.connection;
   }
 
   public ServerPlayer getServerPlayer(Player player) {
@@ -134,11 +135,10 @@ public class PacketInjector {
     // Prepare Data
     Connection connection = getConnection(getServerPlayer(player).connection);
     location = location.clone();
-    BlockPos blockPos = new BlockPos(location.getX(), location.getY(), location.getZ());
+    BlockPos blockPos = new BlockPos(location.getBlockX(), location.getBlockY(), location.getBlockZ());
 
     Chunk chunk = location.getChunk();
     CraftChunk craftChunk = (CraftChunk) chunk;
-    LevelChunk levelChunk = craftChunk.getHandle();
 
     World world = location.getWorld();
     CraftWorld craftWorld = (CraftWorld) world;
@@ -163,7 +163,7 @@ public class PacketInjector {
     // Blocks.AIR.defaultBlockState(), PalettedContainer.Strategy.SECTION_STATES,
     // presetBlockStates);
 
-    LevelChunkSection section = levelChunk.getHighestSection();
+    LevelChunkSection section = craftChunk.getHandle(ChunkStatus.FULL).getHighestSection();
 
     ClientboundSectionBlocksUpdatePacket clientboundSectionBlocksUpdatePacket =
         new ClientboundSectionBlocksUpdatePacket(sectionPos, positions, section, true);

@@ -441,18 +441,18 @@ public class QuestManager {
                         category.getQuestsConfig().set("quests." + questName + ".limits.completions", oldMaxAccepts);
                         category.saveQuestsConfig();
                     }
-                    quest.setMaxCompletions(category.getQuestsConfig().getInt("quests." + questName + ".limits.completions", -1));
-                    quest.setMaxAccepts(category.getQuestsConfig().getInt("quests." + questName + ".limits.accepts", -1));
-                    quest.setMaxFails(category.getQuestsConfig().getInt("quests." + questName + ".limits.fails", -1));
-                    quest.setTakeEnabled(category.getQuestsConfig().getBoolean("quests." + questName + ".takeEnabled", true));
-                    quest.setAbortEnabled(category.getQuestsConfig().getBoolean("quests." + questName + ".abortEnabled", true));
+                    quest.setMaxCompletions(category.getQuestsConfig().getInt("quests." + questName + ".limits.completions", -1), false);
+                    quest.setMaxAccepts(category.getQuestsConfig().getInt("quests." + questName + ".limits.accepts", -1), false);
+                    quest.setMaxFails(category.getQuestsConfig().getInt("quests." + questName + ".limits.fails", -1), false);
+                    quest.setTakeEnabled(category.getQuestsConfig().getBoolean("quests." + questName + ".takeEnabled", true), false);
+                    quest.setAbortEnabled(category.getQuestsConfig().getBoolean("quests." + questName + ".abortEnabled", true), false);
                     if(category.getQuestsConfig().isInt("quests." + questName + ".acceptCooldown")){ // Convert
                         final int oldCooldown = category.getQuestsConfig().getInt("quests." + questName + ".acceptCooldown", -1);
                         category.getQuestsConfig().set("quests." + questName + ".acceptCooldown", null);
                         category.getQuestsConfig().set("quests." + questName + ".acceptCooldown.complete", oldCooldown);
                         category.saveQuestsConfig();
                     }
-                    quest.setAcceptCooldownComplete(category.getQuestsConfig().getLong("quests." + questName + ".acceptCooldown.complete", -1));
+                    quest.setAcceptCooldownComplete(category.getQuestsConfig().getLong("quests." + questName + ".acceptCooldown.complete", -1), false);
 
                     quest.setPredefinedProgressOrder(PredefinedProgressOrder.fromConfiguration(category.getQuestsConfig(), "quests." + questName + ".predefinedProgressOrder"), false);
 
@@ -632,7 +632,7 @@ public class QuestManager {
 
 
                     //TakeItem:
-                    quest.setTakeItem(category.getQuestsConfig().getItemStack("quests." + questName + ".takeItem"));
+                    quest.setTakeItem(category.getQuestsConfig().getItemStack("quests." + questName + ".takeItem"), false);
 
                     quests.add(quest);
                 }
@@ -869,7 +869,7 @@ public class QuestManager {
 
             for (Quest quest : questsAttachedToNPC) {
 
-                Component acceptComponent = main.parse("<GREEN>**[CHOOSE]")
+                Component acceptComponent = main.parse("<GREEN>[CHOOSE]")
                         .clickEvent(ClickEvent.runCommand("/nquests preview " + quest.getIdentifier()))
                         .hoverEvent(HoverEvent.showText(main.parse("<GREEN>Click to preview/choose the quest <highlight>" + quest.getDisplayNameOrIdentifier())));
 
@@ -919,7 +919,7 @@ public class QuestManager {
 
             for (final Quest quest : questsAttachedToNPC) {
 
-                Component acceptComponent = main.parse("<GREEN>**[CHOOSE]")
+                Component acceptComponent = main.parse("<GREEN>[CHOOSE]")
                         .clickEvent(ClickEvent.runCommand("/nquests preview " + quest.getIdentifier()))
                         .hoverEvent(HoverEvent.showText(main.parse("<GREEN>Click to preview/choose the quest <highlight>" + quest.getDisplayNameOrIdentifier())));
 

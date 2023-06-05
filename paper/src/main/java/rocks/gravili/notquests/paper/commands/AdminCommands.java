@@ -709,6 +709,12 @@ public class AdminCommands {
                 .meta(CommandMeta.DESCRIPTION, "Opens the web editor.")
                 .handler((context) -> {
                     context.getSender().sendMessage(main.parse(
+                            "<main>This feature is still in development. The web editor does not work at all yet. Sorry! This command just acts as a placeholder. Consult the NotQuests documentation for a tutorial on how to use NotQuests."
+                    ));
+                    if(true){
+                        return;
+                    }
+                    context.getSender().sendMessage(main.parse(
                             "<main>Opening the web editor..."
                     ));
 

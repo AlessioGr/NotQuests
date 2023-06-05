@@ -27,7 +27,6 @@ public class FishItemsObjective extends Objective {
       PaperCommandManager<CommandSender> manager,
       Command.Builder<CommandSender> addObjectiveBuilder,
       final int level) {
-    
     manager.command(
         addObjectiveBuilder
             .argument(

@@ -142,7 +142,7 @@ repositories {
 
 dependencies {
     implementation(project(path= ":common", configuration= "shadow"))
-    paperweight.paperDevBundle("1.19.3-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.19.4-R0.1-SNAPSHOT")
 
     compileOnly(files("libs/citizens-2.0.30-8.jar"))
 
@@ -150,12 +150,12 @@ dependencies {
     compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
 
 
-    compileOnly("io.lumine:Mythic-Dist:5.2.0")
+    compileOnly("io.lumine:Mythic-Dist:5.2.6")
     compileOnly(files("libs/EliteMobs.jar"))
     compileOnly("com.github.UlrichBR:UClansV5-API:4.5")
     compileOnly(files("libs/ProjectKorra-1.10.0.jar"))
 
-    compileOnly(files("libs/BetonQuest-2.0.0-574.jar"))
+    compileOnly(files("libs/BetonQuest-2.0.0-651.jar"))
 
     compileOnly("com.sk89q.worldedit:worldedit-core:7.3.0-SNAPSHOT")
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.3.0-SNAPSHOT")
@@ -178,10 +178,10 @@ dependencies {
     }
 
     //CloudCommands
-    implementation("cloud.commandframework:cloud-paper:1.8.2") {
+    implementation("cloud.commandframework:cloud-paper:1.8.3") {
         exclude(group = "net.kyori", module = "adventure-api")
     }
-    implementation("cloud.commandframework:cloud-minecraft-extras:1.8.2") {
+    implementation("cloud.commandframework:cloud-minecraft-extras:1.8.3") {
         exclude(group = "net.kyori", module = "adventure-api")
     }
     //Else it errors:
@@ -209,7 +209,7 @@ dependencies {
     compileOnly(files("libs/znpc-servers-3.9.jar"))
 
 
-    implementation("com.github.Redempt:Crunch:1.1.2")
+    implementation("com.github.Redempt:Crunch:1.1.3")
 
 
     implementation("com.fasterxml.jackson.core:jackson-core:2.13.3")
@@ -290,7 +290,7 @@ tasks {
         // Configure the Minecraft version for our task.
         // This is the only required configuration besides applying the plugin.
         // Your plugin's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("1.19")
+        minecraftVersion("1.19.4")
     }
 }
 
