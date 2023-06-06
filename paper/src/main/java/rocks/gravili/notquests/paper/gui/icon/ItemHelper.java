@@ -107,14 +107,20 @@ public class ItemHelper {
     }
 
     public static Material fetchMaterial(Icon item, GuiContext guiContext) {
-        if (!item.material().equals("%QUEST_ITEM_MATERIAL%")) {
+        if (item.material().equals("%QUEST_ITEM_MATERIAL%")) {
+            if (guiContext.getActiveQuest() != null) {
+                return guiContext.getActiveQuest().getQuest().getTakeItem().getType();
+            }
+            if (guiContext.getQuest() != null) {
+                return guiContext.getQuest().getTakeItem().getType();
+            }
+        } else if (item.material().equals("%CATEGORY_ITEM_MATERIAL%")) {
+            if (guiContext.getCategory() != null) {
+                return guiContext.getCategory().getGuiItem().getType();
+            }
+        } else {
+
             return Material.valueOf(item.material());
-        }
-        if (guiContext.getActiveQuest() != null) {
-            return guiContext.getActiveQuest().getQuest().getTakeItem().getType();
-        }
-        if (guiContext.getQuest() != null) {
-            return guiContext.getQuest().getTakeItem().getType();
         }
         return Material.STONE;
     }

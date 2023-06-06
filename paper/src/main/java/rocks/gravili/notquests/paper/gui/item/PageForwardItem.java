@@ -1,9 +1,9 @@
 package rocks.gravili.notquests.paper.gui.item;
 
-import de.studiocode.invui.gui.impl.PagedGUI;
-import de.studiocode.invui.item.ItemProvider;
-import de.studiocode.invui.item.ItemWrapper;
-import de.studiocode.invui.item.impl.controlitem.PageItem;
+import xyz.xenondevs.invui.gui.PagedGui;
+import xyz.xenondevs.invui.item.ItemProvider;
+import xyz.xenondevs.invui.item.ItemWrapper;
+import xyz.xenondevs.invui.item.impl.controlitem.PageItem;
 
 public class PageForwardItem extends PageItem {
     private ItemWrapper itemWrapper;
@@ -14,7 +14,7 @@ public class PageForwardItem extends PageItem {
     }
 
     @Override
-    public ItemProvider getItemProvider(PagedGUI gui) {
+    public ItemProvider getItemProvider(PagedGui gui) {
         return itemWrapper;
     }
 }

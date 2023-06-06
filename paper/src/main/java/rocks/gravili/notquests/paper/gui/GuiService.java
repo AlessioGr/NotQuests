@@ -1,7 +1,5 @@
 package rocks.gravili.notquests.paper.gui;
 
-import de.studiocode.inventoryaccess.component.AdventureComponentWrapper;
-import de.studiocode.invui.window.impl.single.SimpleWindow;
 import org.bukkit.entity.Player;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.ConfigurateException;
@@ -12,6 +10,8 @@ import rocks.gravili.notquests.paper.gui.icon.Button;
 import rocks.gravili.notquests.paper.gui.icon.Icon;
 import rocks.gravili.notquests.paper.gui.typeserializer.IconTypeSerializer;
 import rocks.gravili.notquests.paper.gui.typeserializer.ItemTypeSerializer;
+import xyz.xenondevs.inventoryaccess.component.AdventureComponentWrapper;
+import xyz.xenondevs.invui.window.Window;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -37,8 +37,11 @@ public class GuiService {
             return;
         }
         var title = new AdventureComponentWrapper(notQuests.getLanguageManager().getComponent(customGui.getPathToTitle(), player, guiContext.getAsObjectArray()));
-        var window = new SimpleWindow(player, title, customGui.buildGui(notQuests, guiContext));
-        window.show();
+        var window = Window.single()
+                .setViewer(player)
+                .setTitle(title)
+                .setGui(customGui.buildGui(notQuests, guiContext)).build();
+         window.open();
     }
 
     public void saveAllDefaultGuis() {

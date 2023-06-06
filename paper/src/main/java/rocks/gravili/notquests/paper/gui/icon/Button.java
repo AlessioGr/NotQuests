@@ -1,8 +1,5 @@
 package rocks.gravili.notquests.paper.gui.icon;
 
-import de.studiocode.invui.item.Item;
-import de.studiocode.invui.item.ItemWrapper;
-import de.studiocode.invui.item.impl.SimpleItem;
 import net.kyori.adventure.text.Component;
 import org.apache.logging.log4j.core.util.Integers;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -10,6 +7,9 @@ import rocks.gravili.notquests.paper.gui.GuiContext;
 import rocks.gravili.notquests.paper.gui.item.*;
 import rocks.gravili.notquests.paper.gui.property.IconProperty;
 import rocks.gravili.notquests.paper.gui.property.types.StringIconProperty;
+import xyz.xenondevs.invui.item.Item;
+import xyz.xenondevs.invui.item.ItemWrapper;
+import xyz.xenondevs.invui.item.impl.SimpleItem;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -41,10 +41,6 @@ public class Button {
 
     public Item buildItem(NotQuests notQuests, GuiContext guiContext) {
         switch (type) {
-            default -> {
-                var itemStackInWrapper = new ItemWrapper(ItemHelper.assembleItemStack(icons.get(0), notQuests, guiContext));
-                return new SimpleItem(itemStackInWrapper);
-            }
             case FORWARD -> {
                 var itemStackInWrapper = new ItemWrapper(ItemHelper.assembleItemStack(icons.get(0), notQuests,  guiContext));
                 return new PageForwardItem(itemStackInWrapper);
@@ -89,7 +85,11 @@ public class Button {
             }
             case ACTION -> {
                 var itemStackInWrapper = new ItemWrapper(ItemHelper.assembleItemStack(icons.get(0), notQuests, guiContext));
-                return new ActionItem(notQuests,itemStackInWrapper, this, guiContext);
+                return new ActionItem(notQuests, itemStackInWrapper, this, guiContext);
+            }
+            default -> {
+                var itemStackInWrapper = new ItemWrapper(ItemHelper.assembleItemStack(icons.get(0), notQuests, guiContext));
+                return new SimpleItem(itemStackInWrapper);
             }
         }
         var itemStackInWrapper = new ItemWrapper(ItemHelper.assembleItemStack(icons.get(0), notQuests, guiContext));

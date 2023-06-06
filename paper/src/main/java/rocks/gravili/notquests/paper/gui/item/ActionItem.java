@@ -1,8 +1,5 @@
 package rocks.gravili.notquests.paper.gui.item;
 
-import de.studiocode.invui.item.ItemProvider;
-import de.studiocode.invui.item.ItemWrapper;
-import de.studiocode.invui.item.impl.BaseItem;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -15,11 +12,14 @@ import rocks.gravili.notquests.paper.gui.property.types.ListIconProperty;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
+import xyz.xenondevs.invui.item.ItemProvider;
+import xyz.xenondevs.invui.item.ItemWrapper;
+import xyz.xenondevs.invui.item.impl.AbstractItem;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActionItem extends BaseItem {
+public class ActionItem extends AbstractItem {
 
     private final NotQuests notQuests;
     private final Button icon;
@@ -32,6 +32,8 @@ public class ActionItem extends BaseItem {
         this.icon = icon;
         this.guiContext = guiContext;
     }
+
+
 
     @Override
     public ItemProvider getItemProvider() {

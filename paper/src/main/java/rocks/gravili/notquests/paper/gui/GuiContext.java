@@ -1,5 +1,6 @@
 package rocks.gravili.notquests.paper.gui;
 
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.managers.npc.NQNPC;
@@ -12,17 +13,20 @@ public class GuiContext {
     private ActiveQuest activeQuest;
     private NQNPC nqnpc;
 
+    private ArmorStand armorStand;
+
     private Category category;
 
     public GuiContext() {
 
     }
 
-    public GuiContext(Player player, Quest quest, ActiveQuest activeQuest, NQNPC nqnpc, Category category) {
+    public GuiContext(Player player, Quest quest, ActiveQuest activeQuest, NQNPC nqnpc, ArmorStand armorStand, Category category) {
         this.player = player;
         this.quest = quest;
         this.activeQuest = activeQuest;
         this.nqnpc = nqnpc;
+        this.armorStand = armorStand;
         this.category = category;
     }
 
@@ -58,6 +62,14 @@ public class GuiContext {
         this.nqnpc = nqnpc;
     }
 
+    public ArmorStand getArmorStand() {
+        return armorStand;
+    }
+
+    public void setArmorStand(ArmorStand armorStand) {
+        this.armorStand = armorStand;
+    }
+
     public Category getCategory() {
         return category;
     }
@@ -77,6 +89,7 @@ public class GuiContext {
     }
 
     public GuiContext clone() {
-        return new GuiContext(player, quest, activeQuest, nqnpc, category);
+        return new GuiContext(player, quest, activeQuest, nqnpc, armorStand, category);
     }
+
 }

@@ -1,19 +1,18 @@
 package rocks.gravili.notquests.paper.gui.item;
 
-import de.studiocode.inventoryaccess.component.AdventureComponentWrapper;
-import de.studiocode.invui.gui.impl.TabGUI;
-import de.studiocode.invui.item.ItemProvider;
-import de.studiocode.invui.item.ItemWrapper;
-import de.studiocode.invui.item.impl.controlitem.TabItem;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import xyz.xenondevs.inventoryaccess.component.AdventureComponentWrapper;
+import xyz.xenondevs.invui.gui.TabGui;
+import xyz.xenondevs.invui.item.ItemProvider;
+import xyz.xenondevs.invui.item.ItemWrapper;
+import xyz.xenondevs.invui.item.impl.controlitem.TabItem;
 
 import java.util.List;
-import java.util.Set;
 
 public class CustomTabItem extends TabItem {
 
@@ -28,7 +27,7 @@ public class CustomTabItem extends TabItem {
     }
 
     @Override
-    public ItemProvider getItemProvider(TabGUI gui) {
+    public ItemProvider getItemProvider(TabGui gui) {
         var activeTabItem = itemStacks.get(0);
         var inactiveTabItem = itemStacks.get(0);
         if (itemStacks.size() > 1) {

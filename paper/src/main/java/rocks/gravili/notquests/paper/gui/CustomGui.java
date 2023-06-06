@@ -1,17 +1,16 @@
 package rocks.gravili.notquests.paper.gui;
 
-import de.studiocode.invui.gui.GUI;
-import de.studiocode.invui.gui.builder.GUIBuilder;
-import de.studiocode.invui.gui.builder.guitype.GUIType;
-import de.studiocode.invui.gui.structure.Markers;
-import de.studiocode.invui.gui.structure.Structure;
-import de.studiocode.invui.item.Item;
-
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.gui.icon.Button;
 import rocks.gravili.notquests.paper.gui.icon.ButtonType;
 import rocks.gravili.notquests.paper.gui.icon.SpecialIconType;
 import rocks.gravili.notquests.paper.gui.property.types.StringIconProperty;
+import xyz.xenondevs.invui.gui.Gui;
+import xyz.xenondevs.invui.gui.PagedGui;
+import xyz.xenondevs.invui.gui.TabGui;
+import xyz.xenondevs.invui.gui.structure.Markers;
+import xyz.xenondevs.invui.gui.structure.Structure;
+import xyz.xenondevs.invui.item.Item;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +24,7 @@ public class CustomGui {
     private final List<String> additionalGuis;
     private NotQuests notQuests;
 
-    private GUI gui;
+    private Gui gui;
 
     public CustomGui(String[] structure, String pathToTitle, String type, Map<Character, Button> icons, List<String> additionalGuis) {
         this.pathToTitle = pathToTitle;
@@ -35,7 +34,7 @@ public class CustomGui {
         this.additionalGuis = additionalGuis;
     }
 
-    public GUI buildGui(NotQuests notQuests, GuiContext guiContext) {
+    public Gui buildGui(NotQuests notQuests, GuiContext guiContext) {
         this.notQuests = notQuests;
 
         switch (type) {
@@ -55,38 +54,29 @@ public class CustomGui {
 
 
     private SpecialIconType fetchSpecialIconType(Button icon) {
-        SpecialIconType specialIconType;
-        if (icon.getIconProperty("specialicontype").isEmpty()) {
-            specialIconType = SpecialIconType.DEFAULT;
-            notQuests.getLogManager().debug("Case 1 " + icon.getType());
-        } else {
+        if (icon.getIconProperty("specialicontype").isPresent()) {
             if (icon.getIconProperty("specialicontype").get().getValue() instanceof StringIconProperty stringIconProperty) {
-                notQuests.getLogManager().debug("Case 2 " + icon.getType());
-                specialIconType = SpecialIconType.valueOf(stringIconProperty.value());
-                notQuests.getLogManager().debug(specialIconType.name());
-            } else {
-                notQuests.getLogManager().debug("Case 3 " + icon.getType());
-                specialIconType = SpecialIconType.DEFAULT;
+                return SpecialIconType.valueOf(stringIconProperty.value());
             }
         }
-        return specialIconType;
+        return SpecialIconType.DEFAULT;
     }
 
-    private GUI handleNormalGui(GuiContext guiContext) {
-        var guibuilder = new GUIBuilder<>(GUIType.NORMAL).setStructure(structure);
+    private Gui handleNormalGui(GuiContext guiContext) {
+        var guiBuilder = Gui.normal().setStructure(structure);
 
-        icons.forEach((key, icon) -> guibuilder.addIngredient(key, icon.buildItem(notQuests, guiContext)));
+        icons.forEach((key, icon) -> guiBuilder.addIngredient(key, icon.buildItem(notQuests, guiContext)));
         for (Object o : guiContext.getAsObjectArray()) {
-            notQuests.getLogManager().debug(String.valueOf(o));
+            notQuests.getLogManager().debug(pathToTitle + o);
         }
 
-        return guibuilder.build();
+        return guiBuilder.build();
     }
-    private GUI handlePagedItemsGui(GuiContext guiContext) {
+    private Gui handlePagedItemsGui(GuiContext guiContext) {
         var structureObject = new Structure(structure);
         var targetQuestPlayer = notQuests.getQuestPlayerManager().getOrCreateQuestPlayerFromDatabase(guiContext.getPlayer().getUniqueId());
 
-        var guiBuilder = new GUIBuilder<>(GUIType.PAGED_ITEMS).setStructure(structure);
+        var guiBuilder = PagedGui.items().setStructure(structure);
 
         //X and Y are reserved characters!
         var pagedIcon = icons.get('X');
@@ -100,11 +90,12 @@ public class CustomGui {
 
         var pagedIconSpecialType = fetchSpecialIconType(pagedIcon);
 
-        guiBuilder.addIngredient('X', Markers.ITEM_LIST_SLOT_HORIZONTAL);
-        structureObject.addIngredient('X', Markers.ITEM_LIST_SLOT_HORIZONTAL);
+        guiBuilder.addIngredient('X', Markers.CONTENT_LIST_SLOT_HORIZONTAL);
+        structureObject.addIngredient('X', Markers.CONTENT_LIST_SLOT_HORIZONTAL);
+
 
         var items = new ArrayList<Item>();
-        var guiSize = structureObject.getIngredientList().findItemListSlots().length;
+        var guiSize = structureObject.getIngredientList().findContentListSlots().length;
         var numberOfTotalItems = guiSize;
 
         switch (pagedIconSpecialType) {
@@ -123,18 +114,47 @@ public class CustomGui {
                 if (guiContext.getNqnpc() != null) {
                     var npc = guiContext.getNqnpc();
                     var npcQuests = notQuests.getQuestManager().getQuestsFromListWithVisibilityEvaluations(targetQuestPlayer, notQuests.getQuestManager().getQuestsAttachedToNPCWithShowing(npc));
-                    npcQuests.forEach(quest -> notQuests.getLogManager().info(quest.getIdentifier()));
                     numberOfTotalItems = guiSize * ((npcQuests.size() / guiSize) + 1);
                     npcQuests.forEach(quest -> {
                         var itemGuiContext = guiContext.clone();
                         itemGuiContext.setQuest(quest);
                         items.add(pagedIcon.buildItem(notQuests, itemGuiContext));
                     });
+                } else if (guiContext.getArmorStand() != null) {
+                    var armorStand = guiContext.getArmorStand();
+                    var armorStandQuests = notQuests.getQuestManager().getQuestsFromListWithVisibilityEvaluations(targetQuestPlayer, notQuests.getQuestManager().getQuestsAttachedToArmorstandWithShowing(armorStand));
+                    armorStandQuests.forEach(quest -> {
+                        var itemGuiContext = guiContext.clone();
+                        itemGuiContext.setQuest(quest);
+                        items.add(pagedIcon.buildItem(notQuests, itemGuiContext));
+                    });
                 }
             }
-            case CATEGORY -> {
 
+            case CATEGORY_AVAILABLE_QUEST -> {
+                if (guiContext.getCategory() != null) {
+                    var category = guiContext.getCategory();
+                    var categoryQuests = category.getQuests();
+                    numberOfTotalItems = guiSize * ((categoryQuests.size() / guiSize) + 1);
+                    categoryQuests.forEach(quest -> {
+                        var itemGuiContext = guiContext.clone();
+                        itemGuiContext.setQuest(quest);
+                        items.add(pagedIcon.buildItem(notQuests, itemGuiContext));
+                    });
+                }
             }
+
+            case CATEGORY -> {
+                var categories = notQuests.getDataManager().getCategories();
+                numberOfTotalItems = guiSize * ((categories.size() / guiSize) + 1);
+                categories.forEach(category -> {
+                    var itemGuiContext = guiContext.clone();
+                    itemGuiContext.setCategory(category);
+                    notQuests.getLogManager().info("category: " + category);
+                    items.add(pagedIcon.buildItem(notQuests, itemGuiContext));
+                });
+            }
+
             case DEFAULT -> items.add(pagedIcon.buildItem(notQuests, guiContext));
         }
 
@@ -155,7 +175,7 @@ public class CustomGui {
         });
 
 
-        guiBuilder.setItems(items);
+        guiBuilder.setContent(items);
 
         return guiBuilder.build();
     }
@@ -166,8 +186,8 @@ public class CustomGui {
     private GUI handleScrollGuisGui(GuiObjectContext guiObjectContext) {}
 
      */
-    private GUI handleTabGui(GuiContext guiContext) {
-        var tabGuis = new ArrayList<GUI>();
+    private Gui handleTabGui(GuiContext guiContext) {
+        var tabGuis = new ArrayList<Gui>();
 
         additionalGuis.forEach(string -> {
             var tabGui = notQuests.getGuiService().getGuis().get(string);
@@ -178,10 +198,10 @@ public class CustomGui {
             tabGuis.add(tabGui.buildGui(notQuests, guiContext));
         });
 
-        var guiBuilder = new GUIBuilder<>(GUIType.TAB)
+        var guiBuilder = TabGui.normal()
+                .setTabs(tabGuis)
                 .setStructure(structure)
-                .setGUIs(tabGuis)
-                .addIngredient('X', Markers.ITEM_LIST_SLOT_HORIZONTAL);
+                .addIngredient('X', Markers.CONTENT_LIST_SLOT_HORIZONTAL);
 
         icons.forEach((key, icon) -> {
             if (icon == null) {
