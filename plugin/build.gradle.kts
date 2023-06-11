@@ -224,7 +224,7 @@ bukkit {
     name = "NotQuests"
     version = rootProject.version.toString()
     main = "rocks.gravili.notquests.Main"
-    apiVersion = "1.20"
+    apiVersion = "1.19"
     authors = listOf("AlessioGr")
     description = "Flexible, open, GUI Quest Plugin for Minecraft 1.20"
     website = "https://www.notquests.com"
