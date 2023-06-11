@@ -10,7 +10,7 @@ Download: https://modrinth.com/plugin/notquests/versions
 
 ![Banner](https://user-images.githubusercontent.com/70709113/133943253-af271d49-441b-473e-8b95-6053fe5d09cb.png)
 
-NotQuests is a flexible, Minecraft 1.17-1.19 Quest plugin, featuring a complete GUI for player interactions, open & trusted source code and flexibility.
+NotQuests is a flexible, Minecraft 1.17-1.20 Quest plugin, featuring a complete GUI for player interactions, open & trusted source code and flexibility.
 ---
 
 I created NotQuests for my own server, mc.notnot.pro and planned to keep it private. However, I don't have enough time to maintain it myself, so I just made it public.
@@ -120,7 +120,7 @@ Admin Commands - Quest Editing:
 
 
 **Requirements to run this:**
-- Paper 1.17.1 - 1.19.4
+- Paper 1.17.1 - 1.20
 - Java 17
 
 
