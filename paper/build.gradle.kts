@@ -176,7 +176,6 @@ dependencies {
     compileOnly(files("libs/ProjectKorra-1.10.0.jar"))
     //compileOnly(files("libs/UltimateJobs-0.2.0-SNAPSHOT.jar"))
 
-    compileOnly(files("libs/ProjectKorra-1.10.0.jar"))
 
     compileOnly(files("libs/BetonQuest-2.0.0-651.jar"))
 
