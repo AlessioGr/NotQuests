@@ -1,0 +1,42 @@
+title: gui.abort-quest-confirm.title
+structure:
+  - "F F F F F F F F F"
+  - "F F Y F F F N F F"
+  - "F F F F F F F F F"
+
+icons:
+  Y:
+    type: ACTION
+    items:
+      - confirm
+    properties:
+      actions:
+        - FailQuest %QUESTID% --player %player_name%
+        - CloseInventory --player %player_name%
+  N:
+    type: ACTION
+    items:
+      - cancel
+    properties:
+      actions:
+        - OpenGui active-quest-info --quest %QUESTID%
+
+  F:
+    type: BLANK
+    items:
+      - filler
+
+items:
+  confirm:
+    displayname: gui.abort-quest-confirm..button.confirmabort.name
+    lore: gui.abort-quest-confirm.button.confirmabort.lore
+    material: GREEN_CONCRETE
+
+  cancel:
+    displayname: gui.abort-quest-confirm.button.cancelabort.name
+    lore: gui.abort-quest-confirm.button.cancelabort.lore
+    material: RED_CONCRETE
+
+  filler:
+    displayname: EMPTY
+    material: BLACK_STAINED_GLASS_PANE

@@ -1,0 +1,51 @@
+type: NORMAL
+title: gui.active-quest-info.title
+structure:
+  - "F F F F F F F F F"
+  - "F F F F I F F F F"
+  - "F F F F F F F F F"
+  - "F F F F A F F F F"
+  - "F F F F F F F F B"
+
+icons:
+  F:
+    type: BLANK
+    items:
+      - filler
+  I:
+    type: BLANK
+    items:
+      - infobook
+  A:
+    type: ACTION
+    items:
+      - abort
+    properties:
+      specialicontype: PLAYER_ACTIVE_QUEST
+      actions:
+        - OpenGui abort-quest --targetplayer %player_name% --quest %QUESTID%
+  B:
+    type: ACTION
+    items:
+      - back
+    properties:
+      specialicontype: PLAYER_ACTIVE_QUEST
+      actions:
+        - OpenGui main-base --targetplayer %player_name%
+items:
+  filler:
+    displayname: EMPTY
+    material: GRAY_STAINED_GLASS_PANE
+
+  infobook:
+    material: BOOK
+    displayname: gui.active-quest-info.button.infobook.name
+    lore: gui.active-quest-info.button.infobook.lore
+
+  abort:
+    material: RED_CONCRETE
+    displayname: gui.active-quest-info.button.abort.name
+
+  back:
+    material: BARRIER
+    displayname: gui.active-quest-info.button.back.name

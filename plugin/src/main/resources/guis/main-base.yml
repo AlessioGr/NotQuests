@@ -1,43 +1,85 @@
-title: gui.testgui.title
+title: gui.main-base.title
 type: TAB
 structure:
-  - "F F F F F F F F F"
+  - "F W F F F F F F Q"
   - "1 W F X X X X X X"
   - "2 W F X X X X X X"
-  - "3 W F X X X X X X"
   - "F W F X X X X X X"
-  - "F F F X X X X X X"
+  - "F W F X X X X X X"
+  - "F W F X X X X X X"
+additionalguis:
+  - "main-tab-two"
+  - "main-tab-one"
 
 icons:
+  Q:
+    type: BLANK
+    items:
+      - questpoins
+
   F:
     type: BLANK
-    displayName: EMPTY
-    material: BLACK_STAINED_GLASS_PANE
+    items:
+      - filler
   1:
     type: TAB
-    displayName: gui.testgui.icon.tab1.name
-    material: DIAMOND_BLOCK
+    items:
+      - tab-one-active
+      - tab-one-inactive
     properties:
       tabindex: 0
+      tabtitle: gui.main-base.tab1.title
+    items:
+      - tab-one-active
+      - tab-one-inactive
   2:
     type: TAB
-    displayName: gui.testgui.icon.tab2.name
-    material: DIAMOND_BLOCK
+    items:
+      - tab-two-active
+      - tab-two-inactive
     properties:
       tabindex: 1
-  3:
-    type: TAB
-    displayName: gui.testgui.icon.tab3.name
-    material: DIAMOND_BLOCK
-    properties:
-      tabindex: 2
+      tabtitle: gui.main-base.tab3.title
   W:
     type: BLANK
-    displayName: EMPTY
-    material: WHITE_STAINED_GLASS_PANE
+    items:
+      - border
   X:
-    type: ACTION
-    displayName: gui.testgui.icon.listeditem.name
-    material: %QUEST_ITEM_MATERIAL%
-    properties:
-      paginated: true
+    type: PAGED
+
+items:
+  filler:
+    displayname: EMPTY
+    material: GRAY_STAINED_GLASS_PANE
+
+  border:
+    displayname: EMPTY
+    material: WHITE_STAINED_GLASS_PANE
+
+  questpoins:
+    displayname: gui.main-base.button.questpoints.name
+    lore: gui.main-base.button.questpoints.lore
+    material: PLAYER_HEAD
+    skulltexture: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODM4MWM1MjlkNTJlMDNjZDc0YzNiZjM4YmI2YmEzZmRlMTMzN2FlOWJmNTAzMzJmYWE4ODllMGEyOGU4MDgxZiJ9fX0='
+
+  tab-one-active:
+    displayname: gui.main-base.button.tab1.name
+    lore: gui.main-base.button.tab1.lore
+    material: PLAYER_HEAD
+    skulltexture: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTcxNDUxNmU2NTY1YjgxMmZmNWIzOWVhMzljZDI4N2FmZWM4ZmNjMDZkOGYzMDUyMWNjZDhmMWI0Y2JmZGM2YiJ9fX0='
+  tab-one-inactive:
+    displayname: gui.main-base.button.tab1.name
+    lore: gui.main-base.button.tab1.lore
+    material: PLAYER_HEAD
+    skulltexture: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGNkM2M0NWQ3YjgzODRlOGExOTYzZTRkYTBhZTZiMmRhZWIyYTNlOTdhYzdhMjhmOWViM2QzOTU5NzI1Nzk5ZiJ9fX0='
+
+  tab-two-active:
+    displayname: gui.main-base.button.tab2.name
+    lore: gui.main-base.button.tab2.lore
+    material: PLAYER_HEAD
+    skulltexture: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzBjZjZjZGMxMWRiNzRjMGQ3N2JhMzc1NmM2ZmRlMzQ1ZmU1NDQzZWNmN2VhNGE0MWQxNjI1NGU2NTk1ODRjZiJ9fX0='
+  tab-two-inactive:
+    displayname: gui.main-base.button.tab2.name
+    lore: gui.main-base.button.tab2.lore
+    material: PLAYER_HEAD
+    skulltexture: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjBiMDY4NzA5NzkwZDQxYjg5MjdiODQyMmQyMWJiNTI0MDRiNTViNGNhMzUyY2RiN2M2OGU0YjM2NTkyNzIxIn19fQ=='
