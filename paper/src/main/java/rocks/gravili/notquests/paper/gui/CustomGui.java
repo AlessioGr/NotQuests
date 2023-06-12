@@ -15,6 +15,7 @@ import xyz.xenondevs.invui.item.Item;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class CustomGui {
     private final String pathToTitle;
@@ -135,6 +136,22 @@ public class CustomGui {
                 if (guiContext.getCategory() != null) {
                     var category = guiContext.getCategory();
                     var categoryQuests = category.getQuests();
+                    numberOfTotalItems = guiSize * ((categoryQuests.size() / guiSize) + 1);
+                    categoryQuests.forEach(quest -> {
+                        var itemGuiContext = guiContext.clone();
+                        itemGuiContext.setQuest(quest);
+                        items.add(pagedIcon.buildItem(notQuests, itemGuiContext));
+                    });
+                }
+            }
+
+            case CATEGORY_PLAYER_AVAILABLE_QUEST -> {
+                if (guiContext.getCategory() != null) {
+                    var category = guiContext.getCategory();
+                    var categoryQuests = notQuests.getQuestManager().getAllQuestsWithVisibilityEvaluations(targetQuestPlayer)
+                            .stream()
+                            .filter(quest -> quest.getCategory().getCategoryFullName().equals(category.getCategoryFullName()))
+                            .collect(Collectors.toSet());
                     numberOfTotalItems = guiSize * ((categoryQuests.size() / guiSize) + 1);
                     categoryQuests.forEach(quest -> {
                         var itemGuiContext = guiContext.clone();
