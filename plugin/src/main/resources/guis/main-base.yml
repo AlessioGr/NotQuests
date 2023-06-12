@@ -29,9 +29,6 @@ icons:
     properties:
       tabindex: 0
       tabtitle: gui.main-base.tab1.title
-    items:
-      - tab-one-active
-      - tab-one-inactive
   2:
     type: TAB
     items:
