@@ -2081,15 +2081,16 @@ public class DataManager {
             }
 
             hikariConfig.setJdbcUrl("jdbc:sqlite:" +  dataFolder);
+            hikariConfig.setMaximumPoolSize(1);
         }else{
             hikariConfig.setJdbcUrl("jdbc:mysql://" +  configuration.getDatabaseHost() + ":" + configuration.getDatabasePort() + "/" + configuration.getDatabaseName());
             hikariConfig.setUsername(configuration.getDatabaseUsername());
             hikariConfig.setPassword(configuration.getDatabasePassword());
+            hikariConfig.setMaximumPoolSize(20);
         }
         hikariConfig.addDataSourceProperty("cachePrepStmts", "true");
         hikariConfig.addDataSourceProperty("prepStmtCacheSize", "250");
         hikariConfig.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-        hikariConfig.setMaximumPoolSize(20);
 
         hikariDataSource = new HikariDataSource(hikariConfig);
     }
