@@ -2076,7 +2076,7 @@ public class DataManager {
                         main.getLogManager().severe("File write error: database_sqlite.db (1)");
                     }
                 } catch (IOException e) {
-                    main.getLogManager().severe("File write error: database_sqlite.db (2)");
+                    main.getLogManager().severe("File write error: database_sqlite.db (2) - " + e.getMessage());
                 }
             }
 
