@@ -15,20 +15,20 @@ chat:
     <CENTER><GREEN>[Quest Dokončen]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
-  quest-completed-rewards-prefix: '    <highlight>Rewards:'
+  quest-completed-rewards-prefix: '    <highlight>Odměny:'
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
-  quest-not-all-requirements-fulfilled: '<negative>You do not fulfill all the requirements this quest needs! Requirement still needed:'
-  action-not-all-conditions-fulfilled: '<negative>You do not fulfill all the conditions this action needs! Conditions still needed:'
+  quest-not-all-requirements-fulfilled: '<negative>Nesplňuješ všechny požadavky, které tento úkol potřebuje! Potřebné požadavky:'
+  action-not-all-conditions-fulfilled: '<negative>Nesplňuješ všechny podmínky, které tato akce potřebuje! Potřebné podmínky:'
   missing-quest-description: <YELLOW>Tento quest nemá popis.
   objectives-label-after-quest-accepting: '<BLUE>Cíle:'
   questpoints:
     query: <YELLOW>Aktuálně máš <highlight>%QUESTPOINTS%</AQUA> quest pointů.
     none: <RED>Vypadá to, že nemáš žádné questpointy!
     notify-when-changed:
-      set: '<main>Your quest points have been set to <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.'
-      add: '<highlight>+%QUESTPOINTSTOADD% <success>quest points!'
-      remove: '<highlight>-%QUESTPOINTSTOREMOVE% <negative>quest points!'
+      set: '<main>Tvoje body byly nastaveny na <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.'
+      add: '<highlight>+%QUESTPOINTSTOADD% <success>bodů úkolu!'
+      remove: '<highlight>-%QUESTPOINTSTOREMOVE% <negative>bodů úkolu!'
   no-quests-accepted: <RED>Vypadá to, že nemáš žádné aktivní questy!
   quest-does-not-exist: <RED>Quest <highlight>%QUESTNAME%</AQUA> neexistuje!
   quest-not-found-or-does-not-exist: <RED>Quest <highlight>%QUESTNAME%</AQUA> nebyl nalezen, nebo není aktivní!
