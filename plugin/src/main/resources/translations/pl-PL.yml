@@ -44,9 +44,9 @@ chat:
   quest-not-active-error: '<error>Błąd: <highlight>%QUESTNAME%</highlight> nie jest aktywnym questem!'
   force-add-active-quest-accepted: '<success>Pomyślnie zaakceptował zadanie (siła).'
   add-active-quest-player-object-not-found: '<warn>Błąd: Nie znaleziono obiektu gracza. Proszę zgłosić to do twórcy wtyczki.'
-  reached-max-accepts-limit: '<red>You have accepted this quest too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%ACCEPTEDAMOUNT%</highlight> times.'
-  reached-max-fails-limit: '<red>You have failed this quest too many times already. You can only fail it <highlight>%MAXFAILS%</highlight> times, but you have already failed it <highlight>%FAILEDAMOUNT%</highlight> times.'
-  reached-max-completions-limit: '<red>You have completed this quest too many times already. You can only complete it <highlight>%MAXCOMPLETIONS%</highlight> times, but you have already completed it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
+  reached-max-accepts-limit: '<red>Zbyt wiele razy zaakceptowałeś to zadanie. Możesz zaakceptować tylko <highlight>%MAXACCEPTS%</highlight> razy, ale już zaakceptowałeś to <highlight>%ACCEPTEDAMOUNT%</highlight> razy.'
+  reached-max-fails-limit: '<red>Nie udało Ci się wykonać tego zadania za każdym razem. Możesz go nie wykonać tylko <highlight>%MAXFAILS%</highlight> razy, natomiast już nie udało Ci się <highlight>%FAILEDAMOUNT%</highlight> razy.'
+  reached-max-completions-limit: '<red>Ukończyłeś to zadanie zbyt wiele razy. Możesz ukończyć tylko <highlight>%MAXCOMPLETIONS%</highlight> razy, ale już ukończyłeś <highlight>%COMPLETEDAMOUNT%</highlight> razy.'
   reached-max-active-quests-per-player-limit: '<red>Nie możesz zaakceptować więcej niż <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> Zadań.'
   quest-on-cooldown:
     minute: '<red>To zadanie ma odnowienie! Musisz poczekać jeszcze <highlight>1 minutę</highlight>, aby odebrać je ponownie.'
@@ -104,11 +104,11 @@ chat:
       craftItems:
         base: 'Wytwórz przedmioty: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: 'Deliver Items: <main>%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%(%'
+        base: 'Dostarcz Przedmioty: <main>%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%(%'
         deliver-to-npc: '      <GRAY>Dostarcz to do <WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>Dostawa NPC jest obecnie niedostępna!'
       enchant:
-        base: 'Enchant Items with %ENCHANTMENT%: <main>%ITEMTOENCHANTTYPE% %(%%ITEMTOENCHANTNAME%%(%'
+        base: 'Zenchantuj Przedmioty na %ENCHANTMENT%: <main>%ITEMTOENCHANTTYPE% %(%%ITEMTOENCHANTNAME%%(%'
       escortNPC:
         base: 'Eskortuj <main>%NPCNAME%</main> do <main>%DESTINATIONNPCNAME%'
       fishItems:
