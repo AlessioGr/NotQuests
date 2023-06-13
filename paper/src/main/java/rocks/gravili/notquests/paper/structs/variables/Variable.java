@@ -200,7 +200,7 @@ public abstract class Variable<T> {
             return false;
         }
 
-        boolean result = false;
+        boolean result;
         if(Bukkit.isPrimaryThread()){
             result = setValueInternally(newValue, questPlayer, objects);
         }else {
