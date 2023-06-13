@@ -2081,12 +2081,14 @@ public class DataManager {
             }
 
             hikariConfig.setJdbcUrl("jdbc:sqlite:" +  dataFolder);
-            hikariConfig.setMaximumPoolSize(1);
+            hikariConfig.setConnectionInitSql("PRAGMA journal_mode=WAL;");
+            hikariConfig.setMaximumPoolSize(20);
         }else{
             hikariConfig.setJdbcUrl("jdbc:mysql://" +  configuration.getDatabaseHost() + ":" + configuration.getDatabasePort() + "/" + configuration.getDatabaseName());
             hikariConfig.setUsername(configuration.getDatabaseUsername());
             hikariConfig.setPassword(configuration.getDatabasePassword());
             hikariConfig.setMaximumPoolSize(20);
+
         }
         hikariConfig.addDataSourceProperty("cachePrepStmts", "true");
         hikariConfig.addDataSourceProperty("prepStmtCacheSize", "250");

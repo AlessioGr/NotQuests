@@ -120,37 +120,40 @@ public class TagManager {
             tagsStatement.setString(1, uuid.toString());
             tagsStatement.setString(2, questPlayer.getProfile());
 
-            final ResultSet result = tagsStatement.executeQuery();
-            while (result.next()) {
+            try(final ResultSet result = tagsStatement.executeQuery()) {
+                while (result.next()) {
 
-                final String tagIdentifier = result.getString("TagIdentifier");
-                final String tagValue = result.getString("TagValue");
-                final String tagType = result.getString("TagType");
+                    final String tagIdentifier = result.getString("TagIdentifier");
+                    final String tagValue = result.getString("TagValue");
+                    final String tagType = result.getString("TagType");
 
 
-                if (tagValue == null) {
-                    questPlayer.setTagValue(tagIdentifier, null);
-                    continue;
+                    if (tagValue == null) {
+                        questPlayer.setTagValue(tagIdentifier, null);
+                        continue;
+                    }
+                    if (main.getConfiguration().isVerboseStartupMessages()) {
+                        main.getLogManager().info("  Loaded <highlight>%s</highlight> %s tag for player <highlight2>%s</highlight2> with the value <highlight2>%s</highlight2>.",
+                                tagIdentifier,
+                                tagType,
+                                player.getName(),
+                                tagValue
+                        );
+                    }
+
+
+                    switch (tagType) {
+                        case "INTEGER" -> questPlayer.setTagValue(tagIdentifier, Integer.parseInt(tagValue));
+                        case "FLOAT" -> questPlayer.setTagValue(tagIdentifier, Float.parseFloat(tagValue));
+                        case "BOOLEAN" -> questPlayer.setTagValue(tagIdentifier, Boolean.parseBoolean(tagValue));
+                        case "STRING" -> questPlayer.setTagValue(tagIdentifier, tagValue);
+                        case "DOUBLE" -> questPlayer.setTagValue(tagIdentifier, Double.parseDouble(tagValue));
+                    }
+
                 }
-                if (main.getConfiguration().isVerboseStartupMessages()) {
-                    main.getLogManager().info("  Loaded <highlight>%s</highlight> %s tag for player <highlight2>%s</highlight2> with the value <highlight2>%s</highlight2>.",
-                            tagIdentifier,
-                            tagType,
-                            player.getName(),
-                            tagValue
-                    );
-                }
-
-
-                switch (tagType) {
-                    case "INTEGER" -> questPlayer.setTagValue(tagIdentifier, Integer.parseInt(tagValue));
-                    case "FLOAT" -> questPlayer.setTagValue(tagIdentifier, Float.parseFloat(tagValue));
-                    case "BOOLEAN" -> questPlayer.setTagValue(tagIdentifier, Boolean.parseBoolean(tagValue));
-                    case "STRING" -> questPlayer.setTagValue(tagIdentifier, tagValue);
-                    case "DOUBLE" -> questPlayer.setTagValue(tagIdentifier, Double.parseDouble(tagValue));
-                }
-
             }
+
+
         } catch (Exception e) {
             main.getLogManager().severe("ERROR: Could not load tags for player with uuid <highlight>%s</highlight>. Error: ", uuid);
             e.printStackTrace();
@@ -189,7 +192,7 @@ public class TagManager {
         }
         final String uuidString = player.getUniqueId().toString();
 
-        try (Connection connection = main.getDataManager().getConnection();
+        try (final Connection connection = main.getDataManager().getConnection();
              final PreparedStatement deleteTagsPS = connection.prepareStatement("""
                 DELETE FROM Tags WHERE PlayerUUID = ?;
              """);
