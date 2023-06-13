@@ -2081,8 +2081,9 @@ public class DataManager {
             }
 
             hikariConfig.setJdbcUrl("jdbc:sqlite:" +  dataFolder);
-            hikariConfig.setConnectionInitSql("PRAGMA journal_mode=WAL;");
+            hikariConfig.setConnectionInitSql("PRAGMA journal_mode=WAL; PRAGMA busy_timeout=30000"); // Set journal mode to WAL and timeout to 3000 milliseconds
             hikariConfig.setMaximumPoolSize(20);
+            hikariConfig.setConnectionTimeout(30000);
         }else{
             hikariConfig.setJdbcUrl("jdbc:mysql://" +  configuration.getDatabaseHost() + ":" + configuration.getDatabasePort() + "/" + configuration.getDatabaseName());
             hikariConfig.setUsername(configuration.getDatabaseUsername());
