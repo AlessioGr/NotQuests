@@ -53,7 +53,7 @@ public class MythicMobsEvents implements Listener {
                                             || killMobsObjective.getMobToKill().equals(killedMob.getInternalName())
                                             ||
                                             (
-                                                    killMobsObjective.getMobToKill().contains("mmfaction:")
+                                                    killMobsObjective.getMobToKill().startsWith("mmfaction:")
                                                     && (
                                                             killMobsObjective.getMobToKill().replace("mmfaction:", "").equals(killedMob.getFaction())
                                                             || (
