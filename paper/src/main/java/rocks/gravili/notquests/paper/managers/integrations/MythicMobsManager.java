@@ -22,6 +22,8 @@ import io.lumine.mythic.api.MythicPlugin;
 import io.lumine.mythic.api.MythicProvider;
 import io.lumine.mythic.api.mobs.MythicMob;
 import io.lumine.mythic.bukkit.BukkitAdapter;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 import org.bukkit.Location;
@@ -43,6 +45,16 @@ public class MythicMobsManager {
 
   public final Collection<String> getMobNames() {
     return mythicPlugin.getMobManager().getMobNames();
+  }
+
+  public final Collection<String> getFactionNames(final String prefix) {
+    final Collection<String> factionNames = new ArrayList<>();
+    for(final MythicMob mobType : mythicPlugin.getMobManager().getMobTypes()){
+      if(!factionNames.contains(mobType.getFaction())) {
+        factionNames.add(prefix+ mobType.getFaction());
+      }
+    }
+    return factionNames;
   }
 
   public void spawnMob(

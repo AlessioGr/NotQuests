@@ -45,7 +45,7 @@ public class BreedObjective extends Objective {
     manager.command(
         addObjectiveBuilder
             .argument(
-                EntityTypeSelector.of("entityType", main),
+                EntityTypeSelector.of("entityType", main, false),
                 ArgumentDescription.of("Type of Entity the player has to breed."))
             .argument(
                 NumberVariableValueArgument.newBuilder("amount", main, null),

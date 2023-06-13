@@ -51,7 +51,7 @@ public class KillMobsObjective extends Objective {
     addObjectiveBuilder =
         addObjectiveBuilder
             .argument(
-                EntityTypeSelector.of("entityType", main),
+                EntityTypeSelector.of("entityType", main, true),
                 ArgumentDescription.of("Type of Entity the player has to kill."))
             .argument(
                 NumberVariableValueArgument.newBuilder("amount", main, null),
