@@ -170,7 +170,7 @@ dependencies {
     compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
 
 
-    compileOnly("io.lumine:Mythic-Dist:5.2.6")
+    compileOnly("io.lumine:Mythic-Dist:5.3.0-SNAPSHOT")
     compileOnly(files("libs/EliteMobs.jar"))
     compileOnly("com.github.UlrichBR:UClansV5-API:4.5")
     compileOnly(files("libs/ProjectKorra-1.10.0.jar"))
