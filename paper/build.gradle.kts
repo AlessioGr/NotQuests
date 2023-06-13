@@ -177,7 +177,7 @@ dependencies {
     //compileOnly(files("libs/UltimateJobs-0.2.0-SNAPSHOT.jar"))
 
 
-    compileOnly(files("libs/BetonQuest-2.0.0-651.jar"))
+    compileOnly(files("libs/betonquest-2.0.0-668.jar"))
 
     compileOnly("com.sk89q.worldedit:worldedit-core:7.3.0-SNAPSHOT")
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.3.0-SNAPSHOT")
