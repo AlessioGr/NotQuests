@@ -54,7 +54,12 @@ public class MythicMobsEvents implements Listener {
                                             ||
                                             (
                                                     killMobsObjective.getMobToKill().contains("mmfaction:")
-                                                    && killMobsObjective.getMobToKill().replace("mmfaction:", "").equals(killedMob.getFaction())
+                                                    && (
+                                                            killMobsObjective.getMobToKill().replace("mmfaction:", "").equals(killedMob.getFaction())
+                                                            || (
+                                                                    killedMob.getFaction() == null && killMobsObjective.getMobToKill().replace("mmfaction:", "").equals("none")
+                                                               )
+                                                    )
                                             )
                                     ) {
                                         if (event.getEntity() != event.getKiller()) { //Suicide prevention

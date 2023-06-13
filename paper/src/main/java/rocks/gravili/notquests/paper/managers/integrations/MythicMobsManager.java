@@ -51,7 +51,11 @@ public class MythicMobsManager {
     final Collection<String> factionNames = new ArrayList<>();
     for(final MythicMob mobType : mythicPlugin.getMobManager().getMobTypes()){
       if(!factionNames.contains(mobType.getFaction())) {
-        factionNames.add(prefix+ mobType.getFaction());
+        if(mobType.getFaction() == null){
+          factionNames.add(prefix+ "none");
+        }else {
+          factionNames.add(prefix+ mobType.getFaction());
+        }
       }
     }
     return factionNames;
