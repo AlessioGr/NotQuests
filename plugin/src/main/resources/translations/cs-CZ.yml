@@ -33,14 +33,14 @@ chat:
   quest-does-not-exist: <RED>Quest <highlight>%QUESTNAME%</AQUA> neexistuje!
   quest-not-found-or-does-not-exist: <RED>Quest <highlight>%QUESTNAME%</AQUA> nebyl nalezen, nebo není aktivní!
   active-quests-label: '<YELLOW>Aktivní questy:'
-  take-disabled: <error>Accepting or previewing the quest <highlight>%QUESTNAME%</highlight> is disabled.
-  abort-disabled: <error>Aborting the quest <highlight>%QUESTNAME%</highlight> is disabled.
+  take-disabled: <error>Přijímání nebo prohlížení výpravy <highlight>%QUESTNAME%</highlight> je zakázáno.
+  abort-disabled: <error>Přijímání nebo prohlížení questu <highlight>%QUESTNAME%</highlight> je zakázáno.
   quest-not-active-error: '<RED>Chyba: <highlight>%QUESTNAME%</AQUA> není aktivní Quest!'
-  force-add-active-quest-accepted: '<success>Successfully accepted the quest (Forced).'
-  add-active-quest-player-object-not-found: '<warn>Error: Player object not found. Please report this to the plugin developer.'
-  reached-max-accepts-limit: '<red>You have accepted this quest too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%ACCEPTEDAMOUNT%</highlight> times.'
-  reached-max-fails-limit: '<red>You have failed this quest too many times already. You can only fail it <highlight>%MAXFAILS%</highlight> times, but you have already failed it <highlight>%FAILEDAMOUNT%</highlight> times.'
-  reached-max-completions-limit: '<red>You have completed this quest too many times already. You can only complete it <highlight>%MAXCOMPLETIONS%</highlight> times, but you have already completed it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
+  force-add-active-quest-accepted: '<success>Úspěšně přijal úkol (Forced).'
+  add-active-quest-player-object-not-found: '<warn>Chyba: Hráč nenalezen. Prosím, nahlašte chybu vývojáři pluginu.'
+  reached-max-accepts-limit: '<red>Tento úkol jsi již přijal příliš mnohokrát. Můžeš ho přijmout pouze <highlight>%MAXACCEPTS%</highlight>x, ty jsi ho přijal již <highlight>%ACCEPTEDAMOUNT%</highlight>x.'
+  reached-max-fails-limit: '<red>Tento úkol jsi již selhal příliš mnohokrát. Můžeš ho selhat pouze <highlight>%MAXFAILS%</highlight>x, ale ty jsi ho selhal již <highlight>%FAILEDAMOUNT%</highlight>x.'
+  reached-max-completions-limit: '<red>Tento úkol jsi již dokončil příliš mnohokrát. Můžeš ho splnit pouze <highlight>%MAXCOMPLETIONS%</highlight>x, ale ty jsi jej dokončil již <highlight>%COMPLETEDAMOUNT%</highlight>x.'
   reached-max-active-quests-per-player-limit: '<red>You can not accept more than <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> Quests.'
   quest-on-cooldown:
     minute: '<red>This quest is on a cooldown! You have to wait another <highlight>1 minute</highlight> until you can take it again.'
