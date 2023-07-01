@@ -1,8 +1,8 @@
 ---
 chat:
-  wrong-command-usage: <error>Wrong command usage!
-  missing-permission: '<error>No permission! Required permission node: <highlight>%PERMISSION%'
-  too-many-arguments: <error>Too many arguments!
+  wrong-command-usage: <error>Неправильно використано команду!
+  missing-permission: '<error>Немає дозволу! Необхідно доступ: <highlight>%PERMISSION%'
+  too-many-arguments: <error>Забагато аргументів!
   quest-successfully-accepted: |2
 
     <CENTER><main>[Quest Accepted]
