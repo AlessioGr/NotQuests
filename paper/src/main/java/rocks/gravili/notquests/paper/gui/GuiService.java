@@ -45,10 +45,15 @@ public class GuiService {
     }
 
     public void saveAllDefaultGuis() {
+        notQuests.getDataManager()
         saveDefaultGui("main-base");
-        saveDefaultGui("main-tab-one");
-        saveDefaultGui("main-tab-two");
-        saveDefaultGui("main-tab-three");
+        saveDefaultGui("main-take");
+        saveDefaultGui("main-active");
+        saveDefaultGui("category-take");
+        saveDefaultGui("active-quest-abort-confirm");
+        saveDefaultGui("active-quest-info");
+        saveDefaultGui("npc-available-quests");
+        saveDefaultGui("quest-preview");
     }
 
     public void saveDefaultGui(String guiName) {
@@ -66,7 +71,7 @@ public class GuiService {
         }
 
         Arrays.stream(fileNames).filter(fileName -> fileName.endsWith(".yml")).forEach(fileName -> {
-            notQuests.getLogManager().info("Found gui file: " + fileName + "");
+            notQuests.getLogManager().info("Found gui file: " + fileName);
             notQuests.getLogManager().info("Attempting to load gui from file...");
             loadGui(guisFolder, fileName);
         });
