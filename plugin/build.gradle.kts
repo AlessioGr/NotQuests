@@ -112,7 +112,7 @@ repositories {
 }
 
 dependencies {
-    paperweight.paperDevBundle("1.19.4-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.20.1-R0.1-SNAPSHOT")
 
     implementation(project(path= ":common", configuration= "shadow"))
     implementation(project(path= ":paper", configuration= "shadow"))
@@ -152,7 +152,7 @@ tasks {
         // Configure the Minecraft version for our task.
         // This is the only required configuration besides applying the plugin.
         // Your plugin's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("1.19")
+        minecraftVersion("1.20.1")
     }
 
     register<Copy>("copyToServer") {
@@ -189,9 +189,9 @@ bukkit {
     name = "NotQuests"
     version = rootProject.version.toString()
     main = "rocks.gravili.notquests.Main"
-    apiVersion = "1.18"
+    apiVersion = "1.19"
     authors = listOf("AlessioGr")
-    description = "Flexible, open, GUI Quest Plugin for Minecraft 1.19"
+    description = "Flexible, open, GUI Quest Plugin for Minecraft 1.20"
     website = "https://www.notquests.com"
     softDepend = listOf(
         "ProtocolLib",

@@ -667,7 +667,7 @@ public class DataManager {
         configuration.setCitizensNPCQuestGiverIndicatorParticleType(Particle.valueOf(getGeneralConfigString(
                 "visual.citizensnpc.quest-giver-indicator-particle.type",
                 "VILLAGER_ANGRY",
-            "Change the particle type here. Available particle types can be found at https://jd.papermc.io/paper/1.19/org/bukkit/Particle.html"
+            "Change the particle type here. Available particle types can be found at https://jd.papermc.io/paper/1.20/org/bukkit/Particle.html"
         )));
         configuration.setCitizensNPCQuestGiverIndicatorText(getGeneralConfigString(
                 "visual.citizensnpc.quest-giver-indicator-above-name.text",
@@ -1246,7 +1246,7 @@ public class DataManager {
 
         main.getLogManager().info("Detected version: " + Bukkit.getBukkitVersion() + " <highlight>(Paper)");
 
-        if (!Bukkit.getBukkitVersion().contains("1.19.4")) {
+        if (!Bukkit.getBukkitVersion().contains("1.20")) {
             if (!configuration.isPacketMagicUnsafeDisregardVersion()) {
                 configuration.setPacketMagic(false);
                 main.getLogManager().info("Packet magic has been disabled, because you are using an unsupported bukkit version...");
@@ -2090,20 +2090,24 @@ public class DataManager {
                         main.getLogManager().severe("File write error: database_sqlite.db (1)");
                     }
                 } catch (IOException e) {
-                    main.getLogManager().severe("File write error: database_sqlite.db (2)");
+                    main.getLogManager().severe("File write error: database_sqlite.db (2) - " + e.getMessage());
                 }
             }
 
             hikariConfig.setJdbcUrl("jdbc:sqlite:" +  dataFolder);
+            hikariConfig.setConnectionInitSql("PRAGMA journal_mode=WAL; PRAGMA busy_timeout=30000"); // Set journal mode to WAL and timeout to 3000 milliseconds
+            hikariConfig.setMaximumPoolSize(20);
+            hikariConfig.setConnectionTimeout(30000);
         }else{
             hikariConfig.setJdbcUrl("jdbc:mysql://" +  configuration.getDatabaseHost() + ":" + configuration.getDatabasePort() + "/" + configuration.getDatabaseName());
             hikariConfig.setUsername(configuration.getDatabaseUsername());
             hikariConfig.setPassword(configuration.getDatabasePassword());
+            hikariConfig.setMaximumPoolSize(20);
+
         }
         hikariConfig.addDataSourceProperty("cachePrepStmts", "true");
         hikariConfig.addDataSourceProperty("prepStmtCacheSize", "250");
         hikariConfig.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-        hikariConfig.setMaximumPoolSize(20);
 
         hikariDataSource = new HikariDataSource(hikariConfig);
     }

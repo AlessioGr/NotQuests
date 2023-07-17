@@ -50,7 +50,7 @@ public class PacketManager implements Listener {
   public PacketManager(final NotQuests main) {
     this.main = main;
     usePacketEvents = main.getConfiguration().usePacketEvents;
-    modern = Bukkit.getVersion().contains("1.19");
+    modern = Bukkit.getVersion().contains("1.20");
   }
 
   public final ReflectionPacketInjector getPacketInjector() {

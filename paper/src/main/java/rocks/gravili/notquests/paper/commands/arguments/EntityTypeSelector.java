@@ -43,42 +43,45 @@ public class EntityTypeSelector<C> extends CommandArgument<C, String> {
           BiFunction<@NonNull CommandContext<C>, @NonNull String, @NonNull List<@NonNull String>>
           suggestionsProvider,
       final @NonNull ArgumentDescription defaultDescription,
-      NotQuests main) {
+      NotQuests main,
+      boolean mythicMobsFactions) {
     super(
         required,
         name,
-        new EntityTypeParser<>(main),
+        new EntityTypeParser<>(main, mythicMobsFactions),
         defaultValue,
         String.class,
         suggestionsProvider);
   }
 
   public static <C> EntityTypeSelector.@NonNull Builder<C> newBuilder(
-      final @NonNull String name, final NotQuests main) {
-    return new EntityTypeSelector.Builder<>(name, main);
+      final @NonNull String name, final NotQuests main, boolean mythicMobsFactions) {
+    return new EntityTypeSelector.Builder<>(name, main, mythicMobsFactions);
   }
 
   public static <C> @NonNull CommandArgument<C, String> of(
-      final @NonNull String name, final NotQuests main) {
-    return EntityTypeSelector.<C>newBuilder(name, main).asRequired().build();
+      final @NonNull String name, final NotQuests main, final boolean mythicMobsFactions) {
+    return EntityTypeSelector.<C>newBuilder(name, main, mythicMobsFactions).asRequired().build();
   }
 
   public static <C> @NonNull CommandArgument<C, String> optional(
-      final @NonNull String name, final NotQuests main) {
-    return EntityTypeSelector.<C>newBuilder(name, main).asOptional().build();
+      final @NonNull String name, final NotQuests main, boolean mythicMobsFactions) {
+    return EntityTypeSelector.<C>newBuilder(name, main, mythicMobsFactions).asOptional().build();
   }
 
   public static <C> @NonNull CommandArgument<C, String> optional(
-      final @NonNull String name, final @NonNull String entityType, final NotQuests main) {
-    return EntityTypeSelector.<C>newBuilder(name, main).asOptionalWithDefault(entityType).build();
+      final @NonNull String name, final @NonNull String entityType, final NotQuests main, boolean mythicMobsFactions) {
+    return EntityTypeSelector.<C>newBuilder(name, main, mythicMobsFactions).asOptionalWithDefault(entityType).build();
   }
 
   public static final class Builder<C> extends CommandArgument.Builder<C, String> {
     private final NotQuests main;
+    private final boolean mythicMobsFactions;
 
-    private Builder(final @NonNull String name, NotQuests main) {
+    private Builder(final @NonNull String name, NotQuests main, boolean mythicMobsFactions) {
       super(String.class, name);
       this.main = main;
+      this.mythicMobsFactions = mythicMobsFactions;
     }
 
     @Override
@@ -89,17 +92,20 @@ public class EntityTypeSelector<C> extends CommandArgument<C, String> {
           this.getDefaultValue(),
           this.getSuggestionsProvider(),
           this.getDefaultDescription(),
-          this.main);
+          this.main,
+              this.mythicMobsFactions);
     }
   }
 
   public static final class EntityTypeParser<C> implements ArgumentParser<C, String> {
 
     private final NotQuests main;
+    private final boolean mythicMobsFactions;
 
     /** Constructs a new EntityTypePare. */
-    public EntityTypeParser(NotQuests main) {
+    public EntityTypeParser(NotQuests main, boolean mythicMobsFactions) {
       this.main = main;
+      this.mythicMobsFactions = mythicMobsFactions;
     }
 
     @NotNull
@@ -108,6 +114,11 @@ public class EntityTypeSelector<C> extends CommandArgument<C, String> {
       List<String> completions =
           new java.util.ArrayList<>(main.getDataManager().standardEntityTypeCompletions);
       completions.add("any");
+
+      //Add extra Mythic Mobs completions, if enabled
+      if (mythicMobsFactions && main.getIntegrationsManager().isMythicMobsEnabled() && main.getIntegrationsManager().getMythicMobsManager() != null) {
+        completions.addAll(main.getIntegrationsManager().getMythicMobsManager().getFactionNames("mmfaction:"));
+      }
 
       final List<String> allArgs = context.getRawInput();
 
@@ -130,6 +141,12 @@ public class EntityTypeSelector<C> extends CommandArgument<C, String> {
       }
       final String input = inputQueue.peek();
       inputQueue.remove();
+
+      if (mythicMobsFactions && main.getIntegrationsManager().isMythicMobsEnabled() && main.getIntegrationsManager().getMythicMobsManager() != null) {
+        if(main.getIntegrationsManager().getMythicMobsManager().getFactionNames("mmfaction:").contains(input)) {
+          return ArgumentParseResult.success(input);
+        }
+      }
 
       if (!main.getDataManager().standardEntityTypeCompletions.contains(input)
           && !input.equalsIgnoreCase("ANY")) {

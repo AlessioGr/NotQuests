@@ -77,7 +77,7 @@ public class SpawnMobAction extends Action {
     Command.Builder<CommandSender> commonBuilder =
         builder
             .argument(
-                EntityTypeSelector.of("entityType", main),
+                EntityTypeSelector.of("entityType", main, false),
                 ArgumentDescription.of("Type of Entity which should be spawned."))
             .argument(
                 IntegerArgument.<CommandSender>newBuilder("amount").withMin(1),

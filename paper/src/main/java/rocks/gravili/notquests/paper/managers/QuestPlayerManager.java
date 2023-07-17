@@ -319,226 +319,257 @@ public class QuestPlayerManager {
     ) {
 
 
-      final ResultSet questPlayerDataResult;
-      if(playerUUID != null){
-        questPlayerDataIfPlayerProvidedPS.setString(1, playerUUID.toString());
-        questPlayerDataResult = questPlayerDataIfPlayerProvidedPS.executeQuery();
-      }else{
-        questPlayerDataResult = questPlayerDataIfPlayerNotProvidedPS.executeQuery();
-      }
-
-      main.getLogManager().debug("Before questPlayerDataResult.next()");
-      while (questPlayerDataResult.next()) {
-        main.getLogManager().debug("Next result!");
-
-        final UUID uuid;
+      ResultSet questPlayerDataResult = null;
+      try {
         if(playerUUID != null){
-          uuid = playerUUID;
-        }else{
-          uuid = UUID.fromString(questPlayerDataResult.getString("PlayerUUID"));
+          questPlayerDataIfPlayerProvidedPS.setString(1, playerUUID.toString());
+          questPlayerDataResult = questPlayerDataIfPlayerProvidedPS.executeQuery();
+        } else {
+          questPlayerDataResult = questPlayerDataIfPlayerNotProvidedPS.executeQuery();
         }
-        completedQuestsPS.setString(1, uuid.toString());
-        failedQuestsPS.setString(1, uuid.toString());
-        activeQuestsPS.setString(1, uuid.toString());
-        activeQuestTriggersPS.setString(1, uuid.toString());
-        activeQuestObjectivesPS.setString(1, uuid.toString());
 
-        String profile;
-        if(isColumnThere(questPlayerDataResult, "Profile")){
-          profile = questPlayerDataResult.getString("Profile");
-          if(profile == null || profile.isBlank()){
+
+
+
+        main.getLogManager().debug("Before questPlayerDataResult.next()");
+        while (questPlayerDataResult.next()) {
+          main.getLogManager().debug("Next result!");
+
+          final UUID uuid;
+          if(playerUUID != null){
+            uuid = playerUUID;
+          }else{
+            uuid = UUID.fromString(questPlayerDataResult.getString("PlayerUUID"));
+          }
+          completedQuestsPS.setString(1, uuid.toString());
+          failedQuestsPS.setString(1, uuid.toString());
+          activeQuestsPS.setString(1, uuid.toString());
+          activeQuestTriggersPS.setString(1, uuid.toString());
+          activeQuestObjectivesPS.setString(1, uuid.toString());
+
+          String profile;
+          if(isColumnThere(questPlayerDataResult, "Profile")){
+            profile = questPlayerDataResult.getString("Profile");
+            if(profile == null || profile.isBlank()){
+              profile = "default";
+            }
+          }else{
             profile = "default";
           }
-        }else{
-          profile = "default";
-        }
 
-        main.getLogManager().debug("Profile: %s", profile);
+          main.getLogManager().debug("Profile: %s", profile);
 
-        completedQuestsPS.setString(2, profile);
-        failedQuestsPS.setString(2, profile);
-        activeQuestsPS.setString(2, profile);
-        activeQuestTriggersPS.setString(2, profile);
-        activeQuestObjectivesPS.setString(2, profile);
+          completedQuestsPS.setString(2, profile);
+          failedQuestsPS.setString(2, profile);
+          activeQuestsPS.setString(2, profile);
+          activeQuestTriggersPS.setString(2, profile);
+          activeQuestObjectivesPS.setString(2, profile);
 
 
-        questPlayerProfileDataPS.setString(1, uuid.toString());
-        final ResultSet currentQuestPlayerProfile = questPlayerProfileDataPS.executeQuery();
-        String currentProfile = "default";
-        while (currentQuestPlayerProfile.next()) {
-          currentProfile = currentQuestPlayerProfile.getString("CurrentProfile");
-        }
+          questPlayerProfileDataPS.setString(1, uuid.toString());
 
-        createQuestPlayer(uuid, profile, currentProfile == null || profile.equals(currentProfile) || currentProfile.isBlank());
-        final QuestPlayer questPlayer = getQuestPlayer(uuid, profile);
+          try (final ResultSet currentQuestPlayerProfile = questPlayerProfileDataPS.executeQuery()) {
+            String currentProfile = "default";
+            while (currentQuestPlayerProfile.next()) {
+              currentProfile = currentQuestPlayerProfile.getString("CurrentProfile");
+              createQuestPlayer(uuid, profile, currentProfile == null || profile.equals(currentProfile) || currentProfile.isBlank());
+              final QuestPlayer questPlayer = getQuestPlayer(uuid, profile);
 
-        final long questPoints = questPlayerDataResult.getLong("QuestPoints");
-        if (main.getConfiguration().isVerboseStartupMessages()) {
-          main.getLogManager()
-                  .info(
-                          "Loaded player with uuid <highlight>%s</highlight> (Profile: %s) and questPoints: %s",
-                          uuid.toString(),
-                          profile,
-                          questPoints);
-        }
+              final long questPoints = questPlayerDataResult.getLong("QuestPoints");
+              if (main.getConfiguration().isVerboseStartupMessages()) {
+                main.getLogManager()
+                        .info(
+                                "Loaded player with uuid <highlight>%s</highlight> (Profile: %s) and questPoints: %s",
+                                uuid.toString(),
+                                profile,
+                                questPoints);
+              }
 
 
-        if (questPlayer != null) {
-          // QuestPoints
-          questPlayer.setQuestPoints(questPoints, false);
+              if (questPlayer != null) {
+                // QuestPoints
+                questPlayer.setQuestPoints(questPoints, false);
 
-        } else {
-          main.getLogManager()
-                  .severe(
-                          "ERROR: QuestPlayer with the UUID <highlight>%s</highlight> for profile %s could not be loaded from database because it's null",
-                          uuid.toString(),
-                          profile
-                  );
+              } else {
+                main.getLogManager()
+                        .severe(
+                                "ERROR: QuestPlayer with the UUID <highlight>%s</highlight> for profile %s could not be loaded from database because it's null",
+                                uuid.toString(),
+                                profile
+                        );
 
-          return;
-        }
+                return;
+              }
 
-        // Active Quests
-        final ArrayList<ActiveQuest> activeQuests = new ArrayList<>();
 
-        // Completed Quests
-        final ResultSet completedQuestsResults = completedQuestsPS.executeQuery();
+              // Active Quests
+              final ArrayList<ActiveQuest> activeQuests = new ArrayList<>();
 
-        while (completedQuestsResults.next()) {
-          final String questName = completedQuestsResults.getString("QuestName");
-          final Quest quest = main.getQuestManager().getQuest(questName);
-          if (quest != null) {
-            final long timeCompleted = completedQuestsResults.getLong("TimeCompleted");
-            if (timeCompleted > 0) {
-              final CompletedQuest completedQuest =
-                      new CompletedQuest(quest, questPlayer, timeCompleted);
-              questPlayer.addCompletedQuest(completedQuest);
+              // Completed Quests
+              try (final ResultSet completedQuestsResults = completedQuestsPS.executeQuery()) {
+                while (completedQuestsResults.next()) {
+                  final String questName = completedQuestsResults.getString("QuestName");
+                  final Quest quest = main.getQuestManager().getQuest(questName);
+                  if (quest != null) {
+                    final long timeCompleted = completedQuestsResults.getLong("TimeCompleted");
+                    if (timeCompleted > 0) {
+                      final CompletedQuest completedQuest =
+                              new CompletedQuest(quest, questPlayer, timeCompleted);
+                      questPlayer.addCompletedQuest(completedQuest);
 
-            } else {
-              main.getLogManager()
-                      .warn(
-                              "ERROR: TimeCompleted from Quest with name <highlight>"
-                                      + questName
-                                      + "</highlight> could not be loaded from database (requested for loading completed Quests)");
-            }
+                    } else {
+                      main.getLogManager()
+                              .warn(
+                                      "ERROR: TimeCompleted from Quest with name <highlight>"
+                                              + questName
+                                              + "</highlight> could not be loaded from database (requested for loading completed Quests)");
+                    }
 
-          } else {
-            main.getLogManager()
-                    .warn(
-                            "ERROR: Quest with name <highlight>"
-                                    + questName
-                                    + "</highlight> could not be loaded from database (requested for loading completed Quests)");
-          }
-        }
-
-        // Failed Quests
-        final ResultSet failedQuestsResults = failedQuestsPS.executeQuery();
-
-        while (failedQuestsResults.next()) {
-          final String questName = failedQuestsResults.getString("QuestName");
-          final Quest quest = main.getQuestManager().getQuest(questName);
-          if (quest != null) {
-            final long timeFailed = failedQuestsResults.getLong("TimeFailed");
-            if (timeFailed > 0) {
-              final FailedQuest failedQuest =
-                      new FailedQuest(quest, questPlayer, timeFailed);
-              questPlayer.addFailedQuest(failedQuest);
-
-            } else {
-              main.getLogManager()
-                      .warn(
-                              "ERROR: TimeFailed from Quest with name <highlight>"
-                                      + questName
-                                      + "</highlight> could not be loaded from database (requested for loading failed Quests)");
-            }
-
-          } else {
-            main.getLogManager()
-                    .warn(
-                            "ERROR: Quest with name <highlight>"
-                                    + questName
-                                    + "</highlight> could not be loaded from database (requested for loading failed Quests)");
-          }
-        }
-
-        // Active Quests
-        ResultSet activeQuestsResults = activeQuestsPS.executeQuery();
-
-        while (activeQuestsResults.next()) {
-          final String questName = activeQuestsResults.getString("QuestName");
-          final Quest quest = main.getQuestManager().getQuest(questName);
-          if (quest != null) {
-            final ActiveQuest activeQuest = new ActiveQuest(main, quest, questPlayer);
-            activeQuests.add(activeQuest);
-            questPlayer.forceAddActiveQuestSilent(
-                    activeQuest, false); // Run begin/accept trigger when plugin reloads if true
-
-          } else {
-            main.getLogManager()
-                    .warn(
-                            "ERROR: Quest with name <highlight>"
-                                    + questName
-                                    + "</highlight> could not be loaded from database");
-          }
-        }
-        // activeQuestsResults.close();
-
-        for (final ActiveQuest activeQuest : activeQuests) {
-
-          // Active Triggers
-          activeQuestTriggersPS.setString(3, activeQuest.getQuest().getIdentifier());
-          final ResultSet activeQuestTriggerResults = activeQuestTriggersPS.executeQuery();
-          while (activeQuestTriggerResults.next()) {
-            final String triggerTypeString = activeQuestTriggerResults.getString("TriggerType");
-            final long currentProgress = activeQuestTriggerResults.getLong("CurrentProgress");
-
-            if (triggerTypeString != null) {
-              final int triggerID = activeQuestTriggerResults.getInt("TriggerID");
-
-              for (ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
-                if (activeTrigger.getTrigger().getTriggerType().equals(triggerTypeString)
-                        && activeTrigger.getTriggerID() == triggerID) {
-                  activeTrigger.addProgressSilent(currentProgress);
+                  } else {
+                    main.getLogManager()
+                            .warn(
+                                    "ERROR: Quest with name <highlight>"
+                                            + questName
+                                            + "</highlight> could not be loaded from database (requested for loading completed Quests)");
+                  }
                 }
               }
 
-            } else {
-              main.getLogManager()
-                      .warn(
-                              "ERROR: TriggerType for the Quest <highlight>"
-                                      + activeQuest.getQuest().getIdentifier()
-                                      + "</highlight> could not be loaded from database");
+
+
+
+
+              // Failed Quests
+              try (final ResultSet failedQuestsResults = failedQuestsPS.executeQuery()) {
+                while (failedQuestsResults.next()) {
+                  final String questName = failedQuestsResults.getString("QuestName");
+                  final Quest quest = main.getQuestManager().getQuest(questName);
+                  if (quest != null) {
+                    final long timeFailed = failedQuestsResults.getLong("TimeFailed");
+                    if (timeFailed > 0) {
+                      final FailedQuest failedQuest =
+                              new FailedQuest(quest, questPlayer, timeFailed);
+                      questPlayer.addFailedQuest(failedQuest);
+
+                    } else {
+                      main.getLogManager()
+                              .warn(
+                                      "ERROR: TimeFailed from Quest with name <highlight>"
+                                              + questName
+                                              + "</highlight> could not be loaded from database (requested for loading failed Quests)");
+                    }
+
+                  } else {
+                    main.getLogManager()
+                            .warn(
+                                    "ERROR: Quest with name <highlight>"
+                                            + questName
+                                            + "</highlight> could not be loaded from database (requested for loading failed Quests)");
+                  }
+                }
+              }
+
+
+
+              // Active Quests
+              try (final ResultSet activeQuestsResults = activeQuestsPS.executeQuery()) {
+                while (activeQuestsResults.next()) {
+                  final String questName = activeQuestsResults.getString("QuestName");
+                  final Quest quest = main.getQuestManager().getQuest(questName);
+                  if (quest != null) {
+                    final ActiveQuest activeQuest = new ActiveQuest(main, quest, questPlayer);
+                    activeQuests.add(activeQuest);
+                    questPlayer.forceAddActiveQuestSilent(
+                            activeQuest, false); // Run begin/accept trigger when plugin reloads if true
+
+                  } else {
+                    main.getLogManager()
+                            .warn(
+                                    "ERROR: Quest with name <highlight>"
+                                            + questName
+                                            + "</highlight> could not be loaded from database");
+                  }
+                }
+              }
+
+
+
+              for (final ActiveQuest activeQuest : activeQuests) {
+
+                // Active Triggers
+                activeQuestTriggersPS.setString(3, activeQuest.getQuest().getIdentifier());
+                try (final ResultSet activeQuestTriggerResults = activeQuestTriggersPS.executeQuery()) {
+                  while (activeQuestTriggerResults.next()) {
+                    final String triggerTypeString = activeQuestTriggerResults.getString("TriggerType");
+                    final long currentProgress = activeQuestTriggerResults.getLong("CurrentProgress");
+
+                    if (triggerTypeString != null) {
+                      final int triggerID = activeQuestTriggerResults.getInt("TriggerID");
+
+                      for (ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
+                        if (activeTrigger.getTrigger().getTriggerType().equals(triggerTypeString)
+                                && activeTrigger.getTriggerID() == triggerID) {
+                          activeTrigger.addProgressSilent(currentProgress);
+                        }
+                      }
+
+                    } else {
+                      main.getLogManager()
+                              .warn(
+                                      "ERROR: TriggerType for the Quest <highlight>"
+                                              + activeQuest.getQuest().getIdentifier()
+                                              + "</highlight> could not be loaded from database");
+                    }
+                  }
+                }
+
+
+                // Active Objectives
+                handleLoadingOfActiveObjectives(activeQuestObjectivesPS, activeQuest);
+
+              }
+
+              questPlayer.removeCompletedQuests();
+
+              questPlayer.setCurrentlyLoading(false);
+              questPlayer.setFinishedLoadingGeneralData(true);
+
+
+              if(playerUUID != null){
+                //Load single player data => player actually joined and tagmanager wont load automatically after that
+                final Player player = Bukkit.getPlayer(playerUUID);
+                if(player != null){
+                  questPlayer.onJoinAsync(player);
+                  Bukkit.getScheduler()
+                          .runTask(
+                                  main.getMain(),
+                                  () -> {
+                                    questPlayer.onJoin(player);
+                                  });
+                }
+
+              }
             }
+
           }
-          // activeQuestTriggerResults.close();
 
-          // Active Objectives
-          handleLoadingOfActiveObjectives(activeQuestObjectivesPS, activeQuest);
 
-          // activeQuestObjectiveResults.close();
+
+
+
+
         }
 
-        questPlayer.removeCompletedQuests();
-
-        questPlayer.setCurrentlyLoading(false);
-        questPlayer.setFinishedLoadingGeneralData(true);
 
 
-        if(playerUUID != null){
-          //Load single player data => player actually joined and tagmanager wont load automatically after that
-          final Player player = Bukkit.getPlayer(playerUUID);
-          if(player != null){
-            questPlayer.onJoinAsync(player);
-            Bukkit.getScheduler()
-                    .runTask(
-                            main.getMain(),
-                            () -> {
-                              questPlayer.onJoin(player);
-                            });
-          }
 
+      } finally {
+        if (questPlayerDataResult != null) {
+          questPlayerDataResult.close();
         }
       }
+
+
       if(playerUUID != null){
         if(getActiveQuestPlayer(playerUUID) == null){
           final QuestPlayer questPlayer = getOrCreateQuestPlayer(playerUUID);
@@ -580,20 +611,20 @@ public class QuestPlayerManager {
 
       ActiveObjective lastActiveObjective = activeObjective;
       String counterWithSubId = ""+activeObjective.getObjectiveID();
-      main.getLogManager().warn("Level: %s", activeObjective.getLevel());
+      main.getLogManager().debug("Level: %s", activeObjective.getLevel());
       for(int i = 0; i < activeObjective.getLevel(); i++){
         if(lastActiveObjective.getActiveObjectiveHolder() instanceof final ActiveObjective parentActiveObjective){
           lastActiveObjective = parentActiveObjective;
           counterWithSubId = lastActiveObjective.getObjectiveID() + "."+counterWithSubId;
-          main.getLogManager().warn("  counterWithSubId now1: %s", counterWithSubId);
+          main.getLogManager().debug("  counterWithSubId now1: %s", counterWithSubId);
 
         }else if(lastActiveObjective.getActiveObjectiveHolder() instanceof final ActiveQuest activeQuest){
           counterWithSubId = activeQuest.getQuestIdentifier() + "."+counterWithSubId;
-          main.getLogManager().warn("  counterWithSubId now2: %s", counterWithSubId);
+          main.getLogManager().debug("  counterWithSubId now2: %s", counterWithSubId);
           break;
         }
       }
-      main.getLogManager().warn("counterWithSubId: %s", counterWithSubId);
+      main.getLogManager().debug("counterWithSubId: %s", counterWithSubId);
 
       /*if(counterWithSubId.endsWith(".")){
         counterWithSubId = counterWithSubId.substring(0, counterWithSubId.length()-1);
@@ -608,85 +639,88 @@ public class QuestPlayerManager {
     main.getLogManager().debug("Loading active objectives for quest/objective holder name <highlight>%s</highlight>. ActiveObjectiveHolder: <highlight2>%s</highlight2>", questName, activeObjectiveHolder);
 
     activeQuestObjectivesPS.setString(3, questName);
-    ResultSet activeQuestObjectiveResults = activeQuestObjectivesPS.executeQuery();
 
-    final ArrayList<ActiveObjective> activeObjectivesWithSubObjectives = new ArrayList<>();
+    try (final ResultSet activeQuestObjectiveResults = activeQuestObjectivesPS.executeQuery()){
+      final ArrayList<ActiveObjective> activeObjectivesWithSubObjectives = new ArrayList<>();
 
-    while (activeQuestObjectiveResults.next()) {
-      final String objectiveTypeString =
-              activeQuestObjectiveResults.getString("ObjectiveType");
-      final double currentProgress = activeQuestObjectiveResults.getDouble("CurrentProgress");
-      final boolean hasBeenCompleted =
-              activeQuestObjectiveResults.getBoolean("HasBeenCompleted");
-      final double progressNeeded = activeQuestObjectiveResults.getDouble("ProgressNeeded");
-      final boolean progressNeededNull = activeQuestObjectiveResults.wasNull();
+      while (activeQuestObjectiveResults.next()) {
+        final String objectiveTypeString =
+                activeQuestObjectiveResults.getString("ObjectiveType");
+        final double currentProgress = activeQuestObjectiveResults.getDouble("CurrentProgress");
+        final boolean hasBeenCompleted =
+                activeQuestObjectiveResults.getBoolean("HasBeenCompleted");
+        final double progressNeeded = activeQuestObjectiveResults.getDouble("ProgressNeeded");
+        final boolean progressNeededNull = activeQuestObjectiveResults.wasNull();
 
-      if (objectiveTypeString != null) {
-        final int objectiveID = activeQuestObjectiveResults.getInt("ObjectiveID");
+        if (objectiveTypeString != null) {
+          final int objectiveID = activeQuestObjectiveResults.getInt("ObjectiveID");
 
-        // So the active objectives are already there - we just need to fill them with
-        // progress data.
-        main.getLogManager().debug("  Active objective count (.next() for %s): %s", objectiveID, activeObjectiveHolder.getActiveObjectives().size());
-        for (final ActiveObjective activeObjective : activeObjectiveHolder.getActiveObjectives()) {
-          if (activeObjective.getObjective().getClass()
-                  == main.getObjectiveManager().getObjectiveClass(objectiveTypeString)
-                  && activeObjective.getObjectiveID() == objectiveID) {
-            main.getLogManager().debug("  >Handling active objective <highlight>%s</highlight> (ID: %s) of holder <highlight2>%s</highlight2>", activeObjective.getObjective().getIdentifier(), activeObjective.getObjectiveID(), activeObjectiveHolder.getObjectiveHolder().getIdentifier());
-            main.getLogManager().debug("  Has been completed: %s, currentProgress: %s, progressNeeded: %s", hasBeenCompleted, currentProgress, progressNeeded);
-            // System.out.println("§4§lHAS BEEN COMPLETED: §b" + hasBeenCompleted + " §c- ID:
-            // §b" + objectiveID);
-            if (!progressNeededNull) {
-              activeObjective.setProgressNeeded(progressNeeded);
-            }
-            activeObjective.setHasBeenCompleted(hasBeenCompleted);
-            if (activeObjective.getObjective().getCompletionNPC() == null) { // Complete automatically
-              activeObjective.addProgress(currentProgress, true);
-            } else { // Only complete if player has talked to the completion NPC
-              if (activeObjective.hasBeenCompleted()) {
-                activeObjective.addProgress(
-                        currentProgress,
-                        activeObjective.getObjective().getCompletionNPC(),
-                        true);
-
-              } else {
-                activeObjective.addProgress(currentProgress, true);
+          // So the active objectives are already there - we just need to fill them with
+          // progress data.
+          main.getLogManager().debug("  Active objective count (.next() for %s): %s", objectiveID, activeObjectiveHolder.getActiveObjectives().size());
+          for (final ActiveObjective activeObjective : activeObjectiveHolder.getActiveObjectives()) {
+            if (activeObjective.getObjective().getClass()
+                    == main.getObjectiveManager().getObjectiveClass(objectiveTypeString)
+                    && activeObjective.getObjectiveID() == objectiveID) {
+              main.getLogManager().debug("  >Handling active objective <highlight>%s</highlight> (ID: %s) of holder <highlight2>%s</highlight2>", activeObjective.getObjective().getIdentifier(), activeObjective.getObjectiveID(), activeObjectiveHolder.getObjectiveHolder().getIdentifier());
+              main.getLogManager().debug("  Has been completed: %s, currentProgress: %s, progressNeeded: %s", hasBeenCompleted, currentProgress, progressNeeded);
+              // System.out.println("§4§lHAS BEEN COMPLETED: §b" + hasBeenCompleted + " §c- ID:
+              // §b" + objectiveID);
+              if (!progressNeededNull) {
+                activeObjective.setProgressNeeded(progressNeeded);
               }
-            }
-            if(!activeObjective.getActiveObjectives().isEmpty()){
-              main.getLogManager().debug("    Active objective %s has %s more activeobjectives!", activeObjective.getObjective().getIdentifier(), activeObjective.getActiveObjectives().size());
-              activeObjectivesWithSubObjectives.add(activeObjective);
-            }
-          }else{
-            main.getLogManager().debug("  >Skipping active objective <highlight>%s</highlight> (ID: %s) of holder <highlight2>%s</highlight2>", activeObjective.getObjective().getIdentifier(), activeObjective.getObjectiveID(), activeObjectiveHolder.getObjectiveHolder().getIdentifier());
+              activeObjective.setHasBeenCompleted(hasBeenCompleted);
+              if (activeObjective.getObjective().getCompletionNPC() == null) { // Complete automatically
+                activeObjective.addProgress(currentProgress, true);
+              } else { // Only complete if player has talked to the completion NPC
+                if (activeObjective.hasBeenCompleted()) {
+                  activeObjective.addProgress(
+                          currentProgress,
+                          activeObjective.getObjective().getCompletionNPC(),
+                          true);
 
+                } else {
+                  activeObjective.addProgress(currentProgress, true);
+                }
+              }
+              if(!activeObjective.getActiveObjectives().isEmpty()){
+                main.getLogManager().debug("    Active objective %s has %s more activeobjectives!", activeObjective.getObjective().getIdentifier(), activeObjective.getActiveObjectives().size());
+                activeObjectivesWithSubObjectives.add(activeObjective);
+              }
+            }else{
+              main.getLogManager().debug("  >Skipping active objective <highlight>%s</highlight> (ID: %s) of holder <highlight2>%s</highlight2>", activeObjective.getObjective().getIdentifier(), activeObjective.getObjectiveID(), activeObjectiveHolder.getObjectiveHolder().getIdentifier());
+
+            }
           }
+          activeObjectiveHolder.removeCompletedObjectives(false);
+
+
+
+        } else {
+          main.getLogManager()
+                  .warn(
+                          "ERROR: ObjectiveType for the Quest <highlight>"
+                                  + activeObjectiveHolder.getObjectiveHolder().getIdentifier()
+                                  + "</highlight> could not be loaded from database");
         }
-        activeObjectiveHolder.removeCompletedObjectives(false);
+      }
 
+      // Update all active objectives to see if they are unlocked
+      for (final ActiveObjective activeObjectiveToCheckForIfUnlocked :
+              activeObjectiveHolder.getActiveObjectives()) {
+        activeObjectiveToCheckForIfUnlocked.updateUnlocked(false, true);
+      }
 
+      for(final ActiveObjective activeObjectiveWithSubObjectives : activeObjectivesWithSubObjectives){
+        main.getLogManager().debug("Loading active objective with sub-objectives...");
+        handleLoadingOfActiveObjectives(activeQuestObjectivesPS, activeObjectiveWithSubObjectives);
+        main.getLogManager().debug("    Done loading sub-aO's");
 
-      } else {
-        main.getLogManager()
-                .warn(
-                        "ERROR: ObjectiveType for the Quest <highlight>"
-                                + activeObjectiveHolder.getObjectiveHolder().getIdentifier()
-                                + "</highlight> could not be loaded from database");
+        activeObjectiveWithSubObjectives.removeCompletedObjectives(false);
       }
     }
 
-    // Update all active objectives to see if they are unlocked
-    for (final ActiveObjective activeObjectiveToCheckForIfUnlocked :
-            activeObjectiveHolder.getActiveObjectives()) {
-      activeObjectiveToCheckForIfUnlocked.updateUnlocked(false, true);
-    }
 
-    for(final ActiveObjective activeObjectiveWithSubObjectives : activeObjectivesWithSubObjectives){
-      main.getLogManager().debug("Loading active objective with sub-objectives...");
-      handleLoadingOfActiveObjectives(activeQuestObjectivesPS, activeObjectiveWithSubObjectives);
-      main.getLogManager().debug("    Done loading sub-aO's");
-
-      activeObjectiveWithSubObjectives.removeCompletedObjectives(false);
-    }
   }
 
 

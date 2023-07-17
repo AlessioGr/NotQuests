@@ -142,20 +142,21 @@ repositories {
 
 dependencies {
     implementation(project(path= ":common", configuration= "shadow"))
-    paperweight.paperDevBundle("1.19.4-R0.1-SNAPSHOT")
 
-    compileOnly(files("libs/citizens-2.0.30-8.jar"))
+    paperweight.paperDevBundle("1.20.1-R0.1-SNAPSHOT")
+
+    compileOnly(files("libs/citizens-2.0.32-b3110.jar"))
 
     compileOnly("me.clip:placeholderapi:2.11.2")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
 
 
-    compileOnly("io.lumine:Mythic-Dist:5.2.6")
+    compileOnly("io.lumine:Mythic-Dist:5.3.0-SNAPSHOT")
     compileOnly(files("libs/EliteMobs.jar"))
     compileOnly("com.github.UlrichBR:UClansV5-API:4.5")
     compileOnly(files("libs/ProjectKorra-1.10.0.jar"))
 
-    compileOnly(files("libs/BetonQuest-2.0.0-651.jar"))
+    compileOnly(files("libs/betonquest-2.0.0-668.jar"))
 
     compileOnly("com.sk89q.worldedit:worldedit-core:7.3.0-SNAPSHOT")
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.3.0-SNAPSHOT")
@@ -290,7 +291,7 @@ tasks {
         // Configure the Minecraft version for our task.
         // This is the only required configuration besides applying the plugin.
         // Your plugin's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("1.19.4")
+        minecraftVersion("1.20.1")
     }
 }
 

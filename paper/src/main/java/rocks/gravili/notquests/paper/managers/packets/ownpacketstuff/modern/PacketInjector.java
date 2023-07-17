@@ -35,11 +35,12 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.BlockState;
-import org.bukkit.craftbukkit.v1_19_R3.CraftChunk;
-import org.bukkit.craftbukkit.v1_19_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_19_R3.block.CraftBlockState;
-import org.bukkit.craftbukkit.v1_19_R3.entity.CraftArmorStand;
-import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
+
+//import org.bukkit.craftbukkit.v1_20_R1.CraftChunk;
+//import org.bukkit.craftbukkit.v1_20_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_20_R1.block.CraftBlockState;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftArmorStand;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -131,7 +132,7 @@ public class PacketInjector {
   }
 
   public void spawnBeaconBeam(Player player, Location location) {
-
+/*
     // Prepare Data
     Connection connection = getConnection(getServerPlayer(player).connection);
     location = location.clone();
@@ -175,7 +176,7 @@ public class PacketInjector {
     main.sendMessage(player, "<success>Packet sent!");
 
     // ClientboundBlockUpdatePacket clientboundBlockUpdatePacket = new
-    // ClientboundBlockUpdatePacket(blockPos, BlockState.);
+    // ClientboundBlockUpdatePacket(blockPos, BlockState.);*/
 
   }
 

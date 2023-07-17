@@ -28,14 +28,14 @@ plugins {
 
 
 group = "rocks.gravili.notquests"
-version = "5.15.0"
+version = "5.17.1"
 
 
 repositories {
 }
 
 dependencies {
-    paperweight.paperDevBundle("1.19.4-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.20.1-R0.1-SNAPSHOT")
 }
 
 /**
@@ -65,7 +65,7 @@ tasks {
         // Configure the Minecraft version for our task.
         // This is the only required configuration besides applying the plugin.
         // Your plugin's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("1.19.4")
+        minecraftVersion("1.20.1")
     }
 }
 
