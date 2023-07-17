@@ -45,7 +45,6 @@ public class GuiService {
     }
 
     public void saveAllDefaultGuis() {
-        notQuests.getDataManager()
         saveDefaultGui("main-base");
         saveDefaultGui("main-take");
         saveDefaultGui("main-active");
