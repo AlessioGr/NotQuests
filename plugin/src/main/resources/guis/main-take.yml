@@ -14,7 +14,7 @@ icons:
     properties:
       specialicontype: CATEGORY
       actions:
-        - OpenGui main-tab-three --targetplayer %player_name% --category %CATEGORYID%
+        - OpenGui category-take --targetplayer %player_name% --category %CATEGORYID%
 
   Y:
     type: BLANK

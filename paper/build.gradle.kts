@@ -190,7 +190,7 @@ dependencies {
 
     //Interfaces + InvUI
 
-    implementation("xyz.xenondevs.invui:invui:1.9")
+    implementation("xyz.xenondevs.invui:invui:1.12")
 
     implementation("org.incendo.interfaces:interfaces-core:1.0.0-SNAPSHOT")
 

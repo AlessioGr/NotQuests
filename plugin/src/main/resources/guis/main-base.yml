@@ -8,8 +8,8 @@ structure:
   - "F W F X X X X X X"
   - "F W F X X X X X X"
 additionalguis:
-  - "main-tab-two"
-  - "main-tab-one"
+  - "main-active"
+  - "main-take"
 
 icons:
   Q:
