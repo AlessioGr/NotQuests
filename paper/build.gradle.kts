@@ -153,7 +153,7 @@ dependencies {
 
     compileOnly("io.lumine:Mythic-Dist:5.3.0-SNAPSHOT")
     compileOnly(files("libs/EliteMobs.jar"))
-    compileOnly("com.github.UlrichBR:UClansV5-API:4.5")
+    compileOnly("com.github.UlrichBR:UClansV6-API:6.9.0-r8")
     compileOnly(files("libs/ProjectKorra-1.10.0.jar"))
 
     compileOnly(files("libs/betonquest-2.0.0-668.jar"))
@@ -190,7 +190,7 @@ dependencies {
 
     //Interfaces + InvUI
 
-    implementation("xyz.xenondevs.invui:invui:1.12")
+    implementation("xyz.xenondevs.invui:invui:1.22")
 
     implementation("org.incendo.interfaces:interfaces-core:1.0.0-SNAPSHOT")
 
@@ -291,7 +291,7 @@ tasks {
         // Configure the Minecraft version for our task.
         // This is the only required configuration besides applying the plugin.
         // Your plugin's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("1.20.1")
+        minecraftVersion("1.20.2")
     }
 }
 
