@@ -29,12 +29,9 @@ version = rootProject.version
 
 repositories {
     mavenCentral()
-    //mavenLocal()
-
 }
 
 dependencies {
-    //implementation("net.kyori:adventure-api:4.11.0")
     implementation("org.spongepowered:configurate-gson:4.1.2")
 }
 
@@ -45,33 +42,17 @@ val shadowPath = "rocks.gravili.notquests.shadow"
 tasks.withType<ShadowJar> {
     minimize()
 
-    //relocate("net.kyori", "$shadowPath.kyori")
     relocate("org.spongepowered.configurate", "$shadowPath.configurate")
 
     dependencies {
-        //include(dependency("net.kyori:"))
         include(dependency("org.spongepowered:"))
-
-
     }
-    //archiveBaseName.set("notquests")
+
     archiveClassifier.set("")
 }
-/*processResources {
-    def props = [version: version]
-    inputs.properties props
-    filteringCharset 'UTF-8'
-    filesMatching('plugin.yml') {
-        expand props
-    }
-}*/
 
 
 tasks {
-    // Run reobfJar on build
-    //build {
-    //    dependsOn(shadowJar)
-    //}
     compileJava {
         options.encoding = Charsets.UTF_8.name()
         options.release.set(17)
@@ -83,18 +64,6 @@ tasks {
         filteringCharset = Charsets.UTF_8.name()
     }
 }
-
-/*publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            groupId = "rocks.gravili.notquests"
-            artifactId = "NotQuests"
-            version = "4.0.0-dev"
-
-            from(components["java"])
-        }
-    }
-}*/
 
 publishing {
     repositories {

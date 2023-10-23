@@ -139,6 +139,8 @@ visual:
       show-time: 10
       show-if-objective-is-completed: false
 gui:
+  main-gui-name: 'main-base'
+  npc-gui-name: 'npc-available-quests'
   quest-visibility-evaluations:
     already-accepted:
       enabled: true

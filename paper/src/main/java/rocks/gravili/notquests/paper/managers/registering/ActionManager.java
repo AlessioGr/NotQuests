@@ -39,28 +39,7 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
-import rocks.gravili.notquests.paper.structs.actions.Action;
-import rocks.gravili.notquests.paper.structs.actions.ActionAction;
-import rocks.gravili.notquests.paper.structs.actions.ActionFor;
-import rocks.gravili.notquests.paper.structs.actions.BeamAction;
-import rocks.gravili.notquests.paper.structs.actions.BooleanAction;
-import rocks.gravili.notquests.paper.structs.actions.BroadcastMessageAction;
-import rocks.gravili.notquests.paper.structs.actions.CompleteQuestAction;
-import rocks.gravili.notquests.paper.structs.actions.ConsoleCommandAction;
-import rocks.gravili.notquests.paper.structs.actions.FailQuestAction;
-import rocks.gravili.notquests.paper.structs.actions.GiveItemAction;
-import rocks.gravili.notquests.paper.structs.actions.GiveQuestAction;
-import rocks.gravili.notquests.paper.structs.actions.ItemStackListAction;
-import rocks.gravili.notquests.paper.structs.actions.ListAction;
-import rocks.gravili.notquests.paper.structs.actions.NumberAction;
-import rocks.gravili.notquests.paper.structs.actions.ChatAction;
-import rocks.gravili.notquests.paper.structs.actions.PlaySoundAction;
-import rocks.gravili.notquests.paper.structs.actions.PlayerCommandAction;
-import rocks.gravili.notquests.paper.structs.actions.SendMessageAction;
-import rocks.gravili.notquests.paper.structs.actions.SpawnMobAction;
-import rocks.gravili.notquests.paper.structs.actions.StartConversationAction;
-import rocks.gravili.notquests.paper.structs.actions.StringAction;
-import rocks.gravili.notquests.paper.structs.actions.TriggerCommandAction;
+import rocks.gravili.notquests.paper.structs.actions.*;
 import rocks.gravili.notquests.paper.structs.actions.hooks.betonquest.BetonQuestFireEventAction;
 import rocks.gravili.notquests.paper.structs.actions.hooks.betonquest.BetonQuestFireInlineEventAction;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
@@ -106,6 +85,9 @@ public class ActionManager {
     registerAction("BroadcastMessage", BroadcastMessageAction.class);
 
     registerAction("PlaySound", PlaySoundAction.class);
+
+    registerAction("OpenGui", OpenGuiAction.class);
+    registerAction("CloseInventory", CloseInventoryAction.class);
 
 
     registerAction("Number", NumberAction.class);

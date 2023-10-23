@@ -1,0 +1,57 @@
+title: gui.npc-available-quest.title
+type: PAGED_ITEMS
+structure:
+  - "F F F F F F F F F"
+  - "F X X X X X X X F"
+  - "F X X X X X X X F"
+  - "F X X X X X X X F"
+  - "F X X X X X X X F"
+  - "F F P F F F N F F"
+icons:
+  X:
+    type: ACTION
+    items:
+      - quests
+    properties:
+      specialicontype: NPC_SHOWN_QUEST
+      actions:
+        - OpenGui quest-preview --targetplayer %player_name% --quest %QUESTID% --npc %NPCID%
+
+  Y:
+    type: BLANK
+    items:
+      - emptyspacefiller
+  F:
+    type: BLANK
+    items:
+      - filler
+  P:
+    type: BACK
+    items:
+      - back
+  N:
+    type: FORWARD
+    items:
+      - forward
+
+items:
+  quests:
+    displayname: gui.npc-available-quest.button.quests.name
+    lore: gui.npc-available-quest.button.quests.lore
+    material: "%QUEST_ITEM_MATERIAL%"
+
+  emptyspacefiller:
+    material: BLACK_STAINED_GLASS_PANE
+    displayname: EMPTY
+
+  filler:
+    material: GRAY_STAINED_GLASS_PANE
+    displayname: EMPTY
+
+  back:
+    material: PAPER
+    displayname: gui.npc-available-quest.button.back.name
+
+  forward:
+    material: PAPER
+    displayname: gui.npc-available-quest.button.forward.name

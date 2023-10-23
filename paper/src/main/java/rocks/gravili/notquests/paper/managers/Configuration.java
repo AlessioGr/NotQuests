@@ -87,6 +87,10 @@ public class Configuration {
   private String databaseHost, databaseName, databaseUsername, databasePassword;
   private int databasePort;
   private boolean questPreviewUseGUI = true;
+
+  private String mainGuiName = "main-base";
+
+  private String npcGuiName = "npc-available-quests";
   private boolean userCommandsUseGUI = true;
   private boolean mySQLEnabled = false;
   private int maxActiveQuestsPerPlayer = -1;
@@ -1227,5 +1231,21 @@ public class Configuration {
 
   public void setObjectiveUnlockConditionsCheckRegularInterval(int objectiveUnlockConditionsCheckRegularInterval) {
     this.objectiveUnlockConditionsCheckRegularInterval = objectiveUnlockConditionsCheckRegularInterval;
+  }
+
+  public String getNpcGuiName() {
+    return npcGuiName;
+  }
+
+  public void setNpcGuiName(String npcGuiName) {
+    this.npcGuiName = npcGuiName;
+  }
+
+  public String getMainGuiName() {
+    return mainGuiName;
+  }
+
+  public void setMainGuiName(String mainGuiName) {
+    this.mainGuiName = mainGuiName;
   }
 }
