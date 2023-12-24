@@ -1,24 +1,24 @@
 ---
 chat:
-  wrong-command-usage: <error>Wrong command usage!
-  missing-permission: '<error>No permission! Required permission node: <highlight>%PERMISSION%'
-  too-many-arguments: <error>Too many arguments!
+  wrong-command-usage: <error>Érvénytelen parancs használat!
+  missing-permission: '<error>Nincs jogosultságod! Szükséges jogosultság: <highlight>%PERMISSION%'
+  too-many-arguments: <error>Túl sok argumentumot adtál meg!
   quest-successfully-accepted: |2
 
-    <CENTER><main>[Quest Accepted]
+    <CENTER><main>[Köldetés Elvállalva]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
-  quest-description: '<main>Quest description: <unimportant>%QUESTDESCRIPTION%'
-  quest-already-accepted: <error>Quest already accepted.
+  quest-description: '<main>Küldetés leírás: <unimportant>%QUESTDESCRIPTION%'
+  quest-already-accepted: <error>A küldetést már elvállaltad.
   quest-failed: |2
 
-    <CENTER><negative>[Quest Failed]
+    <CENTER><negative>[Sikertelen Küldetés]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
   quest-aborted: ''
   quest-completed-and-rewards-given: |2
 
-    <CENTER><positive>[Quest Completed]
+    <CENTER><positive>[Küldetés Teljesítve]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
   quest-completed-rewards-prefix: '    <highlight>Rewards:'
