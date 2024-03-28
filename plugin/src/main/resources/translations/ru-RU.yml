@@ -2,7 +2,7 @@
 chat:
   wrong-command-usage: <error>Неправильное использование команды!
   missing-permission: '<error>Нет разрешения! Требуется узел разрешения: <highlight>%PERMISSION%'
-  too-many-arguments: <error>Слишком много аргументов!
+  too-many-arguments: <error>Слишком много параметров!
   quest-successfully-accepted: |2
 
     <CENTER><main>[Квест принят]
