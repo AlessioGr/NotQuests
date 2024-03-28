@@ -88,51 +88,51 @@ chat:
         prefix: '    <veryUnimportant>└─ <unimportant>'
         suffix: ''
       breakBlocks:
-        base: 'Break Blocks: <main>%BLOCKTOBREAK%'
+        base: 'Phá vỡ khối: <main>%BLOCKTOBREAK%'
       breed:
-        base: 'Breed Mobs: <main>%ENTITYTOBREED%'
+        base: 'Mobs giống: <main>%ENTITYTOBREED%'
       pickupItems:
-        base: 'Pickup Items: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
+        base: 'Nhặt vật phẩm: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
       consumeItems:
-        base: 'Consume Items: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
+        base: 'Tiêu thụ vật phẩm: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: 'Craft Items: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+        base: 'Chế tạo vật phẩm: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: 'Deliver Items: <main>%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%(%'
+        base: 'Giao vật phẩm: <main>%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%(%'
         deliver-to-npc: '      <GRAY>Giao nó cho<WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>NPC giao hàng hiện không có sẵn!'
       enchant:
-        base: 'Enchant Items with %ENCHANTMENT%: <main>%ITEMTOENCHANTTYPE% %(%%ITEMTOENCHANTNAME%%(%'
+        base: 'Phù phép vật phẩm với %ENCHANTMENT%: <main>%ITEMTOENCHANTTYPE% %(%%ITEMTOENCHANTNAME%%(%'
       escortNPC:
-        base: 'Escort <main>%NPCNAME%</main> to <main>%DESTINATIONNPCNAME%'
+        base: 'Hộ tống <main>%NPCNAME%</main> đến <main>%DESTINATIONNPCNAME%'
       fishItems:
-        base: 'Fish Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
+        base: 'Cá cần câu: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
       killMobs:
-        base: 'Kill mobs: <main>%MOBTOKILL%'
+        base: 'Giết mobs: <main>%MOBTOKILL%'
       otherQuest:
-        base: 'Complete Quest: <main>%OTHERQUESTNAME%'
+        base: 'Hoàn thành nhiệm vụ: <main>%OTHERQUESTNAME%'
       placeBlocks:
-        base: 'Place Blocks: <main>%BLOCKTOPLACE%'
+        base: 'Đặt khối: <main>%BLOCKTOPLACE%'
       reachLocation:
-        base: 'Reach Location: <main>%LOCATIONNAME%'
+        base: 'Vị trí tiếp cận: <main>%LOCATIONNAME%'
       talkToNPC:
-        base: 'Talk to <main>%NAME%'
-        npc-not-available: '    <GRAY>The target NPC is currently not available!'
+        base: 'Nói chuyện với <main>%NAME%'
+        npc-not-available: '    <GRAY>Mục tiêu NPC này hiện không có sẵn!'
       triggerCommand:
-        base: 'Goal: <main>%TRIGGERNAME%'
+        base: 'Mục tiêu: <main>%TRIGGERNAME%'
       killEliteMobs:
-        base: 'Kill Elite Mob: <main>%ELITEMOBNAME%'
-        any: 'Kill any Elite Mob!'
+        base: 'Tiêu diệt Elite Mob: <main>%ELITEMOBNAME%'
+        any: 'Giết con elite mob nào đấy!'
       runCommand:
-        base: 'Run command: <main>%COMMANDTORUN%'
+        base: 'Chạy lệnh: <main>%COMMANDTORUN%'
       interact:
-        base: '%INTERACTTYPE% Location: <main>%COORDINATES% <main>in world %WORLDNAME%'
+        base: '%INTERACTTYPE% Vị trí: <main>%COORDINATES% <main> trong thế giới %WORLDNAME%'
       jump:
-        base: 'Jump <main>%AMOUNTOFJUMPS%</main> times'
+        base: 'Nhảy <main>%AMOUNTOFJUMPS%</main> lần'
       objective:
         base: '%OBJECTIVEHOLDERNAME%'
       sneak:
-        base: 'Sneak <main>%AMOUNTOFSNEAKS%</main> times'
+        base: 'Lén lút <main>%AMOUNTOFSNEAKS%</main> lần'
       smelt:
         base: 'Smelt Items: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       openBuriedTreasure:
