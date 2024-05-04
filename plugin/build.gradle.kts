@@ -235,7 +235,6 @@ bukkit {
         "WorldEdit",
         "Slimefun",
         "LuckPerms",
-        "UltimateClans",
         "Towny",
         "Jobs",
         "ProjectKorra",
