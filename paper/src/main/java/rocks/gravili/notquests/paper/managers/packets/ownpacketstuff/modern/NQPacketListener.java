@@ -87,8 +87,10 @@ public class NQPacketListener extends ChannelDuplexHandler {
                 return;
             }
 
-            String json = clientboundSystemChatPacket.content();
-            Component adventureComponent = clientboundSystemChatPacket.adventure$content();
+            String json = clientboundSystemChatPacket.content().getString();
+
+            Component adventureComponent = GsonComponentSerializer.gson().deserialize(json); // TODO: Not sure if this works in 1.20.6
+            //Component adventureComponent = clientboundSystemChatPacket.adventure$content();
 
 
 

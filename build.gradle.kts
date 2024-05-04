@@ -16,16 +16,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.gradle.api.JavaVersion.*
 
 plugins {
     `java-library`
     `maven-publish`
-    id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("io.papermc.paperweight.userdev") version "1.5.5"
-    id("xyz.jpenilla.run-paper") version "2.0.1" // Adds runServer and runMojangMappedServer tasks for testing
+    id("io.github.goooler.shadow") version "8.1.7"
+    id("io.papermc.paperweight.userdev") version "1.7.0"
+    id("xyz.jpenilla.run-paper") version "2.2.4" // Adds runServer and runMojangMappedServer tasks for testing
 }
 
+subprojects {
+    plugins.apply("java-library")
+    plugins.apply("maven-publish")
+    plugins.apply("io.github.goooler.shadow")
+}
 
 group = "rocks.gravili.notquests"
 version = "5.17.1"
@@ -35,25 +40,35 @@ repositories {
 }
 
 dependencies {
-    paperweight.paperDevBundle("1.20.1-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.20.6-R0.1-SNAPSHOT")
 }
+
+java {
+    // Configure the java toolchain. This allows gradle to auto-provision JDK 21 on systems that only have JDK 11 installed for example.
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
+    sourceCompatibility = VERSION_21
+    targetCompatibility = VERSION_21
+}
+
+paperweight.reobfArtifactConfiguration = io.papermc.paperweight.userdev.ReobfArtifactConfiguration.MOJANG_PRODUCTION
 
 /**
  * Configure NotQuests for shading
  */
 val path = "rocks.gravili.notquests"
-tasks.withType<ShadowJar> {
-    //archiveBaseName.set("notquests")
-    archiveClassifier.set("")
-}
+
 
 tasks {
+    shadowJar {
+        archiveClassifier.set("")
+    }
+
     //build {
     //    dependsOn(shadowJar)
     //}
     compileJava {
         options.encoding = Charsets.UTF_8.name()
-        options.release.set(17)
+        options.release.set(21)
     }
     javadoc {
         options.encoding = Charsets.UTF_8.name()
@@ -65,7 +80,7 @@ tasks {
         // Configure the Minecraft version for our task.
         // This is the only required configuration besides applying the plugin.
         // Your plugin's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("1.20.1")
+        minecraftVersion("1.20.6")
     }
 }
 
@@ -82,22 +97,4 @@ tasks {
         }
     }
 }*/
-
-publishing {
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/alessiogr/NotQuests")
-            credentials {
-                username = project.findProperty("gpr.user") as String? ?: System.getenv("USERNAME")
-                password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
-            }
-        }
-    }
-    publications {
-        register<MavenPublication>("gpr") {
-            from(components["java"])
-        }
-    }
-}
 

@@ -97,14 +97,14 @@ public class Configuration {
   private boolean citizensFocusingCancelConversationWhenTooFar = true;
   private int citizensNPCQuestGiverIndicatorParticleSpawnInterval = 10;
   private int citizensNPCQuestGiverIndicatorParticleCount = 1;
-  private Particle citizensNPCQuestGiverIndicatorParticleType = Particle.VILLAGER_ANGRY;
+  private Particle citizensNPCQuestGiverIndicatorParticleType = Particle.ANGRY_VILLAGER;
   private String citizensNPCQuestGiverIndicatorText = "";
   private int citizensNPCQuestGiverIndicatorTextInterval = 100;
   private boolean citizensNPCQuestGiverIndicatorParticleEnabled = true;
   private double citizensNPCQuestGiverIndicatorParticleDisableIfTPSBelow = -1;
   private int armorStandQuestGiverIndicatorParticleSpawnInterval = 10;
   private int armorStandQuestGiverIndicatorParticleCount = 1;
-  private Particle armorStandQuestGiverIndicatorParticleType = Particle.VILLAGER_ANGRY;
+  private Particle armorStandQuestGiverIndicatorParticleType = Particle.ANGRY_VILLAGER;
   private boolean armorStandQuestGiverIndicatorParticleEnabled = true;
   private double armorStandQuestGiverIndicatorParticleDisableIfTPSBelow = -1;
   private String languageCode = "en";

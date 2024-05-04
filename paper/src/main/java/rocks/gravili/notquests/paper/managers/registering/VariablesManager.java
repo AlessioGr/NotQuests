@@ -51,7 +51,6 @@ import rocks.gravili.notquests.paper.structs.variables.hooks.TownyNationNameVari
 import rocks.gravili.notquests.paper.structs.variables.hooks.TownyNationTownCountVariable;
 import rocks.gravili.notquests.paper.structs.variables.hooks.TownyTownPlotCountVariable;
 import rocks.gravili.notquests.paper.structs.variables.hooks.TownyTownResidentCountVariable;
-import rocks.gravili.notquests.paper.structs.variables.hooks.UltimateClansClanLevelVariable;
 import rocks.gravili.notquests.paper.structs.variables.reflectionVariables.ReflectionStaticBooleanVariable;
 import rocks.gravili.notquests.paper.structs.variables.reflectionVariables.ReflectionStaticDoubleVariable;
 import rocks.gravili.notquests.paper.structs.variables.reflectionVariables.ReflectionStaticFloatVariable;
@@ -92,7 +91,6 @@ public class VariablesManager {
 
     registerVariable("QuestPoints", QuestPointsVariable.class);
     registerVariable("Money", MoneyVariable.class);
-    registerVariable("UltimateClansClanLevel", UltimateClansClanLevelVariable.class);
     registerVariable("ActiveQuests", ActiveQuestsVariable.class);
     registerVariable("CompletedQuests", CompletedQuestsVariable.class);
     registerVariable("CompletedObjectiveIDsOfQuest", CompletedObjectiveIDsOfQuestVariable.class);
