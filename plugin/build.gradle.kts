@@ -17,6 +17,8 @@
  */
 
 import org.gradle.api.JavaVersion.*
+import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
+import net.minecrell.pluginyml.paper.PaperPluginDescription
 
 plugins {
 
@@ -154,11 +156,12 @@ val shadowPath = "rocks.gravili.notquests"
 
 tasks {
     // Run reobfJar on build
-    //build {
-    //    dependsOn(shadowJar)
-    //}
+    build {
+        dependsOn(shadowJar)
+    }
     shadowJar {
         minimize()
+        archiveClassifier.set("")
 
         //relocate("rocks.gravili.notquests.spigot", "$shadowPath.spigot")
         //relocate("rocks.gravili.notquests.paper", "$shadowPath.paper")
@@ -170,12 +173,13 @@ tasks {
             include(dependency("io.papermc:paperlib:"))
         }
         //archiveBaseName.set("notquests")
-        archiveClassifier.set("")
         //archiveClassifier.set(null)
     }
 
 
     compileJava {
+        dependsOn(":common:jar", ":paper:jar", ":paper:build")
+
         options.encoding = Charsets.UTF_8.name()
         options.release.set(21)
     }
@@ -243,6 +247,7 @@ bukkit {
     )
 
     load = net.minecrell.pluginyml.bukkit.BukkitPluginDescription.PluginLoadOrder.POSTWORLD
+
     permissions {
         register("notquests.admin"){
             default = net.minecrell.pluginyml.bukkit.BukkitPluginDescription.Permission.Default.OP

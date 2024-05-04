@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.gradle.api.JavaVersion.*
+
 
 plugins {
     id("io.papermc.paperweight.userdev")
@@ -350,9 +350,7 @@ tasks {
     //build {
     //    dependsOn(shadowJar)
     //}
-    assemble {
-        dependsOn(reobfJar)
-    }
+
 
 
 
@@ -361,7 +359,7 @@ tasks {
     }*/
 
     compileJava {
-        dependsOn(":common:jar")
+        mustRunAfter(":common:jar")
 
         options.encoding = Charsets.UTF_8.name()
         options.release.set(21)
@@ -379,3 +377,5 @@ tasks {
         minecraftVersion("1.20.6")
     }
 }
+
+
