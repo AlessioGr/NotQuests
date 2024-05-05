@@ -59,7 +59,7 @@ chat:
     changed-successfully: '<success>Bạn đã thành công thay đổi hồ sơ của bạn từ %OLDPROFILENAME% sang <highlight>%NEWPROFILENAME%</highlight>!'
     create-already-exists: '<error>Hồ sơ có tên <highlight>%NEWPROFILENAME%</highlight> đã tồn tại.'
     create-invalid-characters: '<error>Tên hồ sơ bạn cung cấp chứa các ký tự không hợp lệ.'
-    created-successfully: '<success>Bạn đã tạo thành công hồ sơ <highlight>%NEWPROFILENAME%</highlight>! Để chuyển sang nó, sử dụng <highlight2>/nq profiles change %NEWPROFILENAME%</highlight2>'
+    created-successfully: '<success>You have successfully created the profile <highlight>%NEWPROFILENAME%</highlight>! To switch to it, use <highlight2>/nq profiles change %NEWPROFILENAME%</highlight2>'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>

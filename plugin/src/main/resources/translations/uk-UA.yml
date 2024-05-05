@@ -65,7 +65,7 @@ chat:
     changed-successfully: '<success>Ви успішно змінили ваш профіль з %OLDPROFILENAME% на <highlight>%NEWPROFILENAME%</highlight>!'
     create-already-exists: '<error>Профіль з іменем <highlight>%NEWPROFILENAME%</highlight> вже існує.'
     create-invalid-characters: '<error>Надане ім''я профілю містить недопустимі символи.'
-    created-successfully: '<success>Ви успішно створили профіль <highlight>%NEWPROFILENAME%</highlight>! Щоб перейти до нього, скористайтеся <highlight2>/ nq профілем %NEWPROFILENAME%</highlight2>'
+    created-successfully: '<success>You have successfully created the profile <highlight>%NEWPROFILENAME%</highlight>! To switch to it, use <highlight2>/nq profiles change %NEWPROFILENAME%</highlight2>'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>

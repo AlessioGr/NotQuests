@@ -65,7 +65,7 @@ chat:
     changed-successfully: '<success>您已成功更改您的個人資料從 %OLDPROFILENAME% 到 <highlight>%NEWPROFILENAME%</highlight>!'
     create-already-exists: '<error>這個人資料名稱 <highlight>%NEWPROFILENAME%</highlight> 已經存在。'
     create-invalid-characters: '<error>您提供的個人資料名稱包含無效字符。'
-    created-successfully: '<success>您已成功建立個人資料 <highlight>%NEWPROFILENAME%</highlight>! 輸入指令<highlight2>/nq profile 切換至 %NEWPROFILENAME%</highlight2>'
+    created-successfully: '<success>You have successfully created the profile <highlight>%NEWPROFILENAME%</highlight>! To switch to it, use <highlight2>/nq profiles change %NEWPROFILENAME%</highlight2>'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>

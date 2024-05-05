@@ -65,7 +65,7 @@ chat:
     changed-successfully: "<success>Sikeresen átváltottál a(z) %OLDPROFILENAME% profilról\n<highlight>%NEWPROFILENAME%</highlight> profilra!"
     create-already-exists: '<error>A(z) <highlight>%NEWPROFILENAME%</highlight> profilnév már létezik.'
     create-invalid-characters: '<error>Ez a profilnév érvénytelen karaktereket tartalmaz.'
-    created-successfully: "<success>Sikeresen létrehoztad a(z) <highlight>%NEWPROFILENAME%</highlight> profilt! A\nváltáshoz használd a <highlight2>/nq profiles change %NEWPROFILENAME%</highlight2> parancsot"
+    created-successfully: '<success>You have successfully created the profile <highlight>%NEWPROFILENAME%</highlight>! To switch to it, use <highlight2>/nq profiles change %NEWPROFILENAME%</highlight2>'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>
