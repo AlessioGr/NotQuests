@@ -1,6 +1,6 @@
 package rocks.gravili.notquests.paper.managers.npc;
 
-import io.github.znetworkw.znpcservers.npc.NPC;
+import io.github.gonalez.znpcs.npc.NPC;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.Nullable;

@@ -145,11 +145,13 @@ repositories {
         }
     }
 
-    maven("https://repo.opencollab.dev/maven-snapshots/") {
+    maven("https://repo.opencollab.dev/main/") {
         content {
             includeGroup("org.geysermc.floodgate")
             includeGroup("org.geysermc.cumulus")
             includeGroup("org.geysermc")
+            includeGroup("org.geysermc.event")
+            includeGroup("org.geysermc.geyser")
         }
     }
 
@@ -164,19 +166,19 @@ dependencies {
     //implementation("de.themoep:inventorygui:1.5-SNAPSHOT")
 
     //compileOnly("net.citizensnpcs:citizens-main:2.0.30-SNAPSHOT")
-    compileOnly(files("libs/citizens-2.0.32-b3110.jar"))
+    compileOnly(files("libs/citizens-2.0.34-b3410.jar"))
 
-    compileOnly("me.clip:placeholderapi:2.11.2")
+    compileOnly("me.clip:placeholderapi:2.11.5")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
 
 
     compileOnly("io.lumine:Mythic-Dist:5.3.0-SNAPSHOT")
-    compileOnly(files("libs/EliteMobs.jar"))
-    compileOnly(files("libs/ProjectKorra-1.10.0.jar"))
+    compileOnly(files("libs/EliteMobs-8.7.11.jar"))
+    compileOnly(files("libs/ProjectKorra-1.11.2.jar"))
     //compileOnly(files("libs/UltimateJobs-0.2.0-SNAPSHOT.jar"))
 
 
-    compileOnly(files("libs/betonquest-2.0.0-668.jar"))
+    compileOnly(files("libs/betonquest-2.0.1.jar"))
 
     compileOnly("com.sk89q.worldedit:worldedit-core:7.3.0-SNAPSHOT")
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.3.0-SNAPSHOT")
@@ -190,7 +192,7 @@ dependencies {
 
     compileOnly("com.github.Zrips:Jobs:v4.17.2")
 
-    compileOnly("org.geysermc.floodgate:api:2.0-SNAPSHOT")
+    compileOnly("org.geysermc.floodgate:api:2.2.2-SNAPSHOT")
 
 
 
@@ -241,17 +243,17 @@ dependencies {
     compileOnly(files("libs/EcoBosses-v8.78.0.jar"))
     compileOnly("com.willfp:eco:6.38.3")
 
-    compileOnly(files("libs/znpc-servers-3.9.jar"))
+    compileOnly(files("libs/znpcs-4.6.jar"))
 
 
-    implementation("com.github.Redempt:Crunch:1.1.3")
+    implementation("com.github.Redempt:Crunch:2.0.3")
 
 
     implementation("com.fasterxml.jackson.core:jackson-core:2.17.0")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.17.0")
-    implementation("org.apache.httpcomponents:httpclient:4.5.13")
+    implementation("org.apache.httpcomponents:httpclient:4.5.14")
 
-    implementation("com.zaxxer:HikariCP:5.0.1")
+    implementation("com.zaxxer:HikariCP:5.1.0")
 
     compileOnly("com.github.war-systems:UltimateJobs:0.3.6")
 
