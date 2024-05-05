@@ -346,7 +346,7 @@ public class UserCommands {
                       return;
                   }
 
-                  main.getQuestPlayerManager().createQuestPlayer(player.getUniqueId(), newProfile, false);
+                  main.getQuestPlayerManager().createQuestPlayer(player.getUniqueId(), newProfile, false, false);
 
                   main.sendMessage(context.getSender(),
                       main.getLanguageManager().getString(
