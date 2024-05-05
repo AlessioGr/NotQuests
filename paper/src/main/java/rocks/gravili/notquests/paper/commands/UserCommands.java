@@ -346,6 +346,8 @@ public class UserCommands {
                       return;
                   }
 
+                  main.getQuestPlayerManager().createQuestPlayer(player.getUniqueId(), newProfile, false);
+
                   main.sendMessage(context.getSender(),
                       main.getLanguageManager().getString(
                           "chat.profiles.created-successfully",

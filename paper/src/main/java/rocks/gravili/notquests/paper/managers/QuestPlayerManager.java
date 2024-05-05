@@ -213,7 +213,7 @@ public class QuestPlayerManager {
     return foundQuestPlayer;
   }
 
-  private String createQuestPlayer(final UUID uuid, final String profile, final boolean setAsCurrentProfile) {
+  public String createQuestPlayer(final UUID uuid, final String profile, final boolean setAsCurrentProfile) {
     QuestPlayer questPlayer = getActiveQuestPlayer(uuid);
 
     if (questPlayer == null || !questPlayer.getProfile().equalsIgnoreCase(profile)) {

@@ -65,7 +65,7 @@ chat:
     changed-successfully: '<success>プロフィールを %OLDPROFILENAME% から <highlight>%NEWPROFILENAME%へ変更しました</highlight>'
     create-already-exists: '<error> <highlight>%NEWPROFILENAME%</highlight> という名前のプロファイルはすでに存在しています。'
     create-invalid-characters: '<error>入力したプロファイル名に無効な文字が含まれています。'
-    created-successfully: '<success>プロファイル <highlight>%NEWPROFILENAME%の作成に成功しました</highlight>!これに切り替えるには、 <highlight2>/nq profile change %NEWPROFILENAME%を使用します</highlight2>'
+    created-successfully: '<success>プロファイル <highlight>%NEWPROFILENAME%の作成に成功しました</highlight>!これに切り替えるには、 <highlight2>/nq profiles change %NEWPROFILENAME%を使用します</highlight2>'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>

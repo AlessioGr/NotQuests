@@ -58,7 +58,7 @@ chat:
     changed-successfully: '<success>Έχετε αλλάξει με επιτυχία το προφίλ σας από %OLDPROFILENAME% σε <highlight>%NEWPROFILENAME%</highlight>!'
     create-already-exists: '<error>Υπάρχει ήδη ένα προφίλ με το όνομα <highlight>%NEWPROFILENAME%</highlight>.'
     create-invalid-characters: '<error>Το όνομα προφίλ που δώσατε περιέχει μη έγκυρους χαρακτήρες.'
-    created-successfully: '<success>You have successfully created the profile <highlight>%NEWPROFILENAME%</highlight>! To switch to it, use <highlight2>/nq profile change %NEWPROFILENAME%</highlight2>'
+    created-successfully: '<success>You have successfully created the profile <highlight>%NEWPROFILENAME%</highlight>! To switch to it, use <highlight2>/nq profiles change %NEWPROFILENAME%</highlight2>'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>
