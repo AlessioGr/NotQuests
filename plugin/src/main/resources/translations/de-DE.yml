@@ -65,7 +65,7 @@ chat:
     changed-successfully: '<success>Du hast dein Profil erfolgreich von %OLDPROFILENAME% auf<highlight>%NEWPROFILENAME%</highlight> geändert!'
     create-already-exists: '<error>Es gibt schon ein Profil mit dem Namen <highlight>%NEWPROFILENAME%</highlight>.'
     create-invalid-characters: '<error>Der Profilname hat ungültige Zeichen.'
-    created-successfully: '<success>You have successfully created the profile <highlight>%NEWPROFILENAME%</highlight>! To switch to it, use <highlight2>/nq profiles change %NEWPROFILENAME%</highlight2>'
+    created-successfully: '<success>Du hast das Profil <highlight>%NEWPROFILENAME%</highlight> erfolgreich erstellt! Um auf das Profil zu wechseln, führe <highlight2>/nq profile change %NEWPROFILENAME%</highlight2> aus'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>
