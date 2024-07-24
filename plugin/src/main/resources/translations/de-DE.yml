@@ -108,7 +108,7 @@ chat:
         deliver-to-npc: '      <GRAY>Bringe es zu <WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>Der Empfänger-NPC ist derzeit nicht verfügbar!'
       enchant:
-        base: 'Enchant Items with %ENCHANTMENT%: <main>%ITEMTOENCHANTTYPE% %(%%ITEMTOENCHANTNAME%%(%'
+        base: 'Verzaubere Gegenstände mit %ENCHANTMENT%: <main>%ITEMTOENCHANTTYPE% %(%%ITEMTOENCHANTNAME%%(%'
       escortNPC:
         base: 'Eskortiere <main>%NPCNAME%</main> zu <main>%DESTINATIONNPCNAME%'
       fishItems:
