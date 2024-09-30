@@ -161,7 +161,7 @@ repositories {
 
 dependencies {
     implementation(project(path= ":common", configuration= "shadow"))
-    paperweight.paperDevBundle("1.20.6-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.21.1-R0.1-SNAPSHOT")
     //compileOnly("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT!!")
     //implementation("de.themoep:inventorygui:1.5-SNAPSHOT")
 
@@ -249,11 +249,8 @@ dependencies {
     implementation("com.github.Redempt:Crunch:2.0.3")
 
 
-    implementation("com.fasterxml.jackson.core:jackson-core:2.17.0")
-    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.17.0")
-    implementation("org.apache.httpcomponents:httpclient:4.5.14")
 
-    implementation("com.zaxxer:HikariCP:5.1.0")
+    implementation("com.zaxxer:HikariCP:6.0.0")
 
     compileOnly("com.github.war-systems:UltimateJobs:0.3.6")
 
@@ -376,7 +373,7 @@ tasks {
         // Configure the Minecraft version for our task.
         // This is the only required configuration besides applying the plugin.
         // Your plugin's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("1.20.6")
+        minecraftVersion("1.21.1")
     }
 }
 

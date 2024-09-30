@@ -1232,7 +1232,7 @@ public class DataManager {
 
         main.getLogManager().info("Detected version: " + Bukkit.getBukkitVersion() + " <highlight>(Paper)");
 
-        if (!Bukkit.getBukkitVersion().contains("1.20")) {
+        if (!Bukkit.getBukkitVersion().contains("1.21")) {
             if (!configuration.isPacketMagicUnsafeDisregardVersion()) {
                 configuration.setPacketMagic(false);
                 main.getLogManager().info("Packet magic has been disabled, because you are using an unsupported bukkit version...");

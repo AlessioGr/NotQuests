@@ -21,26 +21,26 @@ import org.gradle.api.JavaVersion.*
 plugins {
     `java-library`
     `maven-publish`
-    id("io.github.goooler.shadow") version "8.1.7"
-    id("io.papermc.paperweight.userdev") version "1.7.0"
+    id("com.gradleup.shadow") version "8.3.1"
+    id("io.papermc.paperweight.userdev") version "1.7.3"
     id("xyz.jpenilla.run-paper") version "2.2.4" // Adds runServer and runMojangMappedServer tasks for testing
 }
 
 subprojects {
     plugins.apply("java-library")
     plugins.apply("maven-publish")
-    plugins.apply("io.github.goooler.shadow")
+    plugins.apply("com.gradleup.shadow")
 }
 
 group = "rocks.gravili.notquests"
-version = "5.18.2"
+version = "5.19.0"
 
 
 repositories {
 }
 
 dependencies {
-    paperweight.paperDevBundle("1.20.6-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.21.1-R0.1-SNAPSHOT")
 }
 
 java {
@@ -80,7 +80,7 @@ tasks {
         // Configure the Minecraft version for our task.
         // This is the only required configuration besides applying the plugin.
         // Your plugin's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("1.20.6")
+        minecraftVersion("1.21.1")
     }
 }
 

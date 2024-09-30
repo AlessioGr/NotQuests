@@ -82,7 +82,6 @@ public class NotQuests extends NotQuestsMainAbstract<Component, CommandSender> {
     private MessageManager messageManager;
     private TagManager tagManager;
     private ItemsManager itemsManager;
-    private WebManager webManager;
 
     //Registering Managers
     private ObjectiveManager objectiveManager;
@@ -270,7 +269,6 @@ public class NotQuests extends NotQuestsMainAbstract<Component, CommandSender> {
 
         itemsManager = new ItemsManager(this);
 
-        webManager = new WebManager(this);
 
         NotQuestsFullyLoadedEvent notQuestsFullyLoadedEvent = new NotQuestsFullyLoadedEvent(this);
         if (Bukkit.isPrimaryThread()) {
@@ -534,9 +532,6 @@ public class NotQuests extends NotQuestsMainAbstract<Component, CommandSender> {
         return itemsManager;
     }
 
-    public final WebManager getWebManager(){
-        return webManager;
-    }
 
     public final MiniMessage getMiniMessage(){
         return messageManager.getMiniMessage();
