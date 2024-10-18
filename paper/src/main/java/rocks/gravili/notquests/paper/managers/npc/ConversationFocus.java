@@ -39,7 +39,7 @@ public class ConversationFocus extends BukkitRunnable {
         this.rotations = this.getRotation();
         this.conversation = conversation;
 
-        this.potionEffect = new PotionEffect(PotionEffectType.SLOW, 4, 2, false, false);
+        this.potionEffect = new PotionEffect(PotionEffectType.SLOWNESS, 4, 2, false, false);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class ConversationFocus extends BukkitRunnable {
                                 .getString("chat.conversations.ended-previous-conversation", player, conversation));
                 main.getConversationManager().stopConversation(currentOpenConversationPlayer);
             }
-            this.player.removePotionEffect(PotionEffectType.SLOW);
+            this.player.removePotionEffect(PotionEffectType.SLOWNESS);
             return;
         }
 

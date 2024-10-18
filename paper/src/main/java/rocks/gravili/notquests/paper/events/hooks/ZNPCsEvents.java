@@ -1,7 +1,7 @@
 package rocks.gravili.notquests.paper.events.hooks;
 
-import io.github.znetworkw.znpcservers.npc.NPC;
-import io.github.znetworkw.znpcservers.npc.event.NPCInteractEvent;
+import io.github.gonalez.znpcs.npc.NPC;
+import io.github.gonalez.znpcs.npc.event.NPCInteractEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import rocks.gravili.notquests.paper.NotQuests;

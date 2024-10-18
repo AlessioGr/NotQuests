@@ -17,21 +17,28 @@
  */
 
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.gradle.api.JavaVersion.*
 
-plugins {
-    `java-library`
-    `maven-publish`
-    id("com.github.johnrengelman.shadow")
-}
+
 
 group = "rocks.gravili.notquests"
 version = rootProject.version
 
+java {
+    // Configure the java toolchain. This allows gradle to auto-provision JDK 21 on systems that only have JDK 11 installed for example.
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
+    sourceCompatibility = VERSION_21
+    targetCompatibility = VERSION_21
+}
+
 repositories {
     mavenCentral()
+    //mavenLocal()
+
 }
 
 dependencies {
+    //implementation("net.kyori:adventure-api:4.11.0")
     implementation("org.spongepowered:configurate-gson:4.1.2")
 }
 
@@ -39,23 +46,25 @@ dependencies {
  * Configure NotQuests for shading
  */
 val shadowPath = "rocks.gravili.notquests.shadow"
-tasks.withType<ShadowJar> {
-    minimize()
 
-    relocate("org.spongepowered.configurate", "$shadowPath.configurate")
-
-    dependencies {
-        include(dependency("org.spongepowered:"))
+/*processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
     }
-
-    archiveClassifier.set("")
-}
+}*/
 
 
 tasks {
+    // Run reobfJar on build
+    //build {
+    //    dependsOn(shadowJar)
+    //}
     compileJava {
         options.encoding = Charsets.UTF_8.name()
-        options.release.set(17)
+        options.release.set(21)
     }
     javadoc {
         options.encoding = Charsets.UTF_8.name()
@@ -63,22 +72,33 @@ tasks {
     processResources {
         filteringCharset = Charsets.UTF_8.name()
     }
+
+    shadowJar {
+        minimize()
+
+        //relocate("net.kyori", "$shadowPath.kyori")
+        relocate("org.spongepowered.configurate", "$shadowPath.configurate")
+
+        dependencies {
+            //include(dependency("net.kyori:"))
+            include(dependency("org.spongepowered:"))
+
+
+        }
+        //archiveBaseName.set("notquests")
+        archiveClassifier.set("")
+    }
 }
 
-publishing {
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/alessiogr/NotQuests")
-            credentials {
-                username = project.findProperty("gpr.user") as String? ?: System.getenv("USERNAME")
-                password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
-            }
-        }
-    }
+/*publishing {
     publications {
-        register<MavenPublication>("gpr") {
+        create<MavenPublication>("maven") {
+            groupId = "rocks.gravili.notquests"
+            artifactId = "NotQuests"
+            version = "4.0.0-dev"
+
             from(components["java"])
         }
     }
-}
+}*/
+

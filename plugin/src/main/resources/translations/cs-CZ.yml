@@ -62,7 +62,7 @@ chat:
     changed-successfully: '<success>Úspěšně sis změnil profil z %OLDPROFILENAME% na <highlight>%NEWPROFILENAME%</highlight>!'
     create-already-exists: '<error>Profil s jménem <highlight>%NEWPROFILENAME%</highlight> již existuje.'
     create-invalid-characters: '<error>Jméno profilu obsahuje nepovolené znaky.'
-    created-successfully: '<success>Úspěšně jsi vytvořil profil <highlight>%NEWPROFILENAME%</highlight>! Pro změnu profilu, použij <highlight2>/nq profile change %NEWPROFILENAME%</highlight2>'
+    created-successfully: '<success>Úspěšně jsi vytvořil profil <highlight>%NEWPROFILENAME%</highlight>! Pro změnu profilu, použij <highlight2>/nq profiles change %NEWPROFILENAME%</highlight2>'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>

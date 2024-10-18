@@ -666,7 +666,7 @@ public class DataManager {
 
         configuration.setCitizensNPCQuestGiverIndicatorParticleType(Particle.valueOf(getGeneralConfigString(
                 "visual.citizensnpc.quest-giver-indicator-particle.type",
-                "VILLAGER_ANGRY",
+                "ANGRY_VILLAGER",
             "Change the particle type here. Available particle types can be found at https://jd.papermc.io/paper/1.20/org/bukkit/Particle.html"
         )));
         configuration.setCitizensNPCQuestGiverIndicatorText(getGeneralConfigString(
@@ -733,7 +733,7 @@ public class DataManager {
 
         configuration.setArmorStandQuestGiverIndicatorParticleType(Particle.valueOf(getGeneralConfigString(
                 "visual.armorstands.quest-giver-indicator-particle.type",
-                "VILLAGER_ANGRY"
+                "ANGRY_VILLAGER"
         )));
 
         configuration.setArmorStandQuestGiverIndicatorParticleSpawnInterval(getGeneralConfigInt(
@@ -1246,7 +1246,7 @@ public class DataManager {
 
         main.getLogManager().info("Detected version: " + Bukkit.getBukkitVersion() + " <highlight>(Paper)");
 
-        if (!Bukkit.getBukkitVersion().contains("1.20")) {
+        if (!Bukkit.getBukkitVersion().contains("1.21")) {
             if (!configuration.isPacketMagicUnsafeDisregardVersion()) {
                 configuration.setPacketMagic(false);
                 main.getLogManager().info("Packet magic has been disabled, because you are using an unsupported bukkit version...");

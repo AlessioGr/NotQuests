@@ -711,44 +711,6 @@ public class AdminCommands {
                     context.getSender().sendMessage(main.parse(
                             "<main>This feature is still in development. The web editor does not work at all yet. Sorry! This command just acts as a placeholder. Consult the NotQuests documentation for a tutorial on how to use NotQuests."
                     ));
-                    if(true){
-                        return;
-                    }
-                    context.getSender().sendMessage(main.parse(
-                            "<main>Opening the web editor..."
-                    ));
-
-                    String jsonResult = main.getWebManager().openEditor();
-
-                   /*context.getSender().sendMessage(main.parse(
-                            "<main>Result: " + jsonResult
-                    ));*/
-
-                    String editorURL = "";
-
-                    try {
-                        JSONParser parser = new JSONParser();
-                        Object resultObject = parser.parse(jsonResult);
-
-                        if (resultObject instanceof JSONArray array) {
-                            editorURL = "error";
-                        }else if (resultObject instanceof JSONObject obj) {
-                            editorURL = ""+(long)(obj.get("editor_id"));
-                        }
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        context.getSender().sendMessage(main.parse(
-                                "<error>Failed to parse json!"
-                        ));
-                        editorURL = "error";
-                    }
-
-                    editorURL = "https://editor.notquests.com/editor/" + editorURL;
-
-                    context.getSender().sendMessage(main.parse(
-                            "<success>Click following link to open the editor: \n<highlight><click:open_url:" + editorURL + "><hover:show_text:\"<highlight>Click to open the web editor\">" + editorURL
-                    ));
                 }));
 
 
@@ -1011,7 +973,7 @@ public class AdminCommands {
                     }
 
                     if (glow) {
-                        guiItem.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 1);
+                        guiItem.addUnsafeEnchantment(Enchantment.SHARPNESS, 1);
                         ItemMeta meta = guiItem.getItemMeta();
                         if (meta == null) {
                             meta = Bukkit.getItemFactory().getItemMeta(guiItem.getType());

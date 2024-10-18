@@ -65,7 +65,7 @@ chat:
     changed-successfully: '<success>Profilinizi %OLDPROFILENAME% > <highlight>%NEWPROFILENAME%</highlight> başarıyla değiştirdiniz!'
     create-already-exists: '<error> <highlight>%NEWPROFILENAME%</highlight> adında bir profil zaten mevcut.'
     create-invalid-characters: '<error>Sağladığınız profil adı geçersiz karakterler içeriyor.'
-    created-successfully: '<success>Profili başarılı bir şekilde oluşturdunuz <highlight>%NEWPROFILENAME%</highlight>! Geçiş yapmak için <highlight2>/nq profile change %NEWPROFILENAME%</highlight2>'
+    created-successfully: '<success>Profili başarılı bir şekilde oluşturdunuz <highlight>%NEWPROFILENAME%</highlight>! Geçiş yapmak için <highlight2>/nq profiles change %NEWPROFILENAME%</highlight2>'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>

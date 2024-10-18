@@ -16,22 +16,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import org.gradle.api.JavaVersion.*
+import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
+import net.minecrell.pluginyml.paper.PaperPluginDescription
+
 plugins {
-    `java-library`
-    `maven-publish`
-    id("com.github.johnrengelman.shadow")
+
     id("io.papermc.paperweight.userdev")
     id("xyz.jpenilla.run-paper")
-    id("net.minecrell.plugin-yml.bukkit") version "0.5.3"
+    id("net.minecrell.plugin-yml.bukkit") version "0.6.0"
 }
+
 
 group = "rocks.gravili.notquests"
 version = rootProject.version
 
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
+    sourceCompatibility = VERSION_21
+    targetCompatibility = VERSION_21
+}
+
 repositories {
     mavenCentral()
 
-    maven(" https://repo.papermc.io/repository/maven-public/"){
+    maven("https://repo.papermc.io/repository/maven-public/"){
         content {
             includeGroup("io.papermc.paper")
             includeGroup("net.kyori")
@@ -109,14 +118,23 @@ repositories {
             includeGroup("com.mojang")
         }
     }
+
+   // maven("https://oss.sonatype.org/content/repositories/snapshots")
+
+    //mavenLocal()
+
 }
 
 dependencies {
-    paperweight.paperDevBundle("1.20.1-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.21.1-R0.1-SNAPSHOT")
 
     implementation(project(path= ":common", configuration= "shadow"))
     implementation(project(path= ":paper", configuration= "shadow"))
 
+    //implementation(project(":spigot"))
+    //implementation(project(":paper"))
+
+    //compileOnly("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT")
 
     implementation("io.papermc:paperlib:1.0.8")
 }
@@ -126,21 +144,44 @@ dependencies {
  */
 val shadowPath = "rocks.gravili.notquests"
 
+/*processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}*/
+
 
 tasks {
+    // Run reobfJar on build
+    build {
+        dependsOn(shadowJar)
+    }
     shadowJar {
+        minimize()
+        archiveClassifier.set("")
+
+        //relocate("rocks.gravili.notquests.spigot", "$shadowPath.spigot")
+        //relocate("rocks.gravili.notquests.paper", "$shadowPath.paper")
         relocate("io.papermc.lib", "$shadowPath.paperlib")
 
-        archiveClassifier.set("")
+        dependencies {
+            include(dependency(":common"))
+            include(dependency(":paper"))
+            include(dependency("io.papermc:paperlib:"))
+        }
+        //archiveBaseName.set("notquests")
+        //archiveClassifier.set(null)
     }
 
-    build {
-        dependsOn(reobfJar)
-    }
 
     compileJava {
+        dependsOn(":common:jar", ":paper:jar", ":paper:build")
+
         options.encoding = Charsets.UTF_8.name()
-        options.release.set(17)
+        options.release.set(21)
     }
     javadoc {
         options.encoding = Charsets.UTF_8.name()
@@ -152,8 +193,7 @@ tasks {
         // Configure the Minecraft version for our task.
         // This is the only required configuration besides applying the plugin.
         // Your plugin's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("1.20.2")
-
+        minecraftVersion("1.21.1")
     }
 
     register<Copy>("copyToServer") {
@@ -167,32 +207,16 @@ tasks {
     }
 }
 
-publishing {
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/alessiogr/NotQuests")
-            credentials {
-                username = project.findProperty("gpr.user") as String? ?: System.getenv("USERNAME")
-                password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
-            }
-        }
-    }
-    publications {
-        register<MavenPublication>("gpr") {
-            from(components["java"])
-        }
-    }
-}
+
 
 
 bukkit {
     name = "NotQuests"
     version = rootProject.version.toString()
     main = "rocks.gravili.notquests.Main"
-    apiVersion = "1.19"
+    apiVersion = "1.21"
     authors = listOf("AlessioGr")
-    description = "Flexible, open, GUI Quest Plugin for Minecraft 1.20"
+    description = "Flexible, open, GUI Quest Plugin for Minecraft 1.21.1"
     website = "https://www.notquests.com"
     softDepend = listOf(
         "ProtocolLib",
@@ -208,7 +232,6 @@ bukkit {
         "WorldEdit",
         "Slimefun",
         "LuckPerms",
-        "UltimateClans",
         "Towny",
         "Jobs",
         "ProjectKorra",
@@ -220,6 +243,7 @@ bukkit {
     )
 
     load = net.minecrell.pluginyml.bukkit.BukkitPluginDescription.PluginLoadOrder.POSTWORLD
+
     permissions {
         register("notquests.admin"){
             default = net.minecrell.pluginyml.bukkit.BukkitPluginDescription.Permission.Default.OP

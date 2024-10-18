@@ -6,7 +6,6 @@ pluginManagement {
 
 rootProject.name = "notquests"
 
-include(":plugin")
-include(":paper")
 include(":common")
-
+include(":paper")
+include(":plugin")

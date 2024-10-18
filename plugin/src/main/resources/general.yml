@@ -107,7 +107,7 @@ visual:
       cancel-conversation-when-leaving: true
     quest-giver-indicator-particle:
       enabled: true
-      type: VILLAGER_ANGRY
+      type: ANGRY_VILLAGER
       spawn-interval: 10
       count: 1
       disable-if-tps-below: -1.0
@@ -117,7 +117,7 @@ visual:
     #This controls the particle above the heads of Armor Stands with Quests attached to them
     quest-giver-indicator-particle:
       enabled: true
-      type: VILLAGER_ANGRY
+      type: ANGRY_VILLAGER
       spawn-interval: 10
       count: 1
       disable-if-tps-below: -1.0

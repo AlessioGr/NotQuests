@@ -67,15 +67,15 @@ public class WorldEditManager {
       final Location min =
           new Location(
               BukkitAdapter.adapt(selectionWorld),
-              region.getMinimumPoint().getX(),
-              region.getMinimumPoint().getY(),
-              region.getMinimumPoint().getZ());
+              region.getMinimumPoint().x(),
+              region.getMinimumPoint().y(),
+              region.getMinimumPoint().z());
       final Location max =
           new Location(
               BukkitAdapter.adapt(selectionWorld),
-              region.getMaximumPoint().getX(),
-              region.getMaximumPoint().getY(),
-              region.getMaximumPoint().getZ());
+              region.getMaximumPoint().x(),
+              region.getMaximumPoint().y(),
+              region.getMaximumPoint().z());
 
       // Create Objective
       ReachLocationObjective reachLocationObjective = new ReachLocationObjective(main);

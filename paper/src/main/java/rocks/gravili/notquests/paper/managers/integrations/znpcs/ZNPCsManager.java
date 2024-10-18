@@ -1,8 +1,9 @@
 package rocks.gravili.notquests.paper.managers.integrations.znpcs;
 
-import io.github.znetworkw.znpcservers.ServersNPC;
-import io.github.znetworkw.znpcservers.npc.NPC;
+import io.github.gonalez.znpcs.ServersNPC;
 import java.util.ArrayList;
+
+import io.github.gonalez.znpcs.npc.NPC;
 import rocks.gravili.notquests.paper.NotQuests;
 
 public class ZNPCsManager {

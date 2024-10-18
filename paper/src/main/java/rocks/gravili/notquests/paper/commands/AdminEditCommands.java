@@ -353,7 +353,7 @@ public class AdminEditCommands {
                     }
 
                     if (glow) {
-                        guiItem.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 1);
+                        guiItem.addUnsafeEnchantment(Enchantment.SHARPNESS, 1);
                         ItemMeta meta = guiItem.getItemMeta();
                         if (meta == null) {
                             meta = Bukkit.getItemFactory().getItemMeta(guiItem.getType());

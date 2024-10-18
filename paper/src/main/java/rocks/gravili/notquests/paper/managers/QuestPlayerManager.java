@@ -93,7 +93,7 @@ public class QuestPlayerManager {
       if(!questPlayer.isFinishedLoadingGeneralData()){
         main.getLogManager().info("Saving of PlayerData (Player UUID: %s, Player name: %s, Profile: %s) has been skipped, because PlayerData didn't even finish loading yet.",
                 questPlayer.getUniqueId().toString(),
-                questPlayer.getPlayer().getName(),
+                player.getName(),
                 questPlayer.getProfile()
         );
         return;
@@ -213,11 +213,17 @@ public class QuestPlayerManager {
     return foundQuestPlayer;
   }
 
-  private String createQuestPlayer(final UUID uuid, final String profile, final boolean setAsCurrentProfile) {
+  public String createQuestPlayer(final UUID uuid, final String profile, final boolean setAsCurrentProfile, final boolean doNotSetFinishedLoading) {
     QuestPlayer questPlayer = getActiveQuestPlayer(uuid);
 
     if (questPlayer == null || !questPlayer.getProfile().equalsIgnoreCase(profile)) {
       questPlayer = new QuestPlayer(main, uuid, profile);
+
+      if(!doNotSetFinishedLoading){
+        questPlayer.setFinishedLoadingGeneralData(true);
+        questPlayer.setFinishedLoadingTags(true);
+        questPlayer.setCurrentlyLoading(false);
+      }
 
 
 
@@ -372,7 +378,7 @@ public class QuestPlayerManager {
             String currentProfile = "default";
             while (currentQuestPlayerProfile.next()) {
               currentProfile = currentQuestPlayerProfile.getString("CurrentProfile");
-              createQuestPlayer(uuid, profile, currentProfile == null || profile.equals(currentProfile) || currentProfile.isBlank());
+              createQuestPlayer(uuid, profile, currentProfile == null || profile.equals(currentProfile) || currentProfile.isBlank(), true);
               final QuestPlayer questPlayer = getQuestPlayer(uuid, profile);
 
               final long questPoints = questPlayerDataResult.getLong("QuestPoints");

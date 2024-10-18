@@ -65,7 +65,7 @@ chat:
     changed-successfully: '<success>你成功将个人资料由 %OLDPROFILENAME% 切换到了 <highlight>%NEWPROFILENAME%</highlight>!'
     create-already-exists: '<error>一个名为 <highlight>%NEWPROFILENAME%</highlight> 的个人资料已经存在了.'
     create-invalid-characters: '<error>个人资料名称包含无效字符.'
-    created-successfully: '<success>你成功创建了个人资料 <highlight>%NEWPROFILENAME%</highlight>! 想要切换个人资料, 使用<highlight2>/nq profile change %NEWPROFILENAME%</highlight2>'
+    created-successfully: '<success>你成功创建了个人资料 <highlight>%NEWPROFILENAME%</highlight>! 想要切换个人资料, 使用<highlight2>/nq profiles change %NEWPROFILENAME%</highlight2>'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>

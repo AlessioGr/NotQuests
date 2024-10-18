@@ -202,7 +202,8 @@ public class BetonQuestFireInlineEventAction extends Action {
 
       Instruction instructionObject =
           new Instruction(
-              Config.getPackages().values().stream().findFirst().get(),
+                  BetonQuest.getInstance().getLoggerFactory().create(Instruction.class),
+                  Config.getPackages().values().stream().findFirst().get(),
               null,
               instruction); // TODO: 1.19 check
 

@@ -54,7 +54,6 @@ public class IntegrationsManager {
   private boolean townyEnabled = false;
   private boolean jobsRebornEnabled = false;
   private boolean projectKorraEnabled = false;
-  private boolean ultimateClansEnabled = false;
   private boolean luckpermsEnabled = false;
   private boolean worldEditEnabled = false;
   private boolean eliteMobsEnabled = false;
@@ -78,7 +77,6 @@ public class IntegrationsManager {
   private SlimefunManager slimefunManager;
   private LuckpermsManager luckpermsManager;
   private ProjectKorraManager projectKorraManager;
-  private UltimateClansManager ultimateClansManager;
   private EcoBossesManager ecoBossesManager;
   private FloodgateManager floodgateManager;
 
@@ -289,15 +287,7 @@ public class IntegrationsManager {
                   return true;
                 }));
 
-    integrations.add(
-        new Integration(main, "UltimateClans")
-            .setEnableCondition(() -> main.getConfiguration().isIntegrationUltimateClansEnabled())
-            .setRunWhenEnabled(
-                () -> {
-                  ultimateClansEnabled = true;
-                  ultimateClansManager = new UltimateClansManager(main);
-                  return true;
-                }));
+
 
     integrations.add(
         new Integration(main, "Towny")
@@ -523,9 +513,7 @@ public class IntegrationsManager {
     return luckpermsEnabled;
   }
 
-  public final boolean isUltimateClansEnabled() {
-    return ultimateClansEnabled;
-  }
+
 
   public final boolean isTownyEnabled() {
     return townyEnabled;
@@ -591,9 +579,6 @@ public class IntegrationsManager {
     return floodgateManager;
   }
 
-  public final UltimateClansManager getUltimateClansManager() {
-    return ultimateClansManager;
-  }
 
   public final VaultManager getVaultManager() {
     return vaultManager;
