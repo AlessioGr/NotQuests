@@ -160,7 +160,7 @@ tasks {
         dependsOn(shadowJar)
     }
     shadowJar {
-        minimize()
+        //minimize()
         archiveClassifier.set("")
 
         //relocate("rocks.gravili.notquests.spigot", "$shadowPath.spigot")

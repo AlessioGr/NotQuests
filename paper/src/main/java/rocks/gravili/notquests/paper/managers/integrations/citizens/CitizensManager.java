@@ -259,12 +259,12 @@ public class CitizensManager {
         npcToEscort.spawn(spawnLocation);
       }
 
-      if (followerTrait.getFollowing() == null
-          || !followerTrait.getFollowing().equals(player)) {
+      if (followerTrait.getFollowingPlayer() == null
+          || !followerTrait.getFollowingPlayer().equals(player)) {
         if (!Bukkit.isPrimaryThread()) {
-          Bukkit.getScheduler().runTask(main.getMain(), () -> followerTrait.follow(player));
+          Bukkit.getScheduler().runTask(main.getMain(), () -> followerTrait.toggle(player, false));
         } else {
-          followerTrait.follow(player);
+          followerTrait.toggle(player, false);
         }
       }
       final String escortNpcName =
