@@ -28,7 +28,7 @@ icons:
 
 items:
   confirm:
-    displayname: gui.abort-quest-confirm..button.confirmabort.name
+    displayname: gui.abort-quest-confirm.button.confirmabort.name
     lore: gui.abort-quest-confirm.button.confirmabort.lore
     material: GREEN_CONCRETE
 

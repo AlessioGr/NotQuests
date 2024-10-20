@@ -35,7 +35,8 @@ icons:
 
 items:
   categories:
-    displayname: gui.main-take.button.quests.name
+    displayname: gui.main-take.button.categories.name
+    lore: gui.main-take.button.categories.lore
     material: "%CATEGORY_ITEM_MATERIAL%"
 
   emptyspacefiller:

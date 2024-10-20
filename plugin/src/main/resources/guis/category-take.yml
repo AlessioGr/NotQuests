@@ -45,7 +45,7 @@ icons:
 items:
   return:
     material: BARRIER
-    displayname: gui.category-take.button.return
+    displayname: gui.category-take.button.return.name
     
   quests:
     displayname: gui.category-take.button.quests.name

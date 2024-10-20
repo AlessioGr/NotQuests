@@ -29,7 +29,7 @@ icons:
       - decline
     properties:
       actions:
-        - OpenGui npc-available-quests --npc %NPCID%
+        - CloseInventory --player %player_name%
 
 
 items:

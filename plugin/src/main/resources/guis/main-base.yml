@@ -28,7 +28,7 @@ icons:
       - tab-one-inactive
     properties:
       tabindex: 0
-      tabtitle: gui.main-base.tab1.title
+      tabtitle: gui.main-active.title
   2:
     type: TAB
     items:
@@ -36,7 +36,7 @@ icons:
       - tab-two-inactive
     properties:
       tabindex: 1
-      tabtitle: gui.main-base.tab3.title
+      tabtitle: gui.main-take.title
   W:
     type: BLANK
     items:

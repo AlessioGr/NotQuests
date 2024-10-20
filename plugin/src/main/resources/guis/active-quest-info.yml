@@ -23,7 +23,7 @@ icons:
     properties:
       specialicontype: PLAYER_ACTIVE_QUEST
       actions:
-        - OpenGui abort-quest --targetplayer %player_name% --quest %QUESTID%
+        - OpenGui active-quest-abort-confirm --targetplayer %player_name% --quest %QUESTID%
   B:
     type: ACTION
     items:
