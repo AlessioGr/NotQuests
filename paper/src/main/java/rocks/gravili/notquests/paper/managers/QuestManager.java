@@ -38,7 +38,9 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.gui.GuiContext;
 import rocks.gravili.notquests.paper.managers.data.Category;
+import rocks.gravili.notquests.paper.managers.npc.ArmorstandNPC;
 import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.*;
 import rocks.gravili.notquests.paper.structs.actions.Action;
@@ -788,76 +790,14 @@ public class QuestManager {
 
         if (main.getConfiguration().isQuestPreviewUseGUI()) {
 
-            main.getGuiManager().showTakeQuestsGUI(questPlayer, questsAttachedToNPC);
-            /*String[] guiSetup = {
-                    "xxxxxxxxx",
-                    "xgggggggx",
-                    "xgggggggx",
-                    "xgggggggx",
-                    "xgggggggx",
-                    "pxxxxxxxn"
-            };
-            InventoryGui gui = new InventoryGui(main.getMain(), player, main.getUtilManager().miniMessageToLegacyWithSpigotRGB(main.getLanguageManager().getString("gui.availableQuests.title", player)), guiSetup);
-            gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
+            var npcGuiName = main.getConfiguration().getNpcGuiName();
 
-            int count = 0;
-            GuiElementGroup group = new GuiElementGroup('g');
+            var guiContext = new GuiContext();
+            guiContext.setPlayer(player);
+            guiContext.setArmorStand(armorStand);
 
-            for (final Quest quest : questsAttachedToNPC) {
-                final ItemStack materialToUse = quest.getTakeItem();
+            main.getGuiService().showGui(npcGuiName, player, guiContext);
 
-                String displayName = quest.getQuestFinalName();
-
-                displayName = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.questNamePrefix", player, quest) + displayName;
-                QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer((player.getUniqueId()));
-
-                if (questPlayer != null && questPlayer.hasAcceptedQuest(quest)) {
-                    displayName += main.getLanguageManager().getString("gui.availableQuests.button.questPreview.acceptedSuffix", player, quest);
-                }
-                String description = "";
-                if (!quest.getQuestDescription().isBlank()) {
-                    description = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.questDescriptionPrefix", player, quest) + quest.getQuestDescription(main.getConfiguration().guiQuestDescriptionMaxLineLength);
-                }
-                count++;
-
-
-                group.addElement(new StaticGuiElement('e',
-                        materialToUse,
-                        count, // Display a number as the item count
-                        click -> {
-                            player.chat("/notquests preview " + quest.getIdentifier() );
-                            return true; // returning true will cancel the click event and stop taking the item
-
-                        },
-                        main.getUtilManager().miniMessageToLegacyWithSpigotRGB(displayName),
-                        main.getUtilManager().miniMessageToLegacyWithSpigotRGB(description),
-                        main.getUtilManager().miniMessageToLegacyWithSpigotRGB(main.getLanguageManager().getString("gui.availableQuests.button.questPreview.bottomText", player, questPlayer, quest))
-                ));
-
-            }
-
-
-            gui.addElement(group);
-
-            // Previous page
-            gui.addElement(new GuiPageElement('p', new ItemStack(Material.SPECTRAL_ARROW), GuiPageElement.PageAction.PREVIOUS, "Go to previous page (%prevpage%)"));
-
-            // Next page
-            gui.addElement(new GuiPageElement('n', new ItemStack(Material.ARROW), GuiPageElement.PageAction.NEXT, "Go to next page (%nextpage%)"));
-
-            gui.addElement(new StaticGuiElement('x',
-                    new ItemStack(Material.BLACK_STAINED_GLASS_PANE),
-                    0, // Display a number as the item count
-                    click -> {
-
-                        return true; // returning true will cancel the click event and stop taking the item
-
-                    },
-                    " "
-            ));
-
-
-            gui.show(player);*/
         } else {
             main.getLogManager().info("All quest count: <highlight>" + quests.size() + "</highlight>");
 
@@ -907,7 +847,14 @@ public class QuestManager {
 
         final Player player = questPlayer.getPlayer();
         if (main.getConfiguration().isQuestPreviewUseGUI()) {
-            main.getGuiManager().showTakeQuestsGUI(questPlayer, questsAttachedToNPC);
+
+            var npcGuiName = main.getConfiguration().getNpcGuiName();
+
+            var guiContext = new GuiContext();
+            guiContext.setPlayer(player);
+            guiContext.setNqnpc(npc);
+
+            main.getGuiService().showGui(npcGuiName, player, guiContext);
         } else {
             main.getLogManager().info("All quest count: <highlight>" + quests.size() + "</highlight>");
 

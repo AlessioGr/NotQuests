@@ -1,0 +1,56 @@
+title: gui.main-take.title
+type: PAGED_ITEMS
+structure:
+  - "X X X X X X"
+  - "X X X X X X"
+  - "X X X X X X"
+  - "X X X X X X"
+  - "F P F F N F"
+icons:
+  X:
+    type: ACTION
+    items:
+      - categories
+    properties:
+      specialicontype: CATEGORY
+      actions:
+        - OpenGui category-take --targetplayer %player_name% --category %CATEGORYID%
+
+  Y:
+    type: BLANK
+    items:
+      - emptyspacefiller
+  F:
+    type: BLANK
+    items:
+      - filler
+  P:
+    type: BACK
+    items:
+      - back
+  N:
+    type: FORWARD
+    items:
+      - forward
+
+items:
+  categories:
+    displayname: gui.main-take.button.categories.name
+    lore: gui.main-take.button.categories.lore
+    material: "%CATEGORY_ITEM_MATERIAL%"
+
+  emptyspacefiller:
+    material: BLACK_STAINED_GLASS_PANE
+    displayname: EMPTY
+
+  filler:
+    material: GRAY_STAINED_GLASS_PANE
+    displayname: EMPTY
+
+  back:
+    material: PAPER
+    displayname: gui.main-take.button.back.name
+
+  forward:
+    material: PAPER
+    displayname: gui.main-take.button.forward.name

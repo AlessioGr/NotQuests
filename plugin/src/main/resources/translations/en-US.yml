@@ -84,7 +84,7 @@ chat:
     successfully-completed: |2
 
       <CENTER><success>[Objective Completed]
-      <CENTER><highlight><bold>%OBJECTIVENAME%</bold> <RESET><main>(%QUESTNAME%)
+      <CENTER><highlight><bold>%OBJECTIVENAME%</bold> <!i><main>(%QUESTNAME%)
       <EMPTY>
     successfully-completed-rewards-prefix: '    <highlight>Rewards:'
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
@@ -192,191 +192,105 @@ placeholders:
     days: '%DAYS% days'
     no-cooldown: ''
 gui:
-  main:
-    title: '                <highlight2>Quests'
-    backgroundFill:
-      material: 'BLACK_STAINED_GLASS_PANE'
-    background:
-      '1':
-        minX: 0
-        maxX: 8
-        minY: 0
-        maxY: 0
-      '2':
-        minX: 0
-        maxX: 0
-        minY: 0
-        maxY: 5
-      '3':
-        minX: 1
-        maxX: 1
-        minY: 0
-        maxY: 5
-      '4':
-        minX: 2
-        maxX: 2
-        minY: 0
-        maxY: 5
+  abort-quest-confirm:
+    title: "<!i><red>Abort Quest <dark_gray>- <dark_red>Are you sure?"
+    button:
+      cancelabort:
+        name: "<!i><red>Click to cancel"
+        lore:
+          - "<!i><gray>Cancels the abortion of the quest "
+      confirmabort:
+        name: "<!i><dark_red>Click to abort quest"
+        lore:
+          - "<!i><gray>Aborts the quest "
+          - "<!i><dark_red>All progress will be lost!"
+  active-quest-info:
+    title: "<main>Questinfo <gray>- <green>%QUESTNAME%"
+    button:
+      infobook:
+        name: "<!i><green>%QUESTNAME%"
+        lore:
+          - "<!i><gray>%QUESTDESCRIPTION%"
+      abort:
+        name: "<!i><red>Abort quest"
+        lore:
+          - "<!i><red>Click to abort quest"
+      back:
+        name: "<!i><red>Back to previous page"
+  category-take:
+    title: "<main>Take new quest"
+    button:
+      return:
+        name: "<!i><red>Back"
+      quests:
+        name: "<!i><!i><green>%QUESTNAME%"
+        lore:
+          - "<!i><gray>%QUESTDESCRIPTION%"
+      back:
+        name: "<!i><gray>Previous page"
+      forward:
+        name: "<!i><gray>Next page"
+  main-base:
+    title: "<main>Questmenu"
     button:
       questpoints:
-        name: "<highlight>Quest Points"
+        name: "<!i><main>Questpoints"
         lore:
-          - "<main>Current quest points: <highlight2>%QUESTPOINTS%"
-        x: 8
-        y: 0
-      takequest:
-        name: "<positive>Take a Quest"
+          - "<!i><gray>Your questpoints: <yellow>%QUESTPOINTS%"
+      tab1:
+        name: "<!i><main>Active quests"
         lore:
-          - "<unimportant>Start a new Quest!"
-          - ""
-          - "<veryUnimportant>Some Quests cannot be"
-          - "<veryUnimportant>started like this."
-        x: 0
-        y: 1
-      abortquest:
-        name: "<negative>Abort a Quest"
+          - "<!i><gray>See your active quests"
+      tab2:
+        name: "<!i><main>Take a new quest"
         lore:
-          - ""
-          - "<veryUnimportant>Aborting a Quest may"
-          - "<veryUnimportant>lead to punishments."
-        x: 0
-        y: 2
-      activequests:
-        name: "<highlight>Active Quests"
-        lore:
-          - ""
-          - "<veryUnimportant>Shows all of your"
-          - "<veryUnimportant>active Quests."
-        x: 0
-        y: 3
-  activeQuests:
-    title: '             <highlight2>Active Quests'
+          - "<!i><gray>See available quests"
+  main-active:
+    title: "<main>Questmenu <gray>- <highlight>Active quests"
     button:
-      activeQuestButton:
-        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
+      quests:
+        name: "<!i><green>%QUESTNAME%"
         lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<main>Click to see details!"
-  reward-hidden-text: . <unimportant>[HIDDEN]
-  availableQuests:
-    title: '         <highlight2>Available Quests'
+          - "<!i><gray>%QUESTDESCRIPTION%"
+      back:
+        name: "<!i><gray>Previous page"
+      forward:
+        name: "<!i><gray>Next page"
+  main-take:
+    title: "<main>Questmenu <gray>- <highlight>Take a new quest"
     button:
-      questPreview:
-        name-if-not-accepted: "<highlight>%QUESTNAME%"
-        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
+      categories:
+        name: "<!i><yellow>%CATEGORYNAME%"
         lore:
-          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-          - "<main>Click to open Quest!"
-  takeQuestChoose:
-    title: <highlight2>Which Quest do you want to take?
-    size:
-      minX: 3
-      minY: 1
-      maxX: 8
-      maxY: 5
+          - "<!i><gray>Click to view available"
+          - "<!i><gray>quests in category"
+      back:
+        name: "<!i><gray>Previous page"
+      forward:
+        name: "<!i><gray>Next page"
+  npc-available-quests:
+    title: "<!i><main>Available quests"
     button:
-      questPreview:
-        name-if-not-accepted: "<highlight>%QUESTNAME%"
-        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
+      quest:
+        name: "<!i><green>%QUESTNAME%"
         lore:
-          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-          - "<main>Click to preview Quest!"
-  abortQuestChoose:
-    title: '  <highlight2>Active Quests you can abort'
+          - "<!i><gray>%QUESTDESCRIPTION%"
+      back:
+        name: "<!i><gray>Previous page"
+      forward:
+        name: "<!i><gray>Next page"
+  quest-preview:
+    title: "<main>Quest preview"
     button:
-      abortQuestPreview:
-        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
+      info:
+        name: "<!i><green>%QUESTNAME%"
         lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Click to abort Quest!"
-  abortQuest:
-    title: '         <negative>Abort Confirmation'
-    button:
-      confirmAbort:
-        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
-        lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Click to abort the quest <highlight>%QUESTNAME%</highlight>!"
-        x: 3
-        y: 1
-      cancelAbort:
-        name: "<positive>Click to NOT abort this quest"
-        lore:
-          - "<positive>and cancel this action"
-        x: 5
-        y: 1
-  previewQuest:
-    title: <highlight2>Quest Preview
-    button:
-      description:
-        name: "<highlight>Description"
-        lore:
-          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-        lore-if-empty:
-          - "<veryUnimportant>???"
-        x: 2
-        y: 0
-      rewards:
-        name: "<positive>Rewards"
-        lore:
-          - "<WHITE>%QUESTREWARDS%"
-        lore-if-empty:
-          - "<veryUnimportant>None or hidden"
-        x: 4
-        y: 0
-      requirements:
-        name: "<negative>Requirements"
-        lore:
-          - "<WHITE>%QUESTREQUIREMENTS%"
-        lore-if-empty:
-          - "<veryUnimportant>-"
-        x: 6
-        y: 0
-      confirmTake:
-        name: "<highlight>%QUESTNAME%"
-        lore:
-          - "<positive>Click to take the quest <highlight>%QUESTNAME%"
-        x: 3
-        y: 2
-      cancelTake:
-        name: "<negative>Click to NOT take this quest"
-        lore:
-          - "<negative>and cancel this action"
-        x: 5
-        y: 2
-  progress:
-    title: <highlight2>Details for Quest
-    button:
-      unlockedObjective:
-        name: "<highlight2>%ACTIVEOBJECTIVEID%. <highlight>%OBJECTIVENAME%"
-        lore:
-          - "<main><BOLD>ACTIVE</BOLD>"
-          - "<veryUnimportant>%WRAPPEDOBJECTIVEDESCRIPTION%"
-          - "<unimportant>%OBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
-        lore-if-description-empty:
-          - "<main><BOLD>ACTIVE</BOLD>"
-          - "<veryUnimportant>No Description"
-          - "<unimportant>%OBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
-      lockedObjective:
-        name: "<highlight2>%ACTIVEOBJECTIVEID%. <unimportant><BOLD>[HIDDEN]"
-        lore:
-          - "<warn>This objective has not yet"
-          - "<warn>been unlocked!"
-      completedObjective:
-        name: "<highlight2><strikethrough>%ACTIVEOBJECTIVEID%. <positive><strikethrough>%OBJECTIVENAME%"
-        lore:
-          - "<positive><BOLD>COMPLETED</BOLD>"
-          - "<veryUnimportant><strikethrough>%WRAPPEDOBJECTIVEDESCRIPTION%"
-          - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
-        lore-if-description-empty:
-          - "<positive><BOLD>COMPLETED</BOLD>"
-          - "<veryUnimportant><strikethrough>No Description"
-          - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
+          - "<!i><gray>%QUESTDESCRIPTION%"
+      accept:
+        name: "<!i><green>Accept quest"
+      decline:
+        name: "<!i><red>Decline quest"
+
+
+
+

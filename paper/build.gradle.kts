@@ -155,30 +155,36 @@ repositories {
         }
     }
 
+    maven("https://repo.xenondevs.xyz/releases")
+    maven("https://nexus.betonquest.org/repository/betonquest/")
+    maven("https://maven.citizensnpcs.co/repo")
+    maven("https://repo.magmaguy.com/releases")
     //mavenLocal()
 
 }
 
 dependencies {
-    implementation(project(path= ":common", configuration= "shadow"))
+    implementation(project(path = ":common", configuration = "shadow"))
     paperweight.paperDevBundle("1.21.1-R0.1-SNAPSHOT")
     //compileOnly("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT!!")
     //implementation("de.themoep:inventorygui:1.5-SNAPSHOT")
 
-    //compileOnly("net.citizensnpcs:citizens-main:2.0.30-SNAPSHOT")
-    compileOnly(files("libs/citizens-2.0.34-b3410.jar"))
+    compileOnly("net.citizensnpcs:citizens-main:2.0.30-SNAPSHOT") {
+        exclude(group = "*", module = "*")
+    }
 
     compileOnly("me.clip:placeholderapi:2.11.5")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
 
 
     compileOnly("io.lumine:Mythic-Dist:5.3.0-SNAPSHOT")
+    compileOnly("com.magmaguy:EliteMobs:9.1.9")
     compileOnly(files("libs/EliteMobs-8.7.11.jar"))
-    compileOnly(files("libs/ProjectKorra-1.11.2.jar"))
+    compileOnly(files("libs/ProjectKorra-1.11.3.jar"))
     //compileOnly(files("libs/UltimateJobs-0.2.0-SNAPSHOT.jar"))
 
 
-    compileOnly(files("libs/betonquest-2.0.1.jar"))
+    compileOnly(files("libs/BetonQuest.jar"));
 
     compileOnly("com.sk89q.worldedit:worldedit-core:7.3.0-SNAPSHOT")
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.3.0-SNAPSHOT")
@@ -193,8 +199,6 @@ dependencies {
     compileOnly("com.github.Zrips:Jobs:v4.17.2")
 
     compileOnly("org.geysermc.floodgate:api:2.2.2-SNAPSHOT")
-
-
 
 
     //Shaded
@@ -213,7 +217,11 @@ dependencies {
     }
     //Else it errors:
     implementation("io.leangen.geantyref:geantyref:1.3.13")
-    //Interfaces
+
+    //Interfaces + InvUI
+
+    implementation("xyz.xenondevs.invui:invui:1.38")
+
     implementation("org.incendo.interfaces:interfaces-core:1.0.0-SNAPSHOT")
 
     implementation("org.incendo.interfaces:interfaces-paper:1.0.0-SNAPSHOT") {
@@ -243,7 +251,7 @@ dependencies {
     compileOnly(files("libs/EcoBosses-v8.78.0.jar"))
     compileOnly("com.willfp:eco:6.38.3")
 
-    compileOnly(files("libs/znpcs-4.6.jar"))
+    compileOnly(files("libs/znpcs-4.8.jar"))
 
 
     implementation("com.github.Redempt:Crunch:2.0.3")
@@ -267,7 +275,7 @@ tasks {
 
     shadowJar {
 
-        minimize()
+        //minimize()
 
         //exclude('com.mojang:brigadier')
 
@@ -288,6 +296,7 @@ tasks {
         //relocate('net.kyori.adventure.platform.bukkit', path.concat('.kyori.platform-bukkit'))
         relocate("net.kyori.adventure.text.serializer.bungeecord", "$shadowPath.kyori.bungeecord")
 
+        relocate("xyz.xenondevs.invui", "$shadowPath.invui")
 
         relocate("org.incendo.interfaces", "$shadowPath.interfaces")
 
@@ -305,6 +314,7 @@ tasks {
         dependencies {
             //include(dependency('org.apache.commons:')
             include(dependency("commons-io:commons-io:"))
+            include(dependency("xyz.xenondevs.invui:"))
 
             //include(dependency('io.papermc:paperlib')
             //include(dependency("de.themoep:inventorygui:1.5-SNAPSHOT"))
@@ -351,8 +361,6 @@ tasks {
     //}
 
 
-
-
     /*shadowJar {
         dependsOn(reobfJar)
     }*/
@@ -366,9 +374,11 @@ tasks {
     javadoc {
         options.encoding = Charsets.UTF_8.name()
     }
+
     processResources {
         filteringCharset = Charsets.UTF_8.name()
     }
+
     runServer {
         // Configure the Minecraft version for our task.
         // This is the only required configuration besides applying the plugin.

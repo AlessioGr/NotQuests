@@ -929,6 +929,20 @@ public class DataManager {
                 false
         ));
 
+        configuration.setNpcGuiName(
+                getGeneralConfigString(
+                        "gui.npc-gui-name",
+                        "npc-available-quests"
+                )
+        );
+
+        configuration.setMainGuiName(
+                getGeneralConfigString(
+                        "gui.main-gui-name",
+                        "main-base"
+                )
+        );
+
         configuration.setQuestPreviewUseGUI(getGeneralConfigBoolean(
                 "gui.questpreview.enabled",
                 true,

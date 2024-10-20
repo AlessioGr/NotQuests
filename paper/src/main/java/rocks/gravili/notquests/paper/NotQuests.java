@@ -35,6 +35,7 @@ import rocks.gravili.notquests.paper.events.InventoryEvents;
 import rocks.gravili.notquests.paper.events.QuestEvents;
 import rocks.gravili.notquests.paper.events.TriggerEvents;
 import rocks.gravili.notquests.paper.events.notquests.NotQuestsFullyLoadedEvent;
+import rocks.gravili.notquests.paper.gui.GuiService;
 import rocks.gravili.notquests.paper.managers.*;
 import rocks.gravili.notquests.paper.managers.integrations.IntegrationsManager;
 import rocks.gravili.notquests.paper.managers.integrations.bstats.Metrics;
@@ -84,6 +85,7 @@ public class NotQuests extends NotQuestsMainAbstract<Component, CommandSender> {
     private ItemsManager itemsManager;
 
     //Registering Managers
+    private GuiService guiService;
     private ObjectiveManager objectiveManager;
     private ConditionsManager conditionsManager;
     private ActionManager actionManager;
@@ -180,7 +182,7 @@ public class NotQuests extends NotQuestsMainAbstract<Component, CommandSender> {
 
         updateManager = new UpdateManager(this);
 
-        guiManager = new GUIManager(this);
+        reloadGuis();
 
         /*
          * Tell the Data Manager: Hey, NPCs have not been loaded yet. If this is set to false, the plugin will
@@ -212,6 +214,8 @@ public class NotQuests extends NotQuestsMainAbstract<Component, CommandSender> {
         conditionsManager = new ConditionsManager(this);
         actionManager = new ActionManager(this);
         triggerManager = new TriggerManager(this);
+
+        guiManager = new GUIManager(this);
 
         variablesManager.alreadyFullRegisteredVariables.addAll(variablesManager.getVariableIdentifiers());
 
@@ -280,6 +284,17 @@ public class NotQuests extends NotQuestsMainAbstract<Component, CommandSender> {
         }
         getLogManager().info("Initial loading has completed!");
 
+    }
+
+
+    /**
+     * Loads all guis located in the gui folder
+     * Use this for refreshing guis after making changes in the gui files
+     */
+    public void reloadGuis() {
+        guiService = new GuiService(this);
+        guiService.saveAllDefaultGuis();
+        guiService.loadAllGuis();
     }
 
     public void setupBStats() {
@@ -564,4 +579,7 @@ public class NotQuests extends NotQuestsMainAbstract<Component, CommandSender> {
         return npcManager;
     }
 
+    public GuiService getGuiService() {
+        return guiService;
+    }
 }

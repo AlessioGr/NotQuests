@@ -160,7 +160,7 @@ tasks {
         dependsOn(shadowJar)
     }
     shadowJar {
-        minimize()
+        //minimize()
         archiveClassifier.set("")
 
         //relocate("rocks.gravili.notquests.spigot", "$shadowPath.spigot")
@@ -195,20 +195,17 @@ tasks {
         // Your plugin's jar (or shadowJar if present) will be used automatically.
         minecraftVersion("1.21.1")
     }
-}
 
-/*publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            groupId = "rocks.gravili.notquests"
-            artifactId = "NotQuests"
-            version = "4.0.0-dev"
-
-            from(components["java"])
+    register<Copy>("copyToServer") {
+        val path = System.getenv("PLUGIN_DIR")
+        if (path.toString().isEmpty()) {
+            println("No environment variable PLUGIN_DIR set")
+            return@register
         }
+        from(reobfJar)
+        destinationDir = File(path.toString())
     }
-}*/
-
+}
 
 
 

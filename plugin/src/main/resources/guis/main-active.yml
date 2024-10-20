@@ -1,0 +1,56 @@
+title: gui.main-active.title
+type: PAGED_ITEMS
+structure:
+  - "X X X X X X"
+  - "X X X X X X"
+  - "X X X X X X"
+  - "X X X X X X"
+  - "F P F F N F"
+icons:
+  X:
+    type: ACTION
+    items:
+      - quests
+    properties:
+      specialicontype: PLAYER_ACTIVE_QUEST
+      actions:
+        - OpenGui active-quest-info --targetplayer %player_name% --quest %QUESTID%
+
+  Y:
+    type: BLANK
+    items:
+      - emptyspacefiller
+  F:
+    type: BLANK
+    items:
+      - filler
+  P:
+    type: BACK
+    items:
+      - back
+  N:
+    type: FORWARD
+    items:
+      - forward
+
+items:
+  quests:
+    displayname: gui.main-active.button.quests.name
+    lore: gui.main-active.button.quests.lore
+    material: "%QUEST_ITEM_MATERIAL%"
+
+  emptyspacefiller:
+    material: BLACK_STAINED_GLASS_PANE
+    displayname: EMPTY
+
+  filler:
+    material: GRAY_STAINED_GLASS_PANE
+    displayname: EMPTY
+
+  back:
+    material: PAPER
+    displayname: gui.main-active.button.back.name
+
+  forward:
+    material: PAPER
+    displayname: gui.main-active.button.forward.name

@@ -1,0 +1,52 @@
+type: NORMAL
+title: gui.quest-preview.title
+structure:
+  - "F F F F F F F F F"
+  - "F I F F F F A D F"
+  - "F F F F F F F F F"
+
+icons:
+  F:
+    type: BLANK
+    items:
+      - filler
+  I:
+    type: BLANK
+    items:
+      - info
+  A:
+    type: ACTION
+    items:
+      - accept
+    properties:
+      actions:
+        - GiveQuest %QUESTID%
+        - CloseInventory --player %player_name%
+
+  D:
+    type: ACTION
+    items:
+      - decline
+    properties:
+      actions:
+        - CloseInventory --player %player_name%
+
+
+items:
+  filler:
+    material: GRAY_STAINED_GLASS_PANE
+    displayname: EMPTY
+
+  info:
+    material: BOOK
+    displayname: gui.quest-preview.button.info.name
+    lore: gui.quest-preview.button.info.lore
+
+  accept:
+    material: GREEN_CONCRETE
+    displayname: gui.quest-preview.button.accept.name
+
+  decline:
+    material: RED_CONCRETE
+    displayname: gui.quest-preview.button.decline.name
+
