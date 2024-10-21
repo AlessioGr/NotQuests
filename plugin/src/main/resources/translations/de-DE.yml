@@ -65,7 +65,7 @@ chat:
     changed-successfully: '<success>Du hast dein Profil erfolgreich von %OLDPROFILENAME% auf<highlight>%NEWPROFILENAME%</highlight> geändert!'
     create-already-exists: '<error>Es gibt schon ein Profil mit dem Namen <highlight>%NEWPROFILENAME%</highlight>.'
     create-invalid-characters: '<error>Der Profilname hat ungültige Zeichen.'
-    created-successfully: '<success>Du hast das Profil <highlight>%NEWPROFILENAME%</highlight> erfolgreich erstellt! Um auf das Profil zu wechseln, führe <highlight2>/nq profiles change %NEWPROFILENAME%</highlight2> aus'
+    created-successfully: '<success>Du hast das Profil <highlight>%NEWPROFILENAME%</highlight> erfolgreich erstellt! Um auf das Profil zu wechseln, führe <highlight2>/nq profile change %NEWPROFILENAME%</highlight2> aus'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>
@@ -108,7 +108,7 @@ chat:
         deliver-to-npc: '      <GRAY>Bringe es zu <WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>Der Empfänger-NPC ist derzeit nicht verfügbar!'
       enchant:
-        base: 'Enchant Items with %ENCHANTMENT%: <main>%ITEMTOENCHANTTYPE% %(%%ITEMTOENCHANTNAME%%(%'
+        base: 'Verzaubere Gegenstände mit %ENCHANTMENT%: <main>%ITEMTOENCHANTTYPE% %(%%ITEMTOENCHANTNAME%%(%'
       escortNPC:
         base: 'Eskortiere <main>%NPCNAME%</main> zu <main>%DESTINATIONNPCNAME%'
       fishItems:

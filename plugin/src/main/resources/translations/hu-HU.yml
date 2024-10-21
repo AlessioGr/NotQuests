@@ -1,11 +1,11 @@
 ---
 chat:
-  wrong-command-usage: <error>Érvénytelen parancs használat!
+  wrong-command-usage: <error>Hibás parancs használat!
   missing-permission: '<error>Nincs jogosultságod! Szükséges jogosultság: <highlight>%PERMISSION%'
-  too-many-arguments: <error>Túl sok argumentumot adtál meg!
+  too-many-arguments: <error>Túl sok részletet adtál meg!
   quest-successfully-accepted: |2
 
-    <CENTER><main>[Köldetés Elvállalva]
+    <CENTER><main>[Küldetés Elvállalva]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
   quest-description: '<main>Küldetés leírás: <unimportant>%QUESTDESCRIPTION%'
@@ -25,7 +25,7 @@ chat:
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
   quest-not-all-requirements-fulfilled: '<negative>Még nem teljesítettél minden követelményt amit a küldetés kér! Szükséges követelmény:'
-  action-not-all-conditions-fulfilled: '<negative>Még nem teljestettél minden feltételt amit az akció kér! Szükséges feltétel:'
+  action-not-all-conditions-fulfilled: '<negative>Még nem teljesítettél minden feltételt amit az akció kér! Szükséges feltétel:'
   missing-quest-description: <unimportant>Ennek a küldetésnek nincs leírása.
   objectives-label-after-quest-accepting: '<highlight>Feladatok:'
   questpoints:
@@ -49,7 +49,7 @@ chat:
   reached-max-completions-limit: "<red>Ezt a küldetést már túl sokszor teljestetted. Csak\n<highlight>%MAXCOMPLETIONS%</highlight> alkalommal teljesítheted de már\n<highlight>%COMPLETEDAMOUNT%</highlight> alkalommal teljesítetted."
   reached-max-active-quests-per-player-limit: '<red>Nem vállalhatsz el több mint <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> Küldetést.'
   quest-on-cooldown:
-    minute: '<red>Ez a küldetés újratöltődik! Várnod kell <highlight>1 percet</highlight> mielőtt újra elvállanád a küldetést.'
+    minute: '<red>Ez a küldetés újratöltődik! Várnod kell <highlight>1 percet</highlight> mielőtt újra elvállalnád a küldetést.'
     minutes: '<red>Ez a küldetés újratöltődik! Várnod kell <highlight>%MINUTES% percet</highlight> mielőtt újra elvállalnád a küldetést.'
     hour: '<red>Ez a küldetés újratöltődik! Várnod kell <highlight>1 órát</highlight> mielőtt újra elvállalnád a küldetést.'
     hours: '<red>Ez a küldetés újratöltődik! Várnod kell <highlight>%HOURS% órát</highlight> mielőtt újra elvállalnád a küldetést.'
@@ -65,7 +65,7 @@ chat:
     changed-successfully: "<success>Sikeresen átváltottál a(z) %OLDPROFILENAME% profilról\n<highlight>%NEWPROFILENAME%</highlight> profilra!"
     create-already-exists: '<error>A(z) <highlight>%NEWPROFILENAME%</highlight> profilnév már létezik.'
     create-invalid-characters: '<error>Ez a profilnév érvénytelen karaktereket tartalmaz.'
-    created-successfully: "<success>Sikeresen létrehoztad a(z) <highlight>%NEWPROFILENAME%</highlight> profilt! A\nváltáshoz használd a <highlight2>/nq profiles change %NEWPROFILENAME%</highlight2> parancsot"
+    created-successfully: '<success>Létrehoztad a következő profilt: <highlight>%NEWPROFILENAME%</highlight>! Váltáshoz használd a <highlight2>/nq profiles change %NEWPROFILENAME%</highlight2> parancsot!'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>
