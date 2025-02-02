@@ -208,7 +208,9 @@ dependencies {
     implementation("net.kyori:adventure-api:4.18.0") {}
 
     //CloudCommands
-    implementation("org.incendo:cloud-paper:2.0.0-beta.10")
+    implementation("org.incendo:cloud-paper:2.0.0-beta.10") {
+        exclude(group = "org.incendo.cloud", module = "cloud-bukkit")
+    }
     implementation("org.incendo:cloud-minecraft-extras:2.0.0-beta.10")
 
     //Else it errors:

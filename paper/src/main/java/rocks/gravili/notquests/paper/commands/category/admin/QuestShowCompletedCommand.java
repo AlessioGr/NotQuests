@@ -5,7 +5,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.CommandManager;
-import org.incendo.cloud.bukkit.data.SinglePlayerSelector;
 import org.incendo.cloud.description.Description;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.BaseCommand;
@@ -32,8 +31,7 @@ public class QuestShowCompletedCommand extends BaseCommand {
                 .required("player", playerParser(), Description.of("Player to display the completed quests of."))
                 .handler((context) -> {
                     context.sender().sendMessage(Component.empty());
-                    final SinglePlayerSelector singlePlayerSelector = context.get("player");
-                    final OfflinePlayer player = singlePlayerSelector.single().getPlayer();
+                    final OfflinePlayer player = context.get("player");
                     if (player != null) {
                         QuestPlayer questPlayer = notQuests.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
                         String onlineMessagePart = questPlayer != null ? "<green>(online)</green>" : "<red>(offline)</red>";

@@ -27,6 +27,11 @@ import org.incendo.cloud.description.Description;
 import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.category.admin.*;
+import rocks.gravili.notquests.paper.commands.category.admin.category.CategoryCreateCommand;
+import rocks.gravili.notquests.paper.commands.category.admin.category.CategoryEditCommand;
+import rocks.gravili.notquests.paper.commands.category.admin.category.CategoryListCommand;
+import rocks.gravili.notquests.paper.commands.category.admin.structs.ObjectiveTriggerCommand;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -76,6 +81,28 @@ public class AdminCommands {
         handleActions();
         handleQuestPoints();
 
+        new DebugCommand(notQuests, builder).apply(manager);
+        new EditorCommand(notQuests, builder).apply(manager);
+        new ListCommand(notQuests, builder).apply(manager);
+        new QuestCompleteCommand(notQuests, builder).apply(manager);
+        new QuestCreateCommand(notQuests, builder).apply(manager);
+        new QuestDeleteCommand(notQuests, builder).apply(manager);
+        new QuestFailCommand(notQuests, builder).apply(manager);
+        new QuestGiveCommand(notQuests, builder).apply(manager);
+        new QuestProgressCommand(notQuests, builder).apply(manager);
+        new QuestResetAndFailCommand(notQuests, builder).apply(manager);
+        new QuestResetAndRemoveCommand(notQuests, builder).apply(manager);
+        new QuestShowActiveCommand(notQuests, builder).apply(manager);
+        new QuestShowCompletedCommand(notQuests, builder).apply(manager);
+        new ReloadCommand(notQuests, builder).apply(manager);
+        new SaveCommand(notQuests, builder).apply(manager);
+        new VersionCommand(notQuests, builder).apply(manager);
+
+        new ObjectiveTriggerCommand(notQuests, builder).apply(manager);
+
+        new CategoryCreateCommand(notQuests, builder).apply(manager);
+        new CategoryEditCommand(notQuests, builder).apply(manager);
+        new CategoryListCommand(notQuests, builder).apply(manager);
     }
 
 

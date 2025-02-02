@@ -360,45 +360,39 @@ public class CommandManager {
 
         // brigadier
         try {
-            commandManager.registerBrigadier();
+            commandManager.registerLegacyPaperBrigadier();
             CloudBrigadierManager<CommandSender, ?> cloudBrigadierManager = commandManager.brigadierManager();
-            if (cloudBrigadierManager != null) {
-                cloudBrigadierManager.setNativeNumberSuggestions(false);
+            cloudBrigadierManager.setNativeNumberSuggestions(false);
 
-                cloudBrigadierManager.registerMapping(
-                        new TypeToken<StringVariableValueParser<CommandSender>>() {
-                        }, builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
+            cloudBrigadierManager.registerMapping(
+                    new TypeToken<StringVariableValueParser<CommandSender>>() {
+                    }, builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
 
-                // Greedy string to prevent false, red brigardier color when entering special symbols like a
-                // comma
-                cloudBrigadierManager.registerMapping(
-                        new TypeToken<NumberVariableValueParser<CommandSender>>() {
-                        },
-                        builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
-                cloudBrigadierManager.registerMapping(
-                        new TypeToken<BooleanVariableValueParser<CommandSender>>() {
-                        },
-                        builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
-                cloudBrigadierManager.registerMapping(
-                        new TypeToken<MultiActionsParser<CommandSender>>() {
-                        },
-                        builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
-                cloudBrigadierManager.registerMapping(
-                        new TypeToken<ItemStackSelectionParser<CommandSender>>() {
-                        },
-                        builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
+            // Greedy string to prevent false, red brigardier color when entering special symbols like a
+            // comma
+            cloudBrigadierManager.registerMapping(
+                    new TypeToken<NumberVariableValueParser<CommandSender>>() {
+                    },
+                    builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
+            cloudBrigadierManager.registerMapping(
+                    new TypeToken<BooleanVariableValueParser<CommandSender>>() {
+                    },
+                    builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
+            cloudBrigadierManager.registerMapping(
+                    new TypeToken<MultiActionsParser<CommandSender>>() {
+                    },
+                    builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
+            cloudBrigadierManager.registerMapping(
+                    new TypeToken<ItemStackSelectionParser<CommandSender>>() {
+                    },
+                    builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
 
-                cloudBrigadierManager.registerMapping(
-                        new TypeToken<NQNPCParser<CommandSender>>() {
-                        },
-                        builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
-            } else {
-                main.getLogManager()
-                        .warn("Failed to initialize Brigadier support. Brigadier manager is null.");
-            }
+            cloudBrigadierManager.registerMapping(
+                    new TypeToken<NQNPCParser<CommandSender>>() {
+                    },
+                    builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
         } catch (final Exception e) {
-            main.getLogManager()
-                    .warn("Failed to initialize Brigadier support: <highlight>" + e.getMessage());
+            main.getLogManager().warn("Failed to initialize Brigadier support: <highlight>" + e.getMessage());
         }
 
         commandPostProcessor = new CommandPostProcessor<>(main);
@@ -406,7 +400,7 @@ public class CommandManager {
     }
 
     public void preSetupUserCommands() {
-        minecraftUserHelp = MinecraftHelp.create("/nq help", commandManager,AudienceProvider.nativeAudience());
+        minecraftUserHelp = MinecraftHelp.create("/nq help", commandManager, AudienceProvider.nativeAudience());
 
         minecraftUserHelp.colors().primary().styleApply(Style.style(NotQuestColors.main).toBuilder());
         minecraftUserHelp.colors().highlight().styleApply(Style.style(NamedTextColor.WHITE).toBuilder());

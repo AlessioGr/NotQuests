@@ -315,10 +315,10 @@ public class UserCommands {
 
         manager.command(builder.literal("take")
                 .senderType(Player.class)
-                .required("quest-name", questParser(main, true), Description.of("Quest Name"))
+                .required("questName", questParser(main, true), Description.of("Quest Name"))
                 .commandDescription(Description.of("Starts a Quest."))
                 .handler((context) -> {
-                    final Quest quest = context.get("quest-name");
+                    final Quest quest = context.get("questName");
                     final Player player = context.sender();
                     final String result = main.getQuestPlayerManager().acceptQuest(player, quest, true, true);
 
@@ -457,11 +457,11 @@ public class UserCommands {
                 }));
 
         manager.command(builder.literal("preview").senderType(Player.class)
-                .required("Quest Name", questParser(main, true), Description.of("Quest Name")).commandDescription(Description.of("Previews a Quest"))
+                .required("questName", questParser(main, true), Description.of("Quest Name")).commandDescription(Description.of("Previews a Quest"))
                 .handler((context) -> {
                     final Player player = context.sender();
                     final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer((player.getUniqueId()));
-                    final Quest quest = context.get("Quest Name");
+                    final Quest quest = context.get("questName");
                     main.getGuiManager().showPreviewQuestGUI(questPlayer, quest);
                 }));
 
@@ -621,11 +621,11 @@ public class UserCommands {
 
         manager.command(builder.literal("preview")
                 .senderType(Player.class)
-                .required("Quest Name", questParser(main, true), Description.of("Quest Name"))
+                .required("questName", questParser(main, true), Description.of("Quest Name"))
                 .commandDescription(Description.of("Previews a Quest"))
                 .handler((context) -> {
                     final Player player = context.sender();
-                    final Quest quest = context.get("Quest Name");
+                    final Quest quest = context.get("questName");
                     main.getQuestManager().sendSingleQuestPreview(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), quest);
                 }));
     }

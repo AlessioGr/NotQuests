@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 
 import static org.incendo.cloud.parser.standard.StringParser.stringParser;
+import static rocks.gravili.notquests.paper.commands.arguments.CategoryParser.categoryParser;
 
 public class CategoryCreateCommand extends BaseCommand {
     public CategoryCreateCommand(NotQuests notQuests, Command.Builder<CommandSender> builder) {
@@ -21,9 +22,9 @@ public class CategoryCreateCommand extends BaseCommand {
 
     @Override
     public void apply(CommandManager<CommandSender> commandManager) {
-        commandManager.command(builder.commandDescription(Description.of("Creates a new category."))
-                .literal("create")
-                .required("category-name", stringParser(), Description.of("Name of your new category"), (context, input) -> {
+        builder = builder.literal("creater");
+
+        commandManager.command(builder.required("categoryName", categoryParser(notQuests), Description.of("Name of your new category"), (context, input) -> {
                             notQuests.getUtilManager().sendFancyCommandCompletion(context.sender(), input.input().split(" "), "[Name of your new category]", "");
 
                             final ArrayList<Suggestion> suggestions = new ArrayList<>();
@@ -34,7 +35,7 @@ public class CategoryCreateCommand extends BaseCommand {
                         }
                 )
                 .handler((context) -> {
-                    String fullNewCategoryIdentifier = context.get("Category Name");
+                    String fullNewCategoryIdentifier = context.get("categoryName");
                     fullNewCategoryIdentifier = fullNewCategoryIdentifier.replaceAll("[^0-9a-zA-Z-._]", "_");
 
                     if (notQuests.getDataManager().getCategory(fullNewCategoryIdentifier) != null) {
@@ -69,7 +70,6 @@ public class CategoryCreateCommand extends BaseCommand {
                         );
                         context.sender().sendMessage(notQuests.parse("<success>Category <highlight>" + fullNewCategoryIdentifier + "</highlight> has successfully been created!"));
                     }
-
                 }));
     }
 }

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 
 import static org.incendo.cloud.parser.standard.StringParser.stringParser;
+import static rocks.gravili.notquests.paper.commands.arguments.QuestParser.questParser;
 
 public class QuestDeleteCommand extends BaseCommand {
     public QuestDeleteCommand(NotQuests notQuests, Command.Builder<CommandSender> builder) {
@@ -22,7 +23,7 @@ public class QuestDeleteCommand extends BaseCommand {
     @Override
     public void apply(CommandManager<CommandSender> commandManager) {
         commandManager.command(builder.literal("delete", Description.of("Delete an existing Quest."))
-                .required("quest-name", stringParser(), Description.of("Quest Name"), (context, input) -> {
+                .required("questName", questParser(notQuests), Description.of("Quest Name"), (context, input) -> {
                     notQuests.getUtilManager().sendFancyCommandCompletion(context.sender(), input.input().split(" "), "[Name of the Quest you want to delete]", "");
 
                     ArrayList<Suggestion> completions = new ArrayList<>();
@@ -32,8 +33,6 @@ public class QuestDeleteCommand extends BaseCommand {
                     }
                     return CompletableFuture.completedFuture(completions);
                 })
-                .handler((context) -> {
-                    context.sender().sendMessage(notQuests.parse(notQuests.getQuestManager().deleteQuest(context.get("quest-name"))));
-                }));
+                .handler((context) -> context.sender().sendMessage(notQuests.parse(notQuests.getQuestManager().deleteQuest(context.get("questName"))))));
     }
 }
