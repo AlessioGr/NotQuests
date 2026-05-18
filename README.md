@@ -16,7 +16,7 @@ NotQuests is a flexible, open-source Quest plugin for Paper, featuring custom YA
 You can find the releases here: https://github.com/AlessioGr/NotQuests/releases. A MySQL database connection is recommended and can be specified in the general.yml. Otherwise, SQLite will be used.
 
 ## Requirements
-- Paper 26.1 (Minecraft 26.1.1)
+- Paper 26.1.2
 - Java 25
 
 ## Translations
