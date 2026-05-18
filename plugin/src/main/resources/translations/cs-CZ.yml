@@ -3,21 +3,30 @@ chat:
   wrong-command-usage: <error>Špatné užití příkazu!
   missing-permission: '<error>Na toto nemáš oprávnění! Potřebuješ: <highlight>%PERMISSION%'
   too-many-arguments: <error>Příliš mnoho argumentů!
-  quest-successfully-accepted: |2
+  quest-successfully-accepted: '
 
     <CENTER><main>[Úkol přijat]
+
     <CENTER><highlight><BOLD>%QUESTNAME%
+
     <EMPTY>
+
+    '
   quest-description: '<main>Popis úkolu: <unimportant>%QUESTDESCRIPTION%'
   quest-already-accepted: <error>Úkol jsi již přijal/a.
-  quest-failed: |2
-    <YELLOW>Quest <highlight>%QUESTNAME%<YELLOW> jsi </AQUA><RED><BOLD>NEDOKONČIL/A</BOLD></RED>!
+  quest-failed: '<YELLOW>Quest <highlight>%QUESTNAME%<YELLOW> jsi </AQUA><RED><BOLD>NEDOKONČIL/A</BOLD></RED>!
+
+    '
   quest-aborted: ''
-  quest-completed-and-rewards-given: |2
+  quest-completed-and-rewards-given: '
 
     <CENTER><positive>[Úkol Dokončen]
+
     <CENTER><highlight><BOLD>%QUESTNAME%
+
     <EMPTY>
+
+    '
   quest-completed-rewards-prefix: '    <highlight>Odměny:'
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
@@ -29,9 +38,9 @@ chat:
     query: <main>Aktuálně máš <highlight>%QUESTPOINTS%</highlight>quest bodů.
     none: <error>Vypadá to, že nemáš žádné quest body!
     notify-when-changed:
-      set: '<main>Tvoje body byly nastaveny na <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.'
-      add: '<highlight>+%QUESTPOINTSTOADD% <success>bodů úkolu!'
-      remove: '<highlight>-%QUESTPOINTSTOREMOVE% <negative>bodů úkolu!'
+      set: <main>Tvoje body byly nastaveny na <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.
+      add: <highlight>+%QUESTPOINTSTOADD% <success>bodů úkolu!
+      remove: <highlight>-%QUESTPOINTSTOREMOVE% <negative>bodů úkolu!
   no-quests-accepted: <error>Vypadá to, že nemáš žádné aktivní úkoly!
   quest-does-not-exist: <error>Úkol <highlight>%QUESTNAME%</highlight> neexistuje!
   quest-not-found-or-does-not-exist: <error>Úkol <highlight>%QUESTNAME%</highlight> nebyl nalezen, nebo není aktivní!
@@ -39,36 +48,36 @@ chat:
   take-disabled: <error>Přijímání nebo prohlížení výpravy <highlight>%QUESTNAME%</highlight> je zakázáno.
   abort-disabled: <error>Přijímání nebo prohlížení úkolu <highlight>%QUESTNAME%</highlight> je zakázáno.
   quest-not-active-error: '<error>Chyba: <highlight>%QUESTNAME%</highlight> není aktivní úkol!'
-  force-add-active-quest-accepted: '<success>Úspěšně přijal úkol (Vynuceno).'
+  force-add-active-quest-accepted: <success>Úspěšně přijal úkol (Vynuceno).
   add-active-quest-player-object-not-found: '<warn>Chyba: Hráč nenalezen. Prosím, nahlaste chybu vývojáři pluginu.'
-  reached-max-accepts-limit: '<red>Tento úkol jsi již přijal příliš mnohokrát. Můžeš ho přijmout pouze <highlight>%MAXACCEPTS%</highlight> krát, ty jsi jej přijal již <highlight>%ACCEPTEDAMOUNT%</highlight> krát.'
-  reached-max-fails-limit: '<red>Tento úkol jsi již selhal příliš mnohokrát. Můžeš ho selhat pouze <highlight>%MAXFAILS%</highlight> krát, ty jsi jej selhal již <highlight>%FAILEDAMOUNT%</highlight> krát.'
-  reached-max-completions-limit: '<red>Tento úkol jsi již dokončil příliš mnohokrát. Můžeš ho splnit pouze <highlight>%MAXCOMPLETIONS%</highlight> krát, ty jsi jej dokončil již <highlight>%COMPLETEDAMOUNT%</highlight> krát.'
-  reached-max-active-quests-per-player-limit: '<red>Nemůžeš přijmout více než <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> úkolů.'
+  reached-max-accepts-limit: <red>Tento úkol jsi již přijal příliš mnohokrát. Můžeš ho přijmout pouze <highlight>%MAXACCEPTS%</highlight> krát, ty jsi jej přijal již <highlight>%ACCEPTEDAMOUNT%</highlight> krát.
+  reached-max-fails-limit: <red>Tento úkol jsi již selhal příliš mnohokrát. Můžeš ho selhat pouze <highlight>%MAXFAILS%</highlight> krát, ty jsi jej selhal již <highlight>%FAILEDAMOUNT%</highlight> krát.
+  reached-max-completions-limit: <red>Tento úkol jsi již dokončil příliš mnohokrát. Můžeš ho splnit pouze <highlight>%MAXCOMPLETIONS%</highlight> krát, ty jsi jej dokončil již <highlight>%COMPLETEDAMOUNT%</highlight> krát.
+  reached-max-active-quests-per-player-limit: <red>Nemůžeš přijmout více než <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> úkolů.
   quest-on-cooldown:
-    minute: '<red>Tento úkol se restartuje! Musíš počkat další <highlight>1 minutu</highlight>, než jej budeš moci vzít znovu.'
-    minutes: '<red>Tento úkol se restartuje! Musíš počkat dalších <highlight>%MINUTES% minut</highlight>, než jej budeš moci vzít znovu.'
-    hour: '<red>Tento úkol se restartuje! Musíš počkat další<highlight> 1 hodinu</highlight>, než jej budeš moci vzít znovu.'
-    hours: '<red>Tento úkol se restartuje! Musíš počkat dalších <highlight>%HOURS% hodin</highlight>, než jej budeš moci vzít znovu.'
-    day: '<red>Tento úkol se restartuje! Musíš počkat další <highlight>1 den</highlight>, než jej budeš moci vzít znovu.'
-    days: '<red>Tento úkol se restartuje! Musíš počkat dalších<highlight>%DAYS% dnů</highlight>, než jej budeš moci vzít znovu.'
+    minute: <red>Tento úkol se restartuje! Musíš počkat další <highlight>1 minutu</highlight>, než jej budeš moci vzít znovu.
+    minutes: <red>Tento úkol se restartuje! Musíš počkat dalších <highlight>%MINUTES% minut</highlight>, než jej budeš moci vzít znovu.
+    hour: <red>Tento úkol se restartuje! Musíš počkat další<highlight> 1 hodinu</highlight>, než jej budeš moci vzít znovu.
+    hours: <red>Tento úkol se restartuje! Musíš počkat dalších <highlight>%HOURS% hodin</highlight>, než jej budeš moci vzít znovu.
+    day: <red>Tento úkol se restartuje! Musíš počkat další <highlight>1 den</highlight>, než jej budeš moci vzít znovu.
+    days: <red>Tento úkol se restartuje! Musíš počkat dalších<highlight>%DAYS% dnů</highlight>, než jej budeš moci vzít znovu.
   profiles:
     list-current: '<highlight>Aktuální profil: <main>%PROFILENAME% (%QUESTPOINTS% quest bodů)'
     list-other-heading: '<highlight>Jiné profily:'
     list-other-none: '  <main>Nemáš žádné profily.'
     list-other: '  <highlight>- <main>%PROFILENAME% (%QUESTPOINTS% quest bodů)'
-    change-same-profile: '<error>Tento profil již používáš!'
-    change-profile-doesnt-exist: '<error>Tento profil neexistuje.'
-    changed-successfully: '<success>Úspěšně sis změnil profil z %OLDPROFILENAME% na <highlight>%NEWPROFILENAME%</highlight>!'
-    create-already-exists: '<error>Profil s jménem <highlight>%NEWPROFILENAME%</highlight> již existuje.'
-    create-invalid-characters: '<error>Jméno profilu obsahuje nepovolené znaky.'
-    created-successfully: '<success>Úspěšně jsi vytvořil profil <highlight>%NEWPROFILENAME%</highlight>! Pro změnu profilu, použij <highlight2>/nq profiles change %NEWPROFILENAME%</highlight2>'
+    change-same-profile: <error>Tento profil již používáš!
+    change-profile-doesnt-exist: <error>Tento profil neexistuje.
+    changed-successfully: <success>Úspěšně sis změnil profil z %OLDPROFILENAME% na <highlight>%NEWPROFILENAME%</highlight>!
+    create-already-exists: <error>Profil s jménem <highlight>%NEWPROFILENAME%</highlight> již existuje.
+    create-invalid-characters: <error>Jméno profilu obsahuje nepovolené znaky.
+    created-successfully: <success>Úspěšně jsi vytvořil profil <highlight>%NEWPROFILENAME%</highlight>! Pro změnu profilu, použij <highlight2>/nq profiles change %NEWPROFILENAME%</highlight2>
   conversations:
-    choose-answer-prefix: |-
-      <EMPTY>
-      <main>Vyber svou odpověď:</main>
-    choose-answer-answer-hover-text: '<highlight>Klikni pro odpověď'
-    ended-previous-conversation: '<main>Ukončil jsi svoji předchozí konverzaci!'
+    choose-answer-prefix: '<EMPTY>
+
+      <main>Vyber svou odpověď:</main>'
+    choose-answer-answer-hover-text: <highlight>Klikni pro odpověď
+    ended-previous-conversation: <main>Ukončil jsi svoji předchozí konverzaci!
     speaker-line-format: '%SPEAKERCOLOR%[%SPEAKER%] <GRAY>%MESSAGE%'
     answer-option-line-format: ' <main>%OPTIONNUMBER%. <gray>%MESSAGE%'
   objectives:
@@ -78,11 +87,15 @@ chat:
     hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[HIDDEN]
     description: '    <veryUnimportant>└─<unimportant>Popis: <main>%OBJECTIVEDESCRIPTION%'
     progress: '    <veryUnimportant>└─<unimportant>Pokrok: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
-    successfully-completed: |2
+    successfully-completed: '
 
       <CENTER><success>[Úkol splněn]
+
       <CENTER><highlight><bold>%OBJECTIVENAME%</bold> <RESET><main>(%QUESTNAME%)
+
       <EMPTY>
+
+      '
     successfully-completed-rewards-prefix: '    <highlight>Odměny:'
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
     successfully-completed-rewards-suffix: <EMPTY>
@@ -107,7 +120,7 @@ chat:
       enchant:
         base: 'Enchantuj itemy enchantem %ENCHANTMENT%: <main>%ITEMTOENCHANTTYPE% %(%%ITEMTOENCHANTNAME%%(%'
       escortNPC:
-        base: 'Doprovoď <main>%NPCNAME%</main> k <main>%DESTINATIONNPCNAME%'
+        base: Doprovoď <main>%NPCNAME%</main> k <main>%DESTINATIONNPCNAME%
       fishItems:
         base: 'Vylov itemy: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
       killMobs:
@@ -119,55 +132,55 @@ chat:
       reachLocation:
         base: 'Dojdi na lokaci: <main>%LOCATIONNAME%'
       talkToNPC:
-        base: 'Promluv si s <main>%NAME%'
+        base: Promluv si s <main>%NAME%
         npc-not-available: '    <GRAY>NPC je právě nedostupné!'
       triggerCommand:
         base: 'Cíl: <main>%TRIGGERNAME%'
       killEliteMobs:
         base: 'Zabij Elite moby: <main>%ELITEMOBNAME%'
-        any: 'Zabij jakéhokoliv Elite moba!'
+        any: Zabij jakéhokoliv Elite moba!
       runCommand:
-        base: 'Použij příkaz:<main>%COMMANDTORUN%'
+        base: Použij příkaz:<main>%COMMANDTORUN%
       interact:
         base: '%INTERACTTYPE% Lokace: <main>%COORDINATES% <main>ve světě %WORLDNAME%'
       jump:
-        base: 'Vyskoč <main>%AMOUNTOFJUMPS%</main> krát'
+        base: Vyskoč <main>%AMOUNTOFJUMPS%</main> krát
       objective:
         base: '%OBJECTIVEHOLDERNAME%'
       sneak:
-        base: 'Přikrč se <main>%AMOUNTOFSNEAKS%</main> krát'
+        base: Přikrč se <main>%AMOUNTOFSNEAKS%</main> krát
       smelt:
         base: 'Vypeč itemy: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       openBuriedTreasure:
-        base: 'Otevři zakopaný poklad'
+        base: Otevři zakopaný poklad
       shearSheep:
-        base: 'Ostříhej <main>%AMOUNTOFSHEEP%</main> ovcí'
+        base: Ostříhej <main>%AMOUNTOFSHEEP%</main> ovcí
       townyReachResidentCount:
         base: 'Dosáhni počtu residencí: <main>%AMOUNT%'
       townyNationReachTownCount:
         base: 'Dosáhni částky města s vašim národem: <main>%AMOUNT%'
       jobsRebornReachJobLevel:
-        base: 'Dosáhni levelu <main>%AMOUNT%</main> v práci <main>%JOB%'
+        base: Dosáhni levelu <main>%AMOUNT%</main> v práci <main>%JOB%
       SlimefunResearch:
-        base: 'Vynalož na výzkumu'
+        base: Vynalož na výzkumu
       ProjectKorraUseAbility:
         base: 'Použít schopnost: <main>%ABILITY%'
       BetonQuestCompleteObjective:
         base: 'Dokonči úkol: <main>%BETONQUESTOBJECTIVENAME%'
       ultimateJobsReachJobLevel:
-        base: 'Dosáhni levelu <main>%AMOUNT%</main> v práci <main>%JOBID%'
+        base: Dosáhni levelu <main>%AMOUNT%</main> v práci <main>%JOBID%
   conditions:
     boolean:
-      not-fulfilled: "<warn>Následující musí být %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
-      variable-not-found: "<error>Error: proměnlivá <highlight>%VARIABLENAME%</highlight> nenalezena. Nahlas to Admin týmu serveru."
-      wrong-operator: "<error>Error: proměnlivý operátor <highlight>%OPERATOR%/highlight> je neplatný. Nahlas to Admin týmu serveru."
+      not-fulfilled: '<warn>Následující musí být %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>.'
+      variable-not-found: '<error>Error: proměnlivá <highlight>%VARIABLENAME%</highlight> nenalezena. Nahlas to Admin týmu serveru.'
+      wrong-operator: '<error>Error: proměnlivý operátor <highlight>%OPERATOR%/highlight> je neplatný. Nahlas to Admin týmu serveru.'
 objective-tracking:
   actionbar-progress-update:
-    default: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
-    only-one-max-progress: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+    default: <positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)
+    only-one-max-progress: <positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)
   bossbar-progress-update:
-    default: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
-    only-one-max-progress: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+    default: <positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)
+    only-one-max-progress: <positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)
 titles:
   quest-accepted:
     title: <main>Ůkol přijat
@@ -181,199 +194,109 @@ titles:
 placeholders:
   questcooldownleftformatted:
     prefix: ''
-    minute: '1 minuta'
+    minute: 1 minuta
     minutes: '%MINUTES% minut'
-    hour: '1 hodina'
+    hour: 1 hodina
     hours: '%HOURS% hodin'
-    day: '1 den'
+    day: 1 den
     days: '%DAYS% dní'
     no-cooldown: ''
 gui:
-  main:
-    title: '                <highlight2>Úkol'
-    backgroundFill:
-      material: 'BLACK_STAINED_GLASS_PANE'
-    background:
-      '1':
-        minX: 0
-        maxX: 8
-        minY: 0
-        maxY: 0
-      '2':
-        minX: 0
-        maxX: 0
-        minY: 0
-        maxY: 5
-      '3':
-        minX: 1
-        maxX: 1
-        minY: 0
-        maxY: 5
-      '4':
-        minX: 2
-        maxX: 2
-        minY: 0
-        maxY: 5
+  abort-quest-confirm:
+    title: <!i><red>Přerušit úkol <dark_gray>- <dark_red>Jsi si jistý?
+    button:
+      cancelabort:
+        name: <!i><red>Klikni pro zrušení
+        lore:
+        - '<!i><gray>Zruší přerušení úkolu '
+      confirmabort:
+        name: <!i><dark_red>Klikni pro přerušení úkolu
+        lore:
+        - '<!i><gray>Přeruší úkol '
+        - <!i><dark_red>Veškerý postup bude ztracen!
+  active-quest-info:
+    title: <main>Informace o úkolu <gray>- <green>%QUESTNAME%
+    button:
+      infobook:
+        name: <!i><green>%QUESTNAME%
+        lore:
+        - <!i><gray>%QUESTDESCRIPTION%
+      abort:
+        name: <!i><red>Přerušit úkol
+        lore:
+        - <!i><red>Klikni pro přerušení úkolu
+      back:
+        name: <!i><red>Zpět na předchozí stránku
+  category-take:
+    title: <main>Vzít nový úkol
+    button:
+      return:
+        name: <!i><red>Zpět
+      quests:
+        name: <!i><!i><green>%QUESTNAME%
+        lore:
+        - <!i><gray>%QUESTDESCRIPTION%
+      back:
+        name: <!i><gray>Předchozí stránka
+      forward:
+        name: <!i><gray>Další stránka
+  main-base:
+    title: <main>Menu úkolů
     button:
       questpoints:
-        name: "<highlight>Quest body"
+        name: <!i><main>Quest body
         lore:
-          - "<main>Aktuální počet quest bodů: <highlight2>%QUESTPOINTS%"
-        x: 8
-        y: 0
-      takequest:
-        name: "<positive>Přijmout úkol"
+        - '<!i><gray>Tvoje quest body: <yellow>%QUESTPOINTS%'
+      tab1:
+        name: <!i><main>Aktivní úkoly
         lore:
-          - "<unimportant>Začít nový úkol!"
-          - ""
-          - "<veryUnimportant>Některé úkoly nemohou být"
-          - "<veryUnimportant>přijaty takto."
-        x: 0
-        y: 1
-      abortquest:
-        name: "<negative>Vzdát úkol"
+        - <!i><gray>Zobraz své aktivní úkoly
+      tab2:
+        name: <!i><main>Vzít nový úkol
         lore:
-          - ""
-          - "<veryUnimportant>Vzdaní se úkolu může"
-          - "<veryUnimportant>vést k trestům."
-        x: 0
-        y: 2
-      activequests:
-        name: "<highlight>Aktivní úkoly"
-        lore:
-          - ""
-          - "<veryUnimportant>Ukáže všechny"
-          - "<veryUnimportant>aktivní úkoly."
-        x: 0
-        y: 3
-  activeQuests:
-    title: '             <highlight2>Aktivní úkoly'
+        - <!i><gray>Zobraz dostupné úkoly
+  main-active:
+    title: <main>Menu úkolů <gray>- <highlight>Aktivní úkoly
     button:
-      activeQuestButton:
-        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
+      quests:
+        name: <!i><green>%QUESTNAME%
         lore:
-          - "<unimportant>Pokrok: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<main>Klikni pro zobrazení detailů!"
-  reward-hidden-text: . <unimportant>[HIDDEN]
-  availableQuests:
-    title: '         <highlight2>Dostupné úkoly'
+        - <!i><gray>%QUESTDESCRIPTION%
+      back:
+        name: <!i><gray>Předchozí stránka
+      forward:
+        name: <!i><gray>Další stránka
+  main-take:
+    title: <main>Menu úkolů <gray>- <highlight>Vzít nový úkol
     button:
-      questPreview:
-        name-if-not-accepted: "<highlight>%QUESTNAME%"
-        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
+      categories:
+        name: <!i><yellow>%CATEGORYNAME%
         lore:
-          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-          - "<main>Klikni pro otevření úkolu!"
-  takeQuestChoose:
-    title: <highlight2>Který úkol si chceš vzít?
-    size:
-      minX: 3
-      minY: 1
-      maxX: 8
-      maxY: 5
+        - <!i><gray>Klikni pro zobrazení dostupných
+        - <!i><gray>úkolů v kategorii
+      back:
+        name: <!i><gray>Předchozí stránka
+      forward:
+        name: <!i><gray>Další stránka
+  npc-available-quests:
+    title: <!i><main>Dostupné úkoly
     button:
-      questPreview:
-        name-if-not-accepted: "<highlight>%QUESTNAME%"
-        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
+      quest:
+        name: <!i><green>%QUESTNAME%
         lore:
-          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-          - "<GREEN>Klikni pro náhled questu!"
-  abortQuestChoose:
-    title: '  <highlight2>Aktivní úkoly, které můžeš přerušit'
+        - <!i><gray>%QUESTDESCRIPTION%
+      back:
+        name: <!i><gray>Předchozí stránka
+      forward:
+        name: <!i><gray>Další stránka
+  quest-preview:
+    title: <main>Náhled úkolu
     button:
-      abortQuestPreview:
-        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
+      info:
+        name: <!i><green>%QUESTNAME%
         lore:
-          - "<unimportant>Pokrok: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Klikni pro přerušení úkolu!"
-  abortQuest:
-    title: '         <negative>Potvrzení přerušení'
-    button:
-      confirmAbort:
-        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
-        lore:
-          - "<unimportant>Pokrok: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Klikni pro přerušení úkolu <highlight>%QUESTNAME%</highlight>!"
-        x: 3
-        y: 1
-      cancelAbort:
-        name: "<positive>Klikni pro nepřerušení úkolu"
-        lore:
-          - "<positive>a zrušil tuto akci"
-        x: 5
-        y: 1
-  previewQuest:
-    title: <highlight2>Náhled úkolu
-    button:
-      description:
-        name: "<highlight>Popis"
-        lore:
-          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-        lore-if-empty:
-          - "<veryUnimportant>???"
-        x: 2
-        y: 0
-      rewards:
-        name: "<positive>Odměny"
-        lore:
-          - "<WHITE>%QUESTREWARDS%"
-        lore-if-empty:
-          - "<DARK_GRAY>Žádné nebo skryté"
-        x: 4
-        y: 0
-      requirements:
-        name: "<negative>Požadavky"
-        lore:
-          - "<WHITE>%QUESTREQUIREMENTS%"
-        lore-if-empty:
-          - "<veryUnimportant>-"
-        x: 6
-        y: 0
-      confirmTake:
-        name: "<highlight>%QUESTNAME%"
-        lore:
-          - "<positive>Klikni, aby sis vzal quest <highlight>%QUESTNAME%"
-        x: 3
-        y: 2
-      cancelTake:
-        name: "<negative>Klikni, aby sis nevzal tento úkol"
-        lore:
-          - "<negative>a zrušil tuto akci"
-        x: 5
-        y: 2
-  progress:
-    title: <highlight2>Detaily úkolu
-    button:
-      unlockedObjective:
-        name: "<highlight2>%ACTIVEOBJECTIVEID%. <highlight>%OBJECTIVENAME%"
-        lore:
-          - "<main><BOLD>AKTIVNÍ</BOLD>"
-          - "<veryUnimportant>%WRAPPEDOBJECTIVEDESCRIPTION%"
-          - "<unimportant>%OBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant>Pokrok: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
-        lore-if-description-empty:
-          - "<main><BOLD>AKTIVNÍ</BOLD>"
-          - "<veryUnimportant>Žádný popis"
-          - "<unimportant>%OBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant>Pokrok: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
-      lockedObjective:
-        name: "<highlight2>%ACTIVEOBJECTIVEID%. <unimportant><BOLD>[HIDDEN]"
-        lore:
-          - "<warn>Tento úkol ještě nebyl"
-          - "<warn>odemčen!"
-      completedObjective:
-        name: "<highlight2><strikethrough>%ACTIVEOBJECTIVEID%. <positive><strikethrough>%OBJECTIVENAME%"
-        lore:
-          - "<positive><BOLD>DOKONČENO</BOLD>"
-          - "<veryUnimportant><strikethrough>%WRAPPEDOBJECTIVEDESCRIPTION%"
-          - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant><strikethrough>Pokrok: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
-        lore-if-description-empty:
-          - "<positive><BOLD>DOKONČENO</BOLD>"
-          - "<veryUnimportant>└─<strikethrough>Žádný popis"
-          - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant><strikethrough>Pokrok: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
+        - <!i><gray>%QUESTDESCRIPTION%
+      accept:
+        name: <!i><green>Přijmout úkol
+      decline:
+        name: <!i><red>Odmítnout úkol

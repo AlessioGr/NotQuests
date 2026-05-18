@@ -1,86 +1,113 @@
 ---
 chat:
   wrong-command-usage: <error>Погрешна употреба команде!
-  missing-permission: "<error>Нема дозволе! Потребан чвор за дозвол:\n<highlight>%PERMISSION%"
+  missing-permission: '<error>Нема дозволе! Потребан чвор за дозвол:
+
+    <highlight>%PERMISSION%'
   too-many-arguments: <error>Превише аргумената!
-  quest-successfully-accepted: |2
+  quest-successfully-accepted: '
 
     <CENTER><main>[Задатак Прихваћен]
+
     <CENTER><highlight><BOLD>%QUESTNAME%<EMPTY>
-  quest-description: "<main>Опис задатка:\n<unimportant>%QUESTDESCRIPTION%"
+
+    '
+  quest-description: '<main>Опис задатка:
+
+    <unimportant>%QUESTDESCRIPTION%'
   quest-already-accepted: <error>Задатак је већ прихваћен.
-  quest-failed: |2
+  quest-failed: '
 
     <CENTER><negative>[Задатак Није Успјешан]
+
     <CENTER><highlight><BOLD>%QUESTNAME%<EMPTY>
+
+    '
   quest-aborted: ''
-  quest-completed-and-rewards-given: |2
+  quest-completed-and-rewards-given: '
 
     <CENTER><positive>[Задатак је Завршен]<CENTER><highlight><BOLD>%QUESTNAME%<EMPTY>
+
+    '
   quest-completed-rewards-prefix: '    <highlight>Награде:'
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
-  quest-not-all-requirements-fulfilled: '<negative>You do not fulfill all the requirements this quest needs! Requirement still needed:'
-  action-not-all-conditions-fulfilled: '<negative>You do not fulfill all the conditions this action needs! Conditions still needed:'
+  quest-not-all-requirements-fulfilled: '<negative>Не испуњаваш све услове које ова истрага захтева! Још потребан услов:'
+  action-not-all-conditions-fulfilled: '<negative>Не испуњаваш све услове које ова радња захтева! Још потребни услови:'
   missing-quest-description: <unimportant>Овај задатак нема опис.
   objectives-label-after-quest-accepting: '<highlight>Циљеви:'
   questpoints:
-    query: "<main>Тренутно имате\n<highlight>%QUESTPOINTS%</highlight> бодова."
+    query: '<main>Тренутно имате
+
+      <highlight>%QUESTPOINTS%</highlight> бодова.'
     none: <error>Изгледа да уопште немате бодова!
     notify-when-changed:
-      set: '<main>Your quest points have been set to <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.'
-      add: '<highlight>+%QUESTPOINTSTOADD% <success>quest points!'
-      remove: '<highlight>-%QUESTPOINTSTOREMOVE% <negative>quest points!'
+      set: <main>Твоји истражни поени су постављени на <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.
+      add: <highlight>+%QUESTPOINTSTOADD% <success>истражних поена!
+      remove: <highlight>-%QUESTPOINTSTOREMOVE% <negative>истражних поена!
   no-quests-accepted: <error>Изгледа да немате активних задатака!
-  quest-does-not-exist: "<error>Задатак\n<highlight>%QUESTNAME%</highlight> не постоји!"
-  quest-not-found-or-does-not-exist: "<error>Задатак\n<highlight>%QUESTNAME%</highlight> није пронађен или није активан!"
+  quest-does-not-exist: '<error>Задатак
+
+    <highlight>%QUESTNAME%</highlight> не постоји!'
+  quest-not-found-or-does-not-exist: '<error>Задатак
+
+    <highlight>%QUESTNAME%</highlight> није пронађен или није активан!'
   active-quests-label: '<highlight>Активни задаци:'
-  take-disabled: "<error>Примање или преглед задатка\n<highlight>%QUESTNAME%</highlight> је онемогућен."
-  abort-disabled: <error>Aborting the quest <highlight>%QUESTNAME%</highlight> is disabled.
-  quest-not-active-error: "<error>Грешка:\n<highlight>%QUESTNAME%</highlight> није активан задатак!"
-  force-add-active-quest-accepted: '<success>Successfully accepted the quest (Forced).'
-  add-active-quest-player-object-not-found: '<warn>Error: Player object not found. Please report this to the plugin developer.'
-  reached-max-accepts-limit: '<red>You have accepted this quest too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%ACCEPTEDAMOUNT%</highlight> times.'
-  reached-max-fails-limit: '<red>You have failed this quest too many times already. You can only fail it <highlight>%MAXFAILS%</highlight> times, but you have already failed it <highlight>%FAILEDAMOUNT%</highlight> times.'
-  reached-max-completions-limit: '<red>You have completed this quest too many times already. You can only complete it <highlight>%MAXCOMPLETIONS%</highlight> times, but you have already completed it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
-  reached-max-active-quests-per-player-limit: '<red>You can not accept more than <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> Quests.'
+  take-disabled: '<error>Примање или преглед задатка
+
+    <highlight>%QUESTNAME%</highlight> је онемогућен.'
+  abort-disabled: <error>Прекидање истраге <highlight>%QUESTNAME%</highlight> је онемогућено.
+  quest-not-active-error: '<error>Грешка:
+
+    <highlight>%QUESTNAME%</highlight> није активан задатак!'
+  force-add-active-quest-accepted: <success>Истрага је успешно прихваћена (Принудно).
+  add-active-quest-player-object-not-found: '<warn>Грешка: Објекат играча није пронађен. Пријави ово програмеру додатка.'
+  reached-max-accepts-limit: <red>Превише пута си већ прихватио ову истрагу. Можеш је прихватити само <highlight>%MAXACCEPTS%</highlight> пута, али си је већ прихватио <highlight>%ACCEPTEDAMOUNT%</highlight> пута.
+  reached-max-fails-limit: <red>Превише пута си већ пао на овој истрази. Можеш пасти само <highlight>%MAXFAILS%</highlight> пута, али си већ пао <highlight>%FAILEDAMOUNT%</highlight> пута.
+  reached-max-completions-limit: <red>Превише пута си већ завршио ову истрагу. Можеш је завршити само <highlight>%MAXCOMPLETIONS%</highlight> пута, али си је већ завршио <highlight>%COMPLETEDAMOUNT%</highlight> пута.
+  reached-max-active-quests-per-player-limit: <red>Не можеш прихватити више од <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> истрага.
   quest-on-cooldown:
-    minute: '<red>This quest is on a cooldown! You have to wait another <highlight>1 minute</highlight> until you can take it again.'
-    minutes: '<red>This quest is on a cooldown! You have to wait another <highlight>%MINUTES% minutes</highlight> until you can take it again.'
-    hour: '<red>This quest is on a cooldown! You have to wait another <highlight>1 hour</highlight> until you can take it again.'
-    hours: '<red>This quest is on a cooldown! You have to wait another <highlight>%HOURS% hours</highlight> until you can take it again.'
-    day: '<red>This quest is on a cooldown! You have to wait another <highlight>1 day</highlight> until you can take it again.'
-    days: '<red>This quest is on a cooldown! You have to wait another <highlight>%DAYS% days</highlight> until you can take it again.'
+    minute: <red>Ова истрага је на одмору! Мораш сачекати још <highlight>1 минут</highlight> да би је поново узео.
+    minutes: <red>Ова истрага је на одмору! Мораш сачекати још <highlight>%MINUTES% минута</highlight> да би је поново узео.
+    hour: <red>Ова истрага је на одмору! Мораш сачекати још <highlight>1 сат</highlight> да би је поново узео.
+    hours: <red>Ова истрага је на одмору! Мораш сачекати још <highlight>%HOURS% сати</highlight> да би је поново узео.
+    day: <red>Ова истрага је на одмору! Мораш сачекати још <highlight>1 дан</highlight> да би је поново узео.
+    days: <red>Ова истрага је на одмору! Мораш сачекати још <highlight>%DAYS% дана</highlight> да би је поново узео.
   profiles:
-    list-current: '<highlight>Current profile: <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
-    list-other-heading: '<highlight>Other profiles:'
-    list-other-none: '  <main>You have no more profiles.'
-    list-other: '  <highlight>- <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
-    change-same-profile: '<error>You are already using that profile!'
-    change-profile-doesnt-exist: '<error>That profile does not exist.'
-    changed-successfully: '<success>You have successfully changed your profile from %OLDPROFILENAME% to <highlight>%NEWPROFILENAME%</highlight>!'
-    create-already-exists: '<error>A profile with the name <highlight>%NEWPROFILENAME%</highlight> already exists.'
-    create-invalid-characters: '<error>The profile name you provided contains invalid characters.'
-    created-successfully: '<success>You have successfully created the profile <highlight>%NEWPROFILENAME%</highlight>! To switch to it, use <highlight2>/nq profiles change %NEWPROFILENAME%</highlight2>'
+    list-current: '<highlight>Тренутни профил: <main>%PROFILENAME% (%QUESTPOINTS% истражних поена)'
+    list-other-heading: '<highlight>Остали профили:'
+    list-other-none: '  <main>Немаш више профила.'
+    list-other: '  <highlight>- <main>%PROFILENAME% (%QUESTPOINTS% истражних поена)'
+    change-same-profile: <error>Већ користиш тај профил!
+    change-profile-doesnt-exist: <error>Тај профил не постоји.
+    changed-successfully: <success>Успешно си променио профил са %OLDPROFILENAME% на <highlight>%NEWPROFILENAME%</highlight>!
+    create-already-exists: <error>Профил са именом <highlight>%NEWPROFILENAME%</highlight> већ постоји.
+    create-invalid-characters: <error>Име профила које си унео садржи неважеће знакове.
+    created-successfully: <success>Успешно си направио профил <highlight>%NEWPROFILENAME%</highlight>! Да пређеш на њега, користи <highlight2>/nq profiles change %NEWPROFILENAME%</highlight2>
   conversations:
-    choose-answer-prefix: |-
-      <EMPTY><main>Изабери свој одговор:</main>
-    choose-answer-answer-hover-text: '<highlight>Кликни да одговориш'
-    ended-previous-conversation: '<main>Завршили сте претходни разговор!'
+    choose-answer-prefix: <EMPTY><main>Изабери свој одговор:</main>
+    choose-answer-answer-hover-text: <highlight>Кликни да одговориш
+    ended-previous-conversation: <main>Завршили сте претходни разговор!
     speaker-line-format: '%SPEAKERCOLOR%[%SPEAKER%] <GRAY>%MESSAGE%'
     answer-option-line-format: ' <main>%OPTIONNUMBER%. <gray>%MESSAGE%'
   objectives:
     counter: '<highlight>%OBJECTIVEIDWITHSUBID%.</highlight> <main>%OBJECTIVENAME%:'
     counterForObjectiveObjective: '<highlight>%OBJECTIVEIDWITHSUBID%.</highlight> <main>%OBJECTIVEHOLDERNAME%:'
     subObjectivePrefixAppend: '    '
-    hidden: "<highlight>%OBJECTIVEID%.</highlight>\n<unimportant><BOLD>[HIDDEN]"
-    description: '    <veryUnimportant>└─ <unimportant>Description: <main>%OBJECTIVEDESCRIPTION%'
-    progress: '    <veryUnimportant>└─ <unimportant>Progress: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
-    successfully-completed: |2
+    hidden: '<highlight>%OBJECTIVEID%.</highlight>
+
+      <unimportant><BOLD>[HIDDEN]'
+    description: '    <veryUnimportant>└─ <unimportant>Опис: <main>%OBJECTIVEDESCRIPTION%'
+    progress: '    <veryUnimportant>└─ <unimportant>Напредак: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
+    successfully-completed: '
 
       <CENTER><success>[Objective Completed]
+
       <CENTER><highlight><bold>%OBJECTIVENAME%</bold> <RESET><main>(%QUESTNAME%)
+
       <EMPTY>
+
+      '
     successfully-completed-rewards-prefix: '    <highlight>Награде:'
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
     successfully-completed-rewards-suffix: <EMPTY>
@@ -89,289 +116,199 @@ chat:
         prefix: '    <veryUnimportant>└─ <unimportant>'
         suffix: ''
       breakBlocks:
-        base: 'Break Blocks: <main>%BLOCKTOBREAK%'
+        base: 'Разбиј блокове: <main>%BLOCKTOBREAK%'
       breed:
-        base: 'Breed Mobs: <main>%ENTITYTOBREED%'
+        base: 'Размножи створења: <main>%ENTITYTOBREED%'
       pickupItems:
-        base: 'Pickup Items: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
+        base: 'Покупи предмете: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
       consumeItems:
-        base: 'Consume Items: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
+        base: 'Поједи предмете: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: 'Craft Items: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+        base: 'Направи предмете: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: 'Deliver Items: <main>%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%(%'
-        deliver-to-npc: '      <GRAY>Deliver it to <WHITE>%NPCNAME%'
-        deliver-to-npc-not-available: '      <GRAY>The delivery NPC is currently not available!'
+        base: 'Достави предмете: <main>%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%(%'
+        deliver-to-npc: '      <GRAY>Достави то <WHITE>%NPCNAME%'
+        deliver-to-npc-not-available: '      <GRAY>NPC за доставу тренутно није доступан!'
       enchant:
-        base: 'Enchant Items with %ENCHANTMENT%: <main>%ITEMTOENCHANTTYPE% %(%%ITEMTOENCHANTNAME%%(%'
+        base: 'Зачарај предмете са %ENCHANTMENT%: <main>%ITEMTOENCHANTTYPE% %(%%ITEMTOENCHANTNAME%%(%'
       escortNPC:
-        base: 'Escort <main>%NPCNAME%</main> to <main>%DESTINATIONNPCNAME%'
+        base: Отпрати <main>%NPCNAME%</main> до <main>%DESTINATIONNPCNAME%
       fishItems:
-        base: 'Fish Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
+        base: 'Упецај предмете: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
       killMobs:
-        base: 'Kill mobs: <main>%MOBTOKILL%'
+        base: 'Убиј створења: <main>%MOBTOKILL%'
       otherQuest:
-        base: 'Complete Quest: <main>%OTHERQUESTNAME%'
+        base: 'Заврши истрагу: <main>%OTHERQUESTNAME%'
       placeBlocks:
-        base: 'Place Blocks: <main>%BLOCKTOPLACE%'
+        base: 'Постави блокове: <main>%BLOCKTOPLACE%'
       reachLocation:
-        base: 'Reach Location: <main>%LOCATIONNAME%'
+        base: 'Стигни до локације: <main>%LOCATIONNAME%'
       talkToNPC:
-        base: 'Talk to <main>%NAME%'
-        npc-not-available: '    <GRAY>The target NPC is currently not available!'
+        base: Разговарај са <main>%NAME%
+        npc-not-available: '    <GRAY>Циљни NPC тренутно није доступан!'
       triggerCommand:
-        base: 'Goal: <main>%TRIGGERNAME%'
+        base: 'Циљ: <main>%TRIGGERNAME%'
       killEliteMobs:
-        base: 'Kill Elite Mob: <main>%ELITEMOBNAME%'
-        any: 'Kill any Elite Mob!'
+        base: 'Убиј елитно створење: <main>%ELITEMOBNAME%'
+        any: Убиј било које елитно створење!
       runCommand:
-        base: 'Run command: <main>%COMMANDTORUN%'
+        base: 'Покрени команду: <main>%COMMANDTORUN%'
       interact:
-        base: '%INTERACTTYPE% Location: <main>%COORDINATES% <main>in world %WORLDNAME%'
+        base: '%INTERACTTYPE% локација: <main>%COORDINATES% <main>у свету %WORLDNAME%'
       jump:
-        base: 'Jump <main>%AMOUNTOFJUMPS%</main> times'
+        base: Скочи <main>%AMOUNTOFJUMPS%</main> пута
       objective:
         base: '%OBJECTIVEHOLDERNAME%'
       sneak:
-        base: 'Sneak <main>%AMOUNTOFSNEAKS%</main> times'
+        base: Шуњај се <main>%AMOUNTOFSNEAKS%</main> пута
       smelt:
-        base: 'Smelt Items: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+        base: 'Истопи предмете: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       openBuriedTreasure:
-        base: 'Open buried treasures'
+        base: Откопај закопано благо
       shearSheep:
-        base: 'Shear <main>%AMOUNTOFSHEEP%</main> sheep'
+        base: Ошишај <main>%AMOUNTOFSHEEP%</main> оваца
       townyReachResidentCount:
-        base: 'Reach resident amount: <main>%AMOUNT%'
+        base: 'Достигни број становника: <main>%AMOUNT%'
       townyNationReachTownCount:
-        base: 'Reach town amount with your nation: <main>%AMOUNT%'
+        base: 'Достигни број градова са својом нацијом: <main>%AMOUNT%'
       jobsRebornReachJobLevel:
-        base: 'Reach job level <main>%AMOUNT%</main> with job <main>%JOB%'
+        base: Достигни ниво посла <main>%AMOUNT%</main> са послом <main>%JOB%
       SlimefunResearch:
-        base: 'Spend on research'
+        base: Потроши на истраживање
       ProjectKorraUseAbility:
-        base: 'Use Ability: <main>%ABILITY%'
+        base: 'Употреби способност: <main>%ABILITY%'
       BetonQuestCompleteObjective:
-        base: 'Finish Objective: <main>%BETONQUESTOBJECTIVENAME%'
+        base: 'Заврши циљ: <main>%BETONQUESTOBJECTIVENAME%'
       ultimateJobsReachJobLevel:
-        base: 'Reach job level <main>%AMOUNT%</main> with job <main>%JOBID%'
+        base: Достигни ниво посла <main>%AMOUNT%</main> са послом <main>%JOBID%
   conditions:
     boolean:
-      not-fulfilled: "<warn>Following needs to be %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
-      variable-not-found: "<error>Error: variable <highlight>%VARIABLENAME%</highlight> not found. Report this to the Server owner."
-      wrong-operator: "<error>Error: variable operator <highlight>%OPERATOR%/highlight> is invalid. Report this to the Server owner."
+      not-fulfilled: '<warn>Следеће мора бити %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>.'
+      variable-not-found: '<error>Грешка: променљива <highlight>%VARIABLENAME%</highlight> није пронађена. Пријави ово власнику сервера.'
+      wrong-operator: '<error>Грешка: оператор променљиве <highlight>%OPERATOR%/highlight> је неважећи. Пријави ово власнику сервера.'
 objective-tracking:
   actionbar-progress-update:
-    default: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
-    only-one-max-progress: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+    default: <positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)
+    only-one-max-progress: <positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)
   bossbar-progress-update:
-    default: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
-    only-one-max-progress: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+    default: <positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)
+    only-one-max-progress: <positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)
 titles:
   quest-accepted:
-    title: <main>Quest accepted
+    title: <main>Истрага прихваћена
     subtitle: <highlight>%QUESTNAME%
   quest-completed:
-    title: <positive>Quest Completed
+    title: <positive>Истрага завршена
     subtitle: <highlight>%QUESTNAME%
   quest-failed:
-    title: <negative>Quest Failed
+    title: <negative>Истрага неуспела
     subtitle: <highlight>%QUESTNAME%
 placeholders:
   questcooldownleftformatted:
     prefix: ''
-    minute: '1 minute'
-    minutes: '%MINUTES% minutes'
-    hour: '1 hour'
-    hours: '%HOURS% hours'
-    day: '1 day'
-    days: '%DAYS% days'
+    minute: 1 минут
+    minutes: '%MINUTES% минута'
+    hour: 1 сат
+    hours: '%HOURS% сати'
+    day: 1 дан
+    days: '%DAYS% дана'
     no-cooldown: ''
 gui:
-  main:
-    title: '                <highlight2>Quests'
-    backgroundFill:
-      material: 'BLACK_STAINED_GLASS_PANE'
-    background:
-      '1':
-        minX: 0
-        maxX: 8
-        minY: 0
-        maxY: 0
-      '2':
-        minX: 0
-        maxX: 0
-        minY: 0
-        maxY: 5
-      '3':
-        minX: 1
-        maxX: 1
-        minY: 0
-        maxY: 5
-      '4':
-        minX: 2
-        maxX: 2
-        minY: 0
-        maxY: 5
+  abort-quest-confirm:
+    title: <!i><red>Прекини истрагу <dark_gray>- <dark_red>Јеси ли сигуран?
+    button:
+      cancelabort:
+        name: <!i><red>Кликни да откажеш
+        lore:
+        - '<!i><gray>Отказује прекид истраге '
+      confirmabort:
+        name: <!i><dark_red>Кликни да прекинеш истрагу
+        lore:
+        - '<!i><gray>Прекида истрагу '
+        - <!i><dark_red>Сав напредак ће бити изгубљен!
+  active-quest-info:
+    title: <main>Инфо истраге <gray>- <green>%QUESTNAME%
+    button:
+      infobook:
+        name: <!i><green>%QUESTNAME%
+        lore:
+        - <!i><gray>%QUESTDESCRIPTION%
+      abort:
+        name: <!i><red>Прекини истрагу
+        lore:
+        - <!i><red>Кликни да прекинеш истрагу
+      back:
+        name: <!i><red>Назад на претходну страницу
+  category-take:
+    title: <main>Преузми нову истрагу
+    button:
+      return:
+        name: <!i><red>Назад
+      quests:
+        name: <!i><!i><green>%QUESTNAME%
+        lore:
+        - <!i><gray>%QUESTDESCRIPTION%
+      back:
+        name: <!i><gray>Претходна страница
+      forward:
+        name: <!i><gray>Следећа страница
+  main-base:
+    title: <main>Мени истрага
     button:
       questpoints:
-        name: "<highlight>Quest Points"
+        name: <!i><main>Истражни поени
         lore:
-          - "<main>Current quest points: <highlight2>%QUESTPOINTS%"
-        x: 8
-        y: 0
-      takequest:
-        name: "<positive>Take a Quest"
+        - '<!i><gray>Твоји истражни поени: <yellow>%QUESTPOINTS%'
+      tab1:
+        name: <!i><main>Активне истраге
         lore:
-          - "<unimportant>Start a new Quest!"
-          - ""
-          - "<veryUnimportant>Some Quests cannot be"
-          - "<veryUnimportant>started like this."
-        x: 0
-        y: 1
-      abortquest:
-        name: "<negative>Abort a Quest"
+        - <!i><gray>Погледај своје активне истраге
+      tab2:
+        name: <!i><main>Преузми нову истрагу
         lore:
-          - ""
-          - "<veryUnimportant>Aborting a Quest may"
-          - "<veryUnimportant>lead to punishments."
-        x: 0
-        y: 2
-      activequests:
-        name: "<highlight>Active Quests"
-        lore:
-          - ""
-          - "<veryUnimportant>Shows all of your"
-          - "<veryUnimportant>active Quests."
-        x: 0
-        y: 3
-  activeQuests:
-    title: '             <highlight2>Active Quests'
+        - <!i><gray>Погледај доступне истраге
+  main-active:
+    title: <main>Мени истрага <gray>- <highlight>Активне истраге
     button:
-      activeQuestButton:
-        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
+      quests:
+        name: <!i><green>%QUESTNAME%
         lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<main>Click to see details!"
-  reward-hidden-text: . <unimportant>[HIDDEN]
-  availableQuests:
-    title: '         <highlight2>Available Quests'
+        - <!i><gray>%QUESTDESCRIPTION%
+      back:
+        name: <!i><gray>Претходна страница
+      forward:
+        name: <!i><gray>Следећа страница
+  main-take:
+    title: <main>Мени истрага <gray>- <highlight>Преузми нову истрагу
     button:
-      questPreview:
-        name-if-not-accepted: "<highlight>%QUESTNAME%"
-        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
+      categories:
+        name: <!i><yellow>%CATEGORYNAME%
         lore:
-          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-          - "<main>Click to open Quest!"
-  takeQuestChoose:
-    title: <highlight2>Which Quest do you want to take?
-    size:
-      minX: 3
-      minY: 1
-      maxX: 8
-      maxY: 5
+        - <!i><gray>Кликни да видиш доступне
+        - <!i><gray>истраге у категорији
+      back:
+        name: <!i><gray>Претходна страница
+      forward:
+        name: <!i><gray>Следећа страница
+  npc-available-quests:
+    title: <!i><main>Доступне истраге
     button:
-      questPreview:
-        name-if-not-accepted: "<highlight>%QUESTNAME%"
-        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
+      quest:
+        name: <!i><green>%QUESTNAME%
         lore:
-          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-          - "<main>Click to preview Quest!"
-  abortQuestChoose:
-    title: '  <highlight2>Active Quests you can abort'
+        - <!i><gray>%QUESTDESCRIPTION%
+      back:
+        name: <!i><gray>Претходна страница
+      forward:
+        name: <!i><gray>Следећа страница
+  quest-preview:
+    title: <main>Преглед истраге
     button:
-      abortQuestPreview:
-        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
+      info:
+        name: <!i><green>%QUESTNAME%
         lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Click to abort Quest!"
-  abortQuest:
-    title: '         <negative>Abort Confirmation'
-    button:
-      confirmAbort:
-        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
-        lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Click to abort the quest <highlight>%QUESTNAME%</highlight>!"
-        x: 3
-        y: 1
-      cancelAbort:
-        name: "<positive>Click to NOT abort this quest"
-        lore:
-          - "<positive>and cancel this action"
-        x: 5
-        y: 1
-  previewQuest:
-    title: <highlight2>Quest Preview
-    button:
-      description:
-        name: "<highlight>Description"
-        lore:
-          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-        lore-if-empty:
-          - "<veryUnimportant>???"
-        x: 2
-        y: 0
-      rewards:
-        name: "<positive>Rewards"
-        lore:
-          - "<WHITE>%QUESTREWARDS%"
-        lore-if-empty:
-          - "<veryUnimportant>None or hidden"
-        x: 4
-        y: 0
-      requirements:
-        name: "<negative>Requirements"
-        lore:
-          - "<WHITE>%QUESTREQUIREMENTS%"
-        lore-if-empty:
-          - "<veryUnimportant>-"
-        x: 6
-        y: 0
-      confirmTake:
-        name: "<highlight>%QUESTNAME%"
-        lore:
-          - "<positive>Click to take the quest <highlight>%QUESTNAME%"
-        x: 3
-        y: 2
-      cancelTake:
-        name: "<negative>Click to NOT take this quest"
-        lore:
-          - "<negative>and cancel this action"
-        x: 5
-        y: 2
-  progress:
-    title: <highlight2>Details for Quest
-    button:
-      unlockedObjective:
-        name: "<highlight2>%ACTIVEOBJECTIVEID%. <highlight>%OBJECTIVENAME%"
-        lore:
-          - "<main><BOLD>ACTIVE</BOLD>"
-          - "<veryUnimportant>%WRAPPEDOBJECTIVEDESCRIPTION%"
-          - "<unimportant>%OBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
-        lore-if-description-empty:
-          - "<main><BOLD>ACTIVE</BOLD>"
-          - "<veryUnimportant>No Description"
-          - "<unimportant>%OBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
-      lockedObjective:
-        name: "<highlight2>%ACTIVEOBJECTIVEID%. <unimportant><BOLD>[HIDDEN]"
-        lore:
-          - "<warn>This objective has not yet"
-          - "<warn>been unlocked!"
-      completedObjective:
-        name: "<highlight2><strikethrough>%ACTIVEOBJECTIVEID%. <positive><strikethrough>%OBJECTIVENAME%"
-        lore:
-          - "<positive><BOLD>COMPLETED</BOLD>"
-          - "<veryUnimportant><strikethrough>%WRAPPEDOBJECTIVEDESCRIPTION%"
-          - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
-        lore-if-description-empty:
-          - "<positive><BOLD>COMPLETED</BOLD>"
-          - "<veryUnimportant><strikethrough>No Description"
-          - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
+        - <!i><gray>%QUESTDESCRIPTION%
+      accept:
+        name: <!i><green>Прихвати истрагу
+      decline:
+        name: <!i><red>Одбиј истрагу

@@ -3,24 +3,36 @@ chat:
   wrong-command-usage: <error>Неправильно використано команду!
   missing-permission: '<error>Немає дозволу! Необхідно доступ: <highlight>%PERMISSION%'
   too-many-arguments: <error>Забагато аргументів!
-  quest-successfully-accepted: |2
+  quest-successfully-accepted: '
 
     <CENTER><main>[Завдання Прийнято]
+
     <CENTER><highlight><BOLD>%QUESTNAME%
+
     <EMPTY>
+
+    '
   quest-description: '<main>Опис завдання: <unimportant>%QUESTDESCRIPTION%'
   quest-already-accepted: <error>Завдання вже прийнято.
-  quest-failed: |2
+  quest-failed: '
 
     <CENTER><negative>[Завдання Провалено]
+
     <CENTER><highlight><BOLD>%QUESTNAME%
+
     <EMPTY>
+
+    '
   quest-aborted: ''
-  quest-completed-and-rewards-given: |2
+  quest-completed-and-rewards-given: '
 
     <CENTER><positive>[Завдання Виконано]
+
     <CENTER><highlight><BOLD>%QUESTNAME%
+
     <EMPTY>
+
+    '
   quest-completed-rewards-prefix: '    <highlight>Нагороди:'
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
@@ -32,9 +44,9 @@ chat:
     query: <main>Наразі ви маєте <highlight>%QUESTPOINTS%</highlight> балів завдань.
     none: <error>Схоже, ви не маєте жодних балів завдань!
     notify-when-changed:
-      set: '<main>Ваші бали завдань встановлено на <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.'
-      add: '<highlight>+%QUESTPOINTSTOADD% <success>балів завдань!'
-      remove: '<highlight>-%QUESTPOINTSTOREMOVE% <negative>балів завдань!'
+      set: <main>Ваші бали завдань встановлено на <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.
+      add: <highlight>+%QUESTPOINTSTOADD% <success>балів завдань!
+      remove: <highlight>-%QUESTPOINTSTOREMOVE% <negative>балів завдань!
   no-quests-accepted: <error>Схоже, ви не маєте ніяких активних завдань!
   quest-does-not-exist: <error>Завдання <highlight>%QUESTNAME%</highlight> не існує!
   quest-not-found-or-does-not-exist: <error>Завдання <highlight>%QUESTNAME%</highlight> не знайдено, або воно не було активовано!
@@ -42,36 +54,36 @@ chat:
   take-disabled: <error>Прийняття, або попередній перегляд завдання <highlight>%QUESTNAME%</highlight> вимкнено.
   abort-disabled: <error>Скасування завдання <highlight>%QUESTNAME%</highlight> вимкнено.
   quest-not-active-error: '<error>Помилка: <highlight>%QUESTNAME%</highlight> не є активним завданням!'
-  force-add-active-quest-accepted: '<success>Успішно прийнято завдання (Вимушено).'
+  force-add-active-quest-accepted: <success>Успішно прийнято завдання (Вимушено).
   add-active-quest-player-object-not-found: '<warn>Помилка: Об''єкт гравця не знайдено. Будь ласка, повідомте про це розробнику плагіну.'
-  reached-max-accepts-limit: '<red>Ви вже прийняли це завдання занадто багато разів. Ви можете прийняти його лише <highlight>%MAXACCEPTS%</highlight> разів, але ви його прийняли вже <highlight>%ACCEPTEDAMOUNT%</highlight> разів.'
-  reached-max-fails-limit: '<red>Ви вже провалили цей квест занадто багато разів. Ви можете його провалити лише <highlight>%MAXFAILS%</highlight> разів, але ви вже провалили його <highlight>%FAILEDAMOUNT%</highlight> разів.'
-  reached-max-completions-limit: '<red>Ви вже виконали це завдання занадто багато разів. Ви можете його виконати лише <highlight>%MAXCOMPLETIONS%</highlight> разів, але ви вже виконали його <highlight>%COMPLETEDAMOUNT%</highlight> разів.'
-  reached-max-active-quests-per-player-limit: '<red>Ви не можете прийняти більше ніж <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> Завдань.'
+  reached-max-accepts-limit: <red>Ви вже прийняли це завдання занадто багато разів. Ви можете прийняти його лише <highlight>%MAXACCEPTS%</highlight> разів, але ви його прийняли вже <highlight>%ACCEPTEDAMOUNT%</highlight> разів.
+  reached-max-fails-limit: <red>Ви вже провалили цей квест занадто багато разів. Ви можете його провалити лише <highlight>%MAXFAILS%</highlight> разів, але ви вже провалили його <highlight>%FAILEDAMOUNT%</highlight> разів.
+  reached-max-completions-limit: <red>Ви вже виконали це завдання занадто багато разів. Ви можете його виконати лише <highlight>%MAXCOMPLETIONS%</highlight> разів, але ви вже виконали його <highlight>%COMPLETEDAMOUNT%</highlight> разів.
+  reached-max-active-quests-per-player-limit: <red>Ви не можете прийняти більше ніж <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> Завдань.
   quest-on-cooldown:
-    minute: '<red>Завдання ще відновлюється! Вам потрібно почекати ще <highlight>1 хвилину</highlight> доки ви знову зможете його прийняти.'
-    minutes: '<red>Завдання ще відновлюється! Вам потрібно почекати ще <highlight>%MINUTES% хвилин</highlight> доки ви знову зможете його прийняти.'
-    hour: '<red>Завдання ще відновлюється! Вам потрібно почекати ще <highlight>1 годину</highlight> доки ви знову зможете його прийняти.'
-    hours: '<red>Завдання ще відновлюється! Вам потрібно почекати ще <highlight>%HOURS% годин</highlight> доки ви знову зможете його прийняти.'
-    day: '<red>Завдання ще відновлюється! Вам потрібно почекати ще <highlight>1 день</highlight> доки ви знову зможете його прийняти.'
-    days: '<red>Завдання ще відновлюється! Вам потрібно почекати ще <highlight>%DAYS% днів</highlight> доки ви знову зможете його прийняти.'
+    minute: <red>Завдання ще відновлюється! Вам потрібно почекати ще <highlight>1 хвилину</highlight> доки ви знову зможете його прийняти.
+    minutes: <red>Завдання ще відновлюється! Вам потрібно почекати ще <highlight>%MINUTES% хвилин</highlight> доки ви знову зможете його прийняти.
+    hour: <red>Завдання ще відновлюється! Вам потрібно почекати ще <highlight>1 годину</highlight> доки ви знову зможете його прийняти.
+    hours: <red>Завдання ще відновлюється! Вам потрібно почекати ще <highlight>%HOURS% годин</highlight> доки ви знову зможете його прийняти.
+    day: <red>Завдання ще відновлюється! Вам потрібно почекати ще <highlight>1 день</highlight> доки ви знову зможете його прийняти.
+    days: <red>Завдання ще відновлюється! Вам потрібно почекати ще <highlight>%DAYS% днів</highlight> доки ви знову зможете його прийняти.
   profiles:
     list-current: '<highlight>Поточний профіль: <main>%PROFILENAME% (%QUESTPOINTS% балів завдань)'
     list-other-heading: '<highlight>Інші профілі:'
     list-other-none: '  <main>Ви не маєте більше профілів.'
     list-other: '  <highlight>- <main>%PROFILENAME% (%QUESTPOINTS% балів завдань)'
-    change-same-profile: '<error>Ви вже використовуєте цей профіль!'
-    change-profile-doesnt-exist: '<error>Цього профілю не існує.'
-    changed-successfully: '<success>Ви успішно змінили ваш профіль з %OLDPROFILENAME% на <highlight>%NEWPROFILENAME%</highlight>!'
-    create-already-exists: '<error>Профіль з іменем <highlight>%NEWPROFILENAME%</highlight> вже існує.'
-    create-invalid-characters: '<error>Надане ім''я профілю містить недопустимі символи.'
-    created-successfully: '<success>Ви успішно створили профіль <highlight>%NEWPROFILENAME%</highlight>! Щоб перейти до нього, скористайтеся <highlight2>/ nq профілем %NEWPROFILENAME%</highlight2>'
+    change-same-profile: <error>Ви вже використовуєте цей профіль!
+    change-profile-doesnt-exist: <error>Цього профілю не існує.
+    changed-successfully: <success>Ви успішно змінили ваш профіль з %OLDPROFILENAME% на <highlight>%NEWPROFILENAME%</highlight>!
+    create-already-exists: <error>Профіль з іменем <highlight>%NEWPROFILENAME%</highlight> вже існує.
+    create-invalid-characters: <error>Надане ім'я профілю містить недопустимі символи.
+    created-successfully: <success>Ви успішно створили профіль <highlight>%NEWPROFILENAME%</highlight>! Щоб перейти до нього, скористайтеся <highlight2>/ nq профілем %NEWPROFILENAME%</highlight2>
   conversations:
-    choose-answer-prefix: |-
-      <EMPTY>
-      <main>Оберіть вашу відповідь:</main>
-    choose-answer-answer-hover-text: '<highlight>Натисніть, щоб відповісти'
-    ended-previous-conversation: '<main>Ви закінчили попередню розмову!'
+    choose-answer-prefix: '<EMPTY>
+
+      <main>Оберіть вашу відповідь:</main>'
+    choose-answer-answer-hover-text: <highlight>Натисніть, щоб відповісти
+    ended-previous-conversation: <main>Ви закінчили попередню розмову!
     speaker-line-format: '%SPEAKERCOLOR%[%SPEAKER%] <GRAY>%MESSAGE%'
     answer-option-line-format: ' <main>%OPTIONNUMBER%. <gray>%MESSAGE%'
   objectives:
@@ -81,11 +93,15 @@ chat:
     hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[HIDDEN]
     description: '    <veryUnimportant>└─ <unimportant>Опис: <main>%OBJECTIVEDESCRIPTION%'
     progress: '    <veryUnimportant>└─ <unimportant>Прогрес: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
-    successfully-completed: |2
+    successfully-completed: '
 
       <CENTER><success>[Ціль виконана]
+
       <CENTER><highlight><bold>%OBJECTIVENAME%</bold> <RESET><main>(%QUESTNAME%)
+
       <EMPTY>
+
+      '
     successfully-completed-rewards-prefix: '    <highlight>Нагороди:'
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
     successfully-completed-rewards-suffix: <EMPTY>
@@ -110,7 +126,7 @@ chat:
       enchant:
         base: 'Зачаровані предмети з %ENCHANTMENT%: <main>%ITEMTOENCHANTTYPE% %(%%ITEMTOENCHANTNAME%%(%'
       escortNPC:
-        base: 'Супровід <main>%NPCNAME%</main> до <main>%DESTINATIONNPCNAME%'
+        base: Супровід <main>%NPCNAME%</main> до <main>%DESTINATIONNPCNAME%
       fishItems:
         base: 'Наловіть предметів: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
       killMobs:
@@ -122,55 +138,55 @@ chat:
       reachLocation:
         base: 'Дістатись локації: <main>%LOCATIONNAME%'
       talkToNPC:
-        base: 'Поговоріть з <main>%NAME%'
+        base: Поговоріть з <main>%NAME%
         npc-not-available: '    <GRAY>Цільовий NPC наразі недоступний!'
       triggerCommand:
         base: 'Ціль: <main>%TRIGGERNAME%'
       killEliteMobs:
         base: 'Вбити Елітного Моба: <main>%ELITEMOBNAME%'
-        any: 'Вбийте будь-якого Елітного Моба!'
+        any: Вбийте будь-якого Елітного Моба!
       runCommand:
         base: 'Запустити команду: <main>%COMMANDTORUN%'
       interact:
         base: '%INTERACTTYPE% Локація: <main>%COORDINATES% <main>у світі %WORLDNAME%'
       jump:
-        base: 'Стрибнути <main>%AMOUNTOFJUMPS%</main> разів'
+        base: Стрибнути <main>%AMOUNTOFJUMPS%</main> разів
       objective:
         base: '%OBJECTIVEHOLDERNAME%'
       sneak:
-        base: 'Крастись <main>%AMOUNTOFSNEAKS%</main> разів'
+        base: Крастись <main>%AMOUNTOFSNEAKS%</main> разів
       smelt:
         base: 'Переплавити предмети: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       openBuriedTreasure:
-        base: 'Відкрити закопані скарби'
+        base: Відкрити закопані скарби
       shearSheep:
-        base: 'Підстригти <main>%AMOUNTOFSHEEP%</main> овець'
+        base: Підстригти <main>%AMOUNTOFSHEEP%</main> овець
       townyReachResidentCount:
         base: 'Досягнути кількість жителів: <main>%AMOUNT%'
       townyNationReachTownCount:
         base: 'Досягнути кількість міст вашою нацією: <main>%AMOUNT%'
       jobsRebornReachJobLevel:
-        base: 'Досягнути рівень роботи <main>%AMOUNT%</main> на роботі <main>%JOB%'
+        base: Досягнути рівень роботи <main>%AMOUNT%</main> на роботі <main>%JOB%
       SlimefunResearch:
-        base: 'Витрачено на дослідження'
+        base: Витрачено на дослідження
       ProjectKorraUseAbility:
         base: 'Використати здібність: <main>%ABILITY%'
       BetonQuestCompleteObjective:
         base: 'Завершіть ціль: <main>%BETONQUESTOBJECTIVENAME%'
       ultimateJobsReachJobLevel:
-        base: 'Досягнути рівень роботи <main>%AMOUNT%</main> на роботі <main>%JOBID%'
+        base: Досягнути рівень роботи <main>%AMOUNT%</main> на роботі <main>%JOBID%
   conditions:
     boolean:
-      not-fulfilled: "<warn>Наступне має бути %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
-      variable-not-found: "<error>Помилка: змінну <highlight>%VARIABLENAME%</highlight> не знайдено. Повідомте про це власнику Сервера."
-      wrong-operator: "<error>Помилка: оператор змінної <highlight>%OPERATOR%/highlight> є неправильним. Повідомте про це власнику Сервера."
+      not-fulfilled: '<warn>Наступне має бути %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>.'
+      variable-not-found: '<error>Помилка: змінну <highlight>%VARIABLENAME%</highlight> не знайдено. Повідомте про це власнику Сервера.'
+      wrong-operator: '<error>Помилка: оператор змінної <highlight>%OPERATOR%/highlight> є неправильним. Повідомте про це власнику Сервера.'
 objective-tracking:
   actionbar-progress-update:
-    default: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
-    only-one-max-progress: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+    default: <positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)
+    only-one-max-progress: <positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)
   bossbar-progress-update:
-    default: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
-    only-one-max-progress: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+    default: <positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)
+    only-one-max-progress: <positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)
 titles:
   quest-accepted:
     title: <main>Завдання прийнято
@@ -184,199 +200,109 @@ titles:
 placeholders:
   questcooldownleftformatted:
     prefix: ''
-    minute: '1 хвилина'
+    minute: 1 хвилина
     minutes: '%MINUTES% хвилин'
-    hour: '1 година'
+    hour: 1 година
     hours: '%HOURS% годин'
-    day: '1 день'
+    day: 1 день
     days: '%DAYS% днів'
     no-cooldown: ''
 gui:
-  main:
-    title: '                <highlight2>Завдання'
-    backgroundFill:
-      material: 'Чорна скляна панель'
-    background:
-      '1':
-        minX: 0
-        maxX: 8
-        minY: 0
-        maxY: 0
-      '2':
-        minX: 0
-        maxX: 0
-        minY: 0
-        maxY: 5
-      '3':
-        minX: 1
-        maxX: 1
-        minY: 0
-        maxY: 5
-      '4':
-        minX: 2
-        maxX: 2
-        minY: 0
-        maxY: 5
+  abort-quest-confirm:
+    title: <!i><red>Перервати квест <dark_gray>- <dark_red>Ви впевнені?
+    button:
+      cancelabort:
+        name: <!i><red>Натисніть, щоб скасувати
+        lore:
+        - '<!i><gray>Скасовує переривання квесту '
+      confirmabort:
+        name: <!i><dark_red>Натисніть, щоб перервати квест
+        lore:
+        - '<!i><gray>Перериває квест '
+        - <!i><dark_red>Весь прогрес буде втрачено!
+  active-quest-info:
+    title: <main>Інформація про квест <gray>- <green>%QUESTNAME%
+    button:
+      infobook:
+        name: <!i><green>%QUESTNAME%
+        lore:
+        - <!i><gray>%QUESTDESCRIPTION%
+      abort:
+        name: <!i><red>Перервати квест
+        lore:
+        - <!i><red>Натисніть, щоб перервати квест
+      back:
+        name: <!i><red>Назад на попередню сторінку
+  category-take:
+    title: <main>Взяти новий квест
+    button:
+      return:
+        name: <!i><red>Назад
+      quests:
+        name: <!i><!i><green>%QUESTNAME%
+        lore:
+        - <!i><gray>%QUESTDESCRIPTION%
+      back:
+        name: <!i><gray>Попередня сторінка
+      forward:
+        name: <!i><gray>Наступна сторінка
+  main-base:
+    title: <main>Меню квестів
     button:
       questpoints:
-        name: "<highlight>Бали завдань"
+        name: <!i><main>Очки квестів
         lore:
-          - "<main>Поточні бали завдань: <highlight2>%QUESTPOINTS%"
-        x: 8
-        y: 0
-      takequest:
-        name: "<positive>Взяти Завдання"
+        - '<!i><gray>Ваші очки квестів: <yellow>%QUESTPOINTS%'
+      tab1:
+        name: <!i><main>Активні квести
         lore:
-          - "<unimportant>Почати нове Завдання!"
-          - ""
-          - "<veryUnimportant>Деякі Завдання не можуть"
-          - "<veryUnimportant>починатись таким чином."
-        x: 0
-        y: 1
-      abortquest:
-        name: "<negative>Скасувати Завдання"
+        - <!i><gray>Переглянути активні квести
+      tab2:
+        name: <!i><main>Взяти новий квест
         lore:
-          - ""
-          - "<veryUnimportant>Скасування Завдання може"
-          - "<veryUnimportant>привести до покарань."
-        x: 0
-        y: 2
-      activequests:
-        name: "<highlight>Активні Завдання"
-        lore:
-          - ""
-          - "<veryUnimportant>Показує усі ваші"
-          - "<veryUnimportant>активні Завдання."
-        x: 0
-        y: 3
-  activeQuests:
-    title: '             <highlight2>Активні Завдання'
+        - <!i><gray>Переглянути доступні квести
+  main-active:
+    title: <main>Меню квестів <gray>- <highlight>Активні квести
     button:
-      activeQuestButton:
-        name: "<highlight>%QUESTNAME% <positive>[АКТИВНО]"
+      quests:
+        name: <!i><green>%QUESTNAME%
         lore:
-          - "<unimportant>Прогрес: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<main>Клацніть, щоб побачити подробиці!"
-  reward-hidden-text: . <unimportant>[ПРИХОВАНО]
-  availableQuests:
-    title: '         <highlight2>Доступні Завдання'
+        - <!i><gray>%QUESTDESCRIPTION%
+      back:
+        name: <!i><gray>Попередня сторінка
+      forward:
+        name: <!i><gray>Наступна сторінка
+  main-take:
+    title: <main>Меню квестів <gray>- <highlight>Взяти новий квест
     button:
-      questPreview:
-        name-if-not-accepted: "<highlight>%QUESTNAME%"
-        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ПРИЙНЯТО]"
+      categories:
+        name: <!i><yellow>%CATEGORYNAME%
         lore:
-          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-          - "<main>Клацніть, щоб відкрити Завдання!"
-  takeQuestChoose:
-    title: <highlight2>Яке завдання ви хочете взяти?
-    size:
-      minX: 3
-      minY: 1
-      maxX: 8
-      maxY: 5
+        - <!i><gray>Натисніть, щоб переглянути доступні
+        - <!i><gray>квести в категорії
+      back:
+        name: <!i><gray>Попередня сторінка
+      forward:
+        name: <!i><gray>Наступна сторінка
+  npc-available-quests:
+    title: <!i><main>Доступні квести
     button:
-      questPreview:
-        name-if-not-accepted: "<highlight>%QUESTNAME%"
-        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ПРИЙНЯТО]"
+      quest:
+        name: <!i><green>%QUESTNAME%
         lore:
-          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-          - "<main>Клацніть, щоб переглянути Завдання!"
-  abortQuestChoose:
-    title: '  <highlight2>Активні Завдання, які ви можете скасувати'
+        - <!i><gray>%QUESTDESCRIPTION%
+      back:
+        name: <!i><gray>Попередня сторінка
+      forward:
+        name: <!i><gray>Наступна сторінка
+  quest-preview:
+    title: <main>Попередній перегляд квесту
     button:
-      abortQuestPreview:
-        name: "<highlight>%QUESTNAME% <positive>[АКТИВНО]"
+      info:
+        name: <!i><green>%QUESTNAME%
         lore:
-          - "<unimportant>Прогрес: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Клацніть, щоб скасувати завдання!"
-  abortQuest:
-    title: '         <negative>Підтвердження скасування'
-    button:
-      confirmAbort:
-        name: "<highlight>%QUESTNAME% <positive>[АКТИВНО]"
-        lore:
-          - "<unimportant>Прогрес: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Клацніть, щоб скасувати завдання <highlight>%QUESTNAME%</highlight>!"
-        x: 3
-        y: 1
-      cancelAbort:
-        name: "<positive>Клацніть, щоб НЕ скасовувати це Завдання"
-        lore:
-          - "<positive>та скасувати цю дію"
-        x: 5
-        y: 1
-  previewQuest:
-    title: <highlight2>Попередній перегляд Завдання
-    button:
-      description:
-        name: "<highlight>Опис"
-        lore:
-          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-        lore-if-empty:
-          - "<veryUnimportant>???"
-        x: 2
-        y: 0
-      rewards:
-        name: "<positive>Нагороди"
-        lore:
-          - "<WHITE>%QUESTREWARDS%"
-        lore-if-empty:
-          - "<veryUnimportant>Немає або приховано"
-        x: 4
-        y: 0
-      requirements:
-        name: "<negative>Вимоги"
-        lore:
-          - "<WHITE>%QUESTREQUIREMENTS%"
-        lore-if-empty:
-          - "<veryUnimportant>-"
-        x: 6
-        y: 0
-      confirmTake:
-        name: "<highlight>%QUESTNAME%"
-        lore:
-          - "<positive>Клацніть, щоб взяти завдання <highlight>%QUESTNAME%"
-        x: 3
-        y: 2
-      cancelTake:
-        name: "<negative>Клацніть, щоб НЕ брати це завдання"
-        lore:
-          - "<negative>та скасувати цю дію"
-        x: 5
-        y: 2
-  progress:
-    title: <highlight2>Подробиці для Завдання
-    button:
-      unlockedObjective:
-        name: "<highlight2>%ACTIVEOBJECTIVEID%. <highlight>%OBJECTIVENAME%"
-        lore:
-          - "<main><BOLD>АКТИВНО</BOLD>"
-          - "<veryUnimportant>%WRAPPEDOBJECTIVEDESCRIPTION%"
-          - "<unimportant>%OBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant>Прогрес: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
-        lore-if-description-empty:
-          - "<main><BOLD>АКТИВНО</BOLD>"
-          - "<veryUnimportant>Немає опису"
-          - "<unimportant>%OBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant>Прогрес: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
-      lockedObjective:
-        name: "<highlight2>%ACTIVEOBJECTIVEID%. <unimportant><BOLD>[HIDDEN]"
-        lore:
-          - "<warn>Ця ціль ще"
-          - "<warn>не була розблокована!"
-      completedObjective:
-        name: "<highlight2><strikethrough>%ACTIVEOBJECTIVEID%. <positive><strikethrough>%OBJECTIVENAME%"
-        lore:
-          - "<positive><BOLD>ВИКОНАНО</BOLD>"
-          - "<veryUnimportant><strikethrough>%WRAPPEDOBJECTIVEDESCRIPTION%"
-          - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant><strikethrough>Прогрес: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
-        lore-if-description-empty:
-          - "<positive><BOLD>ВИКОНАНО</BOLD>"
-          - "<veryUnimportant><strikethrough>Немає опису"
-          - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant><strikethrough>Прогрес: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
+        - <!i><gray>%QUESTDESCRIPTION%
+      accept:
+        name: <!i><green>Прийняти квест
+      decline:
+        name: <!i><red>Відхилити квест

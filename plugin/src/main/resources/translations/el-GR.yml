@@ -3,21 +3,26 @@ chat:
   wrong-command-usage: <error>Λανθασμένη χρήση εντολών!
   missing-permission: '<error>Ανεπαρκής άδεια! Απαιτούμενο node άδειας:  <highlight>%PERMISSION%'
   too-many-arguments: <error>Υπερβολικές μεταβλητές!
-  quest-successfully-accepted: |2
-    <success>Αναλάβατε επιτυχώς την αποστολή <highlight>%QUESTNAME%<success>.
+  quest-successfully-accepted: '<success>Αναλάβατε επιτυχώς την αποστολή <highlight>%QUESTNAME%<success>.
+
+    '
   quest-description: '<main>Περιγραφή αποστολής: <unimportant>%QUESTDESCRIPTION%'
   quest-already-accepted: <error>Έχετε ήδη αναλάβει αυτή την αποστολή.
-  quest-failed: |2
-    <error><bold>Aποτύχατε <warn>στην αποστολή <highlight>%QUESTNAME%<warn>!
+  quest-failed: '<error><bold>Aποτύχατε <warn>στην αποστολή <highlight>%QUESTNAME%<warn>!
+
+    '
   quest-aborted: ''
-  quest-completed-and-rewards-given: |2
-    <CENTER><success>[Η αποστολή ολοκληρώθηκε]
+  quest-completed-and-rewards-given: '<CENTER><success>[Η αποστολή ολοκληρώθηκε]
+
     <CENTER><highlight><bold>%QUESTNAME%
+
     <EMPTY>
+
+    '
   quest-completed-rewards-prefix: '    <highlight>Ανταμοιβές:'
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
-  quest-not-all-requirements-fulfilled: '<negative>You do not fulfill all the requirements this quest needs! Requirement still needed:'
+  quest-not-all-requirements-fulfilled: '<negative>Δεν πληροίς όλες τις απαιτήσεις που χρειάζεται αυτή η αποστολή! Απαίτηση που λείπει ακόμη:'
   action-not-all-conditions-fulfilled: '<negative>Δεν πληρείτε όλες τις προϋποθέσεις που χρειάζεται αυτή η ενέργεια! Απαιτούνται ακόμα προϋποθέσεις:'
   missing-quest-description: <warn>Αυτή η αποστολή δεν έχει περιγραφή.
   objectives-label-after-quest-accepting: '<main>Στόχοι:'
@@ -25,46 +30,46 @@ chat:
     query: <warn>Αυτήν τη στιγμή έχετε <highlight>%QUESTPOINTS% <warn>πόντους αποστολής.
     none: <error>Δεν έχετε πόντους αναζήτησης!
     notify-when-changed:
-      set: '<main>Your quest points have been set to <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.'
-      add: '<highlight>+%QUESTPOINTSTOADD% <success>quest points!'
-      remove: '<highlight>-%QUESTPOINTSTOREMOVE% <negative>quest points!'
+      set: <main>Οι πόντοι αποστολής σου ορίστηκαν σε <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.
+      add: <highlight>+%QUESTPOINTSTOADD% <success>πόντοι αποστολής!
+      remove: <highlight>-%QUESTPOINTSTOREMOVE% <negative>πόντοι αποστολής!
   no-quests-accepted: <error>Δεν έχετε ενεργές αποστολές!
   quest-does-not-exist: <error>Η αποστολή <highlight>%QUESTNAME% <error>δεν υπάρχει!
   quest-not-found-or-does-not-exist: <error>Η αποστολή <highlight>%QUESTNAME% <error>δεν βρέθηκε ή δεν είναι ενεργή!
   active-quests-label: '<warn>Ενεργές αποστολές:'
   take-disabled: <error>Η αποδοχή ή η προεπισκόπηση της αποστολής <highlight>%QUESTNAME%</highlight> είναι απενεργοποιημένη.
-  abort-disabled: <error>Aborting the quest <highlight>%QUESTNAME%</highlight> is disabled.
+  abort-disabled: <error>Η ακύρωση της αποστολής <highlight>%QUESTNAME%</highlight> είναι απενεργοποιημένη.
   quest-not-active-error: '<error>Σφάλμα: Η <highlight>%QUESTNAME% <error>δεν είναι ενεργή αποστολή!'
-  force-add-active-quest-accepted: '<success>Successfully accepted the quest (Forced).'
+  force-add-active-quest-accepted: <success>Η αποστολή έγινε αποδεκτή με επιτυχία (Εξαναγκασμένη).
   add-active-quest-player-object-not-found: '<warn>Σφάλμα: Το αντικείμενο του παίκτη δε βρέθηκε. Αναφέρετέ το στον προγραμματιστή του πρόσθετου.'
-  reached-max-accepts-limit: '<red>You have accepted this quest too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%ACCEPTEDAMOUNT%</highlight> times.'
-  reached-max-fails-limit: '<red>You have failed this quest too many times already. You can only fail it <highlight>%MAXFAILS%</highlight> times, but you have already failed it <highlight>%FAILEDAMOUNT%</highlight> times.'
-  reached-max-completions-limit: '<red>You have completed this quest too many times already. You can only complete it <highlight>%MAXCOMPLETIONS%</highlight> times, but you have already completed it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
-  reached-max-active-quests-per-player-limit: '<red>You can not accept more than <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> Quests.'
+  reached-max-accepts-limit: <red>Έχεις ήδη αποδεχτεί αυτή την αποστολή πάρα πολλές φορές. Μπορείς να την αποδεχτείς μόνο <highlight>%MAXACCEPTS%</highlight> φορές, αλλά την έχεις ήδη αποδεχτεί <highlight>%ACCEPTEDAMOUNT%</highlight> φορές.
+  reached-max-fails-limit: <red>Έχεις ήδη αποτύχει σε αυτή την αποστολή πάρα πολλές φορές. Μπορείς να αποτύχεις μόνο <highlight>%MAXFAILS%</highlight> φορές, αλλά έχεις ήδη αποτύχει <highlight>%FAILEDAMOUNT%</highlight> φορές.
+  reached-max-completions-limit: <red>Έχεις ήδη ολοκληρώσει αυτή την αποστολή πάρα πολλές φορές. Μπορείς να την ολοκληρώσεις μόνο <highlight>%MAXCOMPLETIONS%</highlight> φορές, αλλά την έχεις ήδη ολοκληρώσει <highlight>%COMPLETEDAMOUNT%</highlight> φορές.
+  reached-max-active-quests-per-player-limit: <red>Δεν μπορείς να αποδεχτείς περισσότερες από <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> αποστολές.
   quest-on-cooldown:
-    minute: '<red>This quest is on a cooldown! You have to wait another <highlight>1 minute</highlight> until you can take it again.'
-    minutes: '<red>This quest is on a cooldown! You have to wait another <highlight>%MINUTES% minutes</highlight> until you can take it again.'
-    hour: '<red>This quest is on a cooldown! You have to wait another <highlight>1 hour</highlight> until you can take it again.'
-    hours: '<red>This quest is on a cooldown! You have to wait another <highlight>%HOURS% hours</highlight> until you can take it again.'
-    day: '<red>This quest is on a cooldown! You have to wait another <highlight>1 day</highlight> until you can take it again.'
-    days: '<red>This quest is on a cooldown! You have to wait another <highlight>%DAYS% days</highlight> until you can take it again.'
+    minute: <red>Αυτή η αποστολή είναι σε αναμονή! Πρέπει να περιμένεις άλλο <highlight>1 λεπτό</highlight> μέχρι να μπορέσεις να την πάρεις ξανά.
+    minutes: <red>Αυτή η αποστολή είναι σε αναμονή! Πρέπει να περιμένεις άλλα <highlight>%MINUTES% λεπτά</highlight> μέχρι να μπορέσεις να την πάρεις ξανά.
+    hour: <red>Αυτή η αποστολή είναι σε αναμονή! Πρέπει να περιμένεις άλλη <highlight>1 ώρα</highlight> μέχρι να μπορέσεις να την πάρεις ξανά.
+    hours: <red>Αυτή η αποστολή είναι σε αναμονή! Πρέπει να περιμένεις άλλες <highlight>%HOURS% ώρες</highlight> μέχρι να μπορέσεις να την πάρεις ξανά.
+    day: <red>Αυτή η αποστολή είναι σε αναμονή! Πρέπει να περιμένεις άλλη <highlight>1 ημέρα</highlight> μέχρι να μπορέσεις να την πάρεις ξανά.
+    days: <red>Αυτή η αποστολή είναι σε αναμονή! Πρέπει να περιμένεις άλλες <highlight>%DAYS% ημέρες</highlight> μέχρι να μπορέσεις να την πάρεις ξανά.
   profiles:
-    list-current: '<highlight>Current profile: <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
-    list-other-heading: '<highlight>Other profiles:'
+    list-current: '<highlight>Τρέχον προφίλ: <main>%PROFILENAME% (%QUESTPOINTS% πόντοι αποστολής)'
+    list-other-heading: '<highlight>Άλλα προφίλ:'
     list-other-none: '  <main>Δεν έχετε άλλα προφίλ.'
-    list-other: '  <highlight>- <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
-    change-same-profile: '<error>You are already using that profile!'
-    change-profile-doesnt-exist: '<error>Αυτό το προφίλ δεν υπάρχει.'
-    changed-successfully: '<success>Έχετε αλλάξει με επιτυχία το προφίλ σας από %OLDPROFILENAME% σε <highlight>%NEWPROFILENAME%</highlight>!'
-    create-already-exists: '<error>Υπάρχει ήδη ένα προφίλ με το όνομα <highlight>%NEWPROFILENAME%</highlight>.'
-    create-invalid-characters: '<error>Το όνομα προφίλ που δώσατε περιέχει μη έγκυρους χαρακτήρες.'
-    created-successfully: '<success>You have successfully created the profile <highlight>%NEWPROFILENAME%</highlight>! To switch to it, use <highlight2>/nq profiles change %NEWPROFILENAME%</highlight2>'
+    list-other: '  <highlight>- <main>%PROFILENAME% (%QUESTPOINTS% πόντοι αποστολής)'
+    change-same-profile: <error>Χρησιμοποιείς ήδη αυτό το προφίλ!
+    change-profile-doesnt-exist: <error>Αυτό το προφίλ δεν υπάρχει.
+    changed-successfully: <success>Έχετε αλλάξει με επιτυχία το προφίλ σας από %OLDPROFILENAME% σε <highlight>%NEWPROFILENAME%</highlight>!
+    create-already-exists: <error>Υπάρχει ήδη ένα προφίλ με το όνομα <highlight>%NEWPROFILENAME%</highlight>.
+    create-invalid-characters: <error>Το όνομα προφίλ που δώσατε περιέχει μη έγκυρους χαρακτήρες.
+    created-successfully: <success>Δημιούργησες με επιτυχία το προφίλ <highlight>%NEWPROFILENAME%</highlight>! Για να μεταβείς σε αυτό, χρησιμοποίησε <highlight2>/nq profiles change %NEWPROFILENAME%</highlight2>
   conversations:
-    choose-answer-prefix: |-
-      <EMPTY>
-      <main>Επιλέξτε την απάντησή σας:</main>
-    choose-answer-answer-hover-text: '<highlight>Κάντε κλικ για να απαντήσετε'
-    ended-previous-conversation: '<main>Έχετε τερματίσει την προηγούμενη συνομιλία σας!'
+    choose-answer-prefix: '<EMPTY>
+
+      <main>Επιλέξτε την απάντησή σας:</main>'
+    choose-answer-answer-hover-text: <highlight>Κάντε κλικ για να απαντήσετε
+    ended-previous-conversation: <main>Έχετε τερματίσει την προηγούμενη συνομιλία σας!
     speaker-line-format: '%SPEAKERCOLOR%[%SPEAKER%] <GRAY>%MESSAGE%'
     answer-option-line-format: ' <main>%OPTIONNUMBER%. <gray>%MESSAGE%'
   objectives:
@@ -72,13 +77,17 @@ chat:
     counterForObjectiveObjective: '<highlight>%OBJECTIVEIDWITHSUBID%.</highlight> <main>%OBJECTIVEHOLDERNAME%:'
     subObjectivePrefixAppend: '    '
     hidden: <warn>%OBJECTIVEID%. <unimportant><bold>[HIDDEN]
-    description: '    <veryUnimportant>└─ <unimportant>Description: <main>%OBJECTIVEDESCRIPTION%'
-    progress: '    <veryUnimportant>└─ <unimportant>Progress: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
-    successfully-completed: |2
+    description: '    <veryUnimportant>└─ <unimportant>Περιγραφή: <main>%OBJECTIVEDESCRIPTION%'
+    progress: '    <veryUnimportant>└─ <unimportant>Πρόοδος: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
+    successfully-completed: '
 
       <CENTER><success>[Objective Completed]
+
       <CENTER><highlight><bold>%OBJECTIVENAME%</bold> <RESET><main>(%QUESTNAME%)
+
       <EMPTY>
+
+      '
     successfully-completed-rewards-prefix: '    <highlight>Ανταμοιβές:'
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
     successfully-completed-rewards-suffix: <EMPTY>
@@ -87,83 +96,83 @@ chat:
         prefix: '    <veryUnimportant>└─ <unimportant>'
         suffix: ''
       breakBlocks:
-        base: 'Break Blocks: <main>%BLOCKTOBREAK%'
+        base: 'Σπάσε μπλοκ: <main>%BLOCKTOBREAK%'
       breed:
-        base: 'Breed Mobs: <main>%ENTITYTOBREED%'
+        base: 'Αναπαραγωγή πλασμάτων: <main>%ENTITYTOBREED%'
       pickupItems:
-        base: 'Pickup Items: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
+        base: 'Μάζεψε αντικείμενα: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
       consumeItems:
-        base: 'Consume Items: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
+        base: 'Κατανάλωσε αντικείμενα: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: 'Craft Items: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+        base: 'Κατασκεύασε αντικείμενα: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: 'Deliver Items: <main>%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%(%'
-        deliver-to-npc: '      <GRAY>Deliver it to <WHITE>%NPCNAME%'
-        deliver-to-npc-not-available: '      <GRAY>The delivery NPC is currently not available!'
+        base: 'Παράδωσε αντικείμενα: <main>%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%(%'
+        deliver-to-npc: '      <GRAY>Παράδωσέ το στον <WHITE>%NPCNAME%'
+        deliver-to-npc-not-available: '      <GRAY>Ο NPC παράδοσης δεν είναι διαθέσιμος αυτή τη στιγμή!'
       enchant:
-        base: 'Enchant Items with %ENCHANTMENT%: <main>%ITEMTOENCHANTTYPE% %(%%ITEMTOENCHANTNAME%%(%'
+        base: 'Μαγέψε αντικείμενα με %ENCHANTMENT%: <main>%ITEMTOENCHANTTYPE% %(%%ITEMTOENCHANTNAME%%(%'
       escortNPC:
-        base: 'Escort <main>%NPCNAME%</main> to <main>%DESTINATIONNPCNAME%'
+        base: Συνόδευσε τον <main>%NPCNAME%</main> στον <main>%DESTINATIONNPCNAME%
       fishItems:
-        base: 'Fish Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
+        base: 'Ψάρεψε αντικείμενα: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
       killMobs:
-        base: 'Kill mobs: <main>%MOBTOKILL%'
+        base: 'Σκότωσε πλάσματα: <main>%MOBTOKILL%'
       otherQuest:
-        base: 'Complete Quest: <main>%OTHERQUESTNAME%'
+        base: 'Ολοκλήρωσε την αποστολή: <main>%OTHERQUESTNAME%'
       placeBlocks:
-        base: 'Place Blocks: <main>%BLOCKTOPLACE%'
+        base: 'Τοποθέτησε μπλοκ: <main>%BLOCKTOPLACE%'
       reachLocation:
-        base: 'Reach Location: <main>%LOCATIONNAME%'
+        base: 'Φτάσε στην τοποθεσία: <main>%LOCATIONNAME%'
       talkToNPC:
-        base: 'Talk to <main>%NAME%'
-        npc-not-available: '    <GRAY>The target NPC is currently not available!'
+        base: Μίλησε με τον <main>%NAME%
+        npc-not-available: '    <GRAY>Ο NPC-στόχος δεν είναι διαθέσιμος αυτή τη στιγμή!'
       triggerCommand:
-        base: 'Goal: <main>%TRIGGERNAME%'
+        base: 'Στόχος: <main>%TRIGGERNAME%'
       killEliteMobs:
-        base: 'Kill Elite Mob: <main>%ELITEMOBNAME%'
-        any: 'Kill any Elite Mob!'
+        base: 'Σκότωσε Elite πλάσμα: <main>%ELITEMOBNAME%'
+        any: Σκότωσε οποιοδήποτε Elite πλάσμα!
       runCommand:
-        base: 'Run command: <main>%COMMANDTORUN%'
+        base: 'Εκτέλεσε εντολή: <main>%COMMANDTORUN%'
       interact:
-        base: '%INTERACTTYPE% Location: <main>%COORDINATES% <main>in world %WORLDNAME%'
+        base: '%INTERACTTYPE% Τοποθεσία: <main>%COORDINATES% <main>στον κόσμο %WORLDNAME%'
       jump:
-        base: 'Jump <main>%AMOUNTOFJUMPS%</main> times'
+        base: Πήδα <main>%AMOUNTOFJUMPS%</main> φορές
       objective:
         base: '%OBJECTIVEHOLDERNAME%'
       sneak:
-        base: 'Sneak <main>%AMOUNTOFSNEAKS%</main> times'
+        base: Σύρσου <main>%AMOUNTOFSNEAKS%</main> φορές
       smelt:
-        base: 'Smelt Items: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+        base: 'Λιώσε αντικείμενα: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       openBuriedTreasure:
-        base: 'Open buried treasures'
+        base: Άνοιξε θαμμένους θησαυρούς
       shearSheep:
-        base: 'Shear <main>%AMOUNTOFSHEEP%</main> sheep'
+        base: Κούρεψε <main>%AMOUNTOFSHEEP%</main> πρόβατα
       townyReachResidentCount:
-        base: 'Reach resident amount: <main>%AMOUNT%'
+        base: 'Φτάσε αριθμό κατοίκων: <main>%AMOUNT%'
       townyNationReachTownCount:
-        base: 'Reach town amount with your nation: <main>%AMOUNT%'
+        base: 'Φτάσε αριθμό πόλεων με το έθνος σου: <main>%AMOUNT%'
       jobsRebornReachJobLevel:
-        base: 'Reach job level <main>%AMOUNT%</main> with job <main>%JOB%'
+        base: Φτάσε επίπεδο επαγγέλματος <main>%AMOUNT%</main> με το επάγγελμα <main>%JOB%
       SlimefunResearch:
-        base: 'Spend on research'
+        base: Ξόδεψε σε έρευνα
       ProjectKorraUseAbility:
-        base: 'Use Ability: <main>%ABILITY%'
+        base: 'Χρησιμοποίησε ικανότητα: <main>%ABILITY%'
       BetonQuestCompleteObjective:
-        base: 'Finish Objective: <main>%BETONQUESTOBJECTIVENAME%'
+        base: 'Ολοκλήρωσε τον στόχο: <main>%BETONQUESTOBJECTIVENAME%'
       ultimateJobsReachJobLevel:
-        base: 'Reach job level <main>%AMOUNT%</main> with job <main>%JOBID%'
+        base: Φτάσε επίπεδο επαγγέλματος <main>%AMOUNT%</main> με το επάγγελμα <main>%JOBID%
   conditions:
     boolean:
-      not-fulfilled: "<warn>Following needs to be %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
-      variable-not-found: "<error>Error: variable <highlight>%VARIABLENAME%</highlight> not found. Report this to the Server owner."
-      wrong-operator: "<error>Error: variable operator <highlight>%OPERATOR%/highlight> is invalid. Report this to the Server owner."
+      not-fulfilled: '<warn>Το ακόλουθο πρέπει να είναι %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>.'
+      variable-not-found: '<error>Σφάλμα: η μεταβλητή <highlight>%VARIABLENAME%</highlight> δεν βρέθηκε. Ανάφερέ το στον ιδιοκτήτη του διακομιστή.'
+      wrong-operator: '<error>Σφάλμα: ο τελεστής μεταβλητής <highlight>%OPERATOR%/highlight> δεν είναι έγκυρος. Ανάφερέ το στον ιδιοκτήτη του διακομιστή.'
 objective-tracking:
   actionbar-progress-update:
-    default: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
-    only-one-max-progress: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+    default: <positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)
+    only-one-max-progress: <positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)
   bossbar-progress-update:
-    default: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
-    only-one-max-progress: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+    default: <positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)
+    only-one-max-progress: <positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)
 titles:
   quest-accepted:
     title: <main>Αναλάβατε την αποστολή
@@ -177,199 +186,109 @@ titles:
 placeholders:
   questcooldownleftformatted:
     prefix: ''
-    minute: '1 minute'
-    minutes: '%MINUTES% minutes'
-    hour: '1 hour'
-    hours: '%HOURS% hours'
-    day: '1 day'
-    days: '%DAYS% days'
+    minute: 1 λεπτό
+    minutes: '%MINUTES% λεπτά'
+    hour: 1 ώρα
+    hours: '%HOURS% ώρες'
+    day: 1 ημέρα
+    days: '%DAYS% ημέρες'
     no-cooldown: ''
 gui:
-  main:
-    title: '<main>Αποστολές'
-    backgroundFill:
-      material: 'BLACK_STAINED_GLASS_PANE'
-    background:
-      '1':
-        minX: 0
-        maxX: 8
-        minY: 0
-        maxY: 0
-      '2':
-        minX: 0
-        maxX: 0
-        minY: 0
-        maxY: 5
-      '3':
-        minX: 1
-        maxX: 1
-        minY: 0
-        maxY: 5
-      '4':
-        minX: 2
-        maxX: 2
-        minY: 0
-        maxY: 5
+  abort-quest-confirm:
+    title: <!i><red>Ακύρωση αποστολής <dark_gray>- <dark_red>Είσαι σίγουρος;
+    button:
+      cancelabort:
+        name: <!i><red>Κάνε κλικ για ακύρωση
+        lore:
+        - '<!i><gray>Ακυρώνει τη ματαίωση της αποστολής '
+      confirmabort:
+        name: <!i><dark_red>Κάνε κλικ για ματαίωση αποστολής
+        lore:
+        - '<!i><gray>Ματαιώνει την αποστολή '
+        - <!i><dark_red>Όλη η πρόοδος θα χαθεί!
+  active-quest-info:
+    title: <main>Πληροφορίες αποστολής <gray>- <green>%QUESTNAME%
+    button:
+      infobook:
+        name: <!i><green>%QUESTNAME%
+        lore:
+        - <!i><gray>%QUESTDESCRIPTION%
+      abort:
+        name: <!i><red>Ματαίωση αποστολής
+        lore:
+        - <!i><red>Κάνε κλικ για ματαίωση αποστολής
+      back:
+        name: <!i><red>Πίσω στην προηγούμενη σελίδα
+  category-take:
+    title: <main>Πάρε νέα αποστολή
+    button:
+      return:
+        name: <!i><red>Πίσω
+      quests:
+        name: <!i><!i><green>%QUESTNAME%
+        lore:
+        - <!i><gray>%QUESTDESCRIPTION%
+      back:
+        name: <!i><gray>Προηγούμενη σελίδα
+      forward:
+        name: <!i><gray>Επόμενη σελίδα
+  main-base:
+    title: <main>Μενού αποστολών
     button:
       questpoints:
-        name: "<highlight>Quest Points"
+        name: <!i><main>Πόντοι αποστολής
         lore:
-          - "<main>Current quest points: <highlight2>%QUESTPOINTS%"
-        x: 8
-        y: 0
-      takequest:
-        name: "<positive>Take a Quest"
+        - '<!i><gray>Οι πόντοι αποστολής σου: <yellow>%QUESTPOINTS%'
+      tab1:
+        name: <!i><main>Ενεργές αποστολές
         lore:
-          - "<unimportant>Start a new Quest!"
-          - ""
-          - "<veryUnimportant>Some Quests cannot be"
-          - "<veryUnimportant>started like this."
-        x: 0
-        y: 1
-      abortquest:
-        name: "<negative>Abort a Quest"
+        - <!i><gray>Δες τις ενεργές αποστολές σου
+      tab2:
+        name: <!i><main>Πάρε νέα αποστολή
         lore:
-          - ""
-          - "<veryUnimportant>Aborting a Quest may"
-          - "<veryUnimportant>lead to punishments."
-        x: 0
-        y: 2
-      activequests:
-        name: "<highlight>Active Quests"
-        lore:
-          - ""
-          - "<veryUnimportant>Shows all of your"
-          - "<veryUnimportant>active Quests."
-        x: 0
-        y: 3
-  activeQuests:
-    title: '<main>Ενεργές αποστολές'
+        - <!i><gray>Δες τις διαθέσιμες αποστολές
+  main-active:
+    title: <main>Μενού αποστολών <gray>- <highlight>Ενεργές αποστολές
     button:
-      activeQuestButton:
-        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
+      quests:
+        name: <!i><green>%QUESTNAME%
         lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<main>Click to see details!"
-  reward-hidden-text: . <unimportant>[HIDDEN]
-  availableQuests:
-    title: '         <highlight2>Διαθέσιμες αποστολές'
+        - <!i><gray>%QUESTDESCRIPTION%
+      back:
+        name: <!i><gray>Προηγούμενη σελίδα
+      forward:
+        name: <!i><gray>Επόμενη σελίδα
+  main-take:
+    title: <main>Μενού αποστολών <gray>- <highlight>Πάρε νέα αποστολή
     button:
-      questPreview:
-        name-if-not-accepted: "<highlight>%QUESTNAME%"
-        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
+      categories:
+        name: <!i><yellow>%CATEGORYNAME%
         lore:
-          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-          - "<main>Click to open Quest!"
-  takeQuestChoose:
-    title: <main>Ποια αποστολή θες να αναλάβεις?
-    size:
-      minX: 3
-      minY: 1
-      maxX: 8
-      maxY: 5
+        - <!i><gray>Κάνε κλικ για να δεις τις διαθέσιμες
+        - <!i><gray>αποστολές στην κατηγορία
+      back:
+        name: <!i><gray>Προηγούμενη σελίδα
+      forward:
+        name: <!i><gray>Επόμενη σελίδα
+  npc-available-quests:
+    title: <!i><main>Διαθέσιμες αποστολές
     button:
-      questPreview:
-        name-if-not-accepted: "<highlight>%QUESTNAME%"
-        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
+      quest:
+        name: <!i><green>%QUESTNAME%
         lore:
-          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-          - "<success>Κάντε κλικ για προεπισκόπηση της αποστολής!"
-  abortQuestChoose:
-    title: '  <main>Ενεργές αποστολές που μπορείτε να ματαιώσετε'
+        - <!i><gray>%QUESTDESCRIPTION%
+      back:
+        name: <!i><gray>Προηγούμενη σελίδα
+      forward:
+        name: <!i><gray>Επόμενη σελίδα
+  quest-preview:
+    title: <main>Προεπισκόπηση αποστολής
     button:
-      abortQuestPreview:
-        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
+      info:
+        name: <!i><green>%QUESTNAME%
         lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Click to abort Quest!"
-  abortQuest:
-    title: '<error>Επιβεβαίωση ματαίωσης'
-    button:
-      confirmAbort:
-        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
-        lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Click to abort the quest <highlight>%QUESTNAME%</highlight>!"
-        x: 3
-        y: 1
-      cancelAbort:
-        name: "<positive>Click to NOT abort this quest"
-        lore:
-          - "<positive>and cancel this action"
-        x: 5
-        y: 1
-  previewQuest:
-    title: <highlight2>Quest Preview
-    button:
-      description:
-        name: "<highlight>Description"
-        lore:
-          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-        lore-if-empty:
-          - "<veryUnimportant>???"
-        x: 2
-        y: 0
-      rewards:
-        name: "<positive>Rewards"
-        lore:
-          - "<WHITE>%QUESTREWARDS%"
-        lore-if-empty:
-          - "<veryUnimportant>Καμία ή κρυφές"
-        x: 4
-        y: 0
-      requirements:
-        name: "<negative>Requirements"
-        lore:
-          - "<WHITE>%QUESTREQUIREMENTS%"
-        lore-if-empty:
-          - "<veryUnimportant>-"
-        x: 6
-        y: 0
-      confirmTake:
-        name: "<highlight>%QUESTNAME%"
-        lore:
-          - "<positive>Click to take the quest <highlight>%QUESTNAME%"
-        x: 3
-        y: 2
-      cancelTake:
-        name: "<negative>Click to NOT take this quest"
-        lore:
-          - "<negative>and cancel this action"
-        x: 5
-        y: 2
-  progress:
-    title: <highlight2>Details for Quest
-    button:
-      unlockedObjective:
-        name: "<highlight2>%ACTIVEOBJECTIVEID%. <highlight>%OBJECTIVENAME%"
-        lore:
-          - "<main><BOLD>ACTIVE</BOLD>"
-          - "<veryUnimportant>%WRAPPEDOBJECTIVEDESCRIPTION%"
-          - "<unimportant>%OBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
-        lore-if-description-empty:
-          - "<main><BOLD>ACTIVE</BOLD>"
-          - "<veryUnimportant>No Description"
-          - "<unimportant>%OBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
-      lockedObjective:
-        name: "<highlight2>%ACTIVEOBJECTIVEID%. <unimportant><BOLD>[HIDDEN]"
-        lore:
-          - "<warn>This objective has not yet"
-          - "<warn>been unlocked!"
-      completedObjective:
-        name: "<highlight2><strikethrough>%ACTIVEOBJECTIVEID%. <positive><strikethrough>%OBJECTIVENAME%"
-        lore:
-          - "<positive><BOLD>COMPLETED</BOLD>"
-          - "<veryUnimportant><strikethrough>%WRAPPEDOBJECTIVEDESCRIPTION%"
-          - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
-        lore-if-description-empty:
-          - "<positive><BOLD>COMPLETED</BOLD>"
-          - "<veryUnimportant><strikethrough>No Description"
-          - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
+        - <!i><gray>%QUESTDESCRIPTION%
+      accept:
+        name: <!i><green>Αποδοχή αποστολής
+      decline:
+        name: <!i><red>Απόρριψη αποστολής

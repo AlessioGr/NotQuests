@@ -1,92 +1,108 @@
 ---
 chat:
-  wrong-command-usage: <error>Wrong command usage!
-  missing-permission: '<error>No permission! Required permission node: <highlight>%PERMISSION%'
-  too-many-arguments: <error>Too many arguments!
-  quest-successfully-accepted: |2
+  wrong-command-usage: <error>استخدام خاطئ للأمر!
+  missing-permission: '<error>لا توجد صلاحية! عقدة الصلاحية المطلوبة: <highlight>%PERMISSION%'
+  too-many-arguments: <error>عدد كبير جدًا من الوسائط!
+  quest-successfully-accepted: '
 
-    <CENTER><main>[Quest Accepted]
-    <CENTER><highlight><BOLD>%QUESTNAME%
-    <EMPTY>
-  quest-description: '<main>Quest description: <unimportant>%QUESTDESCRIPTION%'
-  quest-already-accepted: <error>Quest already accepted.
-  quest-failed: |2
+    <CENTER><main>[تم قبول المهمة]
 
-    <CENTER><negative>[Quest Failed]
     <CENTER><highlight><BOLD>%QUESTNAME%
+
     <EMPTY>
+
+    '
+  quest-description: '<main>وصف المهمة: <unimportant>%QUESTDESCRIPTION%'
+  quest-already-accepted: <error>تم قبول المهمة بالفعل.
+  quest-failed: '
+
+    <CENTER><negative>[فشلت المهمة]
+
+    <CENTER><highlight><BOLD>%QUESTNAME%
+
+    <EMPTY>
+
+    '
   quest-aborted: ''
-  quest-completed-and-rewards-given: |2
+  quest-completed-and-rewards-given: '
 
-    <CENTER><positive>[Quest Completed]
+    <CENTER><positive>[اكتملت المهمة]
+
     <CENTER><highlight><BOLD>%QUESTNAME%
+
     <EMPTY>
-  quest-completed-rewards-prefix: '    <highlight>Rewards:'
+
+    '
+  quest-completed-rewards-prefix: '    <highlight>المكافآت:'
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
-  quest-not-all-requirements-fulfilled: '<negative>You do not fulfill all the requirements this quest needs! Requirement still needed:'
-  action-not-all-conditions-fulfilled: '<negative>You do not fulfill all the conditions this action needs! Conditions still needed:'
-  missing-quest-description: <unimportant>This quest has no quest description.
-  objectives-label-after-quest-accepting: '<highlight>Objectives:'
+  quest-not-all-requirements-fulfilled: '<negative>أنت لا تستوفي جميع المتطلبات التي تحتاجها هذه المهمة! المتطلب الذي ما زال مطلوبًا:'
+  action-not-all-conditions-fulfilled: '<negative>أنت لا تستوفي جميع الشروط التي يحتاجها هذا الإجراء! الشروط التي ما زالت مطلوبة:'
+  missing-quest-description: <unimportant>هذه المهمة ليس لها وصف.
+  objectives-label-after-quest-accepting: '<highlight>الأهداف:'
   questpoints:
-    query: <main>You currently have <highlight>%QUESTPOINTS%</highlight> quest points.
-    none: <error>Seems like you don't have any quest points!
+    query: <main>لديك حاليًا <highlight>%QUESTPOINTS%</highlight> نقطة مهمة.
+    none: <error>يبدو أنه ليس لديك أي نقاط مهام!
     notify-when-changed:
-      set: '<main>Your quest points have been set to <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.'
-      add: '<highlight>+%QUESTPOINTSTOADD% <success>quest points!'
-      remove: '<highlight>-%QUESTPOINTSTOREMOVE% <negative>quest points!'
-  no-quests-accepted: <error>Seems like you don't have any active quests!
-  quest-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> does not exist!
-  quest-not-found-or-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> not found or not active!
-  active-quests-label: '<highlight>Active quests:'
-  take-disabled: <error>Accepting or previewing the quest <highlight>%QUESTNAME%</highlight> is disabled.
-  abort-disabled: <error>Aborting the quest <highlight>%QUESTNAME%</highlight> is disabled.
-  quest-not-active-error: '<error>Error: <highlight>%QUESTNAME%</highlight> is not an active Quest!'
-  force-add-active-quest-accepted: '<success>Successfully accepted the quest (Forced).'
-  add-active-quest-player-object-not-found: '<warn>Error: Player object not found. Please report this to the plugin developer.'
-  reached-max-accepts-limit: '<red>You have accepted this quest too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%ACCEPTEDAMOUNT%</highlight> times.'
-  reached-max-fails-limit: '<red>You have failed this quest too many times already. You can only fail it <highlight>%MAXFAILS%</highlight> times, but you have already failed it <highlight>%FAILEDAMOUNT%</highlight> times.'
-  reached-max-completions-limit: '<red>You have completed this quest too many times already. You can only complete it <highlight>%MAXCOMPLETIONS%</highlight> times, but you have already completed it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
-  reached-max-active-quests-per-player-limit: '<red>You can not accept more than <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> Quests.'
+      set: <main>تم تعيين نقاط مهامك إلى <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.
+      add: <highlight>+%QUESTPOINTSTOADD% <success>نقطة مهمة!
+      remove: <highlight>-%QUESTPOINTSTOREMOVE% <negative>نقطة مهمة!
+  no-quests-accepted: <error>يبدو أنه ليس لديك أي مهام نشطة!
+  quest-does-not-exist: <error>المهمة <highlight>%QUESTNAME%</highlight> غير موجودة!
+  quest-not-found-or-does-not-exist: <error>المهمة <highlight>%QUESTNAME%</highlight> غير موجودة أو غير نشطة!
+  active-quests-label: '<highlight>المهام النشطة:'
+  take-disabled: <error>قبول أو معاينة المهمة <highlight>%QUESTNAME%</highlight> معطّل.
+  abort-disabled: <error>إلغاء المهمة <highlight>%QUESTNAME%</highlight> معطّل.
+  quest-not-active-error: '<error>خطأ: <highlight>%QUESTNAME%</highlight> ليست مهمة نشطة!'
+  force-add-active-quest-accepted: <success>تم قبول المهمة بنجاح (إجباري).
+  add-active-quest-player-object-not-found: '<warn>خطأ: لم يتم العثور على كائن اللاعب. يرجى إبلاغ مطوّر الإضافة بهذا.'
+  reached-max-accepts-limit: <red>لقد قبلت هذه المهمة عددًا كبيرًا جدًا من المرات بالفعل. يمكنك قبولها <highlight>%MAXACCEPTS%</highlight> مرة فقط، لكنك قبلتها بالفعل <highlight>%ACCEPTEDAMOUNT%</highlight> مرة.
+  reached-max-fails-limit: <red>لقد فشلت في هذه المهمة عددًا كبيرًا جدًا من المرات بالفعل. يمكنك الفشل فيها <highlight>%MAXFAILS%</highlight> مرة فقط، لكنك فشلت فيها بالفعل <highlight>%FAILEDAMOUNT%</highlight> مرة.
+  reached-max-completions-limit: <red>لقد أكملت هذه المهمة عددًا كبيرًا جدًا من المرات بالفعل. يمكنك إكمالها <highlight>%MAXCOMPLETIONS%</highlight> مرة فقط، لكنك أكملتها بالفعل <highlight>%COMPLETEDAMOUNT%</highlight> مرة.
+  reached-max-active-quests-per-player-limit: <red>لا يمكنك قبول أكثر من <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> مهمة.
   quest-on-cooldown:
-    minute: '<red>This quest is on a cooldown! You have to wait another <highlight>1 minute</highlight> until you can take it again.'
-    minutes: '<red>This quest is on a cooldown! You have to wait another <highlight>%MINUTES% minutes</highlight> until you can take it again.'
-    hour: '<red>This quest is on a cooldown! You have to wait another <highlight>1 hour</highlight> until you can take it again.'
-    hours: '<red>This quest is on a cooldown! You have to wait another <highlight>%HOURS% hours</highlight> until you can take it again.'
-    day: '<red>This quest is on a cooldown! You have to wait another <highlight>1 day</highlight> until you can take it again.'
-    days: '<red>This quest is on a cooldown! You have to wait another <highlight>%DAYS% days</highlight> until you can take it again.'
+    minute: <red>هذه المهمة في فترة انتظار! عليك الانتظار <highlight>دقيقة واحدة</highlight> أخرى حتى تتمكن من أخذها مرة أخرى.
+    minutes: <red>هذه المهمة في فترة انتظار! عليك الانتظار <highlight>%MINUTES% دقيقة</highlight> أخرى حتى تتمكن من أخذها مرة أخرى.
+    hour: <red>هذه المهمة في فترة انتظار! عليك الانتظار <highlight>ساعة واحدة</highlight> أخرى حتى تتمكن من أخذها مرة أخرى.
+    hours: <red>هذه المهمة في فترة انتظار! عليك الانتظار <highlight>%HOURS% ساعة</highlight> أخرى حتى تتمكن من أخذها مرة أخرى.
+    day: <red>هذه المهمة في فترة انتظار! عليك الانتظار <highlight>يومًا واحدًا</highlight> آخر حتى تتمكن من أخذها مرة أخرى.
+    days: <red>هذه المهمة في فترة انتظار! عليك الانتظار <highlight>%DAYS% يوم</highlight> أخرى حتى تتمكن من أخذها مرة أخرى.
   profiles:
-    list-current: '<highlight>Current profile: <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
-    list-other-heading: '<highlight>Other profiles:'
-    list-other-none: '  <main>You have no more profiles.'
-    list-other: '  <highlight>- <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
-    change-same-profile: '<error>You are already using that profile!'
-    change-profile-doesnt-exist: '<error>That profile does not exist.'
-    changed-successfully: '<success>You have successfully changed your profile from %OLDPROFILENAME% to <highlight>%NEWPROFILENAME%</highlight>!'
-    create-already-exists: '<error>A profile with the name <highlight>%NEWPROFILENAME%</highlight> already exists.'
-    create-invalid-characters: '<error>The profile name you provided contains invalid characters.'
-    created-successfully: '<success>You have successfully created the profile <highlight>%NEWPROFILENAME%</highlight>! To switch to it, use <highlight2>/nq profiles change %NEWPROFILENAME%</highlight2>'
+    list-current: '<highlight>الملف الشخصي الحالي: <main>%PROFILENAME% (%QUESTPOINTS% نقطة مهمة)'
+    list-other-heading: '<highlight>الملفات الشخصية الأخرى:'
+    list-other-none: '  <main>ليس لديك المزيد من الملفات الشخصية.'
+    list-other: '  <highlight>- <main>%PROFILENAME% (%QUESTPOINTS% نقطة مهمة)'
+    change-same-profile: <error>أنت تستخدم هذا الملف الشخصي بالفعل!
+    change-profile-doesnt-exist: <error>هذا الملف الشخصي غير موجود.
+    changed-successfully: <success>لقد قمت بتغيير ملفك الشخصي بنجاح من %OLDPROFILENAME% إلى <highlight>%NEWPROFILENAME%</highlight>!
+    create-already-exists: <error>يوجد بالفعل ملف شخصي بالاسم <highlight>%NEWPROFILENAME%</highlight>.
+    create-invalid-characters: <error>اسم الملف الشخصي الذي قدمته يحتوي على أحرف غير صالحة.
+    created-successfully: <success>لقد أنشأت الملف الشخصي <highlight>%NEWPROFILENAME%</highlight> بنجاح! للتبديل إليه، استخدم <highlight2>/nq profiles change %NEWPROFILENAME%</highlight2>
   conversations:
-    choose-answer-prefix: |-
-      <EMPTY>
-      <main>Choose your answer:</main>
-    choose-answer-answer-hover-text: '<highlight>Click to answer'
-    ended-previous-conversation: '<main>You have ended your previous conversation!'
+    choose-answer-prefix: '<EMPTY>
+
+      <main>اختر إجابتك:</main>'
+    choose-answer-answer-hover-text: <highlight>انقر للإجابة
+    ended-previous-conversation: <main>لقد أنهيت محادثتك السابقة!
     speaker-line-format: '%SPEAKERCOLOR%[%SPEAKER%] <GRAY>%MESSAGE%'
     answer-option-line-format: ' <main>%OPTIONNUMBER%. <gray>%MESSAGE%'
   objectives:
     counter: '<highlight>%OBJECTIVEIDWITHSUBID%.</highlight> <main>%OBJECTIVENAME%:'
     counterForObjectiveObjective: '<highlight>%OBJECTIVEIDWITHSUBID%.</highlight> <main>%OBJECTIVEHOLDERNAME%:'
     subObjectivePrefixAppend: '    '
-    hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[HIDDEN]
-    description: '    <veryUnimportant>└─ <unimportant>Description: <main>%OBJECTIVEDESCRIPTION%'
-    progress: '    <veryUnimportant>└─ <unimportant>Progress: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
-    successfully-completed: |2
+    hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[مخفي]
+    description: '    <veryUnimportant>└─ <unimportant>الوصف: <main>%OBJECTIVEDESCRIPTION%'
+    progress: '    <veryUnimportant>└─ <unimportant>التقدم: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
+    successfully-completed: '
 
       <CENTER><success>[Objective Completed]
+
       <CENTER><highlight><bold>%OBJECTIVENAME%</bold> <RESET><main>(%QUESTNAME%)
+
       <EMPTY>
-    successfully-completed-rewards-prefix: '    <highlight>Rewards:'
+
+      '
+    successfully-completed-rewards-prefix: '    <highlight>المكافآت:'
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
     successfully-completed-rewards-suffix: <EMPTY>
     taskDescription:
@@ -94,289 +110,199 @@ chat:
         prefix: '    <veryUnimportant>└─ <unimportant>'
         suffix: ''
       breakBlocks:
-        base: 'Break Blocks: <main>%BLOCKTOBREAK%'
+        base: 'كسر الكتل: <main>%BLOCKTOBREAK%'
       breed:
-        base: 'Breed Mobs: <main>%ENTITYTOBREED%'
+        base: 'تربية الوحوش: <main>%ENTITYTOBREED%'
       pickupItems:
-        base: 'Pickup Items: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
+        base: 'التقاط العناصر: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
       consumeItems:
-        base: 'Consume Items: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
+        base: 'استهلاك العناصر: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: 'Craft Items: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+        base: 'صناعة العناصر: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: 'Deliver Items: <main>%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%(%'
-        deliver-to-npc: '      <GRAY>Deliver it to <WHITE>%NPCNAME%'
-        deliver-to-npc-not-available: '      <GRAY>The delivery NPC is currently not available!'
+        base: 'تسليم العناصر: <main>%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%(%'
+        deliver-to-npc: '      <GRAY>سلّمها إلى <WHITE>%NPCNAME%'
+        deliver-to-npc-not-available: '      <GRAY>شخصية التسليم غير متاحة حاليًا!'
       enchant:
-        base: 'Enchant Items with %ENCHANTMENT%: <main>%ITEMTOENCHANTTYPE% %(%%ITEMTOENCHANTNAME%%(%'
+        base: 'سحر العناصر بـ %ENCHANTMENT%: <main>%ITEMTOENCHANTTYPE% %(%%ITEMTOENCHANTNAME%%(%'
       escortNPC:
-        base: 'Escort <main>%NPCNAME%</main> to <main>%DESTINATIONNPCNAME%'
+        base: رافق <main>%NPCNAME%</main> إلى <main>%DESTINATIONNPCNAME%
       fishItems:
-        base: 'Fish Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
+        base: 'صيد العناصر: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
       killMobs:
-        base: 'Kill mobs: <main>%MOBTOKILL%'
+        base: 'قتل الوحوش: <main>%MOBTOKILL%'
       otherQuest:
-        base: 'Complete Quest: <main>%OTHERQUESTNAME%'
+        base: 'إكمال المهمة: <main>%OTHERQUESTNAME%'
       placeBlocks:
-        base: 'Place Blocks: <main>%BLOCKTOPLACE%'
+        base: 'وضع الكتل: <main>%BLOCKTOPLACE%'
       reachLocation:
-        base: 'Reach Location: <main>%LOCATIONNAME%'
+        base: 'الوصول إلى الموقع: <main>%LOCATIONNAME%'
       talkToNPC:
-        base: 'Talk to <main>%NAME%'
-        npc-not-available: '    <GRAY>The target NPC is currently not available!'
+        base: تحدّث إلى <main>%NAME%
+        npc-not-available: '    <GRAY>الشخصية المستهدفة غير متاحة حاليًا!'
       triggerCommand:
-        base: 'Goal: <main>%TRIGGERNAME%'
+        base: 'الهدف: <main>%TRIGGERNAME%'
       killEliteMobs:
-        base: 'Kill Elite Mob: <main>%ELITEMOBNAME%'
-        any: 'Kill any Elite Mob!'
+        base: 'اقتل الوحش النخبة: <main>%ELITEMOBNAME%'
+        any: اقتل أي وحش نخبة!
       runCommand:
-        base: 'Run command: <main>%COMMANDTORUN%'
+        base: 'نفّذ الأمر: <main>%COMMANDTORUN%'
       interact:
-        base: '%INTERACTTYPE% Location: <main>%COORDINATES% <main>in world %WORLDNAME%'
+        base: '%INTERACTTYPE% الموقع: <main>%COORDINATES% <main>في العالم %WORLDNAME%'
       jump:
-        base: 'Jump <main>%AMOUNTOFJUMPS%</main> times'
+        base: اقفز <main>%AMOUNTOFJUMPS%</main> مرة
       objective:
         base: '%OBJECTIVEHOLDERNAME%'
       sneak:
-        base: 'Sneak <main>%AMOUNTOFSNEAKS%</main> times'
+        base: تسلّل <main>%AMOUNTOFSNEAKS%</main> مرة
       smelt:
-        base: 'Smelt Items: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+        base: 'صهر العناصر: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       openBuriedTreasure:
-        base: 'Open buried treasures'
+        base: افتح الكنوز المدفونة
       shearSheep:
-        base: 'Shear <main>%AMOUNTOFSHEEP%</main> sheep'
+        base: جزّ <main>%AMOUNTOFSHEEP%</main> خروف
       townyReachResidentCount:
-        base: 'Reach resident amount: <main>%AMOUNT%'
+        base: 'الوصول إلى عدد السكان: <main>%AMOUNT%'
       townyNationReachTownCount:
-        base: 'Reach town amount with your nation: <main>%AMOUNT%'
+        base: 'الوصول إلى عدد البلدات مع أمتك: <main>%AMOUNT%'
       jobsRebornReachJobLevel:
-        base: 'Reach job level <main>%AMOUNT%</main> with job <main>%JOB%'
+        base: الوصول إلى مستوى الوظيفة <main>%AMOUNT%</main> بالوظيفة <main>%JOB%
       SlimefunResearch:
-        base: 'Spend on research'
+        base: أنفق على البحث
       ProjectKorraUseAbility:
-        base: 'Use Ability: <main>%ABILITY%'
+        base: 'استخدم القدرة: <main>%ABILITY%'
       BetonQuestCompleteObjective:
-        base: 'Finish Objective: <main>%BETONQUESTOBJECTIVENAME%'
+        base: 'أنهِ الهدف: <main>%BETONQUESTOBJECTIVENAME%'
       ultimateJobsReachJobLevel:
-        base: 'Reach job level <main>%AMOUNT%</main> with job <main>%JOBID%'
+        base: الوصول إلى مستوى الوظيفة <main>%AMOUNT%</main> بالوظيفة <main>%JOBID%
   conditions:
     boolean:
-      not-fulfilled: "<warn>Following needs to be %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
-      variable-not-found: "<error>Error: variable <highlight>%VARIABLENAME%</highlight> not found. Report this to the Server owner."
-      wrong-operator: "<error>Error: variable operator <highlight>%OPERATOR%/highlight> is invalid. Report this to the Server owner."
+      not-fulfilled: '<warn>التالي يجب أن يكون %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>.'
+      variable-not-found: '<error>خطأ: المتغير <highlight>%VARIABLENAME%</highlight> غير موجود. أبلغ مالك الخادم بهذا.'
+      wrong-operator: '<error>خطأ: مُعامل المتغير <highlight>%OPERATOR%/highlight> غير صالح. أبلغ مالك الخادم بهذا.'
 objective-tracking:
   actionbar-progress-update:
-    default: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
-    only-one-max-progress: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+    default: <positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)
+    only-one-max-progress: <positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)
   bossbar-progress-update:
-    default: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
-    only-one-max-progress: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+    default: <positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)
+    only-one-max-progress: <positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)
 titles:
   quest-accepted:
-    title: <main>Quest accepted
+    title: <main>تم قبول المهمة
     subtitle: <highlight>%QUESTNAME%
   quest-completed:
-    title: <positive>Quest Completed
+    title: <positive>اكتملت المهمة
     subtitle: <highlight>%QUESTNAME%
   quest-failed:
-    title: <negative>Quest Failed
+    title: <negative>فشلت المهمة
     subtitle: <highlight>%QUESTNAME%
 placeholders:
   questcooldownleftformatted:
     prefix: ''
-    minute: '1 minute'
-    minutes: '%MINUTES% minutes'
-    hour: '1 hour'
-    hours: '%HOURS% hours'
-    day: '1 day'
-    days: '%DAYS% days'
+    minute: دقيقة واحدة
+    minutes: '%MINUTES% دقيقة'
+    hour: ساعة واحدة
+    hours: '%HOURS% ساعة'
+    day: يوم واحد
+    days: '%DAYS% يوم'
     no-cooldown: ''
 gui:
-  main:
-    title: '                <highlight2>Quests'
-    backgroundFill:
-      material: 'BLACK_STAINED_GLASS_PANE'
-    background:
-      '1':
-        minX: 0
-        maxX: 8
-        minY: 0
-        maxY: 0
-      '2':
-        minX: 0
-        maxX: 0
-        minY: 0
-        maxY: 5
-      '3':
-        minX: 1
-        maxX: 1
-        minY: 0
-        maxY: 5
-      '4':
-        minX: 2
-        maxX: 2
-        minY: 0
-        maxY: 5
+  abort-quest-confirm:
+    title: <!i><red>إلغاء المهمة <dark_gray>- <dark_red>هل أنت متأكد؟
+    button:
+      cancelabort:
+        name: <!i><red>انقر للإلغاء
+        lore:
+        - '<!i><gray>يلغي إلغاء المهمة '
+      confirmabort:
+        name: <!i><dark_red>انقر لإلغاء المهمة
+        lore:
+        - '<!i><gray>يلغي المهمة '
+        - <!i><dark_red>سيتم فقدان كل التقدم!
+  active-quest-info:
+    title: <main>معلومات المهمة <gray>- <green>%QUESTNAME%
+    button:
+      infobook:
+        name: <!i><green>%QUESTNAME%
+        lore:
+        - <!i><gray>%QUESTDESCRIPTION%
+      abort:
+        name: <!i><red>إلغاء المهمة
+        lore:
+        - <!i><red>انقر لإلغاء المهمة
+      back:
+        name: <!i><red>العودة إلى الصفحة السابقة
+  category-take:
+    title: <main>خذ مهمة جديدة
+    button:
+      return:
+        name: <!i><red>رجوع
+      quests:
+        name: <!i><!i><green>%QUESTNAME%
+        lore:
+        - <!i><gray>%QUESTDESCRIPTION%
+      back:
+        name: <!i><gray>الصفحة السابقة
+      forward:
+        name: <!i><gray>الصفحة التالية
+  main-base:
+    title: <main>قائمة المهام
     button:
       questpoints:
-        name: "<highlight>Quest Points"
+        name: <!i><main>نقاط المهام
         lore:
-          - "<main>Current quest points: <highlight2>%QUESTPOINTS%"
-        x: 8
-        y: 0
-      takequest:
-        name: "<positive>Take a Quest"
+        - '<!i><gray>نقاط مهامك: <yellow>%QUESTPOINTS%'
+      tab1:
+        name: <!i><main>المهام النشطة
         lore:
-          - "<unimportant>Start a new Quest!"
-          - ""
-          - "<veryUnimportant>Some Quests cannot be"
-          - "<veryUnimportant>started like this."
-        x: 0
-        y: 1
-      abortquest:
-        name: "<negative>Abort a Quest"
+        - <!i><gray>اطّلع على مهامك النشطة
+      tab2:
+        name: <!i><main>خذ مهمة جديدة
         lore:
-          - ""
-          - "<veryUnimportant>Aborting a Quest may"
-          - "<veryUnimportant>lead to punishments."
-        x: 0
-        y: 2
-      activequests:
-        name: "<highlight>Active Quests"
-        lore:
-          - ""
-          - "<veryUnimportant>Shows all of your"
-          - "<veryUnimportant>active Quests."
-        x: 0
-        y: 3
-  activeQuests:
-    title: '             <highlight2>Active Quests'
+        - <!i><gray>اطّلع على المهام المتاحة
+  main-active:
+    title: <main>قائمة المهام <gray>- <highlight>المهام النشطة
     button:
-      activeQuestButton:
-        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
+      quests:
+        name: <!i><green>%QUESTNAME%
         lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<main>Click to see details!"
-  reward-hidden-text: . <unimportant>[HIDDEN]
-  availableQuests:
-    title: '         <highlight2>Available Quests'
+        - <!i><gray>%QUESTDESCRIPTION%
+      back:
+        name: <!i><gray>الصفحة السابقة
+      forward:
+        name: <!i><gray>الصفحة التالية
+  main-take:
+    title: <main>قائمة المهام <gray>- <highlight>خذ مهمة جديدة
     button:
-      questPreview:
-        name-if-not-accepted: "<highlight>%QUESTNAME%"
-        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
+      categories:
+        name: <!i><yellow>%CATEGORYNAME%
         lore:
-          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-          - "<main>Click to open Quest!"
-  takeQuestChoose:
-    title: <highlight2>Which Quest do you want to take?
-    size:
-      minX: 3
-      minY: 1
-      maxX: 8
-      maxY: 5
+        - <!i><gray>انقر لعرض المهام
+        - <!i><gray>المتاحة في الفئة
+      back:
+        name: <!i><gray>الصفحة السابقة
+      forward:
+        name: <!i><gray>الصفحة التالية
+  npc-available-quests:
+    title: <!i><main>المهام المتاحة
     button:
-      questPreview:
-        name-if-not-accepted: "<highlight>%QUESTNAME%"
-        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
+      quest:
+        name: <!i><green>%QUESTNAME%
         lore:
-          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-          - "<main>Click to preview Quest!"
-  abortQuestChoose:
-    title: '  <highlight2>Active Quests you can abort'
+        - <!i><gray>%QUESTDESCRIPTION%
+      back:
+        name: <!i><gray>الصفحة السابقة
+      forward:
+        name: <!i><gray>الصفحة التالية
+  quest-preview:
+    title: <main>معاينة المهمة
     button:
-      abortQuestPreview:
-        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
+      info:
+        name: <!i><green>%QUESTNAME%
         lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Click to abort Quest!"
-  abortQuest:
-    title: '         <negative>Abort Confirmation'
-    button:
-      confirmAbort:
-        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
-        lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Click to abort the quest <highlight>%QUESTNAME%</highlight>!"
-        x: 3
-        y: 1
-      cancelAbort:
-        name: "<positive>Click to NOT abort this quest"
-        lore:
-          - "<positive>and cancel this action"
-        x: 5
-        y: 1
-  previewQuest:
-    title: <highlight2>Quest Preview
-    button:
-      description:
-        name: "<highlight>Description"
-        lore:
-          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-        lore-if-empty:
-          - "<veryUnimportant>???"
-        x: 2
-        y: 0
-      rewards:
-        name: "<positive>Rewards"
-        lore:
-          - "<WHITE>%QUESTREWARDS%"
-        lore-if-empty:
-          - "<veryUnimportant>None or hidden"
-        x: 4
-        y: 0
-      requirements:
-        name: "<negative>Requirements"
-        lore:
-          - "<WHITE>%QUESTREQUIREMENTS%"
-        lore-if-empty:
-          - "<veryUnimportant>-"
-        x: 6
-        y: 0
-      confirmTake:
-        name: "<highlight>%QUESTNAME%"
-        lore:
-          - "<positive>Click to take the quest <highlight>%QUESTNAME%"
-        x: 3
-        y: 2
-      cancelTake:
-        name: "<negative>Click to NOT take this quest"
-        lore:
-          - "<negative>and cancel this action"
-        x: 5
-        y: 2
-  progress:
-    title: <highlight2>Details for Quest
-    button:
-      unlockedObjective:
-        name: "<highlight2>%ACTIVEOBJECTIVEID%. <highlight>%OBJECTIVENAME%"
-        lore:
-          - "<main><BOLD>ACTIVE</BOLD>"
-          - "<veryUnimportant>%WRAPPEDOBJECTIVEDESCRIPTION%"
-          - "<unimportant>%OBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
-        lore-if-description-empty:
-          - "<main><BOLD>ACTIVE</BOLD>"
-          - "<veryUnimportant>No Description"
-          - "<unimportant>%OBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
-      lockedObjective:
-        name: "<highlight2>%ACTIVEOBJECTIVEID%. <unimportant><BOLD>[HIDDEN]"
-        lore:
-          - "<warn>This objective has not yet"
-          - "<warn>been unlocked!"
-      completedObjective:
-        name: "<highlight2><strikethrough>%ACTIVEOBJECTIVEID%. <positive><strikethrough>%OBJECTIVENAME%"
-        lore:
-          - "<positive><BOLD>COMPLETED</BOLD>"
-          - "<veryUnimportant><strikethrough>%WRAPPEDOBJECTIVEDESCRIPTION%"
-          - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
-        lore-if-description-empty:
-          - "<positive><BOLD>COMPLETED</BOLD>"
-          - "<veryUnimportant><strikethrough>No Description"
-          - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
+        - <!i><gray>%QUESTDESCRIPTION%
+      accept:
+        name: <!i><green>قبول المهمة
+      decline:
+        name: <!i><red>رفض المهمة

@@ -3,24 +3,36 @@ chat:
   wrong-command-usage: <error>Érvénytelen parancs használat!
   missing-permission: '<error>Nincs jogosultságod! Szükséges jogosultság: <highlight>%PERMISSION%'
   too-many-arguments: <error>Túl sok argumentumot adtál meg!
-  quest-successfully-accepted: |2
+  quest-successfully-accepted: '
 
     <CENTER><main>[Köldetés Elvállalva]
+
     <CENTER><highlight><BOLD>%QUESTNAME%
+
     <EMPTY>
+
+    '
   quest-description: '<main>Küldetés leírás: <unimportant>%QUESTDESCRIPTION%'
   quest-already-accepted: <error>A küldetést már elvállaltad.
-  quest-failed: |2
+  quest-failed: '
 
     <CENTER><negative>[Sikertelen Küldetés]
+
     <CENTER><highlight><BOLD>%QUESTNAME%
+
     <EMPTY>
+
+    '
   quest-aborted: ''
-  quest-completed-and-rewards-given: |2
+  quest-completed-and-rewards-given: '
 
     <CENTER><positive>[Küldetés Teljesítve]
+
     <CENTER><highlight><BOLD>%QUESTNAME%
+
     <EMPTY>
+
+    '
   quest-completed-rewards-prefix: '    <highlight>Jutalmak:'
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
@@ -32,9 +44,9 @@ chat:
     query: <main>Jelenleg <highlight>%QUESTPOINTS%</highlight> küldetés pontod van.
     none: <error>Úgy látszik hogy nincs küldetés pontod!
     notify-when-changed:
-      set: '<main>A küldetés pontod be lett álltva a következőre <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.'
-      add: '<highlight>+%QUESTPOINTSTOADD% <success>küldetés pont!'
-      remove: '<highlight>-%QUESTPOINTSTOREMOVE% <negative>küldetés pont!'
+      set: <main>A küldetés pontod be lett álltva a következőre <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.
+      add: <highlight>+%QUESTPOINTSTOADD% <success>küldetés pont!
+      remove: <highlight>-%QUESTPOINTSTOREMOVE% <negative>küldetés pont!
   no-quests-accepted: <error>Úgy látszik hogy nincs aktív küldetésed!
   quest-does-not-exist: <error>A(z) <highlight>%QUESTNAME%</highlight> Küldetés nem létezik!
   quest-not-found-or-does-not-exist: <error>A(z) <highlight>%QUESTNAME%</highlight> Küldetés nem található vagy aktív!
@@ -42,36 +54,52 @@ chat:
   take-disabled: <error>A(z) <highlight>%QUESTNAME%</highlight> küldetés elfogadás vagy előnézete le van tiltva.
   abort-disabled: <error>A(z) <highlight>%QUESTNAME%</highlight> küldetés megszakítása le van tiltva.
   quest-not-active-error: '<error>Hiba: <highlight>%QUESTNAME%</highlight> nem egy aktív Küldetés!'
-  force-add-active-quest-accepted: '<success>Sikeresen elfogadtad a küldetést (Eröltetve).'
+  force-add-active-quest-accepted: <success>Sikeresen elfogadtad a küldetést (Eröltetve).
   add-active-quest-player-object-not-found: '<warn>Hiba: A Játékos objektum nem található. Kérlek jelentsd ezt a plugin fejlesztőjének.'
-  reached-max-accepts-limit: "<red>Már túl sokszor vállaltad el ezt a küldetést. Csak\n<highlight>%MAXACCEPTS%</highlight> alkalommal vállalhatod el de már\n<highlight>%ACCEPTEDAMOUNT%</highlight> alkalommal elvállaltad."
-  reached-max-fails-limit: "<red>Már túl sokszor hibáztad el ezt a küldetést. Csak\n<highlight>%MAXFAILS%</highlight> alkalommal hibázhatod el de már\n<highlight>%FAILEDAMOUNT%</highlight> alkalommal hibáztad el."
-  reached-max-completions-limit: "<red>Ezt a küldetést már túl sokszor teljestetted. Csak\n<highlight>%MAXCOMPLETIONS%</highlight> alkalommal teljesítheted de már\n<highlight>%COMPLETEDAMOUNT%</highlight> alkalommal teljesítetted."
-  reached-max-active-quests-per-player-limit: '<red>Nem vállalhatsz el több mint <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> Küldetést.'
+  reached-max-accepts-limit: '<red>Már túl sokszor vállaltad el ezt a küldetést. Csak
+
+    <highlight>%MAXACCEPTS%</highlight> alkalommal vállalhatod el de már
+
+    <highlight>%ACCEPTEDAMOUNT%</highlight> alkalommal elvállaltad.'
+  reached-max-fails-limit: '<red>Már túl sokszor hibáztad el ezt a küldetést. Csak
+
+    <highlight>%MAXFAILS%</highlight> alkalommal hibázhatod el de már
+
+    <highlight>%FAILEDAMOUNT%</highlight> alkalommal hibáztad el.'
+  reached-max-completions-limit: '<red>Ezt a küldetést már túl sokszor teljestetted. Csak
+
+    <highlight>%MAXCOMPLETIONS%</highlight> alkalommal teljesítheted de már
+
+    <highlight>%COMPLETEDAMOUNT%</highlight> alkalommal teljesítetted.'
+  reached-max-active-quests-per-player-limit: <red>Nem vállalhatsz el több mint <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> Küldetést.
   quest-on-cooldown:
-    minute: '<red>Ez a küldetés újratöltődik! Várnod kell <highlight>1 percet</highlight> mielőtt újra elvállanád a küldetést.'
-    minutes: '<red>Ez a küldetés újratöltődik! Várnod kell <highlight>%MINUTES% percet</highlight> mielőtt újra elvállalnád a küldetést.'
-    hour: '<red>Ez a küldetés újratöltődik! Várnod kell <highlight>1 órát</highlight> mielőtt újra elvállalnád a küldetést.'
-    hours: '<red>Ez a küldetés újratöltődik! Várnod kell <highlight>%HOURS% órát</highlight> mielőtt újra elvállalnád a küldetést.'
-    day: '<red>Ez a küldetés újratöltődik! Várnod kell <highlight>1 napot</highlight> mielőtt újra elvállalnád a küldetést.'
-    days: '<red>Ez a küldetés újratöltődik! Várnod kell <highlight>%DAYS% napot</highlight> mielőtt újra elvállalnád a küldetést.'
+    minute: <red>Ez a küldetés újratöltődik! Várnod kell <highlight>1 percet</highlight> mielőtt újra elvállanád a küldetést.
+    minutes: <red>Ez a küldetés újratöltődik! Várnod kell <highlight>%MINUTES% percet</highlight> mielőtt újra elvállalnád a küldetést.
+    hour: <red>Ez a küldetés újratöltődik! Várnod kell <highlight>1 órát</highlight> mielőtt újra elvállalnád a küldetést.
+    hours: <red>Ez a küldetés újratöltődik! Várnod kell <highlight>%HOURS% órát</highlight> mielőtt újra elvállalnád a küldetést.
+    day: <red>Ez a küldetés újratöltődik! Várnod kell <highlight>1 napot</highlight> mielőtt újra elvállalnád a küldetést.
+    days: <red>Ez a küldetés újratöltődik! Várnod kell <highlight>%DAYS% napot</highlight> mielőtt újra elvállalnád a küldetést.
   profiles:
     list-current: '<highlight>Jelenlegi profilod: <main>%PROFILENAME% (%QUESTPOINTS% küldetés pont)'
     list-other-heading: '<highlight>Más profilok:'
     list-other-none: '  <main>Nincs több profilod.'
     list-other: '  <highlight>- <main>%PROFILENAME% (%QUESTPOINTS% küldetés pont)'
-    change-same-profile: '<error>Már ezt a profilt használod!'
-    change-profile-doesnt-exist: '<error>Ez a profil nem létezik.'
-    changed-successfully: "<success>Sikeresen átváltottál a(z) %OLDPROFILENAME% profilról\n<highlight>%NEWPROFILENAME%</highlight> profilra!"
-    create-already-exists: '<error>A(z) <highlight>%NEWPROFILENAME%</highlight> profilnév már létezik.'
-    create-invalid-characters: '<error>Ez a profilnév érvénytelen karaktereket tartalmaz.'
-    created-successfully: "<success>Sikeresen létrehoztad a(z) <highlight>%NEWPROFILENAME%</highlight> profilt! A\nváltáshoz használd a <highlight2>/nq profiles change %NEWPROFILENAME%</highlight2> parancsot"
+    change-same-profile: <error>Már ezt a profilt használod!
+    change-profile-doesnt-exist: <error>Ez a profil nem létezik.
+    changed-successfully: '<success>Sikeresen átváltottál a(z) %OLDPROFILENAME% profilról
+
+      <highlight>%NEWPROFILENAME%</highlight> profilra!'
+    create-already-exists: <error>A(z) <highlight>%NEWPROFILENAME%</highlight> profilnév már létezik.
+    create-invalid-characters: <error>Ez a profilnév érvénytelen karaktereket tartalmaz.
+    created-successfully: '<success>Sikeresen létrehoztad a(z) <highlight>%NEWPROFILENAME%</highlight> profilt! A
+
+      váltáshoz használd a <highlight2>/nq profiles change %NEWPROFILENAME%</highlight2> parancsot'
   conversations:
-    choose-answer-prefix: |-
-      <EMPTY>
-      <main>Válassz ki egy választ:</main>
-    choose-answer-answer-hover-text: '<highlight>Kattints ide a válaszhoz'
-    ended-previous-conversation: '<main>Befejezted az előző beszélgetésedet!'
+    choose-answer-prefix: '<EMPTY>
+
+      <main>Válassz ki egy választ:</main>'
+    choose-answer-answer-hover-text: <highlight>Kattints ide a válaszhoz
+    ended-previous-conversation: <main>Befejezted az előző beszélgetésedet!
     speaker-line-format: '%SPEAKERCOLOR%[%SPEAKER%] <GRAY>%MESSAGE%'
     answer-option-line-format: ' <main>%OPTIONNUMBER%. <gray>%MESSAGE%'
   objectives:
@@ -80,12 +108,18 @@ chat:
     subObjectivePrefixAppend: '    '
     hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[REJTETT]
     description: '    <veryUnimportant>└─ <unimportant>Leírás: <main>%OBJECTIVEDESCRIPTION%'
-    progress: "    <veryUnimportant>└─ <unimportant>Haladás: <main>%ACTIVEOBJECTIVEPROGRESS% /\n%OBJECTIVEPROGRESSNEEDED%"
-    successfully-completed: |2
+    progress: '    <veryUnimportant>└─ <unimportant>Haladás: <main>%ACTIVEOBJECTIVEPROGRESS% /
+
+      %OBJECTIVEPROGRESSNEEDED%'
+    successfully-completed: '
 
       <CENTER><success>[Feladat Teljesítve]
+
       <CENTER><highlight><bold>%OBJECTIVENAME%</bold> <RESET><main>(%QUESTNAME%)
+
       <EMPTY>
+
+      '
     successfully-completed-rewards-prefix: '    <highlight>Jutalmak:'
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
     successfully-completed-rewards-suffix: <EMPTY>
@@ -108,9 +142,11 @@ chat:
         deliver-to-npc: '      <GRAY>Száltsd le neki <WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>A szállító NPC jelenelg nem elérhető!'
       enchant:
-        base: "Enchantolj tárgyakat %ENCHANTMENT% enchanttal: <main>%ITEMTOENCHANTTYPE% %\n(%%ITEMTOENCHANTNAME%%)%"
+        base: 'Enchantolj tárgyakat %ENCHANTMENT% enchanttal: <main>%ITEMTOENCHANTTYPE% %
+
+          (%%ITEMTOENCHANTNAME%%)%'
       escortNPC:
-        base: 'KIsérd el <main>%NPCNAME%-t</main> ide <main>%DESTINATIONNPCNAME%'
+        base: KIsérd el <main>%NPCNAME%-t</main> ide <main>%DESTINATIONNPCNAME%
       fishItems:
         base: 'Kifogott Tárgyak: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
       killMobs:
@@ -122,55 +158,71 @@ chat:
       reachLocation:
         base: 'Elérés HElye: <main>%LOCATIONNAME%'
       talkToNPC:
-        base: 'Beszélj vele <main>%NAME%'
+        base: Beszélj vele <main>%NAME%
         npc-not-available: '    <GRAY>A kiválasztott NPC jelenleg nem elérhető!'
       triggerCommand:
         base: 'Cél: <main>%TRIGGERNAME%'
       killEliteMobs:
         base: 'MEgölt Elit Szörny: <main>%ELITEMOBNAME%'
-        any: 'Ölj meg bármilyen Elit Szörnyet!'
+        any: Ölj meg bármilyen Elit Szörnyet!
       runCommand:
         base: 'Futtatott parancs: <main>%COMMANDTORUN%'
       interact:
         base: '%INTERACTTYPE% Hely: <main>%COORDINATES% <main>a(z) %WORLDNAME% világban'
       jump:
-        base: 'Ugorj <main>%AMOUNTOFJUMPS%</main> alkalommal'
+        base: Ugorj <main>%AMOUNTOFJUMPS%</main> alkalommal
       objective:
         base: '%OBJECTIVEHOLDERNAME%'
       sneak:
-        base: 'Guggolj <main>%AMOUNTOFSNEAKS%</main> alkalommal'
+        base: Guggolj <main>%AMOUNTOFSNEAKS%</main> alkalommal
       smelt:
         base: 'Kiégetett Tárgyak: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       openBuriedTreasure:
-        base: 'Nyiss ki egy elásott kincset'
+        base: Nyiss ki egy elásott kincset
       shearSheep:
-        base: 'Nyrj le <main>%AMOUNTOFSHEEP%</main> bárányt'
+        base: Nyrj le <main>%AMOUNTOFSHEEP%</main> bárányt
       townyReachResidentCount:
         base: 'Érd el a következő rezident egyenleget: <main>%AMOUNT%'
       townyNationReachTownCount:
         base: 'Érd el a következő város egyenleget a nemzeteddel: <main>%AMOUNT%'
       jobsRebornReachJobLevel:
-        base: 'Érd el a(z) <main>%AMOUNT%</main> szintet a(z) <main>%JOB% munkában'
+        base: Érd el a(z) <main>%AMOUNT%</main> szintet a(z) <main>%JOB% munkában
       SlimefunResearch:
-        base: 'Költs kutatásra'
+        base: Költs kutatásra
       ProjectKorraUseAbility:
         base: 'Használt Képesség: <main>%ABILITY%'
       BetonQuestCompleteObjective:
         base: 'Feladat Befejezése: <main>%BETONQUESTOBJECTIVENAME%'
       ultimateJobsReachJobLevel:
-        base: 'Érd el a(z) <main>%AMOUNT%</main> szintet a(z) <main>%JOBID% munkában'
+        base: Érd el a(z) <main>%AMOUNT%</main> szintet a(z) <main>%JOBID% munkában
   conditions:
     boolean:
-      not-fulfilled: "<warn>A következőkre van szükséged %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
-      variable-not-found: "<error>Hiba: <highlight>%VARIABLENAME%</highlight> változó nem található. Jelentsd ezt a Szerver tulajdonosának."
-      wrong-operator: "<error>Hiba: <highlight>%OPERATOR%</highlight> változó operátor érvénytelen. Jelentsd ezt a Szerver tulajdonosának."
+      not-fulfilled: '<warn>A következőkre van szükséged %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>.'
+      variable-not-found: '<error>Hiba: <highlight>%VARIABLENAME%</highlight> változó nem található. Jelentsd ezt a Szerver tulajdonosának.'
+      wrong-operator: '<error>Hiba: <highlight>%OPERATOR%</highlight> változó operátor érvénytelen. Jelentsd ezt a Szerver tulajdonosának.'
 objective-tracking:
   actionbar-progress-update:
-    default: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main>\n<unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/\n<main>%OBJECTIVEPROGRESSNEEDED% <unimportant>-\n<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
-    only-one-max-progress: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main>\n<unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+    default: '<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main>
+
+      <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/
+
+      <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>-
+
+      <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)'
+    only-one-max-progress: '<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main>
+
+      <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)'
   bossbar-progress-update:
-    default: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main>\n<unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/\n<main>%OBJECTIVEPROGRESSNEEDED% <unimportant>-\n<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
-    only-one-max-progress: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main>\n<unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+    default: '<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main>
+
+      <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/
+
+      <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>-
+
+      <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)'
+    only-one-max-progress: '<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main>
+
+      <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)'
 titles:
   quest-accepted:
     title: <main>Küldetés elvállalva
@@ -184,199 +236,109 @@ titles:
 placeholders:
   questcooldownleftformatted:
     prefix: ''
-    minute: '1 perc'
+    minute: 1 perc
     minutes: '%MINUTES% perc'
-    hour: '1 óra'
+    hour: 1 óra
     hours: '%HOURS% óra'
-    day: '1 nap'
+    day: 1 nap
     days: '%DAYS% nap'
     no-cooldown: ''
 gui:
-  main:
-    title: '                <highlight2>Küldetések'
-    backgroundFill:
-      material: 'BLACK_STAINED_GLASS_PANE'
-    background:
-      '1':
-        minX: 0
-        maxX: 8
-        minY: 0
-        maxY: 0
-      '2':
-        minX: 0
-        maxX: 0
-        minY: 0
-        maxY: 5
-      '3':
-        minX: 1
-        maxX: 1
-        minY: 0
-        maxY: 5
-      '4':
-        minX: 2
-        maxX: 2
-        minY: 0
-        maxY: 5
+  abort-quest-confirm:
+    title: <!i><red>Küldetés Megszakítása <dark_gray>- <dark_red>Biztos vagy benne?
+    button:
+      cancelabort:
+        name: <!i><red>Kattints a megszakításhoz
+        lore:
+        - '<!i><gray>Megszakítja a küldetés megszakítását '
+      confirmabort:
+        name: <!i><dark_red>Kattints a küldetés megszakításához
+        lore:
+        - '<!i><gray>Megszakítja a küldetést '
+        - <!i><dark_red>Minden haladás elveszik!
+  active-quest-info:
+    title: <main>Küldetés info <gray>- <green>%QUESTNAME%
+    button:
+      infobook:
+        name: <!i><green>%QUESTNAME%
+        lore:
+        - <!i><gray>%QUESTDESCRIPTION%
+      abort:
+        name: <!i><red>Küldetés megszakítása
+        lore:
+        - <!i><red>Kattints a küldetés megszakításához
+      back:
+        name: <!i><red>Vissza az előző oldalra
+  category-take:
+    title: <main>Új küldetés elvállalása
+    button:
+      return:
+        name: <!i><red>Vissza
+      quests:
+        name: <!i><!i><green>%QUESTNAME%
+        lore:
+        - <!i><gray>%QUESTDESCRIPTION%
+      back:
+        name: <!i><gray>Előző oldal
+      forward:
+        name: <!i><gray>Következő oldal
+  main-base:
+    title: <main>Küldetés menü
     button:
       questpoints:
-        name: "<highlight>Küldetés Pont"
+        name: <!i><main>Küldetés pontok
         lore:
-          - "<main>Jelenlegi küldetés pont: <highlight2>%QUESTPOINTS%"
-        x: 8
-        y: 0
-      takequest:
-        name: "<positive>Küldetés Elvállalása"
+        - '<!i><gray>Küldetés pontjaid: <yellow>%QUESTPOINTS%'
+      tab1:
+        name: <!i><main>Aktív küldetések
         lore:
-          - "<unimportant>Új Küldetés elkezdése!"
-          - ""
-          - "<veryUnimportant>Egyes Küldetéseket nem"
-          - "<veryUnimportant>kezdhetsz el így."
-        x: 0
-        y: 1
-      abortquest:
-        name: "<negative>Küldetés Megszakítása"
+        - <!i><gray>Nézd meg az aktív küldetéseidet
+      tab2:
+        name: <!i><main>Új küldetés elvállalása
         lore:
-          - ""
-          - "<veryUnimportant>A küldetések megszakítása"
-          - "<veryUnimportant>büntetésekkel jár."
-        x: 0
-        y: 2
-      activequests:
-        name: "<highlight>Aktív Küldetések"
-        lore:
-          - ""
-          - "<veryUnimportant>Megjeleníti az összes"
-          - "<veryUnimportant>aktív Küldetésed."
-        x: 0
-        y: 3
-  activeQuests:
-    title: '             <highlight2>Aktív Küldetések'
+        - <!i><gray>Nézd meg az elérhető küldetéseket
+  main-active:
+    title: <main>Küldetés menü <gray>- <highlight>Aktív küldetések
     button:
-      activeQuestButton:
-        name: "<highlight>%QUESTNAME% <positive>[AKTÍV]"
+      quests:
+        name: <!i><green>%QUESTNAME%
         lore:
-          - "<unimportant>Haladás: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/\n<main>%ALLOBJECTIVESCOUNT%"
-          - "<main>Kattints ide a részletekért!"
-  reward-hidden-text: . <unimportant>[REJTETT]
-  availableQuests:
-    title: '         <highlight2>Elérhető Küldetések'
+        - <!i><gray>%QUESTDESCRIPTION%
+      back:
+        name: <!i><gray>Előző oldal
+      forward:
+        name: <!i><gray>Következő oldal
+  main-take:
+    title: <main>Küldetés menü <gray>- <highlight>Új küldetés elvállalása
     button:
-      questPreview:
-        name-if-not-accepted: "<highlight>%QUESTNAME%"
-        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ELVÁLLALVA]"
+      categories:
+        name: <!i><yellow>%CATEGORYNAME%
         lore:
-          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-          - "<main>Kattints ide a Küldi megnyitásához!"
-  takeQuestChoose:
-    title: <highlight2>Melyik küldetést választod?
-    size:
-      minX: 3
-      minY: 1
-      maxX: 8
-      maxY: 5
+        - <!i><gray>Kattints az elérhető küldetések
+        - <!i><gray>megtekintéséhez a kategóriában
+      back:
+        name: <!i><gray>Előző oldal
+      forward:
+        name: <!i><gray>Következő oldal
+  npc-available-quests:
+    title: <!i><main>Elérhető küldetések
     button:
-      questPreview:
-        name-if-not-accepted: "<highlight>%QUESTNAME%"
-        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ELVÁLLALVA]"
+      quest:
+        name: <!i><green>%QUESTNAME%
         lore:
-          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-          - "<main>Kattints ide a Küldetés előnézethez!"
-  abortQuestChoose:
-    title: '  <highlight2>Aktív Küldetések amiket megszakíthatsz'
+        - <!i><gray>%QUESTDESCRIPTION%
+      back:
+        name: <!i><gray>Előző oldal
+      forward:
+        name: <!i><gray>Következő oldal
+  quest-preview:
+    title: <main>Küldetés előnézet
     button:
-      abortQuestPreview:
-        name: "<highlight>%QUESTNAME% <positive>[AKTÍV]"
+      info:
+        name: <!i><green>%QUESTNAME%
         lore:
-          - "<unimportant>Haladás: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/\n<main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Kattints ide a Küldetés megszakításához!"
-  abortQuest:
-    title: '         <negative>Megszakítás Megerősítés'
-    button:
-      confirmAbort:
-        name: "<highlight>%QUESTNAME% <positive>[AKTÍV]"
-        lore:
-          - "<unimportant>Haladás: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/\n<main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Kattints ide hogy megszakítsd a(z) <highlight>%QUESTNAME%</highlight> küldetést!"
-        x: 3
-        y: 1
-      cancelAbort:
-        name: "<positive>Kattints ide hogy NE szakítsd meg a küldetést"
-        lore:
-          - "<positive>és megszakítsd ezt az akciót"
-        x: 5
-        y: 1
-  previewQuest:
-    title: <highlight2>Küldetés Előnézet
-    button:
-      description:
-        name: "<highlight>Leírás"
-        lore:
-          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-        lore-if-empty:
-          - "<veryUnimportant>???"
-        x: 2
-        y: 0
-      rewards:
-        name: "<positive>Jutalmak"
-        lore:
-          - "<WHITE>%QUESTREWARDS%"
-        lore-if-empty:
-          - "<veryUnimportant>Semmi vagy rejtett"
-        x: 4
-        y: 0
-      requirements:
-        name: "<negative>Követelmények"
-        lore:
-          - "<WHITE>%QUESTREQUIREMENTS%"
-        lore-if-empty:
-          - "<veryUnimportant>-"
-        x: 6
-        y: 0
-      confirmTake:
-        name: "<highlight>%QUESTNAME%"
-        lore:
-          - "<positive>Kattints ide hogy elvállald a(z) <highlight>%QUESTNAME% küldetést"
-        x: 3
-        y: 2
-      cancelTake:
-        name: "<negative>Kattints ide hogy NE vállald el ezt a küldetést"
-        lore:
-          - "<negative>és megszakítsd ezt az akciót"
-        x: 5
-        y: 2
-  progress:
-    title: <highlight2>Küldetés Részletek
-    button:
-      unlockedObjective:
-        name: "<highlight2>%ACTIVEOBJECTIVEID%. <highlight>%OBJECTIVENAME%"
-        lore:
-          - "<main><BOLD>AKTÍV</BOLD>"
-          - "<veryUnimportant>%WRAPPEDOBJECTIVEDESCRIPTION%"
-          - "<unimportant>%OBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant>Haladás: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/\n<main>%OBJECTIVEPROGRESSNEEDED%"
-        lore-if-description-empty:
-          - "<main><BOLD>AKTÍV</BOLD>"
-          - "<veryUnimportant>Nincs Leírás"
-          - "<unimportant>%OBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant>Haladás: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/\n<main>%OBJECTIVEPROGRESSNEEDED%"
-      lockedObjective:
-        name: "<highlight2>%ACTIVEOBJECTIVEID%. <unimportant><BOLD>[REJTETT]"
-        lore:
-          - "<warn>Ez a feladat még"
-          - "<warn>nincs feloldva!"
-      completedObjective:
-        name: "<highlight2><strikethrough>%ACTIVEOBJECTIVEID%. <positive><strikethrough>%OBJECTIVENAME%"
-        lore:
-          - "<positive><BOLD>TELJESÍTVE</BOLD>"
-          - "<veryUnimportant><strikethrough>%WRAPPEDOBJECTIVEDESCRIPTION%"
-          - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant><strikethrough>Haladás: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS%\n<unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
-        lore-if-description-empty:
-          - "<positive><BOLD>TELJESÍTVE</BOLD>"
-          - "<veryUnimportant><strikethrough>Nincs Leírás"
-          - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant><strikethrough>Haladás: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS%\n<unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
+        - <!i><gray>%QUESTDESCRIPTION%
+      accept:
+        name: <!i><green>Küldetés elfogadása
+      decline:
+        name: <!i><red>Küldetés elutasítása

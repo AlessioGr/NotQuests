@@ -1,92 +1,108 @@
 ---
 chat:
-  wrong-command-usage: <error>Wrong command usage!
-  missing-permission: '<error>No permission! Required permission node: <highlight>%PERMISSION%'
-  too-many-arguments: <error>Too many arguments!
-  quest-successfully-accepted: |2
+  wrong-command-usage: <error>Feil kommandobruk!
+  missing-permission: '<error>Ingen tillatelse! Påkrevd tillatelse: <highlight>%PERMISSION%'
+  too-many-arguments: <error>For mange argumenter!
+  quest-successfully-accepted: '
 
-    <CENTER><main>[Quest Accepted]
-    <CENTER><highlight><BOLD>%QUESTNAME%
-    <EMPTY>
-  quest-description: '<main>Quest description: <unimportant>%QUESTDESCRIPTION%'
-  quest-already-accepted: <error>Quest already accepted.
-  quest-failed: |2
+    <CENTER><main>[Oppdrag akseptert]
 
-    <CENTER><negative>[Quest Failed]
     <CENTER><highlight><BOLD>%QUESTNAME%
+
     <EMPTY>
+
+    '
+  quest-description: '<main>Oppdragsbeskrivelse: <unimportant>%QUESTDESCRIPTION%'
+  quest-already-accepted: <error>Oppdraget er allerede akseptert.
+  quest-failed: '
+
+    <CENTER><negative>[Oppdrag mislyktes]
+
+    <CENTER><highlight><BOLD>%QUESTNAME%
+
+    <EMPTY>
+
+    '
   quest-aborted: ''
-  quest-completed-and-rewards-given: |2
+  quest-completed-and-rewards-given: '
 
-    <CENTER><positive>[Quest Completed]
+    <CENTER><positive>[Oppdrag fullført]
+
     <CENTER><highlight><BOLD>%QUESTNAME%
+
     <EMPTY>
-  quest-completed-rewards-prefix: '    <highlight>Rewards:'
+
+    '
+  quest-completed-rewards-prefix: '    <highlight>Belønninger:'
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
-  quest-not-all-requirements-fulfilled: '<negative>You do not fulfill all the requirements this quest needs! Requirement still needed:'
-  action-not-all-conditions-fulfilled: '<negative>You do not fulfill all the conditions this action needs! Conditions still needed:'
-  missing-quest-description: <unimportant>This quest has no quest description.
-  objectives-label-after-quest-accepting: '<highlight>Objectives:'
+  quest-not-all-requirements-fulfilled: '<negative>Du oppfyller ikke alle kravene dette oppdraget trenger! Krav som fortsatt mangler:'
+  action-not-all-conditions-fulfilled: '<negative>Du oppfyller ikke alle betingelsene denne handlingen trenger! Betingelser som fortsatt mangler:'
+  missing-quest-description: <unimportant>Dette oppdraget har ingen oppdragsbeskrivelse.
+  objectives-label-after-quest-accepting: '<highlight>Mål:'
   questpoints:
-    query: <main>You currently have <highlight>%QUESTPOINTS%</highlight> quest points.
-    none: <error>Seems like you don't have any quest points!
+    query: <main>Du har for øyeblikket <highlight>%QUESTPOINTS%</highlight> oppdragspoeng.
+    none: <error>Det ser ut til at du ikke har noen oppdragspoeng!
     notify-when-changed:
-      set: '<main>Your quest points have been set to <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.'
-      add: '<highlight>+%QUESTPOINTSTOADD% <success>quest points!'
-      remove: '<highlight>-%QUESTPOINTSTOREMOVE% <negative>quest points!'
-  no-quests-accepted: <error>Seems like you don't have any active quests!
-  quest-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> does not exist!
-  quest-not-found-or-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> not found or not active!
-  active-quests-label: '<highlight>Active quests:'
-  take-disabled: <error>Accepting or previewing the quest <highlight>%QUESTNAME%</highlight> is disabled.
-  abort-disabled: <error>Aborting the quest <highlight>%QUESTNAME%</highlight> is disabled.
-  quest-not-active-error: '<error>Error: <highlight>%QUESTNAME%</highlight> is not an active Quest!'
-  force-add-active-quest-accepted: '<success>Successfully accepted the quest (Forced).'
-  add-active-quest-player-object-not-found: '<warn>Error: Player object not found. Please report this to the plugin developer.'
-  reached-max-accepts-limit: '<red>You have accepted this quest too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%ACCEPTEDAMOUNT%</highlight> times.'
-  reached-max-fails-limit: '<red>You have failed this quest too many times already. You can only fail it <highlight>%MAXFAILS%</highlight> times, but you have already failed it <highlight>%FAILEDAMOUNT%</highlight> times.'
-  reached-max-completions-limit: '<red>You have completed this quest too many times already. You can only complete it <highlight>%MAXCOMPLETIONS%</highlight> times, but you have already completed it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
-  reached-max-active-quests-per-player-limit: '<red>You can not accept more than <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> Quests.'
+      set: <main>Oppdragspoengene dine er satt til <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.
+      add: <highlight>+%QUESTPOINTSTOADD% <success>oppdragspoeng!
+      remove: <highlight>-%QUESTPOINTSTOREMOVE% <negative>oppdragspoeng!
+  no-quests-accepted: <error>Det ser ut til at du ikke har noen aktive oppdrag!
+  quest-does-not-exist: <error>Oppdraget <highlight>%QUESTNAME%</highlight> finnes ikke!
+  quest-not-found-or-does-not-exist: <error>Oppdraget <highlight>%QUESTNAME%</highlight> ble ikke funnet eller er ikke aktivt!
+  active-quests-label: '<highlight>Aktive oppdrag:'
+  take-disabled: <error>Å akseptere eller forhåndsvise oppdraget <highlight>%QUESTNAME%</highlight> er deaktivert.
+  abort-disabled: <error>Å avbryte oppdraget <highlight>%QUESTNAME%</highlight> er deaktivert.
+  quest-not-active-error: '<error>Feil: <highlight>%QUESTNAME%</highlight> er ikke et aktivt oppdrag!'
+  force-add-active-quest-accepted: <success>Oppdraget ble akseptert (Tvunget).
+  add-active-quest-player-object-not-found: '<warn>Feil: Spillerobjekt ikke funnet. Rapporter dette til plugin-utvikleren.'
+  reached-max-accepts-limit: <red>Du har allerede akseptert dette oppdraget for mange ganger. Du kan bare akseptere det <highlight>%MAXACCEPTS%</highlight> ganger, men du har allerede akseptert det <highlight>%ACCEPTEDAMOUNT%</highlight> ganger.
+  reached-max-fails-limit: <red>Du har allerede mislyktes med dette oppdraget for mange ganger. Du kan bare mislykkes med det <highlight>%MAXFAILS%</highlight> ganger, men du har allerede mislyktes med det <highlight>%FAILEDAMOUNT%</highlight> ganger.
+  reached-max-completions-limit: <red>Du har allerede fullført dette oppdraget for mange ganger. Du kan bare fullføre det <highlight>%MAXCOMPLETIONS%</highlight> ganger, men du har allerede fullført det <highlight>%COMPLETEDAMOUNT%</highlight> ganger.
+  reached-max-active-quests-per-player-limit: <red>Du kan ikke akseptere mer enn <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> oppdrag.
   quest-on-cooldown:
-    minute: '<red>This quest is on a cooldown! You have to wait another <highlight>1 minute</highlight> until you can take it again.'
-    minutes: '<red>This quest is on a cooldown! You have to wait another <highlight>%MINUTES% minutes</highlight> until you can take it again.'
-    hour: '<red>This quest is on a cooldown! You have to wait another <highlight>1 hour</highlight> until you can take it again.'
-    hours: '<red>This quest is on a cooldown! You have to wait another <highlight>%HOURS% hours</highlight> until you can take it again.'
-    day: '<red>This quest is on a cooldown! You have to wait another <highlight>1 day</highlight> until you can take it again.'
-    days: '<red>This quest is on a cooldown! You have to wait another <highlight>%DAYS% days</highlight> until you can take it again.'
+    minute: <red>Dette oppdraget har nedkjøling! Du må vente <highlight>1 minutt</highlight> til før du kan ta det igjen.
+    minutes: <red>Dette oppdraget har nedkjøling! Du må vente <highlight>%MINUTES% minutter</highlight> til før du kan ta det igjen.
+    hour: <red>Dette oppdraget har nedkjøling! Du må vente <highlight>1 time</highlight> til før du kan ta det igjen.
+    hours: <red>Dette oppdraget har nedkjøling! Du må vente <highlight>%HOURS% timer</highlight> til før du kan ta det igjen.
+    day: <red>Dette oppdraget har nedkjøling! Du må vente <highlight>1 dag</highlight> til før du kan ta det igjen.
+    days: <red>Dette oppdraget har nedkjøling! Du må vente <highlight>%DAYS% dager</highlight> til før du kan ta det igjen.
   profiles:
-    list-current: '<highlight>Current profile: <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
-    list-other-heading: '<highlight>Other profiles:'
-    list-other-none: '  <main>You have no more profiles.'
-    list-other: '  <highlight>- <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
-    change-same-profile: '<error>You are already using that profile!'
-    change-profile-doesnt-exist: '<error>That profile does not exist.'
-    changed-successfully: '<success>You have successfully changed your profile from %OLDPROFILENAME% to <highlight>%NEWPROFILENAME%</highlight>!'
-    create-already-exists: '<error>A profile with the name <highlight>%NEWPROFILENAME%</highlight> already exists.'
-    create-invalid-characters: '<error>The profile name you provided contains invalid characters.'
-    created-successfully: '<success>You have successfully created the profile <highlight>%NEWPROFILENAME%</highlight>! To switch to it, use <highlight2>/nq profiles change %NEWPROFILENAME%</highlight2>'
+    list-current: '<highlight>Nåværende profil: <main>%PROFILENAME% (%QUESTPOINTS% oppdragspoeng)'
+    list-other-heading: '<highlight>Andre profiler:'
+    list-other-none: '  <main>Du har ingen flere profiler.'
+    list-other: '  <highlight>- <main>%PROFILENAME% (%QUESTPOINTS% oppdragspoeng)'
+    change-same-profile: <error>Du bruker allerede den profilen!
+    change-profile-doesnt-exist: <error>Den profilen finnes ikke.
+    changed-successfully: <success>Du har byttet profil fra %OLDPROFILENAME% til <highlight>%NEWPROFILENAME%</highlight>!
+    create-already-exists: <error>En profil med navnet <highlight>%NEWPROFILENAME%</highlight> finnes allerede.
+    create-invalid-characters: <error>Profilnavnet du oppga inneholder ugyldige tegn.
+    created-successfully: <success>Du har opprettet profilen <highlight>%NEWPROFILENAME%</highlight>! For å bytte til den, bruk <highlight2>/nq profiles change %NEWPROFILENAME%</highlight2>
   conversations:
-    choose-answer-prefix: |-
-      <EMPTY>
-      <main>Choose your answer:</main>
-    choose-answer-answer-hover-text: '<highlight>Click to answer'
-    ended-previous-conversation: '<main>You have ended your previous conversation!'
+    choose-answer-prefix: '<EMPTY>
+
+      <main>Velg svaret ditt:</main>'
+    choose-answer-answer-hover-text: <highlight>Klikk for å svare
+    ended-previous-conversation: <main>Du har avsluttet den forrige samtalen din!
     speaker-line-format: '%SPEAKERCOLOR%[%SPEAKER%] <GRAY>%MESSAGE%'
     answer-option-line-format: ' <main>%OPTIONNUMBER%. <gray>%MESSAGE%'
   objectives:
     counter: '<highlight>%OBJECTIVEIDWITHSUBID%.</highlight> <main>%OBJECTIVENAME%:'
     counterForObjectiveObjective: '<highlight>%OBJECTIVEIDWITHSUBID%.</highlight> <main>%OBJECTIVEHOLDERNAME%:'
     subObjectivePrefixAppend: '    '
-    hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[HIDDEN]
-    description: '    <veryUnimportant>└─ <unimportant>Description: <main>%OBJECTIVEDESCRIPTION%'
-    progress: '    <veryUnimportant>└─ <unimportant>Progress: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
-    successfully-completed: |2
+    hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[SKJULT]
+    description: '    <veryUnimportant>└─ <unimportant>Beskrivelse: <main>%OBJECTIVEDESCRIPTION%'
+    progress: '    <veryUnimportant>└─ <unimportant>Fremdrift: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
+    successfully-completed: '
 
       <CENTER><success>[Objective Completed]
+
       <CENTER><highlight><bold>%OBJECTIVENAME%</bold> <RESET><main>(%QUESTNAME%)
+
       <EMPTY>
-    successfully-completed-rewards-prefix: '    <highlight>Rewards:'
+
+      '
+    successfully-completed-rewards-prefix: '    <highlight>Belønninger:'
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
     successfully-completed-rewards-suffix: <EMPTY>
     taskDescription:
@@ -94,289 +110,199 @@ chat:
         prefix: '    <veryUnimportant>└─ <unimportant>'
         suffix: ''
       breakBlocks:
-        base: 'Break Blocks: <main>%BLOCKTOBREAK%'
+        base: 'Bryt blokker: <main>%BLOCKTOBREAK%'
       breed:
-        base: 'Breed Mobs: <main>%ENTITYTOBREED%'
+        base: 'Avl mobs: <main>%ENTITYTOBREED%'
       pickupItems:
-        base: 'Pickup Items: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
+        base: 'Plukk opp gjenstander: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
       consumeItems:
-        base: 'Consume Items: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
+        base: 'Forbruk gjenstander: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: 'Craft Items: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+        base: 'Lag gjenstander: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: 'Deliver Items: <main>%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%(%'
-        deliver-to-npc: '      <GRAY>Deliver it to <WHITE>%NPCNAME%'
-        deliver-to-npc-not-available: '      <GRAY>The delivery NPC is currently not available!'
+        base: 'Lever gjenstander: <main>%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%(%'
+        deliver-to-npc: '      <GRAY>Lever det til <WHITE>%NPCNAME%'
+        deliver-to-npc-not-available: '      <GRAY>Leverings-NPC-en er for øyeblikket ikke tilgjengelig!'
       enchant:
-        base: 'Enchant Items with %ENCHANTMENT%: <main>%ITEMTOENCHANTTYPE% %(%%ITEMTOENCHANTNAME%%(%'
+        base: 'Forheks gjenstander med %ENCHANTMENT%: <main>%ITEMTOENCHANTTYPE% %(%%ITEMTOENCHANTNAME%%(%'
       escortNPC:
-        base: 'Escort <main>%NPCNAME%</main> to <main>%DESTINATIONNPCNAME%'
+        base: Eskorter <main>%NPCNAME%</main> til <main>%DESTINATIONNPCNAME%
       fishItems:
-        base: 'Fish Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
+        base: 'Fisk gjenstander: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
       killMobs:
-        base: 'Kill mobs: <main>%MOBTOKILL%'
+        base: 'Drep mobs: <main>%MOBTOKILL%'
       otherQuest:
-        base: 'Complete Quest: <main>%OTHERQUESTNAME%'
+        base: 'Fullfør oppdrag: <main>%OTHERQUESTNAME%'
       placeBlocks:
-        base: 'Place Blocks: <main>%BLOCKTOPLACE%'
+        base: 'Plasser blokker: <main>%BLOCKTOPLACE%'
       reachLocation:
-        base: 'Reach Location: <main>%LOCATIONNAME%'
+        base: 'Nå sted: <main>%LOCATIONNAME%'
       talkToNPC:
-        base: 'Talk to <main>%NAME%'
-        npc-not-available: '    <GRAY>The target NPC is currently not available!'
+        base: Snakk med <main>%NAME%
+        npc-not-available: '    <GRAY>Mål-NPC-en er for øyeblikket ikke tilgjengelig!'
       triggerCommand:
-        base: 'Goal: <main>%TRIGGERNAME%'
+        base: 'Mål: <main>%TRIGGERNAME%'
       killEliteMobs:
-        base: 'Kill Elite Mob: <main>%ELITEMOBNAME%'
-        any: 'Kill any Elite Mob!'
+        base: 'Drep Elite-mob: <main>%ELITEMOBNAME%'
+        any: Drep en hvilken som helst Elite-mob!
       runCommand:
-        base: 'Run command: <main>%COMMANDTORUN%'
+        base: 'Kjør kommando: <main>%COMMANDTORUN%'
       interact:
-        base: '%INTERACTTYPE% Location: <main>%COORDINATES% <main>in world %WORLDNAME%'
+        base: '%INTERACTTYPE% sted: <main>%COORDINATES% <main>i verdenen %WORLDNAME%'
       jump:
-        base: 'Jump <main>%AMOUNTOFJUMPS%</main> times'
+        base: Hopp <main>%AMOUNTOFJUMPS%</main> ganger
       objective:
         base: '%OBJECTIVEHOLDERNAME%'
       sneak:
-        base: 'Sneak <main>%AMOUNTOFSNEAKS%</main> times'
+        base: Snik <main>%AMOUNTOFSNEAKS%</main> ganger
       smelt:
-        base: 'Smelt Items: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+        base: 'Smelt gjenstander: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       openBuriedTreasure:
-        base: 'Open buried treasures'
+        base: Åpne begravde skatter
       shearSheep:
-        base: 'Shear <main>%AMOUNTOFSHEEP%</main> sheep'
+        base: Klipp <main>%AMOUNTOFSHEEP%</main> sauer
       townyReachResidentCount:
-        base: 'Reach resident amount: <main>%AMOUNT%'
+        base: 'Nå antall innbyggere: <main>%AMOUNT%'
       townyNationReachTownCount:
-        base: 'Reach town amount with your nation: <main>%AMOUNT%'
+        base: 'Nå antall byer med nasjonen din: <main>%AMOUNT%'
       jobsRebornReachJobLevel:
-        base: 'Reach job level <main>%AMOUNT%</main> with job <main>%JOB%'
+        base: Nå jobbnivå <main>%AMOUNT%</main> med jobben <main>%JOB%
       SlimefunResearch:
-        base: 'Spend on research'
+        base: Bruk på forskning
       ProjectKorraUseAbility:
-        base: 'Use Ability: <main>%ABILITY%'
+        base: 'Bruk evne: <main>%ABILITY%'
       BetonQuestCompleteObjective:
-        base: 'Finish Objective: <main>%BETONQUESTOBJECTIVENAME%'
+        base: 'Fullfør mål: <main>%BETONQUESTOBJECTIVENAME%'
       ultimateJobsReachJobLevel:
-        base: 'Reach job level <main>%AMOUNT%</main> with job <main>%JOBID%'
+        base: Nå jobbnivå <main>%AMOUNT%</main> med jobben <main>%JOBID%
   conditions:
     boolean:
-      not-fulfilled: "<warn>Following needs to be %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
-      variable-not-found: "<error>Error: variable <highlight>%VARIABLENAME%</highlight> not found. Report this to the Server owner."
-      wrong-operator: "<error>Error: variable operator <highlight>%OPERATOR%/highlight> is invalid. Report this to the Server owner."
+      not-fulfilled: '<warn>Følgende må være %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>.'
+      variable-not-found: '<error>Feil: variabelen <highlight>%VARIABLENAME%</highlight> ble ikke funnet. Rapporter dette til servereieren.'
+      wrong-operator: '<error>Feil: variabeloperatoren <highlight>%OPERATOR%/highlight> er ugyldig. Rapporter dette til servereieren.'
 objective-tracking:
   actionbar-progress-update:
-    default: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
-    only-one-max-progress: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+    default: <positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)
+    only-one-max-progress: <positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)
   bossbar-progress-update:
-    default: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
-    only-one-max-progress: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+    default: <positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)
+    only-one-max-progress: <positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)
 titles:
   quest-accepted:
-    title: <main>Quest accepted
+    title: <main>Oppdrag akseptert
     subtitle: <highlight>%QUESTNAME%
   quest-completed:
-    title: <positive>Quest Completed
+    title: <positive>Oppdrag fullført
     subtitle: <highlight>%QUESTNAME%
   quest-failed:
-    title: <negative>Quest Failed
+    title: <negative>Oppdrag mislyktes
     subtitle: <highlight>%QUESTNAME%
 placeholders:
   questcooldownleftformatted:
     prefix: ''
-    minute: '1 minute'
-    minutes: '%MINUTES% minutes'
-    hour: '1 hour'
-    hours: '%HOURS% hours'
-    day: '1 day'
-    days: '%DAYS% days'
+    minute: 1 minutt
+    minutes: '%MINUTES% minutter'
+    hour: 1 time
+    hours: '%HOURS% timer'
+    day: 1 dag
+    days: '%DAYS% dager'
     no-cooldown: ''
 gui:
-  main:
-    title: '                <highlight2>Quests'
-    backgroundFill:
-      material: 'BLACK_STAINED_GLASS_PANE'
-    background:
-      '1':
-        minX: 0
-        maxX: 8
-        minY: 0
-        maxY: 0
-      '2':
-        minX: 0
-        maxX: 0
-        minY: 0
-        maxY: 5
-      '3':
-        minX: 1
-        maxX: 1
-        minY: 0
-        maxY: 5
-      '4':
-        minX: 2
-        maxX: 2
-        minY: 0
-        maxY: 5
+  abort-quest-confirm:
+    title: <!i><red>Avbryt oppdrag <dark_gray>- <dark_red>Er du sikker?
+    button:
+      cancelabort:
+        name: <!i><red>Klikk for å avbryte
+        lore:
+        - '<!i><gray>Avbryter avslutningen av oppdraget '
+      confirmabort:
+        name: <!i><dark_red>Klikk for å avbryte oppdrag
+        lore:
+        - '<!i><gray>Avbryter oppdraget '
+        - <!i><dark_red>All fremdrift vil gå tapt!
+  active-quest-info:
+    title: <main>Oppdragsinfo <gray>- <green>%QUESTNAME%
+    button:
+      infobook:
+        name: <!i><green>%QUESTNAME%
+        lore:
+        - <!i><gray>%QUESTDESCRIPTION%
+      abort:
+        name: <!i><red>Avbryt oppdrag
+        lore:
+        - <!i><red>Klikk for å avbryte oppdrag
+      back:
+        name: <!i><red>Tilbake til forrige side
+  category-take:
+    title: <main>Ta nytt oppdrag
+    button:
+      return:
+        name: <!i><red>Tilbake
+      quests:
+        name: <!i><!i><green>%QUESTNAME%
+        lore:
+        - <!i><gray>%QUESTDESCRIPTION%
+      back:
+        name: <!i><gray>Forrige side
+      forward:
+        name: <!i><gray>Neste side
+  main-base:
+    title: <main>Oppdragsmeny
     button:
       questpoints:
-        name: "<highlight>Quest Points"
+        name: <!i><main>Oppdragspoeng
         lore:
-          - "<main>Current quest points: <highlight2>%QUESTPOINTS%"
-        x: 8
-        y: 0
-      takequest:
-        name: "<positive>Take a Quest"
+        - '<!i><gray>Oppdragspoengene dine: <yellow>%QUESTPOINTS%'
+      tab1:
+        name: <!i><main>Aktive oppdrag
         lore:
-          - "<unimportant>Start a new Quest!"
-          - ""
-          - "<veryUnimportant>Some Quests cannot be"
-          - "<veryUnimportant>started like this."
-        x: 0
-        y: 1
-      abortquest:
-        name: "<negative>Abort a Quest"
+        - <!i><gray>Se de aktive oppdragene dine
+      tab2:
+        name: <!i><main>Ta et nytt oppdrag
         lore:
-          - ""
-          - "<veryUnimportant>Aborting a Quest may"
-          - "<veryUnimportant>lead to punishments."
-        x: 0
-        y: 2
-      activequests:
-        name: "<highlight>Active Quests"
-        lore:
-          - ""
-          - "<veryUnimportant>Shows all of your"
-          - "<veryUnimportant>active Quests."
-        x: 0
-        y: 3
-  activeQuests:
-    title: '             <highlight2>Active Quests'
+        - <!i><gray>Se tilgjengelige oppdrag
+  main-active:
+    title: <main>Oppdragsmeny <gray>- <highlight>Aktive oppdrag
     button:
-      activeQuestButton:
-        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
+      quests:
+        name: <!i><green>%QUESTNAME%
         lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<main>Click to see details!"
-  reward-hidden-text: . <unimportant>[HIDDEN]
-  availableQuests:
-    title: '         <highlight2>Available Quests'
+        - <!i><gray>%QUESTDESCRIPTION%
+      back:
+        name: <!i><gray>Forrige side
+      forward:
+        name: <!i><gray>Neste side
+  main-take:
+    title: <main>Oppdragsmeny <gray>- <highlight>Ta et nytt oppdrag
     button:
-      questPreview:
-        name-if-not-accepted: "<highlight>%QUESTNAME%"
-        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
+      categories:
+        name: <!i><yellow>%CATEGORYNAME%
         lore:
-          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-          - "<main>Click to open Quest!"
-  takeQuestChoose:
-    title: <highlight2>Which Quest do you want to take?
-    size:
-      minX: 3
-      minY: 1
-      maxX: 8
-      maxY: 5
+        - <!i><gray>Klikk for å se tilgjengelige
+        - <!i><gray>oppdrag i kategorien
+      back:
+        name: <!i><gray>Forrige side
+      forward:
+        name: <!i><gray>Neste side
+  npc-available-quests:
+    title: <!i><main>Tilgjengelige oppdrag
     button:
-      questPreview:
-        name-if-not-accepted: "<highlight>%QUESTNAME%"
-        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
+      quest:
+        name: <!i><green>%QUESTNAME%
         lore:
-          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-          - "<main>Click to preview Quest!"
-  abortQuestChoose:
-    title: '  <highlight2>Active Quests you can abort'
+        - <!i><gray>%QUESTDESCRIPTION%
+      back:
+        name: <!i><gray>Forrige side
+      forward:
+        name: <!i><gray>Neste side
+  quest-preview:
+    title: <main>Forhåndsvisning av oppdrag
     button:
-      abortQuestPreview:
-        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
+      info:
+        name: <!i><green>%QUESTNAME%
         lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Click to abort Quest!"
-  abortQuest:
-    title: '         <negative>Abort Confirmation'
-    button:
-      confirmAbort:
-        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
-        lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Click to abort the quest <highlight>%QUESTNAME%</highlight>!"
-        x: 3
-        y: 1
-      cancelAbort:
-        name: "<positive>Click to NOT abort this quest"
-        lore:
-          - "<positive>and cancel this action"
-        x: 5
-        y: 1
-  previewQuest:
-    title: <highlight2>Quest Preview
-    button:
-      description:
-        name: "<highlight>Description"
-        lore:
-          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-        lore-if-empty:
-          - "<veryUnimportant>???"
-        x: 2
-        y: 0
-      rewards:
-        name: "<positive>Rewards"
-        lore:
-          - "<WHITE>%QUESTREWARDS%"
-        lore-if-empty:
-          - "<veryUnimportant>None or hidden"
-        x: 4
-        y: 0
-      requirements:
-        name: "<negative>Requirements"
-        lore:
-          - "<WHITE>%QUESTREQUIREMENTS%"
-        lore-if-empty:
-          - "<veryUnimportant>-"
-        x: 6
-        y: 0
-      confirmTake:
-        name: "<highlight>%QUESTNAME%"
-        lore:
-          - "<positive>Click to take the quest <highlight>%QUESTNAME%"
-        x: 3
-        y: 2
-      cancelTake:
-        name: "<negative>Click to NOT take this quest"
-        lore:
-          - "<negative>and cancel this action"
-        x: 5
-        y: 2
-  progress:
-    title: <highlight2>Details for Quest
-    button:
-      unlockedObjective:
-        name: "<highlight2>%ACTIVEOBJECTIVEID%. <highlight>%OBJECTIVENAME%"
-        lore:
-          - "<main><BOLD>ACTIVE</BOLD>"
-          - "<veryUnimportant>%WRAPPEDOBJECTIVEDESCRIPTION%"
-          - "<unimportant>%OBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
-        lore-if-description-empty:
-          - "<main><BOLD>ACTIVE</BOLD>"
-          - "<veryUnimportant>No Description"
-          - "<unimportant>%OBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
-      lockedObjective:
-        name: "<highlight2>%ACTIVEOBJECTIVEID%. <unimportant><BOLD>[HIDDEN]"
-        lore:
-          - "<warn>This objective has not yet"
-          - "<warn>been unlocked!"
-      completedObjective:
-        name: "<highlight2><strikethrough>%ACTIVEOBJECTIVEID%. <positive><strikethrough>%OBJECTIVENAME%"
-        lore:
-          - "<positive><BOLD>COMPLETED</BOLD>"
-          - "<veryUnimportant><strikethrough>%WRAPPEDOBJECTIVEDESCRIPTION%"
-          - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
-        lore-if-description-empty:
-          - "<positive><BOLD>COMPLETED</BOLD>"
-          - "<veryUnimportant><strikethrough>No Description"
-          - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
+        - <!i><gray>%QUESTDESCRIPTION%
+      accept:
+        name: <!i><green>Aksepter oppdrag
+      decline:
+        name: <!i><red>Avslå oppdrag

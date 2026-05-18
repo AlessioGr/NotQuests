@@ -1,92 +1,108 @@
 ---
 chat:
-  wrong-command-usage: <error>Wrong command usage!
-  missing-permission: '<error>No permission! Required permission node: <highlight>%PERMISSION%'
-  too-many-arguments: <error>Too many arguments!
-  quest-successfully-accepted: |2
+  wrong-command-usage: <error>Väärä komennon käyttö!
+  missing-permission: '<error>Ei oikeuksia! Vaadittu oikeus: <highlight>%PERMISSION%'
+  too-many-arguments: <error>Liian monta argumenttia!
+  quest-successfully-accepted: '
 
-    <CENTER><main>[Quest Accepted]
-    <CENTER><highlight><BOLD>%QUESTNAME%
-    <EMPTY>
-  quest-description: '<main>Quest description: <unimportant>%QUESTDESCRIPTION%'
-  quest-already-accepted: <error>Quest already accepted.
-  quest-failed: |2
+    <CENTER><main>[Tehtävä hyväksytty]
 
-    <CENTER><negative>[Quest Failed]
     <CENTER><highlight><BOLD>%QUESTNAME%
+
     <EMPTY>
+
+    '
+  quest-description: '<main>Tehtävän kuvaus: <unimportant>%QUESTDESCRIPTION%'
+  quest-already-accepted: <error>Tehtävä on jo hyväksytty.
+  quest-failed: '
+
+    <CENTER><negative>[Tehtävä epäonnistui]
+
+    <CENTER><highlight><BOLD>%QUESTNAME%
+
+    <EMPTY>
+
+    '
   quest-aborted: ''
-  quest-completed-and-rewards-given: |2
+  quest-completed-and-rewards-given: '
 
-    <CENTER><positive>[Quest Completed]
+    <CENTER><positive>[Tehtävä suoritettu]
+
     <CENTER><highlight><BOLD>%QUESTNAME%
+
     <EMPTY>
-  quest-completed-rewards-prefix: '    <highlight>Rewards:'
+
+    '
+  quest-completed-rewards-prefix: '    <highlight>Palkinnot:'
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
-  quest-not-all-requirements-fulfilled: '<negative>You do not fulfill all the requirements this quest needs! Requirement still needed:'
-  action-not-all-conditions-fulfilled: '<negative>You do not fulfill all the conditions this action needs! Conditions still needed:'
-  missing-quest-description: <unimportant>This quest has no quest description.
-  objectives-label-after-quest-accepting: '<highlight>Objectives:'
+  quest-not-all-requirements-fulfilled: '<negative>Et täytä kaikkia tämän tehtävän vaatimuksia! Yhä tarvittava vaatimus:'
+  action-not-all-conditions-fulfilled: '<negative>Et täytä kaikkia tämän toiminnon ehtoja! Yhä tarvittavat ehdot:'
+  missing-quest-description: <unimportant>Tällä tehtävällä ei ole kuvausta.
+  objectives-label-after-quest-accepting: '<highlight>Tavoitteet:'
   questpoints:
-    query: <main>You currently have <highlight>%QUESTPOINTS%</highlight> quest points.
-    none: <error>Seems like you don't have any quest points!
+    query: <main>Sinulla on tällä hetkellä <highlight>%QUESTPOINTS%</highlight> tehtäväpistettä.
+    none: <error>Näyttää siltä, ettei sinulla ole yhtään tehtäväpistettä!
     notify-when-changed:
-      set: '<main>Your quest points have been set to <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.'
-      add: '<highlight>+%QUESTPOINTSTOADD% <success>quest points!'
-      remove: '<highlight>-%QUESTPOINTSTOREMOVE% <negative>quest points!'
-  no-quests-accepted: <error>Seems like you don't have any active quests!
-  quest-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> does not exist!
-  quest-not-found-or-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> not found or not active!
-  active-quests-label: '<highlight>Active quests:'
-  take-disabled: <error>Accepting or previewing the quest <highlight>%QUESTNAME%</highlight> is disabled.
-  abort-disabled: <error>Aborting the quest <highlight>%QUESTNAME%</highlight> is disabled.
-  quest-not-active-error: '<error>Error: <highlight>%QUESTNAME%</highlight> is not an active Quest!'
-  force-add-active-quest-accepted: '<success>Successfully accepted the quest (Forced).'
-  add-active-quest-player-object-not-found: '<warn>Error: Player object not found. Please report this to the plugin developer.'
-  reached-max-accepts-limit: '<red>You have accepted this quest too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%ACCEPTEDAMOUNT%</highlight> times.'
-  reached-max-fails-limit: '<red>You have failed this quest too many times already. You can only fail it <highlight>%MAXFAILS%</highlight> times, but you have already failed it <highlight>%FAILEDAMOUNT%</highlight> times.'
-  reached-max-completions-limit: '<red>You have completed this quest too many times already. You can only complete it <highlight>%MAXCOMPLETIONS%</highlight> times, but you have already completed it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
-  reached-max-active-quests-per-player-limit: '<red>You can not accept more than <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> Quests.'
+      set: <main>Tehtäväpisteesi on asetettu arvoon <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.
+      add: <highlight>+%QUESTPOINTSTOADD% <success>tehtäväpistettä!
+      remove: <highlight>-%QUESTPOINTSTOREMOVE% <negative>tehtäväpistettä!
+  no-quests-accepted: <error>Näyttää siltä, ettei sinulla ole yhtään aktiivista tehtävää!
+  quest-does-not-exist: <error>Tehtävää <highlight>%QUESTNAME%</highlight> ei ole olemassa!
+  quest-not-found-or-does-not-exist: <error>Tehtävää <highlight>%QUESTNAME%</highlight> ei löytynyt tai se ei ole aktiivinen!
+  active-quests-label: '<highlight>Aktiiviset tehtävät:'
+  take-disabled: <error>Tehtävän <highlight>%QUESTNAME%</highlight> hyväksyminen tai esikatselu on poistettu käytöstä.
+  abort-disabled: <error>Tehtävän <highlight>%QUESTNAME%</highlight> keskeyttäminen on poistettu käytöstä.
+  quest-not-active-error: '<error>Virhe: <highlight>%QUESTNAME%</highlight> ei ole aktiivinen tehtävä!'
+  force-add-active-quest-accepted: <success>Tehtävä hyväksyttiin onnistuneesti (Pakotettu).
+  add-active-quest-player-object-not-found: '<warn>Virhe: Pelaajaobjektia ei löytynyt. Ilmoita tästä lisäosan kehittäjälle.'
+  reached-max-accepts-limit: <red>Olet jo hyväksynyt tämän tehtävän liian monta kertaa. Voit hyväksyä sen vain <highlight>%MAXACCEPTS%</highlight> kertaa, mutta olet jo hyväksynyt sen <highlight>%ACCEPTEDAMOUNT%</highlight> kertaa.
+  reached-max-fails-limit: <red>Olet jo epäonnistunut tässä tehtävässä liian monta kertaa. Voit epäonnistua siinä vain <highlight>%MAXFAILS%</highlight> kertaa, mutta olet jo epäonnistunut <highlight>%FAILEDAMOUNT%</highlight> kertaa.
+  reached-max-completions-limit: <red>Olet jo suorittanut tämän tehtävän liian monta kertaa. Voit suorittaa sen vain <highlight>%MAXCOMPLETIONS%</highlight> kertaa, mutta olet jo suorittanut sen <highlight>%COMPLETEDAMOUNT%</highlight> kertaa.
+  reached-max-active-quests-per-player-limit: <red>Et voi hyväksyä enempää kuin <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> tehtävää.
   quest-on-cooldown:
-    minute: '<red>This quest is on a cooldown! You have to wait another <highlight>1 minute</highlight> until you can take it again.'
-    minutes: '<red>This quest is on a cooldown! You have to wait another <highlight>%MINUTES% minutes</highlight> until you can take it again.'
-    hour: '<red>This quest is on a cooldown! You have to wait another <highlight>1 hour</highlight> until you can take it again.'
-    hours: '<red>This quest is on a cooldown! You have to wait another <highlight>%HOURS% hours</highlight> until you can take it again.'
-    day: '<red>This quest is on a cooldown! You have to wait another <highlight>1 day</highlight> until you can take it again.'
-    days: '<red>This quest is on a cooldown! You have to wait another <highlight>%DAYS% days</highlight> until you can take it again.'
+    minute: <red>Tämä tehtävä on jäähdytysajalla! Sinun on odotettava vielä <highlight>1 minuutti</highlight> ennen kuin voit ottaa sen uudelleen.
+    minutes: <red>Tämä tehtävä on jäähdytysajalla! Sinun on odotettava vielä <highlight>%MINUTES% minuuttia</highlight> ennen kuin voit ottaa sen uudelleen.
+    hour: <red>Tämä tehtävä on jäähdytysajalla! Sinun on odotettava vielä <highlight>1 tunti</highlight> ennen kuin voit ottaa sen uudelleen.
+    hours: <red>Tämä tehtävä on jäähdytysajalla! Sinun on odotettava vielä <highlight>%HOURS% tuntia</highlight> ennen kuin voit ottaa sen uudelleen.
+    day: <red>Tämä tehtävä on jäähdytysajalla! Sinun on odotettava vielä <highlight>1 päivä</highlight> ennen kuin voit ottaa sen uudelleen.
+    days: <red>Tämä tehtävä on jäähdytysajalla! Sinun on odotettava vielä <highlight>%DAYS% päivää</highlight> ennen kuin voit ottaa sen uudelleen.
   profiles:
-    list-current: '<highlight>Current profile: <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
-    list-other-heading: '<highlight>Other profiles:'
-    list-other-none: '  <main>You have no more profiles.'
-    list-other: '  <highlight>- <main>%PROFILENAME% (%QUESTPOINTS% quest points)'
-    change-same-profile: '<error>You are already using that profile!'
-    change-profile-doesnt-exist: '<error>That profile does not exist.'
-    changed-successfully: '<success>You have successfully changed your profile from %OLDPROFILENAME% to <highlight>%NEWPROFILENAME%</highlight>!'
-    create-already-exists: '<error>A profile with the name <highlight>%NEWPROFILENAME%</highlight> already exists.'
-    create-invalid-characters: '<error>The profile name you provided contains invalid characters.'
-    created-successfully: '<success>You have successfully created the profile <highlight>%NEWPROFILENAME%</highlight>! To switch to it, use <highlight2>/nq profiles change %NEWPROFILENAME%</highlight2>'
+    list-current: '<highlight>Nykyinen profiili: <main>%PROFILENAME% (%QUESTPOINTS% tehtäväpistettä)'
+    list-other-heading: '<highlight>Muut profiilit:'
+    list-other-none: '  <main>Sinulla ei ole enempää profiileja.'
+    list-other: '  <highlight>- <main>%PROFILENAME% (%QUESTPOINTS% tehtäväpistettä)'
+    change-same-profile: <error>Käytät jo kyseistä profiilia!
+    change-profile-doesnt-exist: <error>Kyseistä profiilia ei ole olemassa.
+    changed-successfully: <success>Vaihdoit profiilisi onnistuneesti profiilista %OLDPROFILENAME% profiiliin <highlight>%NEWPROFILENAME%</highlight>!
+    create-already-exists: <error>Profiili nimellä <highlight>%NEWPROFILENAME%</highlight> on jo olemassa.
+    create-invalid-characters: <error>Antamasi profiilin nimi sisältää virheellisiä merkkejä.
+    created-successfully: <success>Loit onnistuneesti profiilin <highlight>%NEWPROFILENAME%</highlight>! Vaihtaaksesi siihen käytä <highlight2>/nq profiles change %NEWPROFILENAME%</highlight2>
   conversations:
-    choose-answer-prefix: |-
-      <EMPTY>
-      <main>Choose your answer:</main>
-    choose-answer-answer-hover-text: '<highlight>Click to answer'
-    ended-previous-conversation: '<main>You have ended your previous conversation!'
+    choose-answer-prefix: '<EMPTY>
+
+      <main>Valitse vastauksesi:</main>'
+    choose-answer-answer-hover-text: <highlight>Klikkaa vastataksesi
+    ended-previous-conversation: <main>Lopetit edellisen keskustelusi!
     speaker-line-format: '%SPEAKERCOLOR%[%SPEAKER%] <GRAY>%MESSAGE%'
     answer-option-line-format: ' <main>%OPTIONNUMBER%. <gray>%MESSAGE%'
   objectives:
     counter: '<highlight>%OBJECTIVEIDWITHSUBID%.</highlight> <main>%OBJECTIVENAME%:'
     counterForObjectiveObjective: '<highlight>%OBJECTIVEIDWITHSUBID%.</highlight> <main>%OBJECTIVEHOLDERNAME%:'
     subObjectivePrefixAppend: '    '
-    hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[HIDDEN]
-    description: '    <veryUnimportant>└─ <unimportant>Description: <main>%OBJECTIVEDESCRIPTION%'
-    progress: '    <veryUnimportant>└─ <unimportant>Progress: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
-    successfully-completed: |2
+    hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[PIILOTETTU]
+    description: '    <veryUnimportant>└─ <unimportant>Kuvaus: <main>%OBJECTIVEDESCRIPTION%'
+    progress: '    <veryUnimportant>└─ <unimportant>Edistyminen: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
+    successfully-completed: '
 
       <CENTER><success>[Objective Completed]
+
       <CENTER><highlight><bold>%OBJECTIVENAME%</bold> <RESET><main>(%QUESTNAME%)
+
       <EMPTY>
-    successfully-completed-rewards-prefix: '    <highlight>Rewards:'
+
+      '
+    successfully-completed-rewards-prefix: '    <highlight>Palkinnot:'
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
     successfully-completed-rewards-suffix: <EMPTY>
     taskDescription:
@@ -94,289 +110,199 @@ chat:
         prefix: '    <veryUnimportant>└─ <unimportant>'
         suffix: ''
       breakBlocks:
-        base: 'Break Blocks: <main>%BLOCKTOBREAK%'
+        base: 'Riko lohkoja: <main>%BLOCKTOBREAK%'
       breed:
-        base: 'Breed Mobs: <main>%ENTITYTOBREED%'
+        base: 'Lisää eläimiä: <main>%ENTITYTOBREED%'
       pickupItems:
-        base: 'Pickup Items: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
+        base: 'Poimi esineitä: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
       consumeItems:
-        base: 'Consume Items: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
+        base: 'Käytä esineitä: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: 'Craft Items: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+        base: 'Valmista esineitä: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: 'Deliver Items: <main>%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%(%'
-        deliver-to-npc: '      <GRAY>Deliver it to <WHITE>%NPCNAME%'
-        deliver-to-npc-not-available: '      <GRAY>The delivery NPC is currently not available!'
+        base: 'Toimita esineitä: <main>%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%(%'
+        deliver-to-npc: '      <GRAY>Toimita se hahmolle <WHITE>%NPCNAME%'
+        deliver-to-npc-not-available: '      <GRAY>Toimitushahmo ei ole tällä hetkellä saatavilla!'
       enchant:
-        base: 'Enchant Items with %ENCHANTMENT%: <main>%ITEMTOENCHANTTYPE% %(%%ITEMTOENCHANTNAME%%(%'
+        base: 'Lumoa esineitä lumouksella %ENCHANTMENT%: <main>%ITEMTOENCHANTTYPE% %(%%ITEMTOENCHANTNAME%%(%'
       escortNPC:
-        base: 'Escort <main>%NPCNAME%</main> to <main>%DESTINATIONNPCNAME%'
+        base: Saata <main>%NPCNAME%</main> kohteeseen <main>%DESTINATIONNPCNAME%
       fishItems:
-        base: 'Fish Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
+        base: 'Kalasta esineitä: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
       killMobs:
-        base: 'Kill mobs: <main>%MOBTOKILL%'
+        base: 'Tapa olentoja: <main>%MOBTOKILL%'
       otherQuest:
-        base: 'Complete Quest: <main>%OTHERQUESTNAME%'
+        base: 'Suorita tehtävä: <main>%OTHERQUESTNAME%'
       placeBlocks:
-        base: 'Place Blocks: <main>%BLOCKTOPLACE%'
+        base: 'Aseta lohkoja: <main>%BLOCKTOPLACE%'
       reachLocation:
-        base: 'Reach Location: <main>%LOCATIONNAME%'
+        base: 'Saavu sijaintiin: <main>%LOCATIONNAME%'
       talkToNPC:
-        base: 'Talk to <main>%NAME%'
-        npc-not-available: '    <GRAY>The target NPC is currently not available!'
+        base: Puhu hahmolle <main>%NAME%
+        npc-not-available: '    <GRAY>Kohdehahmo ei ole tällä hetkellä saatavilla!'
       triggerCommand:
-        base: 'Goal: <main>%TRIGGERNAME%'
+        base: 'Tavoite: <main>%TRIGGERNAME%'
       killEliteMobs:
-        base: 'Kill Elite Mob: <main>%ELITEMOBNAME%'
-        any: 'Kill any Elite Mob!'
+        base: 'Tapa eliittiolento: <main>%ELITEMOBNAME%'
+        any: Tapa mikä tahansa eliittiolento!
       runCommand:
-        base: 'Run command: <main>%COMMANDTORUN%'
+        base: 'Suorita komento: <main>%COMMANDTORUN%'
       interact:
-        base: '%INTERACTTYPE% Location: <main>%COORDINATES% <main>in world %WORLDNAME%'
+        base: '%INTERACTTYPE% Sijainti: <main>%COORDINATES% <main>maailmassa %WORLDNAME%'
       jump:
-        base: 'Jump <main>%AMOUNTOFJUMPS%</main> times'
+        base: Hyppää <main>%AMOUNTOFJUMPS%</main> kertaa
       objective:
         base: '%OBJECTIVEHOLDERNAME%'
       sneak:
-        base: 'Sneak <main>%AMOUNTOFSNEAKS%</main> times'
+        base: Hiivi <main>%AMOUNTOFSNEAKS%</main> kertaa
       smelt:
-        base: 'Smelt Items: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+        base: 'Sulata esineitä: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       openBuriedTreasure:
-        base: 'Open buried treasures'
+        base: Avaa haudattuja aarteita
       shearSheep:
-        base: 'Shear <main>%AMOUNTOFSHEEP%</main> sheep'
+        base: Keritse <main>%AMOUNTOFSHEEP%</main> lammasta
       townyReachResidentCount:
-        base: 'Reach resident amount: <main>%AMOUNT%'
+        base: 'Saavuta asukasmäärä: <main>%AMOUNT%'
       townyNationReachTownCount:
-        base: 'Reach town amount with your nation: <main>%AMOUNT%'
+        base: 'Saavuta kaupunkimäärä kansakunnallasi: <main>%AMOUNT%'
       jobsRebornReachJobLevel:
-        base: 'Reach job level <main>%AMOUNT%</main> with job <main>%JOB%'
+        base: Saavuta ammattitaso <main>%AMOUNT%</main> ammatilla <main>%JOB%
       SlimefunResearch:
-        base: 'Spend on research'
+        base: Käytä tutkimukseen
       ProjectKorraUseAbility:
-        base: 'Use Ability: <main>%ABILITY%'
+        base: 'Käytä kykyä: <main>%ABILITY%'
       BetonQuestCompleteObjective:
-        base: 'Finish Objective: <main>%BETONQUESTOBJECTIVENAME%'
+        base: 'Suorita tavoite: <main>%BETONQUESTOBJECTIVENAME%'
       ultimateJobsReachJobLevel:
-        base: 'Reach job level <main>%AMOUNT%</main> with job <main>%JOBID%'
+        base: Saavuta ammattitaso <main>%AMOUNT%</main> ammatilla <main>%JOBID%
   conditions:
     boolean:
-      not-fulfilled: "<warn>Following needs to be %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
-      variable-not-found: "<error>Error: variable <highlight>%VARIABLENAME%</highlight> not found. Report this to the Server owner."
-      wrong-operator: "<error>Error: variable operator <highlight>%OPERATOR%/highlight> is invalid. Report this to the Server owner."
+      not-fulfilled: '<warn>Seuraavan on oltava %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>.'
+      variable-not-found: '<error>Virhe: muuttujaa <highlight>%VARIABLENAME%</highlight> ei löytynyt. Ilmoita tästä palvelimen omistajalle.'
+      wrong-operator: '<error>Virhe: muuttujan operaattori <highlight>%OPERATOR%/highlight> on virheellinen. Ilmoita tästä palvelimen omistajalle.'
 objective-tracking:
   actionbar-progress-update:
-    default: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
-    only-one-max-progress: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+    default: <positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)
+    only-one-max-progress: <positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)
   bossbar-progress-update:
-    default: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
-    only-one-max-progress: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+    default: <positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)
+    only-one-max-progress: <positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)
 titles:
   quest-accepted:
-    title: <main>Quest accepted
+    title: <main>Tehtävä hyväksytty
     subtitle: <highlight>%QUESTNAME%
   quest-completed:
-    title: <positive>Quest Completed
+    title: <positive>Tehtävä suoritettu
     subtitle: <highlight>%QUESTNAME%
   quest-failed:
-    title: <negative>Quest Failed
+    title: <negative>Tehtävä epäonnistui
     subtitle: <highlight>%QUESTNAME%
 placeholders:
   questcooldownleftformatted:
     prefix: ''
-    minute: '1 minute'
-    minutes: '%MINUTES% minutes'
-    hour: '1 hour'
-    hours: '%HOURS% hours'
-    day: '1 day'
-    days: '%DAYS% days'
+    minute: 1 minuutti
+    minutes: '%MINUTES% minuuttia'
+    hour: 1 tunti
+    hours: '%HOURS% tuntia'
+    day: 1 päivä
+    days: '%DAYS% päivää'
     no-cooldown: ''
 gui:
-  main:
-    title: '                <highlight2>Quests'
-    backgroundFill:
-      material: 'BLACK_STAINED_GLASS_PANE'
-    background:
-      '1':
-        minX: 0
-        maxX: 8
-        minY: 0
-        maxY: 0
-      '2':
-        minX: 0
-        maxX: 0
-        minY: 0
-        maxY: 5
-      '3':
-        minX: 1
-        maxX: 1
-        minY: 0
-        maxY: 5
-      '4':
-        minX: 2
-        maxX: 2
-        minY: 0
-        maxY: 5
+  abort-quest-confirm:
+    title: <!i><red>Keskeytä tehtävä <dark_gray>- <dark_red>Oletko varma?
+    button:
+      cancelabort:
+        name: <!i><red>Klikkaa peruuttaaksesi
+        lore:
+        - '<!i><gray>Peruuttaa tehtävän keskeyttämisen '
+      confirmabort:
+        name: <!i><dark_red>Klikkaa keskeyttääksesi tehtävän
+        lore:
+        - '<!i><gray>Keskeyttää tehtävän '
+        - <!i><dark_red>Kaikki edistyminen menetetään!
+  active-quest-info:
+    title: <main>Tehtävän tiedot <gray>- <green>%QUESTNAME%
+    button:
+      infobook:
+        name: <!i><green>%QUESTNAME%
+        lore:
+        - <!i><gray>%QUESTDESCRIPTION%
+      abort:
+        name: <!i><red>Keskeytä tehtävä
+        lore:
+        - <!i><red>Klikkaa keskeyttääksesi tehtävän
+      back:
+        name: <!i><red>Takaisin edelliselle sivulle
+  category-take:
+    title: <main>Ota uusi tehtävä
+    button:
+      return:
+        name: <!i><red>Takaisin
+      quests:
+        name: <!i><!i><green>%QUESTNAME%
+        lore:
+        - <!i><gray>%QUESTDESCRIPTION%
+      back:
+        name: <!i><gray>Edellinen sivu
+      forward:
+        name: <!i><gray>Seuraava sivu
+  main-base:
+    title: <main>Tehtävävalikko
     button:
       questpoints:
-        name: "<highlight>Quest Points"
+        name: <!i><main>Tehtäväpisteet
         lore:
-          - "<main>Current quest points: <highlight2>%QUESTPOINTS%"
-        x: 8
-        y: 0
-      takequest:
-        name: "<positive>Take a Quest"
+        - '<!i><gray>Tehtäväpisteesi: <yellow>%QUESTPOINTS%'
+      tab1:
+        name: <!i><main>Aktiiviset tehtävät
         lore:
-          - "<unimportant>Start a new Quest!"
-          - ""
-          - "<veryUnimportant>Some Quests cannot be"
-          - "<veryUnimportant>started like this."
-        x: 0
-        y: 1
-      abortquest:
-        name: "<negative>Abort a Quest"
+        - <!i><gray>Katso aktiiviset tehtäväsi
+      tab2:
+        name: <!i><main>Ota uusi tehtävä
         lore:
-          - ""
-          - "<veryUnimportant>Aborting a Quest may"
-          - "<veryUnimportant>lead to punishments."
-        x: 0
-        y: 2
-      activequests:
-        name: "<highlight>Active Quests"
-        lore:
-          - ""
-          - "<veryUnimportant>Shows all of your"
-          - "<veryUnimportant>active Quests."
-        x: 0
-        y: 3
-  activeQuests:
-    title: '             <highlight2>Active Quests'
+        - <!i><gray>Katso saatavilla olevat tehtävät
+  main-active:
+    title: <main>Tehtävävalikko <gray>- <highlight>Aktiiviset tehtävät
     button:
-      activeQuestButton:
-        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
+      quests:
+        name: <!i><green>%QUESTNAME%
         lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<main>Click to see details!"
-  reward-hidden-text: . <unimportant>[HIDDEN]
-  availableQuests:
-    title: '         <highlight2>Available Quests'
+        - <!i><gray>%QUESTDESCRIPTION%
+      back:
+        name: <!i><gray>Edellinen sivu
+      forward:
+        name: <!i><gray>Seuraava sivu
+  main-take:
+    title: <main>Tehtävävalikko <gray>- <highlight>Ota uusi tehtävä
     button:
-      questPreview:
-        name-if-not-accepted: "<highlight>%QUESTNAME%"
-        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
+      categories:
+        name: <!i><yellow>%CATEGORYNAME%
         lore:
-          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-          - "<main>Click to open Quest!"
-  takeQuestChoose:
-    title: <highlight2>Which Quest do you want to take?
-    size:
-      minX: 3
-      minY: 1
-      maxX: 8
-      maxY: 5
+        - <!i><gray>Klikkaa nähdäksesi saatavilla olevat
+        - <!i><gray>tehtävät kategoriassa
+      back:
+        name: <!i><gray>Edellinen sivu
+      forward:
+        name: <!i><gray>Seuraava sivu
+  npc-available-quests:
+    title: <!i><main>Saatavilla olevat tehtävät
     button:
-      questPreview:
-        name-if-not-accepted: "<highlight>%QUESTNAME%"
-        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
+      quest:
+        name: <!i><green>%QUESTNAME%
         lore:
-          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-          - "<main>Click to preview Quest!"
-  abortQuestChoose:
-    title: '  <highlight2>Active Quests you can abort'
+        - <!i><gray>%QUESTDESCRIPTION%
+      back:
+        name: <!i><gray>Edellinen sivu
+      forward:
+        name: <!i><gray>Seuraava sivu
+  quest-preview:
+    title: <main>Tehtävän esikatselu
     button:
-      abortQuestPreview:
-        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
+      info:
+        name: <!i><green>%QUESTNAME%
         lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Click to abort Quest!"
-  abortQuest:
-    title: '         <negative>Abort Confirmation'
-    button:
-      confirmAbort:
-        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
-        lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Click to abort the quest <highlight>%QUESTNAME%</highlight>!"
-        x: 3
-        y: 1
-      cancelAbort:
-        name: "<positive>Click to NOT abort this quest"
-        lore:
-          - "<positive>and cancel this action"
-        x: 5
-        y: 1
-  previewQuest:
-    title: <highlight2>Quest Preview
-    button:
-      description:
-        name: "<highlight>Description"
-        lore:
-          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-        lore-if-empty:
-          - "<veryUnimportant>???"
-        x: 2
-        y: 0
-      rewards:
-        name: "<positive>Rewards"
-        lore:
-          - "<WHITE>%QUESTREWARDS%"
-        lore-if-empty:
-          - "<veryUnimportant>None or hidden"
-        x: 4
-        y: 0
-      requirements:
-        name: "<negative>Requirements"
-        lore:
-          - "<WHITE>%QUESTREQUIREMENTS%"
-        lore-if-empty:
-          - "<veryUnimportant>-"
-        x: 6
-        y: 0
-      confirmTake:
-        name: "<highlight>%QUESTNAME%"
-        lore:
-          - "<positive>Click to take the quest <highlight>%QUESTNAME%"
-        x: 3
-        y: 2
-      cancelTake:
-        name: "<negative>Click to NOT take this quest"
-        lore:
-          - "<negative>and cancel this action"
-        x: 5
-        y: 2
-  progress:
-    title: <highlight2>Details for Quest
-    button:
-      unlockedObjective:
-        name: "<highlight2>%ACTIVEOBJECTIVEID%. <highlight>%OBJECTIVENAME%"
-        lore:
-          - "<main><BOLD>ACTIVE</BOLD>"
-          - "<veryUnimportant>%WRAPPEDOBJECTIVEDESCRIPTION%"
-          - "<unimportant>%OBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
-        lore-if-description-empty:
-          - "<main><BOLD>ACTIVE</BOLD>"
-          - "<veryUnimportant>No Description"
-          - "<unimportant>%OBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
-      lockedObjective:
-        name: "<highlight2>%ACTIVEOBJECTIVEID%. <unimportant><BOLD>[HIDDEN]"
-        lore:
-          - "<warn>This objective has not yet"
-          - "<warn>been unlocked!"
-      completedObjective:
-        name: "<highlight2><strikethrough>%ACTIVEOBJECTIVEID%. <positive><strikethrough>%OBJECTIVENAME%"
-        lore:
-          - "<positive><BOLD>COMPLETED</BOLD>"
-          - "<veryUnimportant><strikethrough>%WRAPPEDOBJECTIVEDESCRIPTION%"
-          - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
-        lore-if-description-empty:
-          - "<positive><BOLD>COMPLETED</BOLD>"
-          - "<veryUnimportant><strikethrough>No Description"
-          - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVETASKDESCRIPTION%"
-          - ""
-          - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
+        - <!i><gray>%QUESTDESCRIPTION%
+      accept:
+        name: <!i><green>Hyväksy tehtävä
+      decline:
+        name: <!i><red>Hylkää tehtävä
