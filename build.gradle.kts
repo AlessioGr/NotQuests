@@ -33,7 +33,7 @@ subprojects {
 }
 
 group = "rocks.gravili.notquests"
-version = "6.0.0"
+version = "6.0.1"
 
 
 repositories {
@@ -83,18 +83,3 @@ tasks {
         minecraftVersion("26.1.2")
     }
 }
-
-
-
-/*publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            groupId = "rocks.gravili.notquests"
-            artifactId = "NotQuests"
-            version = "4.0.0-dev"
-
-            from(components["java"])
-        }
-    }
-}*/
-
