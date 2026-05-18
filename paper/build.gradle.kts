@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import org.gradle.api.JavaVersion.VERSION_25
+import org.gradle.api.JavaVersion.VERSION_21
 
 
 plugins {
@@ -28,9 +28,9 @@ group = "rocks.gravili.notquests"
 version = rootProject.version
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(25))
-    sourceCompatibility = VERSION_25
-    targetCompatibility = VERSION_25
+    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+    sourceCompatibility = VERSION_21
+    targetCompatibility = VERSION_21
 }
 
 repositories {
@@ -139,7 +139,7 @@ repositories {
 
 dependencies {
     implementation(project(path = ":common", configuration = "shadow"))
-    paperweight.paperDevBundle("26.1.1.build.29-alpha")
+    paperweight.paperDevBundle("1.21.11-R0.1-SNAPSHOT")
 
     compileOnly("org.projectlombok:lombok:1.18.44")
     annotationProcessor("org.projectlombok:lombok:1.18.44")
@@ -186,7 +186,7 @@ dependencies {
     implementation("io.leangen.geantyref:geantyref:1.3.13")
 
     //InvUI
-    implementation("xyz.xenondevs.invui:invui:2.0.0-RC.1")
+    implementation("xyz.xenondevs.invui:invui:2.0.0-beta.5")
 
     implementation("com.github.retrooper:packetevents-spigot:2.12.0")
 
@@ -280,7 +280,7 @@ tasks {
         mustRunAfter(":common:jar")
 
         options.encoding = Charsets.UTF_8.name()
-        options.release.set(25)
+        options.release.set(21)
     }
     javadoc {
         options.encoding = Charsets.UTF_8.name()
@@ -291,6 +291,6 @@ tasks {
     }
 
     runServer {
-        minecraftVersion("26.1.1")
+        minecraftVersion("1.21.11")
     }
 }

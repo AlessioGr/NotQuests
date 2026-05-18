@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import org.gradle.api.JavaVersion.VERSION_25
+import org.gradle.api.JavaVersion.VERSION_21
 
 plugins {
 
@@ -31,9 +31,9 @@ group = "rocks.gravili.notquests"
 version = rootProject.version
 
 java {
-    toolchain.languageVersion = JavaLanguageVersion.of(25)
-    sourceCompatibility = VERSION_25
-    targetCompatibility = VERSION_25
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
+    sourceCompatibility = VERSION_21
+    targetCompatibility = VERSION_21
 }
 
 repositories {
@@ -116,7 +116,7 @@ repositories {
 }
 
 dependencies {
-    paperweight.paperDevBundle("26.1.1.build.29-alpha")
+    paperweight.paperDevBundle("1.21.11-R0.1-SNAPSHOT")
 
     implementation(project(path= ":common", configuration= "shadowRuntimeElements"))
     implementation(project(path= ":paper", configuration= "shadowRuntimeElements"))
@@ -163,7 +163,7 @@ tasks {
         dependsOn(":common:jar", ":paper:jar", ":paper:build")
 
         options.encoding = Charsets.UTF_8.name()
-        options.release.set(25)
+        options.release.set(21)
     }
     javadoc {
         options.encoding = Charsets.UTF_8.name()
@@ -175,7 +175,7 @@ tasks {
         // Configure the Minecraft version for our task.
         // This is the only required configuration besides applying the plugin.
         // Your plugin's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("26.1.1")
+        minecraftVersion("1.21.11")
     }
 
     register<Copy>("copyToServer") {
@@ -196,7 +196,7 @@ bukkit {
     name = "NotQuests"
     version = rootProject.version.toString()
     main = "rocks.gravili.notquests.Main"
-    apiVersion = "26.1.1"
+    apiVersion = "1.21"
     authors = listOf("AlessioGr")
     description = "Flexible, open, GUI Quest Plugin for Minecraft"
     website = "https://www.notquests.com"
@@ -254,7 +254,7 @@ paper {
     name = "NotQuests"
     version = rootProject.version.toString()
     main = "rocks.gravili.notquests.Main"
-    apiVersion = "26.1.1"
+    apiVersion = "1.21"
     authors = listOf("AlessioGr")
     description = "Flexible, open, GUI Quest Plugin for Minecraft"
     website = "https://www.notquests.com"
