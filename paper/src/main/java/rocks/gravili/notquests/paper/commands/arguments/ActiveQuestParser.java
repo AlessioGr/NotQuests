@@ -52,14 +52,30 @@ public class ActiveQuestParser<C> implements ArgumentParser<C, ActiveQuest> {
         return ParserDescriptor.of(new ActiveQuestParser<>(main), ActiveQuest.class);
     }
 
+    /**
+     * Resolves the target player for this argument: an explicit "player" argument (admin commands)
+     * if present, otherwise the command sender (user commands like /nq abort, where there is no
+     * "player" argument and the sender is the player).
+     */
+    private @Nullable OfflinePlayer resolveTargetPlayer(final @NonNull CommandContext<C> context) {
+        if (context.contains("player")) {
+            return context.get("player");
+        }
+        if (context.sender() instanceof Player player) {
+            return player;
+        }
+        return null;
+    }
+
     @Override
     public @NonNull ArgumentParseResult<@NonNull ActiveQuest> parse(@NonNull CommandContext<@NonNull C> commandContext, @NonNull CommandInput commandInput) {
-        OfflinePlayer offlinePlayer = commandContext.get("player");
-        if (commandInput.isEmpty()) {
+        final OfflinePlayer offlinePlayer = resolveTargetPlayer(commandContext);
+        if (offlinePlayer == null || commandInput.isEmpty()) {
             return ArgumentParseResult.failure(new QuestParseException(commandContext));
         }
         final String input = commandInput.readString();
-        final ActiveQuest activeQuest = main.getQuestPlayerManager().getActiveQuestPlayer(offlinePlayer.getUniqueId()).getActiveQuest(main.getQuestManager().getQuest(input));
+        final QuestPlayer activeQuestPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(offlinePlayer.getUniqueId());
+        final ActiveQuest activeQuest = activeQuestPlayer == null ? null : activeQuestPlayer.getActiveQuest(main.getQuestManager().getQuest(input));
         if (activeQuest == null) {
             if (commandContext.sender() instanceof Player player) {
                 return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.quest-does-not-exist", player).replace("%QUESTNAME%", input)));
@@ -68,14 +84,10 @@ public class ActiveQuestParser<C> implements ArgumentParser<C, ActiveQuest> {
             }
         }
 
-        if (commandContext.sender() instanceof final Player player) {
-            if (main.getConfiguration().isQuestPreviewUseGUI()) {
-                return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.take-disabled", player, activeQuest)));
-
-            }
-        } else {
-            return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.take-disabled", (QuestPlayer) null, activeQuest)));
-        }
+        // NOTE: ActiveQuestParser resolves an already-active quest for abort/fail/complete/progress.
+        // It must NOT enforce the take/preview "take-disabled" rule (that belongs to QuestParser),
+        // otherwise /nq abort, /nq progress, /qa failQuest, /qa completeQuest get blocked whenever
+        // quest-preview-GUI is enabled or the sender is the console.
         return ArgumentParseResult.success(activeQuest);
     }
 
@@ -83,10 +95,15 @@ public class ActiveQuestParser<C> implements ArgumentParser<C, ActiveQuest> {
     @Override
     public @NonNull SuggestionProvider<C> suggestionProvider() {
         return (context, input) -> {
-            OfflinePlayer offlinePlayer = context.get("player");
-            List<Suggestion> questNames = new ArrayList<>();
-            for (ActiveQuest quest : main.getQuestPlayerManager().getActiveQuestPlayer(offlinePlayer.getUniqueId()).getActiveQuests()) {
-                questNames.add(Suggestion.suggestion(quest.getQuestIdentifier()));
+            final List<Suggestion> questNames = new ArrayList<>();
+            final OfflinePlayer offlinePlayer = resolveTargetPlayer(context);
+            final QuestPlayer activeQuestPlayer = offlinePlayer == null
+                    ? null
+                    : main.getQuestPlayerManager().getActiveQuestPlayer(offlinePlayer.getUniqueId());
+            if (activeQuestPlayer != null) {
+                for (ActiveQuest quest : activeQuestPlayer.getActiveQuests()) {
+                    questNames.add(Suggestion.suggestion(quest.getQuestIdentifier()));
+                }
             }
 
             main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.sender(), context.rawInput().input().split(" "), "[Quest Name]", "[...]");

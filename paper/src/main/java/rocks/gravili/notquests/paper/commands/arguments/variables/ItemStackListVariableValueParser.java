@@ -60,7 +60,7 @@ public class ItemStackListVariableValueParser<C> implements ArgumentParser<C, St
         if (commandInput.isEmpty()) {
             return ArgumentParseResult.failure(new IllegalArgumentException("No input provided"));
         }
-        return ArgumentParseResult.success(commandInput.peekString());
+        return ArgumentParseResult.success(commandInput.readString());
     }
 
 

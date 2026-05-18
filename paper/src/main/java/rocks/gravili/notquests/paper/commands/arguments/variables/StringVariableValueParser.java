@@ -71,7 +71,7 @@ public class StringVariableValueParser<C> implements ArgumentParser<C, String> {
         if (commandInput.isEmpty()) {
             return ArgumentParseResult.failure(new IllegalArgumentException("No input provided"));
         }
-        return ArgumentParseResult.success(commandInput.peekString());
+        return ArgumentParseResult.success(commandInput.readString());
     }
 
 

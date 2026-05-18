@@ -75,7 +75,7 @@ public class BooleanVariableValueParser<C> implements ArgumentParser<C, String> 
         if (commandInput.isEmpty()) {
             return ArgumentParseResult.failure(new IllegalArgumentException("No input provided"));
         }
-        final String input = commandInput.peekString();
+        final String input = commandInput.readString();
         try {
             final NumberExpression numberExpression = new NumberExpression(main, input);
 
@@ -217,12 +217,12 @@ public class BooleanVariableValueParser<C> implements ArgumentParser<C, String> 
             if(context.sender() instanceof final Player player) {
                 final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
                 if (variable.getPossibleValues(questPlayer) == null) {
-                    CompletableFuture.completedFuture(completions);
+                    return CompletableFuture.completedFuture(completions);
                 }
                 completions.addAll(variable.getPossibleValues(questPlayer));
             }else{
                 if(variable.getPossibleValues(null) == null){
-                    CompletableFuture.completedFuture(completions);
+                    return CompletableFuture.completedFuture(completions);
                 }
                 completions.addAll(variable.getPossibleValues(null));
             }
