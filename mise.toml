@@ -1,0 +1,6 @@
+# NotQuests (main) — targets Paper 26.1.1 / Minecraft 1.26.1, which requires Java 25.
+# Gradle pinned to match gradle/wrapper/gradle-wrapper.properties (9.0.0).
+
+[tools]
+java = "temurin-25"
+gradle = "9.0.0"
