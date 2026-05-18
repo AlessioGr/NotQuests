@@ -139,7 +139,7 @@ repositories {
 
 dependencies {
     implementation(project(path = ":common", configuration = "shadow"))
-    paperweight.paperDevBundle("26.1.1.build.29-alpha")
+    paperweight.paperDevBundle("26.1.2.build.64-stable")
 
     compileOnly("org.projectlombok:lombok:1.18.44")
     annotationProcessor("org.projectlombok:lombok:1.18.44")
@@ -186,7 +186,7 @@ dependencies {
     implementation("io.leangen.geantyref:geantyref:1.3.13")
 
     //InvUI
-    implementation("xyz.xenondevs.invui:invui:2.0.0-RC.1")
+    implementation("xyz.xenondevs.invui:invui:2.1.0")
 
     implementation("com.github.retrooper:packetevents-spigot:2.12.0")
 
@@ -291,6 +291,6 @@ tasks {
     }
 
     runServer {
-        minecraftVersion("26.1.1")
+        minecraftVersion("26.1.2")
     }
 }

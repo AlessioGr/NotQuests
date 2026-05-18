@@ -36,7 +36,7 @@ plugin/build/libs/plugin-6.0.0.jar
 ./gradlew :plugin:runServer
 ```
 
-This starts a Paper 26.1.1 test server with the plugin loaded.
+This starts a Paper 26.1.2 test server with the plugin loaded.
 
 ## Project structure
 
