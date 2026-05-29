@@ -19,6 +19,8 @@ out/
 
 # Package Files #
 *.jar
+# ...but the Gradle wrapper jar MUST be committed so ./gradlew works on a fresh clone / in CI
+!gradle/wrapper/gradle-wrapper.jar
 *.war
 *.nar
 *.ear

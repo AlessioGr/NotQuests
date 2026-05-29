@@ -137,6 +137,14 @@ repositories {
 
 }
 
+paperweight {
+    // Keep the Paper dev bundle (NMS / Mojang-mapped server) on the COMPILE classpath only,
+    // so it is NOT on the test runtime classpath where it conflicts with MockBukkit's own
+    // Bukkit implementation ("two service providers" / "Bukkit not initialized").
+    // See https://docs.mockbukkit.org/docs/en/user_guide/advanced/paperweight
+    addServerDependencyTo.set(configurations.named("compileOnly").map { setOf(it) })
+}
+
 dependencies {
     implementation(project(path = ":common", configuration = "shadow"))
     paperweight.paperDevBundle("26.1.2.build.64-stable")
@@ -209,6 +217,24 @@ dependencies {
     compileOnly("com.github.war-systems:UltimateJobs:0.3.6")
 
 
+    // --- Testing (JUnit 6 + MockBukkit) ---
+    testImplementation(platform("org.junit:junit-bom:6.1.0"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    // MockBukkit for Paper 26.1.2 (in-JVM mock server; no real server needed)
+    testImplementation("org.mockbukkit.mockbukkit:mockbukkit-v26.1.2:4.113.1")
+    // MockBukkit does NOT bundle the Bukkit API (it assumes the plugin already provides it).
+    // Our paper-api comes from the paperweight dev bundle, which is compileOnly (off the test
+    // classpath), so add the regular paper-api + JetBrains annotations for the test compile.
+    testImplementation("io.papermc.paper:paper-api:26.1.2.build.64-stable")
+    testImplementation("org.jetbrains:annotations:26.1.0")
+
+    // Mockito (spies/mocks) — ready for future tests (e.g. failing-Connection DB tests)
+    testImplementation("org.mockito:mockito-core:5.23.0")
+
+    // SQLite JDBC driver for deterministic DB-integrity tests (matches the runtime driver)
+    testImplementation("org.xerial:sqlite-jdbc:3.53.1.0")
 }
 
 /**
@@ -274,6 +300,16 @@ tasks {
 
         archiveClassifier.set("")
 
+    }
+
+    test {
+        useJUnitPlatform()
+        // Quiet Mockito's self-attaching agent on JDK 25+ and allow MockBukkit's reflection.
+        jvmArgs("-XX:+EnableDynamicAgentLoading", "--add-opens", "java.base/java.lang=ALL-UNNAMED")
+        testLogging {
+            events("passed", "skipped", "failed")
+            exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+        }
     }
 
     compileJava {
