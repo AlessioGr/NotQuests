@@ -181,6 +181,8 @@ chat:
         base: Nyiss ki egy elásott kincset
       shearSheep:
         base: Nyrj le <main>%AMOUNTOFSHEEP%</main> bárányt
+      milkCow:
+        base: 'Fejj meg <main>%AMOUNTOFCOWS%</main> tehenet'
       townyReachResidentCount:
         base: 'Érd el a következő rezident egyenleget: <main>%AMOUNT%'
       townyNationReachTownCount:

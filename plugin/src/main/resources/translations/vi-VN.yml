@@ -149,6 +149,8 @@ chat:
         base: Mở kho báu bị chôn vùi
       shearSheep:
         base: Xén lông <main>%AMOUNTOFSHEEP%</main> con cừu
+      milkCow:
+        base: 'Vắt sữa <main>%AMOUNTOFCOWS%</main> con bò'
       townyReachResidentCount:
         base: 'Đạt số lượng cư dân: <main>%AMOUNT%'
       townyNationReachTownCount:

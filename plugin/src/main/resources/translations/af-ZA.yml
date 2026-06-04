@@ -161,6 +161,8 @@ chat:
         base: Maak begrawe skatte oop
       shearSheep:
         base: Skeer <main>%AMOUNTOFSHEEP%</main> skape
+      milkCow:
+        base: 'Melk <main>%AMOUNTOFCOWS%</main> koeie'
       townyReachResidentCount:
         base: 'Bereik aantal inwoners: <main>%AMOUNT%'
       townyNationReachTownCount:

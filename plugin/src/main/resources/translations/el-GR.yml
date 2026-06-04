@@ -147,6 +147,8 @@ chat:
         base: Άνοιξε θαμμένους θησαυρούς
       shearSheep:
         base: Κούρεψε <main>%AMOUNTOFSHEEP%</main> πρόβατα
+      milkCow:
+        base: 'Άρμεξε <main>%AMOUNTOFCOWS%</main> αγελάδες'
       townyReachResidentCount:
         base: 'Φτάσε αριθμό κατοίκων: <main>%AMOUNT%'
       townyNationReachTownCount:

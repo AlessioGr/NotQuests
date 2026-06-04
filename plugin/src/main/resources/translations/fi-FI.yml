@@ -161,6 +161,8 @@ chat:
         base: Avaa haudattuja aarteita
       shearSheep:
         base: Keritse <main>%AMOUNTOFSHEEP%</main> lammasta
+      milkCow:
+        base: 'Lypsä <main>%AMOUNTOFCOWS%</main> lehmää'
       townyReachResidentCount:
         base: 'Saavuta asukasmäärä: <main>%AMOUNT%'
       townyNationReachTownCount:

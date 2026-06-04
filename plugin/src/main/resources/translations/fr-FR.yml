@@ -161,6 +161,8 @@ chat:
         base: Ouvrir des trésors enfouis
       shearSheep:
         base: Tondre <main>%AMOUNTOFSHEEP%</main> moutons
+      milkCow:
+        base: 'Trais <main>%AMOUNTOFCOWS%</main> vaches'
       townyReachResidentCount:
         base: 'Atteindre le nombre de résidents : <main>%AMOUNT%'
       townyNationReachTownCount:

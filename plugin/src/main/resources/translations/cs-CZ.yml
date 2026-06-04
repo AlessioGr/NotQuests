@@ -155,6 +155,8 @@ chat:
         base: Otevři zakopaný poklad
       shearSheep:
         base: Ostříhej <main>%AMOUNTOFSHEEP%</main> ovcí
+      milkCow:
+        base: 'Podojte <main>%AMOUNTOFCOWS%</main> krav'
       townyReachResidentCount:
         base: 'Dosáhni počtu residencí: <main>%AMOUNT%'
       townyNationReachTownCount:

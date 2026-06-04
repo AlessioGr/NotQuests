@@ -161,6 +161,8 @@ chat:
         base: Abrir tesouros enterrados
       shearSheep:
         base: Tosquie <main>%AMOUNTOFSHEEP%</main> ovelhas
+      milkCow:
+        base: 'Ordenhe <main>%AMOUNTOFCOWS%</main> vacas'
       townyReachResidentCount:
         base: 'Alcance a quantidade de residentes: <main>%AMOUNT%'
       townyNationReachTownCount:

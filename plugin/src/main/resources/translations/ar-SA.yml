@@ -161,6 +161,8 @@ chat:
         base: افتح الكنوز المدفونة
       shearSheep:
         base: جزّ <main>%AMOUNTOFSHEEP%</main> خروف
+      milkCow:
+        base: 'احلب <main>%AMOUNTOFCOWS%</main> بقرات'
       townyReachResidentCount:
         base: 'الوصول إلى عدد السكان: <main>%AMOUNT%'
       townyNationReachTownCount:

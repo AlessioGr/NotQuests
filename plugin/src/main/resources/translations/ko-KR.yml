@@ -161,6 +161,8 @@ chat:
         base: 묻힌 보물 열기
       shearSheep:
         base: 양 <main>%AMOUNTOFSHEEP%</main>마리 털 깎기
+      milkCow:
+        base: '소 <main>%AMOUNTOFCOWS%</main> 마리의 젖 짜기'
       townyReachResidentCount:
         base: '주민 수 도달하기: <main>%AMOUNT%'
       townyNationReachTownCount:

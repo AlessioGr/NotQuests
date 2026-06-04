@@ -145,6 +145,8 @@ chat:
         base: 'Open buried treasures'
       shearSheep:
         base: 'Shear <main>%AMOUNTOFSHEEP%</main> sheep'
+      milkCow:
+        base: 'Milk <main>%AMOUNTOFCOWS%</main> cows'
       townyReachResidentCount:
         base: 'Reach resident amount: <main>%AMOUNT%'
       townyNationReachTownCount:

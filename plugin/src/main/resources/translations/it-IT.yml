@@ -161,6 +161,8 @@ chat:
         base: Apri tesori sepolti
       shearSheep:
         base: Tosa <main>%AMOUNTOFSHEEP%</main> pecore
+      milkCow:
+        base: 'Mungi <main>%AMOUNTOFCOWS%</main> mucche'
       townyReachResidentCount:
         base: 'Raggiungi numero di residenti: <main>%AMOUNT%'
       townyNationReachTownCount:

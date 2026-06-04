@@ -161,6 +161,8 @@ chat:
         base: 埋蔵された宝物を開く
       shearSheep:
         base: <main>%AMOUNTOFSHEEP%</main> 匹の羊を刈り取ろう
+      milkCow:
+        base: '<main>%AMOUNTOFCOWS%</main> 頭の牛の乳を搾る'
       townyReachResidentCount:
         base: '居住者数に到達: <main>%AMOUNT%'
       townyNationReachTownCount:

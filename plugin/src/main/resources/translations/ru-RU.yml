@@ -161,6 +161,8 @@ chat:
         base: Открытые захороненные сокровища
       shearSheep:
         base: Прыгнуть <main>%AMOUNTOFSHEEP%</main> раз
+      milkCow:
+        base: 'Подоите <main>%AMOUNTOFCOWS%</main> коров'
       townyReachResidentCount:
         base: 'Достигнут лимит: <main>%AMOUNT%'
       townyNationReachTownCount:

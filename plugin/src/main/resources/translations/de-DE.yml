@@ -161,6 +161,8 @@ chat:
         base: Öffne vergrabene Schätze
       shearSheep:
         base: Schere <main>%AMOUNTOFSHEEP%</main> Schafe
+      milkCow:
+        base: 'Melke <main>%AMOUNTOFCOWS%</main> Kühe'
       townyReachResidentCount:
         base: 'Bewohneranzahl erreichen: <main>%AMOUNT%'
       townyNationReachTownCount:

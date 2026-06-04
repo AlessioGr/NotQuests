@@ -161,6 +161,8 @@ chat:
         base: פתח אוצרות קבורים
       shearSheep:
         base: גזוז <main>%AMOUNTOFSHEEP%</main> כבשים
+      milkCow:
+        base: 'חלוב <main>%AMOUNTOFCOWS%</main> פרות'
       townyReachResidentCount:
         base: 'הגע למספר תושבים: <main>%AMOUNT%'
       townyNationReachTownCount:

@@ -161,6 +161,8 @@ chat:
         base: 打開埋藏的寶藏
       shearSheep:
         base: 剪 <main>%AMOUNTOFSHEEP%</main> 次羊毛
+      milkCow:
+        base: '擠 <main>%AMOUNTOFCOWS%</main> 頭牛的奶'
       townyReachResidentCount:
         base: '達到常駐人數: <main>%AMOUNT%'
       townyNationReachTownCount:

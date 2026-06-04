@@ -167,6 +167,8 @@ chat:
         base: Откопај закопано благо
       shearSheep:
         base: Ошишај <main>%AMOUNTOFSHEEP%</main> оваца
+      milkCow:
+        base: 'Помузи <main>%AMOUNTOFCOWS%</main> крава'
       townyReachResidentCount:
         base: 'Достигни број становника: <main>%AMOUNT%'
       townyNationReachTownCount:

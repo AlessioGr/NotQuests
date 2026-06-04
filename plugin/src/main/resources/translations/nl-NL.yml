@@ -161,6 +161,8 @@ chat:
         base: Open begraven schatten
       shearSheep:
         base: Scheer <main>%AMOUNTOFSHEEP%</main> schapen
+      milkCow:
+        base: 'Melk <main>%AMOUNTOFCOWS%</main> koeien'
       townyReachResidentCount:
         base: 'Bereik aantal inwoners: <main>%AMOUNT%'
       townyNationReachTownCount:

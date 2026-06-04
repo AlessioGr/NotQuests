@@ -31,6 +31,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
+import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -1406,6 +1407,33 @@ public class QuestEvents implements Listener {
             });
             questPlayer.checkQueuedObjectives();
         }
+    }
+
+    // Milk Cow (right-click a cow with an empty bucket). There is no dedicated milk event in Bukkit,
+    // so we detect the interaction: a Cow (includes Mooshroom) right-clicked with an empty BUCKET.
+    @EventHandler(ignoreCancelled = true)
+    public void onMilkCow(final PlayerInteractEntityEvent e) {
+        if (!(e.getRightClicked() instanceof Cow)) {
+            return;
+        }
+        final Player player = e.getPlayer();
+        final ItemStack handItem = player.getInventory().getItem(e.getHand());
+        if (handItem == null || handItem.getType() != Material.BUCKET) {
+            return;
+        }
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
+        if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
+            return;
+        }
+        questPlayer.queueObjectiveCheck(activeObjective -> {
+            if (activeObjective.getObjective() instanceof final MilkCowObjective milkCowObjective) {
+                activeObjective.addProgress(1);
+                if (milkCowObjective.isCancelMilking()) {
+                    e.setCancelled(true);
+                }
+            }
+        });
+        questPlayer.checkQueuedObjectives();
     }
 
 

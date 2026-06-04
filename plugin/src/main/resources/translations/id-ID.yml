@@ -161,6 +161,8 @@ chat:
         base: Buka harta karun terkubur
       shearSheep:
         base: Cukur <main>%AMOUNTOFSHEEP%</main> domba
+      milkCow:
+        base: 'Perah <main>%AMOUNTOFCOWS%</main> sapi'
       townyReachResidentCount:
         base: 'Capai jumlah penduduk: <main>%AMOUNT%'
       townyNationReachTownCount:

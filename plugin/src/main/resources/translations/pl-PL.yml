@@ -165,6 +165,8 @@ chat:
         base: Otwórz zakopane skarby
       shearSheep:
         base: Ostrzyż <main>%AMOUNTOFSHEEP%</main> owiec
+      milkCow:
+        base: 'Wydój <main>%AMOUNTOFCOWS%</main> krów'
       townyReachResidentCount:
         base: 'Osiągnij liczbę mieszkańców: <main>%AMOUNT%'
       townyNationReachTownCount:

@@ -161,6 +161,8 @@ chat:
         base: Відкрити закопані скарби
       shearSheep:
         base: Підстригти <main>%AMOUNTOFSHEEP%</main> овець
+      milkCow:
+        base: 'Подоїть <main>%AMOUNTOFCOWS%</main> корів'
       townyReachResidentCount:
         base: 'Досягнути кількість жителів: <main>%AMOUNT%'
       townyNationReachTownCount:

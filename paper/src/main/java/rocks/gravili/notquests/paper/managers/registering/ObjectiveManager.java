@@ -90,6 +90,7 @@ public class ObjectiveManager {
         registerObjective("SmeltItems", SmeltObjective.class);
         registerObjective("OpenBuriedTreasure", OpenBuriedTreasureObjective.class);
         registerObjective("ShearSheep", ShearSheepObjective.class);
+        registerObjective("MilkCow", MilkCowObjective.class);
         registerObjective("Objective", ObjectiveObjective.class);
 
         registerObjective("NumberVariable", NumberVariableObjective.class); //Special

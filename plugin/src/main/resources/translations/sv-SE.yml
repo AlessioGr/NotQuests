@@ -161,6 +161,8 @@ chat:
         base: Öppna nedgrävda skatter
       shearSheep:
         base: Klipp <main>%AMOUNTOFSHEEP%</main> får
+      milkCow:
+        base: 'Mjölka <main>%AMOUNTOFCOWS%</main> kor'
       townyReachResidentCount:
         base: 'Nå antal invånare: <main>%AMOUNT%'
       townyNationReachTownCount:

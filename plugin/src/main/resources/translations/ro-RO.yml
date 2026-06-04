@@ -161,6 +161,8 @@ chat:
         base: Deschide comori îngropate
       shearSheep:
         base: Tunde <main>%AMOUNTOFSHEEP%</main> oi
+      milkCow:
+        base: 'Mulge <main>%AMOUNTOFCOWS%</main> vaci'
       townyReachResidentCount:
         base: 'Atinge numărul de rezidenți: <main>%AMOUNT%'
       townyNationReachTownCount:
