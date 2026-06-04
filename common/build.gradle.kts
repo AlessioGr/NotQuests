@@ -37,7 +37,7 @@ repositories {
 
 dependencies {
     //implementation("net.kyori:adventure-api:4.11.0")
-    implementation("org.spongepowered:configurate-gson:4.1.2")
+    implementation("org.spongepowered:configurate-gson:4.2.0")
 }
 
 /**

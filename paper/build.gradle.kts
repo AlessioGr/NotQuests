@@ -34,6 +34,10 @@ java {
 }
 
 repositories {
+    // NOTE: We deliberately do NOT add any maven repository for a *plugin* dependency.
+    // Every plugin integration API is vendored locally in paper/libs/ (see the dependencies block),
+    // so a relocated/deleted plugin repo can never break our build. Only repos for libraries we
+    // actually shade into our jar (or the platform itself) are listed here.
     mavenCentral()
 
     maven("https://repo.papermc.io/repository/maven-public/") {
@@ -43,96 +47,36 @@ repositories {
         }
     }
 
-    maven("https://repo.citizensnpcs.co/") {
-        content {
-            includeGroup("net.citizensnpcs")
-        }
-    }
-
-    maven("https://repo.extendedclip.com/content/repositories/placeholderapi/") {
-        content {
-            includeGroup("me.clip")
-        }
-    }
-
+    // packetevents — shaded library
     maven("https://repo.codemc.io/repository/maven-releases/") {
         content {
             includeGroup("com.github.retrooper")
         }
     }
 
-    maven("https://jitpack.io") {
-        content {
-            includeGroup("com.github.MilkBowl")
-            includeGroup("com.github.TheBusyBiscuit")
-            includeGroup("com.github.TownyAdvanced")
-            includeGroup("com.github.Zrips")
-            includeGroup("com.willfp")
-            includeGroup("com.github.war-systems")
-            includeGroup("com.github.UlrichBR")
-            includeGroup("com.github.Slimefun")
-            includeGroup("net.citizensnpcs")
-            includeGroup("com.github.Redempt")
-        }
-        metadataSources {
-            artifact()
-        }
-    }
-
-    maven("https://repo.glaremasters.me/repository/towny/") {
-        content {
-            includeGroup("com.palmergames.bukkit.towny")
-        }
-    }
-
-    maven("https://mvn.lumine.io/repository/maven-public/") {
-        content {
-            includeGroup("io.lumine.xikage")
-            includeGroup("io.lumine")
-        }
-    }
-
-
-    maven("https://maven.enginehub.org/repo/") {
-        content {
-            includeGroup("com.sk89q.worldedit")
-        }
-        metadataSources {
-            artifact()
-        }
-    }
-
+    // cloud command framework — shaded library (2.x dev line)
     maven("https://oss.sonatype.org/content/repositories/snapshots") {
         content {
             includeGroup("org.incendo")
         }
     }
 
+    // Mojang libraries (brigadier / authlib / datafixerupper transitives)
     maven("https://libraries.minecraft.net/") {
         content {
             includeGroup("com.mojang")
         }
     }
 
+    // Crunch — shaded expression-evaluation library
     maven("https://redempt.dev") {
         content {
             includeGroup("com.github.Redempt")
         }
     }
 
-    maven("https://repo.opencollab.dev/main/") {
-        content {
-            includeGroup("org.geysermc.floodgate")
-            includeGroup("org.geysermc.cumulus")
-            includeGroup("org.geysermc")
-            includeGroup("org.geysermc.event")
-            includeGroup("org.geysermc.geyser")
-        }
-    }
-
+    // InvUI — shaded GUI library
     maven("https://repo.xenondevs.xyz/releases")
-    maven("https://maven.citizensnpcs.co/repo")
-    maven("https://repo.magmaguy.com/releases")
     //mavenLocal()
 
 }
@@ -147,46 +91,43 @@ paperweight {
 
 dependencies {
     implementation(project(path = ":common", configuration = "shadow"))
-    paperweight.paperDevBundle("26.1.2.build.64-stable")
+    paperweight.paperDevBundle("26.1.2.build.69-stable")
 
-    compileOnly("org.projectlombok:lombok:1.18.44")
-    annotationProcessor("org.projectlombok:lombok:1.18.44")
+    compileOnly("org.projectlombok:lombok:1.18.46")
+    annotationProcessor("org.projectlombok:lombok:1.18.46")
 
-    compileOnly("net.citizensnpcs:citizens-main:2.0.42-SNAPSHOT") {
-        exclude(group = "*", module = "*")
-    }
-
-    // FancyNPCs API — vendored locally (paper/libs/) on purpose, so the build never depends on an
-    // external maven repository (if it were relocated/deleted the project would still compile).
+    // --- Plugin integration APIs ---
+    // ALL vendored locally in paper/libs/ ON PURPOSE: the build must never depend on an external
+    // maven repository for a *plugin* (those repos are frequently relocated / deleted / broken).
+    // If every one of those repos disappeared, NotQuests would still compile. These are compileOnly
+    // because the real plugin provides the classes at runtime. To update one, drop the new jar in
+    // paper/libs/ and bump the filename here.
+    compileOnly(files("libs/Citizens-2.0.42-SNAPSHOT.jar"))
     compileOnly(files("libs/FancyNpcs-2.10.0.jar"))
-
-    compileOnly("me.clip:placeholderapi:2.11.5")
-    compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
-
-
-    compileOnly("io.lumine:Mythic-Dist:5.3.0-SNAPSHOT")
-    compileOnly("com.magmaguy:EliteMobs:9.1.9")
-    compileOnly(files("libs/EliteMobs-8.7.11.jar"))
-
-
-    compileOnly("com.sk89q.worldedit:worldedit-core:7.3.0-SNAPSHOT")
-    compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.3.0-SNAPSHOT")
-
-    compileOnly("com.github.Slimefun:Slimefun4:RC-37")
-
-    compileOnly("net.luckperms:api:5.4")
-
-    compileOnly("com.github.TownyAdvanced:Towny:0.98.4.4")
-
-    compileOnly("com.github.Zrips:Jobs:v4.17.2")
-
-    compileOnly("org.geysermc.floodgate:api:2.2.2-SNAPSHOT")
+    compileOnly(files("libs/PlaceholderAPI-2.12.2.jar"))
+    compileOnly(files("libs/VaultAPI-1.7.1.jar"))
+    compileOnly(files("libs/Mythic-Dist-5.12.1.jar"))
+    compileOnly(files("libs/EliteMobs-10.4.0.jar"))
+    compileOnly(files("libs/worldedit-core-7.4.3.jar"))
+    compileOnly(files("libs/worldedit-bukkit-7.4.3.jar"))
+    compileOnly(files("libs/Slimefun4-RC-37.jar"))
+    compileOnly(files("libs/LuckPerms-api-5.5.jar"))
+    compileOnly(files("libs/Towny-0.102.0.13.jar"))
+    compileOnly(files("libs/Jobs-5.2.6.3.jar"))
+    compileOnly(files("libs/floodgate-api-2.2.5-SNAPSHOT.jar"))
+    compileOnly(files("libs/EcoBosses-9.50.0.jar"))
+    compileOnly(files("libs/eco-7.6.0.jar"))
+    // libreforge: EcoBosses 9.50.0's EcoBoss implements com.willfp.libreforge.Holder, so the
+    // framework must be on the compile classpath. It's a standalone plugin, hence vendored too.
+    compileOnly(files("libs/libreforge-4.58.0.jar"))
+    compileOnly(files("libs/UltimateJobs-0.3.6.jar"))
 
 
-    //Shaded
+    // --- Shaded libraries (bundled into our jar; fine to resolve from maven) ---
 
-
-    implementation("net.kyori:adventure-api:4.18.0") {}
+    // Adventure: pinned to Paper 26.1.2's bundled Adventure (adventure-bom 4.26.1). Do NOT move to
+    // 5.x — Paper provides 4.x at runtime, so a 5.x compile target would break against the server.
+    implementation("net.kyori:adventure-api:4.26.1") {}
 
     //CloudCommands
     implementation("org.incendo:cloud-paper:2.0.0-SNAPSHOT") {
@@ -194,22 +135,16 @@ dependencies {
     }
     implementation("org.incendo:cloud-minecraft-extras:2.0.0-SNAPSHOT")
 
-    //Else it errors:
-    implementation("io.leangen.geantyref:geantyref:1.3.13")
+    //Else it errors (kept on the 1.3.x line cloud expects):
+    implementation("io.leangen.geantyref:geantyref:1.3.16")
 
     //InvUI
     implementation("xyz.xenondevs.invui:invui:2.1.0")
 
-    implementation("com.github.retrooper:packetevents-spigot:2.12.0")
+    implementation("com.github.retrooper:packetevents-spigot:2.12.2")
 
 
-    implementation("commons-io:commons-io:2.11.0")
-
-    //compileOnly("com.willfp:EcoBosses:8.0.0")
-    compileOnly(files("libs/EcoBosses-v8.78.0.jar"))
-    compileOnly("com.willfp:eco:6.38.3")
-
-    compileOnly(files("libs/znpcs-4.8.jar"))
+    implementation("commons-io:commons-io:2.22.0")
 
 
     implementation("com.github.Redempt:Crunch:2.0.3")
@@ -217,8 +152,6 @@ dependencies {
 
 
     implementation("com.zaxxer:HikariCP:7.0.2")
-
-    compileOnly("com.github.war-systems:UltimateJobs:0.3.6")
 
 
     // --- Testing (JUnit 6 + MockBukkit) ---
@@ -231,14 +164,14 @@ dependencies {
     // MockBukkit does NOT bundle the Bukkit API (it assumes the plugin already provides it).
     // Our paper-api comes from the paperweight dev bundle, which is compileOnly (off the test
     // classpath), so add the regular paper-api + JetBrains annotations for the test compile.
-    testImplementation("io.papermc.paper:paper-api:26.1.2.build.64-stable")
+    testImplementation("io.papermc.paper:paper-api:26.1.2.build.69-stable")
     testImplementation("org.jetbrains:annotations:26.1.0")
 
     // Mockito (spies/mocks) — ready for future tests (e.g. failing-Connection DB tests)
     testImplementation("org.mockito:mockito-core:5.23.0")
 
     // SQLite JDBC driver for deterministic DB-integrity tests (matches the runtime driver)
-    testImplementation("org.xerial:sqlite-jdbc:3.53.1.0")
+    testImplementation("org.xerial:sqlite-jdbc:3.53.2.0")
 }
 
 /**

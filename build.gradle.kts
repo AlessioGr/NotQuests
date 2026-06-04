@@ -21,7 +21,7 @@ import org.gradle.api.JavaVersion.VERSION_25
 plugins {
     `java-library`
     `maven-publish`
-    id("com.gradleup.shadow") version "9.4.1"
+    id("com.gradleup.shadow") version "9.4.2"
     id("io.papermc.paperweight.userdev") version "2.0.0-beta.21"
     id("xyz.jpenilla.run-paper") version "3.0.2"
 }
@@ -40,7 +40,7 @@ repositories {
 }
 
 dependencies {
-    paperweight.paperDevBundle("26.1.2.build.64-stable")
+    paperweight.paperDevBundle("26.1.2.build.69-stable")
 }
 
 java {

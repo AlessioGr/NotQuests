@@ -42,9 +42,9 @@ public class EcoBossesManager {
     try {
       for (EcoBoss ecoBoss : Bosses.values()) {
         try {
-          // bossNames.add(ecoBoss.getId());
-          // main.getLogManager().info("Registered EcoBoss: <highlight>" + ecoBoss.getId());
-          final String id = ecoBoss.getId();
+          // EcoBosses 9.x: getId() now returns a NamespacedKey; getID() still returns the String id
+          // that Bosses.getByID(String) expects.
+          final String id = ecoBoss.getID();
 
           bossNames.add(id);
           main.getLogManager().info("Registered EcoBoss: <highlight>" + id);

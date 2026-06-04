@@ -37,6 +37,8 @@ java {
 }
 
 repositories {
+    // This module only pulls the Paper platform + PaperLib; no plugin dependencies are declared
+    // here, so (like the paper module) it lists no plugin maven repos.
     mavenCentral()
 
     maven("https://repo.papermc.io/repository/maven-public/"){
@@ -47,76 +49,19 @@ repositories {
         }
     }
 
-    maven("https://repo.citizensnpcs.co/"){
-        content {
-            includeGroup("net.citizensnpcs")
-        }
-    }
-
-    maven("https://repo.extendedclip.com/content/repositories/placeholderapi/"){
-        content {
-            includeGroup("me.clip")
-        }
-    }
-
-    maven("https://jitpack.io"){
-        content {
-            includeGroup("com.github.MilkBowl")
-            includeGroup("com.github.TheBusyBiscuit")
-            includeGroup("com.github.retrooper")
-            includeGroup("com.github.retrooper.packetevents")
-            includeGroup("io.github.retrooper")
-            includeGroup("com.github.AlessioGr")
-            includeGroup("com.github.TownyAdvanced")
-            includeGroup("com.github.Zrips")
-        }
-        metadataSources {
-            artifact()
-        }
-    }
-
-    maven("https://repo.minebench.de/"){
-        content {
-            includeGroup("de.themoep")
-        }
-    }
-
-    maven("https://mvn.lumine.io/repository/maven-public/"){
-        content {
-            includeGroup("io.lumine.xikage")
-        }
-    }
-
-
-    maven("https://maven.enginehub.org/repo/"){
-        content {
-            includeGroup("com.sk89q.worldedit")
-        }
-        metadataSources {
-            artifact()
-        }
-    }
-
-    maven("https://repo.incendo.org/content/repositories/snapshots"){
-        content {
-            includeGroup("org.incendo.interfaces")
-        }
-    }
-
+    // Mojang libraries (brigadier / authlib / datafixerupper transitives of the dev bundle)
     maven("https://libraries.minecraft.net/"){
         content {
             includeGroup("com.mojang")
         }
     }
 
-   // maven("https://oss.sonatype.org/content/repositories/snapshots")
-
     //mavenLocal()
 
 }
 
 dependencies {
-    paperweight.paperDevBundle("26.1.2.build.64-stable")
+    paperweight.paperDevBundle("26.1.2.build.69-stable")
 
     implementation(project(path= ":common", configuration= "shadowRuntimeElements"))
     implementation(project(path= ":paper", configuration= "shadowRuntimeElements"))
