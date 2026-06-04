@@ -260,12 +260,18 @@ public class CitizensManager {
         npcToEscort.spawn(spawnLocation);
       }
 
-      if (followerTrait.getFollowingPlayer() == null
-          || !followerTrait.getFollowingPlayer().equals(player)) {
+      // Citizens 2.0.4x FollowTrait API: getFollowingPlayer()->getFollowing(),
+      // toggle(player, protect)->follow(entity) + setProtect(boolean).
+      if (followerTrait.getFollowing() == null
+          || !followerTrait.getFollowing().equals(player)) {
+        final Runnable startFollowing = () -> {
+          followerTrait.setProtect(false);
+          followerTrait.follow(player);
+        };
         if (!Bukkit.isPrimaryThread()) {
-          Bukkit.getScheduler().runTask(main.getMain(), () -> followerTrait.toggle(player, false));
+          Bukkit.getScheduler().runTask(main.getMain(), startFollowing);
         } else {
-          followerTrait.toggle(player, false);
+          startFollowing.run();
         }
       }
       final String escortNpcName =

@@ -152,7 +152,7 @@ dependencies {
     compileOnly("org.projectlombok:lombok:1.18.44")
     annotationProcessor("org.projectlombok:lombok:1.18.44")
 
-    compileOnly("net.citizensnpcs:citizens-main:2.0.30-SNAPSHOT") {
+    compileOnly("net.citizensnpcs:citizens-main:2.0.42-SNAPSHOT") {
         exclude(group = "*", module = "*")
     }
 
