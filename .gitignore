@@ -21,6 +21,9 @@ out/
 *.jar
 # ...but the Gradle wrapper jar MUST be committed so ./gradlew works on a fresh clone / in CI
 !gradle/wrapper/gradle-wrapper.jar
+# ...and vendored integration API jars are committed on purpose, so the build never needs an
+# external maven repo (if it were relocated/deleted, the project would still compile).
+!paper/libs/*.jar
 *.war
 *.nar
 *.ear

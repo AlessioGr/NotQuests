@@ -156,6 +156,10 @@ dependencies {
         exclude(group = "*", module = "*")
     }
 
+    // FancyNPCs API — vendored locally (paper/libs/) on purpose, so the build never depends on an
+    // external maven repository (if it were relocated/deleted the project would still compile).
+    compileOnly(files("libs/FancyNpcs-2.10.0.jar"))
+
     compileOnly("me.clip:placeholderapi:2.11.5")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
 

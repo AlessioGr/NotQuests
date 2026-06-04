@@ -208,6 +208,7 @@ bukkit {
         "ViaRewind",
         "Geyser-Spigot",
         "Citizens",
+        "FancyNpcs",
         "Vault",
         "PlaceholderAPI",
         "MythicMobs",
@@ -279,6 +280,9 @@ paper {
             required = false
         }
         register("Citizens") {
+            required = false
+        }
+        register("FancyNpcs") {
             required = false
         }
         register("Vault") {

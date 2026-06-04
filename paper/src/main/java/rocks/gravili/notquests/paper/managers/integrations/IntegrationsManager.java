@@ -24,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.events.hooks.*;
 import rocks.gravili.notquests.paper.managers.integrations.citizens.CitizensManager;
+import rocks.gravili.notquests.paper.managers.integrations.fancynpcs.FancyNPCsManager;
 import rocks.gravili.notquests.paper.placeholders.QuestPlaceholders;
 
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -39,6 +40,7 @@ public class IntegrationsManager {
   // Booleans
   private boolean vaultEnabled = false;
   private boolean citizensEnabled = false;
+  private boolean fancyNPCsEnabled = false;
   private boolean slimefunEnabled = false;
   private boolean townyEnabled = false;
   private boolean jobsRebornEnabled = false;
@@ -59,6 +61,7 @@ public class IntegrationsManager {
   private VaultManager vaultManager;
   private MythicMobsManager mythicMobsManager;
   private CitizensManager citizensManager;
+  private FancyNPCsManager fancyNPCsManager;
   private WorldEditManager worldEditManager;
   private SlimefunManager slimefunManager;
   private LuckpermsManager luckpermsManager;
@@ -231,6 +234,39 @@ public class IntegrationsManager {
                   }
                 })
     );
+
+    // Enable 'FancyNpcs' integration (packet-based NPCs). Like Citizens, missing it just disables
+    // some NPC features (armor stands / Citizens can be used instead).
+    integrations.add(
+        new Integration(main, "FancyNpcs")
+            .setEnableCondition(() -> true)
+            .setRunWhenEnablingFailed(
+                () ->
+                    main.getLogManager()
+                        .info("FancyNpcs Dependency not found! You can use Citizens or armor stands instead."))
+            .setRunWhenEnabled(
+                () -> {
+                  fancyNPCsEnabled = true;
+                  fancyNPCsManager = new FancyNPCsManager(main);
+                  return true;
+                })
+            .setRunWhenRegisteringEventsOnTime(
+                () ->
+                    main.getMain()
+                        .getServer()
+                        .getPluginManager()
+                        .registerEvents(new FancyNPCsEvents(main), main.getMain()))
+            .setRunAlsoWhenEnabledLate(
+                () -> {
+                  main.getDataManager().setAlreadyLoadedNPCs(false);
+                  main.getMain()
+                      .getServer()
+                      .getPluginManager()
+                      .registerEvents(new FancyNPCsEvents(main), main.getMain());
+                  if (!main.getDataManager().isAlreadyLoadedNPCs()) {
+                    main.getDataManager().loadNPCData();
+                  }
+                }));
 
     integrations.add(
         new Integration(main, "Slimefun")
@@ -475,6 +511,14 @@ public class IntegrationsManager {
 
   public final CitizensManager getCitizensManager() {
     return citizensManager;
+  }
+
+  public final boolean isFancyNPCsEnabled() {
+    return fancyNPCsEnabled;
+  }
+
+  public final FancyNPCsManager getFancyNPCsManager() {
+    return fancyNPCsManager;
   }
 
   public final FloodgateManager getFloodgateManager() {
