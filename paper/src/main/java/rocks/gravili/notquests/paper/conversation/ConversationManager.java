@@ -41,14 +41,18 @@ import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ConversationManager {
 
   private final Map<Integer, List<UUID>> activeConversationsOfNPCWithPlayerCache = new HashMap<>();
 
   final ArrayList<ConversationLine> linesForOneFile = new ArrayList<>();
-  final HashMap<UUID, ArrayList<Component>> chatHistory;
-  final HashMap<UUID, ArrayList<Component>> conversationChatHistory;
+  // ConcurrentHashMap: written from the main thread, the async chat-event thread, AND Netty packet
+  // threads (the chat-history packet listeners). A plain HashMap can corrupt (lost entries /
+  // infinite loop on resize) under concurrent structural modification from those threads.
+  final Map<UUID, ArrayList<Component>> chatHistory;
+  final Map<UUID, ArrayList<Component>> conversationChatHistory;
   private final NotQuests main;
   private final ArrayList<Conversation> conversations;
   private final HashMap<UUID, ConversationPlayer> openConversations;
@@ -66,8 +70,8 @@ public class ConversationManager {
 
 
 
-    chatHistory = new HashMap<>();
-    conversationChatHistory = new HashMap<>();
+    chatHistory = new ConcurrentHashMap<>();
+    conversationChatHistory = new ConcurrentHashMap<>();
 
     // playConversation(Bukkit.getPlayer("NoeX"), createTestConversation());
     loadConversationsFromConfig();
@@ -528,11 +532,11 @@ public class ConversationManager {
     }
   }
 
-  public final HashMap<UUID, ArrayList<Component>> getChatHistory() {
+  public final Map<UUID, ArrayList<Component>> getChatHistory() {
     return chatHistory;
   }
 
-  public final HashMap<UUID, ArrayList<Component>> getConversationChatHistory() {
+  public final Map<UUID, ArrayList<Component>> getConversationChatHistory() {
     return conversationChatHistory;
   }
 

@@ -100,7 +100,11 @@ public class ArmorStandManager {
 
 
     public void startQuestGiverIndicatorParticleRunnable() {
-        Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(main.getMain(), () -> {
+        // MUST be a SYNC timer: the body reads entity state (ArmorStand#getLocation) and spawns
+        // particles (World#spawnParticle), both of which are main-thread-only on Paper and throw
+        // "Asynchronous entity/world access" off-thread. It also iterates the armor-stand list,
+        // which the main thread mutates — sync iteration avoids a ConcurrentModificationException.
+        Bukkit.getServer().getScheduler().runTaskTimer(main.getMain(), () -> {
 
             //Disable if Server TPS is too low
             double minimumTPS = main.getConfiguration().getArmorStandQuestGiverIndicatorParticleDisableIfTPSBelow();
