@@ -145,6 +145,8 @@ chat:
         base: 'Abrir tesouros enterrados'
       shearSheep:
         base: 'Tosquie <main>%AMOUNTOFSHEEP%</main> ovelhas'
+      milkCow:
+        base: 'Milk <main>%AMOUNTOFCOWS%</main> cows'
       townyReachResidentCount:
         base: 'Alcance a quantidade de residentes: <main>%AMOUNT%'
       townyNationReachTownCount:
@@ -157,8 +159,6 @@ chat:
         base: 'Use a habilidade: <main>%ABILITY%'
       BetonQuestCompleteObjective:
         base: 'Termine o objetivo: <main>%BETONQUESTOBJECTIVENAME%'
-      ultimateJobsReachJobLevel:
-        base: 'Alcance o nível de trabalho <main>%AMOUNT%</main> com o trabalho <main>%JOBID%'
   conditions:
     boolean:
       not-fulfilled: "<warn>A seguir precisa ser %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
