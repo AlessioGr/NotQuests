@@ -145,6 +145,8 @@ chat:
         base: '打开埋藏的宝藏'
       shearSheep:
         base: '修剪 <main>%AMOUNTOFSHEEP%</main> 只羊'
+      milkCow:
+        base: 'Milk <main>%AMOUNTOFCOWS%</main> cows'
       townyReachResidentCount:
         base: '达到居民数量：<main>%AMOUNT%'
       townyNationReachTownCount:
@@ -157,8 +159,6 @@ chat:
         base: '运用能力：<main>%ABILITY%'
       BetonQuestCompleteObjective:
         base: '完成目标:：<main>%BETONQUESTOBJECTIVENAME%'
-      ultimateJobsReachJobLevel:
-        base: '达到职业等级：<main>%AMOUNT%</main> 工作： <main>%JOBID%'
   conditions:
     boolean:
       not-fulfilled: "<warn>以下需要 %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
