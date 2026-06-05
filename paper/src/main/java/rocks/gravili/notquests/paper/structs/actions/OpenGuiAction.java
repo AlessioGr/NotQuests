@@ -123,8 +123,14 @@ public class OpenGuiAction extends Action {
         }
 
         var npcId = (String) flags.get("npc");
-        if (npcId != null) {
-            this.guiContext.setNqnpc(main.getNPCManager().getOrCreateNQNpc("Citizens", NQNPCID.fromInteger(Integer.parseInt(npcId))));
+        // Skip unreplaced placeholders ("%NPCID%") and non-integer ids (FancyNPCs/armor stand use
+        // String/UUID ids) instead of crashing on Integer.parseInt. The NPC context is optional here.
+        if (npcId != null && !npcId.contains("%")) {
+            try {
+                this.guiContext.setNqnpc(main.getNPCManager().getOrCreateNQNpc("Citizens", NQNPCID.fromInteger(Integer.parseInt(npcId))));
+            } catch (final NumberFormatException e) {
+                main.getLogManager().debug("OpenGuiAction: NPC id '" + npcId + "' is not a Citizens integer id; skipping NPC context.");
+            }
         }
 
         var categoryName = (String) flags.get("category");
