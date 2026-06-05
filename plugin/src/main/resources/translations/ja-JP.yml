@@ -145,6 +145,8 @@ chat:
         base: '埋蔵された宝物を開く'
       shearSheep:
         base: '<main>%AMOUNTOFSHEEP%</main> 匹の羊を刈り取ろう'
+      milkCow:
+        base: 'Milk <main>%AMOUNTOFCOWS%</main> cows'
       townyReachResidentCount:
         base: '居住者数に到達: <main>%AMOUNT%'
       townyNationReachTownCount:
@@ -157,8 +159,6 @@ chat:
         base: '使用能力: <main>%ABILITY%'
       BetonQuestCompleteObjective:
         base: '完了目標: <main>%BETONQUESTOBJECTIVENAME%'
-      ultimateJobsReachJobLevel:
-        base: 'ジョブ <main>%AMOUNT%</main> でジョブ <main>%JOBID% に達する'
   conditions:
     boolean:
       not-fulfilled: "<warn>以下のことが必要です %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
