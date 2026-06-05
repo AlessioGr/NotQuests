@@ -145,6 +145,8 @@ chat:
         base: 'Nyiss ki egy elásott kincset'
       shearSheep:
         base: 'Nyrj le <main>%AMOUNTOFSHEEP%</main> bárányt'
+      milkCow:
+        base: 'Milk <main>%AMOUNTOFCOWS%</main> cows'
       townyReachResidentCount:
         base: 'Érd el a következő rezident egyenleget: <main>%AMOUNT%'
       townyNationReachTownCount:
@@ -157,8 +159,6 @@ chat:
         base: 'Használt Képesség: <main>%ABILITY%'
       BetonQuestCompleteObjective:
         base: 'Feladat Befejezése: <main>%BETONQUESTOBJECTIVENAME%'
-      ultimateJobsReachJobLevel:
-        base: 'Érd el a(z) <main>%AMOUNT%</main> szintet a(z) <main>%JOBID% munkában'
   conditions:
     boolean:
       not-fulfilled: "<warn>A következőkre van szükséged %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
