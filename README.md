@@ -1,133 +1,93 @@
-# NotQuests
-Download: https://modrinth.com/plugin/notquests/versions
-
 [![GitHub issues](https://img.shields.io/github/issues/AlessioGr/NotQuests)](https://github.com/AlessioGr/NotQuests/issues)
-[![GitHub stars](https://img.shields.io/github/stars/AlessioGr/NotQuests)](https://github.com/AlessioGr/NotQuests/stargazers)
 [![GitHub license](https://img.shields.io/github/license/AlessioGr/NotQuests)](https://github.com/AlessioGr/NotQuests/blob/main/LICENSE)
-<a href="https://alessiogr.github.io/NotQuests/"><img src="https://img.shields.io/badge/JavaDocs-Read%20now-yellow" alt="javadocs"></a>
 [![CodeFactor](https://www.codefactor.io/repository/github/alessiogr/notquests/badge)](https://www.codefactor.io/repository/github/alessiogr/notquests)
-[![Crowdin](https://badges.crowdin.net/e/c753a7d24d44ac550e857d2b521d9ecb/localized.svg)](https://notquests.crowdin.com/notquests)
 
 ![Banner](https://user-images.githubusercontent.com/70709113/133943253-af271d49-441b-473e-8b95-6053fe5d09cb.png)
 
-NotQuests is a flexible, open-source Quest plugin for Paper, featuring custom YAML-based GUIs, a powerful variable system, and extensive integrations.
----
+# NotQuests - Best Quest Plugin
 
-You can find the releases here: https://github.com/AlessioGr/NotQuests/releases. A MySQL database connection is recommended and can be specified in the general.yml. Otherwise, SQLite will be used.
+Download: https://modrinth.com/plugin/notquests/versions
 
-## Requirements
-- Paper 26.1.2
+NotQuests allows you to create powerful quests for pretty much any type of server.
+
+Please note: updates and bug fixes are not guaranteed, and support should not be expected.
+
+- The latest version of NotQuests will be available **exclusively on Modrinth**, a platform I'm happy to support!
+- NotQuests has reached more than **27.000 downloads** across all resource sites! Thank you!
+- If you like NotQuests and want more updates, please give it a **follow** on modrinth to support me! It's just one click :)
+
+![Front image](https://github.com/AlessioGr/NotQuests/blob/main/Logo/spigotbg.jpg?raw=true)
+
+**Attention: Please use [Paper](https://papermc.io/downloads/paper) or a fork of Paper, like [Purpur](https://purpurmc.org/download/purpur) or [Pufferfish](https://pufferfish.host/downloads). Spigot/Bukkit is not supported.**
+
+[=> Getting started guide <=](https://www.notquests.com/docs/tutorials/getting-started)
+
+## Requirements to run NotQuests
+- Minecraft 26.1.2 with Paper 26.1.2 (only the latest Minecraft version is actively developed. Older Minecraft versions only work with older NotQuests versions)
 - Java 25
 
-## Translations
-Do not commit your translations on GitHub. Instead, use translate.notquests.com. Translations are always welcome :) Check https://translate.notquests.com/notquests#readme before translating.
-
-## How to build
-Git clone this project and build it with these Gradle commands: `clean build`
-
-The output file should be in the folder `plugin/build/libs/plugin-version.jar`
+## Helpful links
+- [Wiki](https://www.notquests.com/)
+- [Getting started guide](https://www.notquests.com/docs/tutorials/getting-started/)
+- [GitHub support](https://github.com/AlessioGr/NotQuests/issues) and [Discord support](https://discord.gg/7br638S5Ex)
+- [Source code](https://github.com/AlessioGr/NotQuests)
 
 
-
-![Banner_Images](https://user-images.githubusercontent.com/70709113/133997397-fbe14d0b-22fe-4ede-98e2-4d7a2cbcb489.png)
-
-The images are all OLD and need to be updated:
-
-Quest Giver NPC:
-
-![image](https://user-images.githubusercontent.com/70709113/131539574-ef73ddfb-1dcd-4ab8-a85c-9b38d2f95a8d.png)
-
-What happens when you right click it:
-
-![image](https://user-images.githubusercontent.com/70709113/131539663-5bd12479-3bc8-4958-81a2-de12a541820f.png)
-
-Quest Accepting GUI:
-
-![image](https://user-images.githubusercontent.com/70709113/131539715-b055e4cd-2a7e-4a78-8d7a-dc840399c0c0.png)
-
-Quest User GUI:
-
-![image](https://user-images.githubusercontent.com/70709113/131539761-66be66c2-26d9-4636-bbd5-d69fd11bfeaf.png)
-
-Preview Quests GUI:
-
-![image](https://user-images.githubusercontent.com/70709113/131539815-48c7de30-a5af-499c-b5c7-8316da5e186b.png)
-
-Admin Commands (for quest creation):
-
-![image](https://i.imgur.com/mAyL08w.png)
-
-Admin Commands - Quest Editing:
-
-![image](https://i.imgur.com/WKYvJ4V.png)
-
-
-
-![Banner_Features](https://user-images.githubusercontent.com/70709113/133997198-bbc020b6-69c5-454b-b5b5-5f1bec0bab0d.png)
-- Proxy support (like Velocity, Waterfall & BungeeCord)
-- **Custom YAML-based GUIs** - the entire GUI system is configurable via YAML files, supporting tabbed interfaces, paged item lists, action buttons, custom skull textures, and dynamic placeholders
-- Conversation system
-- Great API
-- Quest Profiles - players can create multiple profiles with separate quest progress
-- Sub-objectives with unlimited nesting
-- Variable system for flexible Actions & Conditions
-- Tag System (save data per-player)
-- Modern coloring using MiniMessage
-- Player data is saved in MySQL or SQLite, quest configuration data in a configuration file
-- Quest Points (you can create your own currency via tags)
-- Smart Command Tab Completions for all User and Admin commands
-- Translation system (https://translate.notquests.com/)
-- Re-usable Actions for Triggers
-- Multiple Quest Objectives:
-  - Break Blocks
-  - Place Blocks
-  - Collect Items
-  - Consume Items
-  - Craft Items
-  - Deliver Items to NPC
-  - Escort NPC
-  - Kill Mobs
-  - Breed Mobs
-  - Complete Other Quest
-  - Talk to NPC
-  - Command Triggers (to finish the objective)
-  - KillEliteMobs (if you're using EliteMobs)
-  - ReachLocation (WorldEdit required for objective creation)
-  - SlimefunResearch (requires Slimefun)
-  - Run Command
-  - Interact (right- or left-click block (or both))
-  - Jump
-  - Sneak
-  - Smelt Items
-  - Shear Sheep
-  - Open Buried Treasure
-  - Enchant
-  - NumberVariable
-  - And more
-- Multiple Conditions (Requirements) and Actions (Rewards) based on the variable system
-- Multiple Triggers: (Triggers run Actions when activated, set per-quest)
-  - Begin Quest or Objective
-  - Complete Quest or Objective
-  - Death
-  - Disconnect
-  - Fail Quest
-  - NPC dies (good for Escort NPC Quests)
-  - Enter World
-  - Leave World
-
-
-**Optional integrations:**
-- Citizens - needed for Citizens NPC stuff to work. You can also use Armor Stands without Citizens
+## Integrations / optional plugins:
+- MySQL Database - strongly recommended. Otherwise, SQLite will be used.
+- Citizens - needed for Citizens NPC stuff to work. You can also use Armor Stands without Citizens, or FancyNPCs
+- FancyNPCs - an alternative to Citizens
 - Vault - for Economy stuff
-- MySQL Database (strongly recommended)
 - PlaceholderAPI - needed for placeholders
-- MythicMobs, EliteMobs, Slimefun, LuckPerms, Towny, Jobs Reborn, EcoBosses, UltimateJobs
-- Countless other plugins through placeholder and command objectives/conditions/actions
+- MythicMobs - you can use MythicMobs in KillMobs objectives
+- EliteMobs - to use the KillEliteMobs objective
+- Slimefun - to use the SlimefunResearch objective
+- LuckPerms - to use the Permission Reward
+- Towny - to use various Requirements and Objectives
+- Jobs Reborn
+- EcoMobs
+- Infinite other plugins through placeholder and command objectives/conditions/actions.
+
+NotQuests is an incredibly easy-to-use, powerful and open-source minecraft Quests plugin for Paper which allows you to create detailed quests.
+
+A powerful and flexible quest plugin does not have to be a pain to use. NotQuests goal is to take the simplicity of "easy" Quest plugins and the power & flexibility of more advanced plugins - and combine it!
+It allows you to create powerful quests in a logical and simple way.
+
+Some quest plugins want to be super powerful and flexible - but they are too hard to use. Some want to be easy-to-use, but they aren't powerful and only suitable for simple pump-and-dump quests.
+
+NotQuests strives to be easy-to-use & intuitive while being super flexible & powerful at the same time! You can create both simple pump-and-dump farming quests, as well as complex omni-path storylines.
+
+The command system is much faster, easier & flexible than what other Quest plugins have to offer, and I did not notice any performance issues either. Do note that one goal of NotQuests is to be modern. Until an abstract version is finished, do not expect for old Minecraft versions to be supported for ages. NotQuests is evolving quick!
+
+## Features
+
+- Proxy support (like Velocity, Waterfall & BungeeCord)
+- **Custom YAML-based GUIs:** The entire GUI system is configurable via YAML files, supporting tabbed interfaces, paged item lists, action buttons, custom skull textures, and dynamic placeholders.
+- **Quest Profiles:** Every player with the permission node "notquests.user.profiles" can create profiles in notquests! Each profile has their own quest points, tags active & completed quests etc. This would allow players to start over if they want to, in order to choose a different path, do a speedrun or just to experience your RPG again - or whatever else!
+- Sub-objectives! Each objective can have unlimited sub-objectives. And each sub-objective can also have unlimited sub-sub-objectives.. and so on!
+- Variable system for registering flexible Actions & Conditions at the same time
+- Actions, Conditions, Objectives & Conditions are registered dynamically. This makes it easy to add your own via the API or by contributing.
+- Tag System (save data per-player)
+- Flexible Conversation system, tightly integrated with actions & conditions
+- Multiple integrations with other plugins (if not, you can achieve a lot with Placeholder Conditions/Objectives & Console Command Actions)
+- Great, extensive API
+- Complete GUI for the User Interface
+- Beautiful GUI & Chat Design
+- Modern coloring using MiniMessage (legacy is unsupported)
+- Player data is saved in MySQL or SQLite, Quest configuration data in a configuration file
+- Quest Point System (You can create your own currency via tags)
+- Smart Command Tab Completions for all User and Admin commands
+- Translation System (https://translate.notquests.com/)
+- Many usable Objectives, Conditions (= Requirements) and Actions (= Rewards). Full list of objectives: https://www.notquests.com/docs/documentation/types/objectives
+- Flexible NPC system - this would allow you to easily integrate other NPC plugins with notquests in the future
+
+## Sub-Objectives
+![Sub Objectives](https://raw.githubusercontent.com/AlessioGr/NotQuests/main/Logo/assets/sub-objectives.png)
 
 
-![Banner_Placeholders](https://user-images.githubusercontent.com/70709113/133997368-44c2bdb3-4ad9-483b-b2db-a5221d3d8a5a.png)
+## PlaceholderAPI Placeholders
 
-Player Placeholders:
+**Player Placeholders:**
 
 %notquests_player_has_completed_quest_QUESTNAME%
 %notquests_player_has_current_active_quest_QUESTNAME%
@@ -144,7 +104,3 @@ Player Placeholders:
 %notquests_player_expression_EXPRESSION%
 %notquests_player_rounded_expression_EXPRESSION%
 %notquests_player_quest_cooldown_left_formatted_QUESTNAME%
-
-You are welcome to join https://discord.gg/7br638S5Ex for community support and announcements.
-
-Please don't hesitate to contribute any features you need on GitHub: https://github.com/AlessioGr/NotQuests
