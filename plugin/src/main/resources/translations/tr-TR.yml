@@ -145,6 +145,8 @@ chat:
         base: 'Gömülü hazineleri aç'
       shearSheep:
         base: ' <main>%AMOUNTOFSHEEP%</main> koyun kırpın'
+      milkCow:
+        base: 'Milk <main>%AMOUNTOFCOWS%</main> cows'
       townyReachResidentCount:
         base: 'İkamet miktarına ulaşın: <main>%AMOUNT%'
       townyNationReachTownCount:
@@ -157,8 +159,6 @@ chat:
         base: 'Yeteneğini kullan: <main>%ABILITY%'
       BetonQuestCompleteObjective:
         base: 'Hedefi Bitir: <main>%BETONQUESTOBJECTIVENAME%'
-      ultimateJobsReachJobLevel:
-        base: '<main>%JOBID% işiyle iş seviyesi <main>%AMOUNT%</main> ulaşın'
   conditions:
     boolean:
       not-fulfilled: "<warn>Takip edilmesi gereken %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
