@@ -175,8 +175,6 @@ chat:
         base: 'Використати здібність: <main>%ABILITY%'
       BetonQuestCompleteObjective:
         base: 'Завершіть ціль: <main>%BETONQUESTOBJECTIVENAME%'
-      ultimateJobsReachJobLevel:
-        base: Досягнути рівень роботи <main>%AMOUNT%</main> на роботі <main>%JOBID%
   conditions:
     boolean:
       not-fulfilled: '<warn>Наступне має бути %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>.'

@@ -50,8 +50,7 @@ public class IntegrationsManager {
   private boolean eliteMobsEnabled = false;
   private boolean placeholderAPIEnabled = false;
   private boolean mythicMobsEnabled = false;
-  private boolean ecoBossesEnabled = false;
-  private boolean ultimateJobsEnabled = false;
+  private boolean ecoMobsEnabled = false;
 
   private boolean floodgateEnabled = false;
 
@@ -66,7 +65,7 @@ public class IntegrationsManager {
   private SlimefunManager slimefunManager;
   private LuckpermsManager luckpermsManager;
 
-  private EcoBossesManager ecoBossesManager;
+  private EcoMobsManager ecoMobsManager;
   private FloodgateManager floodgateManager;
 
 
@@ -75,35 +74,19 @@ public class IntegrationsManager {
     this.main = main;
 
     integrations.add(
-        new Integration(main, "UltimateJobs")
-            .setEnableCondition(() -> main.getConfiguration().isIntegrationUltimateJobsEnabled())
+        new Integration(main, "EcoMobs")
+            .setEnableCondition(() -> main.getConfiguration().isIntegrationEcoMobsEnabled())
             .setRunWhenEnabled(
                 () -> {
-                  ultimateJobsEnabled = true;
-                  return true;
-                })
-            .setRunWhenRegisteringEventsOnTime(
-                () -> {
-                  main.getMain()
-                      .getServer()
-                      .getPluginManager()
-                      .registerEvents(new UltimateJobsEvents(main), main.getMain());
-                }));
-
-    integrations.add(
-        new Integration(main, "EcoBosses")
-            .setEnableCondition(() -> main.getConfiguration().isIntegrationEcoBossesEnabled())
-            .setRunWhenEnabled(
-                () -> {
-                  ecoBossesEnabled = true;
+                  ecoMobsEnabled = true;
                   main.getLogManager()
                       .info(
-                          "EcoBosses found! Enabling EcoBosses support... Bosses will be loaded in 10 seconds, because they are not loaded when the plugin starts. Don't blame me");
+                          "EcoMobs found! Enabling EcoMobs support... Mobs will be loaded in 10 seconds, because they are not loaded when the plugin starts. Don't blame me");
                   Bukkit.getScheduler()
                       .scheduleSyncDelayedTask(
                           main.getMain(),
                           () -> {
-                            ecoBossesManager = new EcoBossesManager(main);
+                            ecoMobsManager = new EcoMobsManager(main);
                             main.getDataManager().loadStandardCompletions();
                           },
                           200L);
@@ -114,7 +97,7 @@ public class IntegrationsManager {
                   main.getMain()
                       .getServer()
                       .getPluginManager()
-                      .registerEvents(new EcoBossesEvents(main), main.getMain());
+                      .registerEvents(new EcoMobsEvents(main), main.getMain());
                 }));
 
     integrations.add(
@@ -481,12 +464,8 @@ public class IntegrationsManager {
     return jobsRebornEnabled;
   }
 
-  public final boolean isEcoBossesEnabled() {
-    return ecoBossesEnabled;
-  }
-
-  public final boolean isUltimateJobsEnabled() {
-    return ultimateJobsEnabled;
+  public final boolean isEcoMobsEnabled() {
+    return ecoMobsEnabled;
   }
 
   public final boolean isFloodgateEnabled() {
@@ -497,8 +476,8 @@ public class IntegrationsManager {
     return mythicMobsManager;
   }
 
-  public final EcoBossesManager getEcoBossesManager() {
-    return ecoBossesManager;
+  public final EcoMobsManager getEcoMobsManager() {
+    return ecoMobsManager;
   }
 
   public final WorldEditManager getWorldEditManager() {

@@ -1113,13 +1113,8 @@ public class DataManager {
                 true
         ));
 
-        configuration.setIntegrationEcoBossesEnabled(getGeneralConfigBoolean(
-                "integrations.ecoBosses.enabled",
-                true
-        ));
-
-        configuration.setIntegrationUltimateJobsEnabled(getGeneralConfigBoolean(
-                "integrations.ultimatejobs.enabled",
+        configuration.setIntegrationEcoMobsEnabled(getGeneralConfigBoolean(
+                "integrations.ecoMobs.enabled",
                 true
         ));
 
@@ -1970,9 +1965,9 @@ public class DataManager {
             standardEntityTypeCompletions.addAll(main.getIntegrationsManager().getMythicMobsManager().getMobNames());
         }
 
-        //Add extra EcoBosses completions, if enabled
-        if (main.getIntegrationsManager().isEcoBossesEnabled() && main.getIntegrationsManager().getEcoBossesManager() != null) {
-            standardEntityTypeCompletions.addAll(main.getIntegrationsManager().getEcoBossesManager().getBossNames());
+        //Add extra EcoMobs completions, if enabled
+        if (main.getIntegrationsManager().isEcoMobsEnabled() && main.getIntegrationsManager().getEcoMobsManager() != null) {
+            standardEntityTypeCompletions.addAll(main.getIntegrationsManager().getEcoMobsManager().getMobNames());
         }
 
         //Fill up standardEliteMobNamesCompletions if the EliteMobs integration is enabled

@@ -175,8 +175,6 @@ chat:
         base: 'استخدم القدرة: <main>%ABILITY%'
       BetonQuestCompleteObjective:
         base: 'أنهِ الهدف: <main>%BETONQUESTOBJECTIVENAME%'
-      ultimateJobsReachJobLevel:
-        base: الوصول إلى مستوى الوظيفة <main>%AMOUNT%</main> بالوظيفة <main>%JOBID%
   conditions:
     boolean:
       not-fulfilled: '<warn>التالي يجب أن يكون %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>.'

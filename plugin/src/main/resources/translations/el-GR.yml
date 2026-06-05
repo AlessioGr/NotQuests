@@ -161,8 +161,6 @@ chat:
         base: 'Χρησιμοποίησε ικανότητα: <main>%ABILITY%'
       BetonQuestCompleteObjective:
         base: 'Ολοκλήρωσε τον στόχο: <main>%BETONQUESTOBJECTIVENAME%'
-      ultimateJobsReachJobLevel:
-        base: Φτάσε επίπεδο επαγγέλματος <main>%AMOUNT%</main> με το επάγγελμα <main>%JOBID%
   conditions:
     boolean:
       not-fulfilled: '<warn>Το ακόλουθο πρέπει να είναι %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>.'

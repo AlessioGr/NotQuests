@@ -175,8 +175,6 @@ chat:
         base: 'Gebruik vermoë: <main>%ABILITY%'
       BetonQuestCompleteObjective:
         base: 'Voltooi doelwit: <main>%BETONQUESTOBJECTIVENAME%'
-      ultimateJobsReachJobLevel:
-        base: Bereik werkvlak <main>%AMOUNT%</main> met werk <main>%JOBID%
   conditions:
     boolean:
       not-fulfilled: '<warn>Die volgende moet %BOOLEANREQUIREMENT% wees: <highlight>%VARIABLESINGULAR%</highlight>.'

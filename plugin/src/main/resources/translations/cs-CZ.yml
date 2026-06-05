@@ -169,8 +169,6 @@ chat:
         base: 'Použít schopnost: <main>%ABILITY%'
       BetonQuestCompleteObjective:
         base: 'Dokonči úkol: <main>%BETONQUESTOBJECTIVENAME%'
-      ultimateJobsReachJobLevel:
-        base: Dosáhni levelu <main>%AMOUNT%</main> v práci <main>%JOBID%
   conditions:
     boolean:
       not-fulfilled: '<warn>Následující musí být %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>.'

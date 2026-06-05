@@ -175,8 +175,6 @@ chat:
         base: 'Upotrebi sposobnost: <main>%ABILITY%'
       BetonQuestCompleteObjective:
         base: 'Završi cilj: <main>%BETONQUESTOBJECTIVENAME%'
-      ultimateJobsReachJobLevel:
-        base: Dostigni nivo posla <main>%AMOUNT%</main> sa poslom <main>%JOBID%
   conditions:
     boolean:
       not-fulfilled: '<warn>Sledeće mora biti %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>.'

@@ -175,8 +175,6 @@ chat:
         base: 'Käytä kykyä: <main>%ABILITY%'
       BetonQuestCompleteObjective:
         base: 'Suorita tavoite: <main>%BETONQUESTOBJECTIVENAME%'
-      ultimateJobsReachJobLevel:
-        base: Saavuta ammattitaso <main>%AMOUNT%</main> ammatilla <main>%JOBID%
   conditions:
     boolean:
       not-fulfilled: '<warn>Seuraavan on oltava %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>.'

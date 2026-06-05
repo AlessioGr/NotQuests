@@ -175,8 +175,6 @@ chat:
         base: 运用能力：<main>%ABILITY%
       BetonQuestCompleteObjective:
         base: 完成目标:：<main>%BETONQUESTOBJECTIVENAME%
-      ultimateJobsReachJobLevel:
-        base: 达到职业等级：<main>%AMOUNT%</main> 工作： <main>%JOBID%
   conditions:
     boolean:
       not-fulfilled: '<warn>以下需要 %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>.'

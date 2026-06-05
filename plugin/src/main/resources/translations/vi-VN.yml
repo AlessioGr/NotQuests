@@ -163,8 +163,6 @@ chat:
         base: 'Sử dụng kỹ năng: <main>%ABILITY%'
       BetonQuestCompleteObjective:
         base: 'Hoàn thành mục tiêu: <main>%BETONQUESTOBJECTIVENAME%'
-      ultimateJobsReachJobLevel:
-        base: Đạt cấp độ nghề <main>%AMOUNT%</main> với nghề <main>%JOBID%
   conditions:
     boolean:
       not-fulfilled: '<warn>Cần phải được %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>.'

@@ -265,15 +265,15 @@ public class SpawnMobAction extends Action {
                             .getMythicMobsManager()
                             .spawnMob(getMobToSpawnType(), getSpawnLocation(), getSpawnAmount(), this);
                 }
-            } else if (main.getIntegrationsManager().isEcoBossesEnabled()
-                    && main.getIntegrationsManager().getEcoBossesManager().isEcoBoss(getMobToSpawnType())) {
+            } else if (main.getIntegrationsManager().isEcoMobsEnabled()
+                    && main.getIntegrationsManager().getEcoMobsManager().isEcoMob(getMobToSpawnType())) {
                 if (isUsePlayerLocation()) {
                     main.getIntegrationsManager()
-                            .getEcoBossesManager()
+                            .getEcoMobsManager()
                             .spawnMob(getMobToSpawnType(), player.getLocation(), getSpawnAmount(), this);
                 } else {
                     main.getIntegrationsManager()
-                            .getEcoBossesManager()
+                            .getEcoMobsManager()
                             .spawnMob(getMobToSpawnType(), getSpawnLocation(), getSpawnAmount(), this);
                 }
             } else {

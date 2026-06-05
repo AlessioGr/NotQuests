@@ -175,8 +175,6 @@ chat:
         base: 'Gebruik Vaardigheid: <main>%ABILITY%'
       BetonQuestCompleteObjective:
         base: 'Voltooi Doel: <main>%BETONQUESTOBJECTIVENAME%'
-      ultimateJobsReachJobLevel:
-        base: Bereik beroepsniveau <main>%AMOUNT%</main> met beroep <main>%JOBID%
   conditions:
     boolean:
       not-fulfilled: '<warn>Het volgende moet %BOOLEANREQUIREMENT% zijn: <highlight>%VARIABLESINGULAR%</highlight>.'

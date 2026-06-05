@@ -175,8 +175,6 @@ chat:
         base: '능력 사용하기: <main>%ABILITY%'
       BetonQuestCompleteObjective:
         base: '목표 완료하기: <main>%BETONQUESTOBJECTIVENAME%'
-      ultimateJobsReachJobLevel:
-        base: '직업 레벨 <main>%AMOUNT%</main> 도달하기 (직업: <main>%JOBID%)'
   conditions:
     boolean:
       not-fulfilled: '<warn>다음이 %BOOLEANREQUIREMENT%이어야 합니다: <highlight>%VARIABLESINGULAR%</highlight>.'

@@ -175,8 +175,6 @@ chat:
         base: 'Brug evne: <main>%ABILITY%'
       BetonQuestCompleteObjective:
         base: 'Afslut mål: <main>%BETONQUESTOBJECTIVENAME%'
-      ultimateJobsReachJobLevel:
-        base: Nå jobniveau <main>%AMOUNT%</main> med jobbet <main>%JOBID%
   conditions:
     boolean:
       not-fulfilled: '<warn>Følgende skal være %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>.'

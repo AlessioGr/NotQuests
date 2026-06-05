@@ -175,8 +175,6 @@ chat:
         base: 'Gunakan Kemampuan: <main>%ABILITY%'
       BetonQuestCompleteObjective:
         base: 'Selesaikan Tujuan: <main>%BETONQUESTOBJECTIVENAME%'
-      ultimateJobsReachJobLevel:
-        base: Capai level pekerjaan <main>%AMOUNT%</main> dengan pekerjaan <main>%JOBID%
   conditions:
     boolean:
       not-fulfilled: '<warn>Berikut ini harus %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>.'

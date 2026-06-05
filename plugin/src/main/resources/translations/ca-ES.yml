@@ -175,8 +175,6 @@ chat:
         base: 'Usa l''Habilitat: <main>%ABILITY%'
       BetonQuestCompleteObjective:
         base: 'Finalitza l''Objectiu: <main>%BETONQUESTOBJECTIVENAME%'
-      ultimateJobsReachJobLevel:
-        base: Arriba al nivell de feina <main>%AMOUNT%</main> amb la feina <main>%JOBID%
   conditions:
     boolean:
       not-fulfilled: '<warn>El següent ha de ser %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>.'
