@@ -21,7 +21,6 @@ import org.gradle.api.JavaVersion.VERSION_25
 
 plugins {
     id("io.papermc.paperweight.userdev")
-    id("xyz.jpenilla.run-paper")
 }
 
 group = "rocks.gravili.notquests"
@@ -267,9 +266,5 @@ tasks {
 
     processResources {
         filteringCharset = Charsets.UTF_8.name()
-    }
-
-    runServer {
-        minecraftVersion("26.1.2")
     }
 }

@@ -29,6 +29,7 @@ import org.incendo.cloud.suggestion.Suggestion;
 import org.incendo.cloud.suggestion.SuggestionProvider;
 import rocks.gravili.notquests.paper.NotQuests;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -72,7 +73,8 @@ public class EntityTypeParser<C> implements ArgumentParser<C, String> {
     @Override
     public @NonNull SuggestionProvider<C> suggestionProvider() {
         return (context, input) -> {
-            List<Suggestion> completions = main.getDataManager().standardEntityTypeCompletions.stream().map(Suggestion::suggestion).toList();
+            // NOTE: Stream.toList() is immutable; wrap in ArrayList so the .add()/.addAll() below work.
+            List<Suggestion> completions = new ArrayList<>(main.getDataManager().standardEntityTypeCompletions.stream().map(Suggestion::suggestion).toList());
             completions.add(Suggestion.suggestion("any"));
 
             //Add extra Mythic Mobs completions, if enabled

@@ -276,4 +276,30 @@ paper {
         }
     }
 
+    // IMPORTANT: Paper prefers paper-plugin.yml over plugin.yml when both exist, so the permission
+    // defaults MUST be declared here too. Without this, notquests.use (default true, which lets every
+    // player run /notquests) is never registered, so non-OP players are denied the command.
+    permissions {
+        register("notquests.admin") {
+            default = net.minecrell.pluginyml.bukkit.BukkitPluginDescription.Permission.Default.OP
+            description = "Gives the player permission to everything in the plugin."
+            childrenMap = mapOf(
+                "notquests.admin.armorstandeditingitems" to true,
+                "notquests.use" to true
+            )
+        }
+        register("notquests.admin.armorstandeditingitems") {
+            default = net.minecrell.pluginyml.bukkit.BukkitPluginDescription.Permission.Default.OP
+            description = "Gives the player permission to use quest editing items for armor stands."
+        }
+        register("notquests.use") {
+            default = net.minecrell.pluginyml.bukkit.BukkitPluginDescription.Permission.Default.TRUE
+            description = "Gives the player permission to use the /notquests user command. They can not create new quests or other administrative tasks with just this permission."
+        }
+        register("notquests.user.profiles") {
+            default = net.minecrell.pluginyml.bukkit.BukkitPluginDescription.Permission.Default.OP
+            description = "Gives the player permission to use the /notquests profiles command, and to create, delete and switch profiles."
+        }
+    }
+
 }

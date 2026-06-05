@@ -23,7 +23,10 @@ plugins {
     `maven-publish`
     id("com.gradleup.shadow") version "9.4.2"
     id("io.papermc.paperweight.userdev") version "2.0.0-beta.21"
-    id("xyz.jpenilla.run-paper") version "3.0.2"
+    // run-paper is only applied to :plugin (the real, server-ready plugin). Declared here so the
+    // subproject can apply it without repeating the version. Booting :paper/:common (intermediate
+    // library jars with no plugin.yml) would just error, so they don't get a runServer task.
+    id("xyz.jpenilla.run-paper") version "3.0.2" apply false
 }
 
 subprojects {
@@ -75,11 +78,5 @@ tasks {
     }
     processResources {
         filteringCharset = Charsets.UTF_8.name()
-    }
-    runServer {
-        // Configure the Minecraft version for our task.
-        // This is the only required configuration besides applying the plugin.
-        // Your plugin's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("26.1.2")
     }
 }
