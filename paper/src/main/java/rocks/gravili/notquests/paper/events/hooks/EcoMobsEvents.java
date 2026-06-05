@@ -18,8 +18,15 @@
 
 package rocks.gravili.notquests.paper.events.hooks;
 
+import com.willfp.ecomobs.event.EcoMobKillEvent;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.ActiveObjective;
+import rocks.gravili.notquests.paper.structs.ActiveQuest;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
+import rocks.gravili.notquests.paper.structs.objectives.KillMobsObjective;
 
 public class EcoMobsEvents implements Listener {
 
@@ -27,5 +34,33 @@ public class EcoMobsEvents implements Listener {
 
   public EcoMobsEvents(NotQuests main) {
     this.main = main;
+  }
+
+  @EventHandler
+  public void onEcoMobKill(final EcoMobKillEvent event) {
+    // EcoMobKillEvent is a PlayerEvent fired when a player kills an EcoMob.
+    final Player player = event.getPlayer();
+    final QuestPlayer questPlayer =
+        main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
+    if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
+      return;
+    }
+
+    // The EcoMob's registry id (e.g. "test"), which is what a KillMobs objective stores as its target.
+    final String killedMobID = event.getMob().getMob().getID();
+
+    for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+      for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
+        if (activeObjective.getObjective() instanceof final KillMobsObjective killMobsObjective
+            && activeObjective.isUnlocked()) {
+          if (killMobsObjective.getMobToKill().equalsIgnoreCase("any")
+              || killMobsObjective.getMobToKill().equalsIgnoreCase(killedMobID)) {
+            activeObjective.addProgress(1);
+          }
+        }
+      }
+      activeQuest.removeCompletedObjectives(true);
+    }
+    questPlayer.removeCompletedQuests();
   }
 }

@@ -83,7 +83,19 @@ public class NQNPCParser<C> implements ArgumentParser<C, NQNPCResult> {
             if (npcIdentifier.equalsIgnoreCase(rawInput)) {
                 String type = npcIdentifier.split(":")[0];
                 String id = npcIdentifier.split(":")[1];
-                NQNPCID nqnpcid = NQNPCID.fromInteger(Integer.parseInt(id));
+                // FancyNPCs uses String (UUID) ids; Citizens uses int ids. Parsing a FancyNPCs UUID as
+                // an int threw NumberFormatException, so branch on the NPC backend.
+                final NQNPCID nqnpcid;
+                if (type.equalsIgnoreCase("fancynpcs")) {
+                    nqnpcid = NQNPCID.fromString(id);
+                } else {
+                    try {
+                        nqnpcid = NQNPCID.fromInteger(Integer.parseInt(id));
+                    } catch (final NumberFormatException e) {
+                        return ArgumentParseResult.failure(
+                                new IllegalArgumentException("Invalid NPC id '" + id + "' for type '" + type + "'"));
+                    }
+                }
                 NQNPC npc = main.getNPCManager().getOrCreateNQNpc(type, nqnpcid);
                 if(npc == null){
                     return ArgumentParseResult.failure(new IllegalArgumentException("No NPC found: " + commandContext));

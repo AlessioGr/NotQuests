@@ -148,35 +148,41 @@ public class JobsRebornReachJobLevelObjective extends Objective {
         if (unlockedDuringPluginStartupQuestLoadingProcess) {
             return;
         }
-        if (activeObjective.getCurrentProgress() != 0) {
+        if (isCountPreviousLevels()) {
+            // "Reach job level N": progress simply mirrors the player's current job level, and is kept
+            // in sync afterwards (JobsRebornEvents handles level-ups + a periodic re-sync). This also
+            // completes the objective immediately if the player is already at/above the target level.
+            updateProgressToCurrentLevel(activeObjective);
+        } else if (activeObjective.getCurrentProgress() == 0) {
+            // "Gain N levels from now": start counting from here (incremented on each level-up).
+            activeObjective.addProgress(1); // Job levels start at 1 and not 0
+        }
+    }
+
+    /**
+     * Re-syncs this objective's progress to the player's <b>current</b> job level (only in the
+     * count-previous-levels "reach level" mode). Safe to call repeatedly: {@link
+     * ActiveObjective#setProgress(double, boolean)} is a no-op when the value is unchanged, so this
+     * can be driven from both the Jobs level-up event and a periodic task without double-counting.
+     * This is what makes the objective track the real level no matter how it changed (including admin
+     * commands like {@code /jobs level add}, which do not fire a level-up event).
+     */
+    public void updateProgressToCurrentLevel(final ActiveObjective activeObjective) {
+        if (!isCountPreviousLevels() || !main.getIntegrationsManager().isJobsRebornEnabled()) {
             return;
         }
-
-        activeObjective.addProgress(1); // Job levels start at 1 and not 0
-        if (!main.getIntegrationsManager().isJobsRebornEnabled() || !isCountPreviousLevels()) {
-            return;
-        }
-
         final Job job = Jobs.getJob(getJobName());
         if (job == null) {
-            main.getLogManager()
-                    .warn("The job <highlight>" + getJobName() + "</highlight> does not exist.");
             return;
         }
-
         final JobsPlayer jobsPlayer =
                 Jobs.getPlayerManager().getJobsPlayer(activeObjective.getQuestPlayer().getUniqueId());
         if (jobsPlayer == null) {
             return;
         }
-
-        JobProgression jobProgression = jobsPlayer.getJobProgression(job);
-
-        if (jobProgression == null) {
-            return;
-        }
-
-        activeObjective.addProgress(jobProgression.getLevel());
+        final JobProgression jobProgression = jobsPlayer.getJobProgression(job);
+        final int level = (jobProgression == null) ? 0 : jobProgression.getLevel();
+        activeObjective.setProgress(level, true);
     }
 
     @Override

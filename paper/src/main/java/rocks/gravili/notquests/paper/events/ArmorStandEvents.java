@@ -95,6 +95,36 @@ public class ArmorStandEvents implements Listener {
                         ));
                         return;
                     }
+                    else if (id == 0 || id == 1) { //Add (0 = showing, 1 = non-showing)
+                        final PersistentDataContainer armorstandPDB = armorStand.getPersistentDataContainer();
+                        final NamespacedKey attachedQuestsKey = (id == 0)
+                                ? main.getArmorStandManager().getAttachedQuestsShowingKey()
+                                : main.getArmorStandManager().getAttachedQuestsNonShowingKey();
+
+                        String existingAttachedQuests = armorstandPDB.has(attachedQuestsKey, PersistentDataType.STRING)
+                                ? armorstandPDB.get(attachedQuestsKey, PersistentDataType.STRING)
+                                : null;
+                        // Quests are stored wrapped in '°' separators, e.g. "°questA°questB°".
+                        if (existingAttachedQuests == null || existingAttachedQuests.isBlank()) {
+                            existingAttachedQuests = "°";
+                        }
+
+                        if (existingAttachedQuests.contains("°" + questName + "°")) {
+                            player.sendMessage(main.parse(
+                                    "<RED>Error: That armor stand already has the Quest <highlight>" + questName + "</highlight> attached to it!"
+                            ));
+                        } else {
+                            existingAttachedQuests = existingAttachedQuests + questName + "°";
+                            armorstandPDB.set(attachedQuestsKey, PersistentDataType.STRING, existingAttachedQuests);
+                            main.getArmorStandManager().addArmorStandWithQuestsOrConversationAttachedToThem(armorStand);
+
+                            player.sendMessage(main.parse(
+                                    "<DARK_GREEN>Quest with the name <highlight>" + questName + "</highlight> was added to this armor stand"
+                                            + (id == 0 ? " (showing)" : " (non-showing)") + "!\n"
+                                            + "<DARK_GREEN>Attached Quests: <highlight>" + existingAttachedQuests
+                            ));
+                        }
+                    }
                     else if(id == 2 || id == 3){ //Remove
                         PersistentDataContainer armorstandPDB = armorStand.getPersistentDataContainer();
 
