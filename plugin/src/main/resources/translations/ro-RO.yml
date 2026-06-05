@@ -143,6 +143,8 @@ chat:
         base: 'Deschide comori îngropate'
       shearSheep:
         base: 'Tunde <main>%AMOUNTOFSHEEP%</main>Oaie'
+      milkCow:
+        base: 'Milk <main>%AMOUNTOFCOWS%</main> cows'
       townyReachResidentCount:
         base: 'Suma atinsă pentru rezidenți: <main>%AMOUNT%'
       townyNationReachTownCount:
@@ -155,8 +157,6 @@ chat:
         base: 'Abilitatea de utilizare: <main>%ABILITY%'
       BetonQuestCompleteObjective:
         base: "Finalizare obiectiv:\n<main>%BETONQUESTOBJECTIVENAME%"
-      ultimateJobsReachJobLevel:
-        base: 'Atinge nivelul de job <main>%AMOUNT%</main> cu job-ul <main>%JOBID%'
   conditions:
     boolean:
       not-fulfilled: "<warn>Următoarele trebuie să fie%BOOLEANREQUIREMENT%<highlight>%VARIABLESINGULAR%</highlight>."
