@@ -145,6 +145,8 @@ chat:
         base: 'Otwórz zakopane skarby'
       shearSheep:
         base: 'Ostrzyż <main>%AMOUNTOFSHEEP%</main> owiec'
+      milkCow:
+        base: 'Milk <main>%AMOUNTOFCOWS%</main> cows'
       townyReachResidentCount:
         base: 'Osiągnij liczbę mieszkańców: <main>%AMOUNT%'
       townyNationReachTownCount:
@@ -157,8 +159,6 @@ chat:
         base: 'Użyj umiejętności: <main>%ABILITY%'
       BetonQuestCompleteObjective:
         base: 'Zakończ cel: <main>%BETONQUESTOBJECTIVENAME%'
-      ultimateJobsReachJobLevel:
-        base: 'Osiągnij <main>%AMOUNT%</main> poziom w pracy <main>%JOBID%'
   conditions:
     boolean:
       not-fulfilled: "<warn>Następujące osoby muszą być %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
