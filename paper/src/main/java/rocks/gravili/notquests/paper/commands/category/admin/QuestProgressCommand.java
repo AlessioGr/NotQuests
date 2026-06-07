@@ -44,7 +44,7 @@ public class QuestProgressCommand extends BaseCommand {
                 notQuests.getQuestManager().sendCompletedObjectivesAndProgress(questPlayer, activeQuest);
 
                 sender.sendMessage(notQuests.parse(
-                        "<main>>Active Objectives for Quest <highlight>" + activeQuest.getQuest().getIdentifier() + "</highlight> of player <highlight2>"
+                        "<main>Active Objectives for Quest <highlight>" + activeQuest.getQuest().getIdentifier() + "</highlight> of player <highlight2>"
                                 + offlinePlayer.getName() + "</highlight2>" + getOfflineOnline(offlinePlayer) + ":"
                 ));
                 notQuests.getQuestManager().sendActiveObjectivesAndProgress(questPlayer, activeQuest, 0);
@@ -68,6 +68,6 @@ public class QuestProgressCommand extends BaseCommand {
     }
 
     private String getOfflineOnline(OfflinePlayer offlinePlayer) {
-        return ((offlinePlayer.isOnline() ? ")<green>(online)</green>" : "<red>(offline)</red>"));
+        return ((offlinePlayer.isOnline() ? " <green>(online)</green>" : " <red>(offline)</red>"));
     }
 }

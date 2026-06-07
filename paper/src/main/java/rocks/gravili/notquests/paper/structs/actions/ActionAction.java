@@ -26,6 +26,7 @@ import org.incendo.cloud.description.Description;
 import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import org.incendo.cloud.parser.flag.CommandFlag;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.ActionList;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 
@@ -83,7 +84,8 @@ public class ActionAction extends Action {
                 .flag(manager.flagBuilder("onlyCountForRandomIfConditionsFulfilled").withDescription(Description.of("Does not count an action to the min or max random counter if its conditions are not fulfilled, if this flag is set")))
                 .handler(
                         (context) -> {
-                            final ArrayList<Action> foundActions = context.get("Actions");
+                            final ArrayList<Action> foundActions =
+                                    new ArrayList<>(context.<ActionList>get("Actions").getValues());
                             final int amount = context.get("amount");
                             final boolean ignoreConditions = context.flags().isPresent("ignoreConditions");
 
