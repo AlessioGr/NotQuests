@@ -28,7 +28,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.component.TypedCommandComponent;
 import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
+import org.incendo.cloud.paper.PaperCommandManager;
 import org.incendo.cloud.parser.flag.CommandFlag;
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -55,7 +55,7 @@ public class EscortNPCObjective extends Objective { //TODO: Add support for othe
 
     public static void handleCommands(
             NotQuests main,
-            LegacyPaperCommandManager<CommandSender> manager,
+            PaperCommandManager<CommandSender> manager,
             Command.Builder<CommandSender> addObjectiveBuilder,
             final int level) {
         if (!main.getIntegrationsManager().isCitizensEnabled()) {

@@ -6,7 +6,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
+import org.incendo.cloud.paper.PaperCommandManager;
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -25,7 +25,7 @@ public class ChatAction extends Action {
 
     public static void handleCommands(
             NotQuests main,
-            LegacyPaperCommandManager<CommandSender> manager,
+            PaperCommandManager<CommandSender> manager,
             Command.Builder<CommandSender> builder,
             ActionFor actionFor) {
         manager.command(builder.required("Chat Message", quotedStringParser(), Description.of("Message which will be sent / chatted from the player's perspective."), (context, lastString) -> {

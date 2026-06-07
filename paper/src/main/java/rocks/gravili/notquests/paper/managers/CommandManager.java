@@ -20,6 +20,7 @@ package rocks.gravili.notquests.paper.managers;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import io.leangen.geantyref.TypeToken;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -32,7 +33,6 @@ import org.bukkit.entity.Player;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.SenderMapper;
 import org.incendo.cloud.brigadier.CloudBrigadierManager;
-import org.incendo.cloud.bukkit.CloudBukkitCapabilities;
 import org.incendo.cloud.component.CommandComponent;
 import org.incendo.cloud.component.TypedCommandComponent;
 import org.incendo.cloud.context.CommandContext;
@@ -43,7 +43,7 @@ import org.incendo.cloud.internal.CommandNode;
 import org.incendo.cloud.minecraft.extras.AudienceProvider;
 import org.incendo.cloud.minecraft.extras.MinecraftExceptionHandler;
 import org.incendo.cloud.minecraft.extras.MinecraftHelp;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
+import org.incendo.cloud.paper.PaperCommandManager;
 import org.incendo.cloud.parser.flag.CommandFlag;
 import org.incendo.cloud.suggestion.Suggestion;
 import org.incendo.cloud.suggestion.SuggestionProcessor;
@@ -101,7 +101,7 @@ public class CommandManager {
 
     public CommandFlag<String> triggerWorldString;
     public CommandFlag<Long> minimumTimeAfterCompletion;
-    private LegacyPaperCommandManager<CommandSender> commandManager;
+    private PaperCommandManager<CommandSender> commandManager;
 
     /**
      * Returns a SuggestionProvider that suggests MiniMessage tags like &lt;red&gt;, &lt;bold&gt;, etc.
@@ -358,7 +358,11 @@ public class CommandManager {
     public void preSetupCommands() {
         // Cloud command framework
         try {
-            commandManager = new LegacyPaperCommandManager<>(main.getMain(), ExecutionCoordinator.simpleCoordinator(), SenderMapper.identity());
+            commandManager = PaperCommandManager.builder(
+                            SenderMapper.<CommandSourceStack, CommandSender>create(
+                                    CommandSourceStack::getSender, CommandSenderSourceStack::new))
+                    .executionCoordinator(ExecutionCoordinator.simpleCoordinator())
+                    .buildOnEnable(main.getMain());
             installCommandHintProcessor();
         } catch (final Exception e) {
             main.getLogManager().severe("There was an error setting up the commands.");
@@ -371,15 +375,9 @@ public class CommandManager {
     }
 
     public void preSetupGeneralCommands() {
-        // asynchronous completions
-        if (commandManager.hasCapability(CloudBukkitCapabilities.ASYNCHRONOUS_COMPLETION)) {
-            commandManager.registerAsynchronousCompletions();
-        }
-
-
-        // brigadier
+        // brigadier — native on Paper's PaperCommandManager (no registration / async-completion
+        // capability check needed; completions are served natively through Brigadier).
         try {
-            commandManager.registerLegacyPaperBrigadier();
             CloudBrigadierManager<CommandSender, ?> cloudBrigadierManager = commandManager.brigadierManager();
             cloudBrigadierManager.setNativeNumberSuggestions(true);
 
@@ -723,7 +721,7 @@ public class CommandManager {
         return null;
     }
 
-    public final LegacyPaperCommandManager<CommandSender> getPaperCommandManager() {
+    public final PaperCommandManager<CommandSender> getPaperCommandManager() {
         return commandManager;
     }
 

@@ -24,7 +24,7 @@ import org.bukkit.command.CommandSender;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
+import org.incendo.cloud.paper.PaperCommandManager;
 import org.incendo.cloud.paper.PaperCommandManager;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -118,7 +118,7 @@ public class ObjectiveManager {
         objectives.put(identifier, objective);
 
         try {
-            Method commandHandler = objective.getMethod("handleCommands", main.getClass(), LegacyPaperCommandManager.class, Command.Builder.class, int.class);
+            Method commandHandler = objective.getMethod("handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class, int.class);
 
             //Level 0
             final Command.Builder<CommandSender> objectivesBuilder = main.getCommandManager().getAdminEditCommandBuilder().literal("objectives", "o");

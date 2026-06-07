@@ -6,7 +6,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
+import org.incendo.cloud.paper.PaperCommandManager;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
 import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
@@ -38,7 +38,7 @@ public class EnchantObjective extends Objective {
 
     public static void handleCommands(
             NotQuests main,
-            LegacyPaperCommandManager<CommandSender> manager,
+            PaperCommandManager<CommandSender> manager,
             Command.Builder<CommandSender> addObjectiveBuilder,
             final int level) {
         manager.command(addObjectiveBuilder

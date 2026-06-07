@@ -23,7 +23,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
+import org.incendo.cloud.paper.PaperCommandManager;
 import org.incendo.cloud.parser.flag.CommandFlag;
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -62,7 +62,7 @@ public class BooleanCondition extends Condition {
         additionalBooleanArguments = new HashMap<>();
     }
 
-    public static void handleCommands(final NotQuests main, final LegacyPaperCommandManager<CommandSender> manager, final Command.Builder<CommandSender> builder, final ConditionFor conditionFor) {
+    public static void handleCommands(final NotQuests main, final PaperCommandManager<CommandSender> manager, final Command.Builder<CommandSender> builder, final ConditionFor conditionFor) {
         for (final String variableString : main.getVariablesManager().getVariableIdentifiers()) {
 
             final Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);

@@ -6,7 +6,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
+import org.incendo.cloud.paper.PaperCommandManager;
 import org.incendo.cloud.parser.flag.CommandFlag;
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -44,7 +44,7 @@ public class NumberVariableObjective extends Objective { // TODO: Not done yet
 
     public static void handleCommands(
             final NotQuests main,
-            final LegacyPaperCommandManager<CommandSender> manager,
+            final PaperCommandManager<CommandSender> manager,
             final Command.Builder<CommandSender> addObjectiveBuilder,
             final int level) {
 

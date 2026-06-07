@@ -4,7 +4,7 @@ import org.incendo.cloud.Command;
 import org.incendo.cloud.bukkit.data.SinglePlayerSelector;
 import org.incendo.cloud.bukkit.parser.selector.SinglePlayerSelectorParser;
 import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
+import org.incendo.cloud.paper.PaperCommandManager;
 import static org.incendo.cloud.parser.standard.IntegerParser.integerParser;
 import static org.incendo.cloud.parser.standard.StringParser.stringParser;
 import org.bukkit.Bukkit;
@@ -27,7 +27,7 @@ public class OpenGuiAction extends Action {
         super(main);
     }
 
-    public static void handleCommands(NotQuests main, LegacyPaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor actionFor) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor actionFor) {
         manager.command(
                 builder.required("guiName", stringParser(), Description.of("Opens a gui for the player"))
                         .flag(manager.flagBuilder("targetPlayer").withComponent(SinglePlayerSelectorParser.singlePlayerSelectorParser()).build())

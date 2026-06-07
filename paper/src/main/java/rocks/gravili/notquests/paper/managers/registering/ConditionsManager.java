@@ -24,7 +24,7 @@ import org.incendo.cloud.Command;
 import org.incendo.cloud.component.TypedCommandComponent;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
+import org.incendo.cloud.paper.PaperCommandManager;
 import org.incendo.cloud.parser.flag.CommandFlag;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -95,7 +95,7 @@ public class ConditionsManager {
         conditions.put(identifier, condition);
 
         try {
-            final Method commandHandler = condition.getMethod("handleCommands", main.getClass(), LegacyPaperCommandManager.class, Command.Builder.class, ConditionFor.class);
+            final Method commandHandler = condition.getMethod("handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class, ConditionFor.class);
 
             commandHandler.setAccessible(true);
 
@@ -317,7 +317,7 @@ public class ConditionsManager {
             for (final Class<? extends Condition> condition : getConditions()) {
                 final String identifier = getConditionType(condition);
 
-                final Method commandHandler = condition.getMethod("handleCommands", main.getClass(), LegacyPaperCommandManager.class, Command.Builder.class, ConditionFor.class);
+                final Method commandHandler = condition.getMethod("handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class, ConditionFor.class);
 
                 commandHandler.setAccessible(true);
                 if (condition == NumberCondition.class || condition == StringCondition.class || condition == BooleanCondition.class || condition == ListCondition.class || condition == ItemStackListCondition.class) {

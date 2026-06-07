@@ -25,7 +25,7 @@ import org.bukkit.inventory.ItemStack;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.CommandManager;
 import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
+import org.incendo.cloud.paper.PaperCommandManager;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.BaseCommand;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
@@ -43,7 +43,7 @@ import static rocks.gravili.notquests.paper.commands.arguments.NQNPCParser.nqNPC
 
 public class AdminItemsCommand extends BaseCommand {
 
-    public AdminItemsCommand(NotQuests notQuests, LegacyPaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder) {
+    public AdminItemsCommand(NotQuests notQuests, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder) {
         super(notQuests, builder);
     }
 

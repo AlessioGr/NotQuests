@@ -33,7 +33,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
+import org.incendo.cloud.paper.PaperCommandManager;
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.conversation.ConversationLine;
@@ -58,13 +58,13 @@ import static rocks.gravili.notquests.paper.commands.arguments.QuestParser.quest
 
 public class UserCommands {
     private final NotQuests main;
-    private final LegacyPaperCommandManager<CommandSender> manager;
+    private final PaperCommandManager<CommandSender> manager;
     private final Command.Builder<CommandSender> builder;
     private final Component firstLevelCommands;
 
     private final ItemStack chest, abort, coins, books, info;
 
-    public UserCommands(final NotQuests main, LegacyPaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder) {
+    public UserCommands(final NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder) {
         this.main = main;
         this.manager = manager;
         this.builder = builder;

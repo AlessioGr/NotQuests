@@ -22,7 +22,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
+import org.incendo.cloud.paper.PaperCommandManager;
 import org.incendo.cloud.parser.flag.CommandFlag;
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -38,10 +38,10 @@ import static org.incendo.cloud.parser.standard.StringParser.stringParser;
 
 public class AdminTagCommands {
     private final NotQuests main;
-    private final LegacyPaperCommandManager<CommandSender> manager;
+    private final PaperCommandManager<CommandSender> manager;
     private final Command.Builder<CommandSender> editBuilder;
 
-    public AdminTagCommands(final NotQuests main, LegacyPaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> editBuilder) {
+    public AdminTagCommands(final NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> editBuilder) {
         this.main = main;
         this.manager = manager;
         this.editBuilder = editBuilder;

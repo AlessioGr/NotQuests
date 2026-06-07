@@ -22,7 +22,7 @@ import org.bukkit.command.CommandSender;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
+import org.incendo.cloud.paper.PaperCommandManager;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.Quest;
@@ -70,7 +70,7 @@ public class TriggerManager {
         try {
             Method commandHandler =
                     trigger.getMethod(
-                            "handleCommands", main.getClass(), LegacyPaperCommandManager.class, Command.Builder.class);
+                            "handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class);
             commandHandler.invoke(
                     trigger,
                     main,

@@ -23,7 +23,7 @@ import org.bukkit.entity.Player;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
+import org.incendo.cloud.paper.PaperCommandManager;
 import org.incendo.cloud.parser.flag.CommandFlag;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -105,7 +105,7 @@ public class ActionManager {
                     action.getMethod(
                             "handleCommands",
                             main.getClass(),
-                            LegacyPaperCommandManager.class,
+                            PaperCommandManager.class,
                             Command.Builder.class,
                             ActionFor.class);
             if (action == NumberAction.class
@@ -402,7 +402,7 @@ public class ActionManager {
                         action.getMethod(
                                 "handleCommands",
                                 main.getClass(),
-                                LegacyPaperCommandManager.class,
+                                PaperCommandManager.class,
                                 Command.Builder.class,
                                 ActionFor.class);
                 if (action == NumberAction.class

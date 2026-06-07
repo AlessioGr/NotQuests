@@ -22,7 +22,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
+import org.incendo.cloud.paper.PaperCommandManager;
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.npc.NQNPC;
@@ -47,7 +47,7 @@ public class TriggerCommandAction extends Action {
         super(main);
     }
 
-    public static void handleCommands(NotQuests main, LegacyPaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor actionFor) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor actionFor) {
         manager.command(builder.required("Trigger Name", stringParser(), Description.of("Name of the trigger which should be triggered."), (context, lastString) -> {
                             main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[Trigger Name]", "");
                             ArrayList<Suggestion> completions = new ArrayList<>();

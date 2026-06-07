@@ -30,7 +30,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Vector;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
+import org.incendo.cloud.paper.PaperCommandManager;
 import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
@@ -65,9 +65,9 @@ import static rocks.gravili.notquests.paper.commands.arguments.ObjectiveParser.o
 
 public class AdminEditCommands {
     private final NotQuests main;
-    private final LegacyPaperCommandManager<CommandSender> manager;
+    private final PaperCommandManager<CommandSender> manager;
 
-    public AdminEditCommands(final NotQuests main, LegacyPaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> editBuilder) {
+    public AdminEditCommands(final NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> editBuilder) {
         this.main = main;
         this.manager = manager;
 
