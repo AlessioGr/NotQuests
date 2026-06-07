@@ -217,7 +217,7 @@ public class AdminConversationCommands {
         manager.command(conversationEditBuilder
                 .literal("npcs")
                 .literal("add")
-                .required("NPC", nqNPCParser(main), Description.of("ID of the NPC which should start the conversation")).commandDescription(Description.of("Add conversation to NPC"))
+                .required("NPC", nqNPCParser(main, false, true), Description.of("ID of the NPC which should start the conversation")).commandDescription(Description.of("Add conversation to NPC"))
                 .handler((context) -> {
                     final Conversation foundConversation = context.get("conversation");
                     final NQNPCResult nqNPCResult = context.get("NPC");
@@ -230,7 +230,7 @@ public class AdminConversationCommands {
                                         context.sender().sendMessage(main.parse("<main>NPCs of conversation <highlight>"
                                                 + foundConversation.getIdentifier()
                                                 + "</highlight> has been added by <highlight2>"
-                                                + nqnpc.getID().toString()
+                                                + nqnpc.getNPCType() + ":" + nqnpc.getID().getEitherAsString()
                                                 + "</highlight2>!"));
                                     },
                                     player,
@@ -255,7 +255,7 @@ public class AdminConversationCommands {
                         context.sender().sendMessage(main.parse("<main>NPCs of conversation <highlight>"
                                 + foundConversation.getIdentifier()
                                 + "</highlight> has been added by <highlight2>"
-                                + nqNPC.getID().toString()
+                                + nqNPC.getNPCType() + ":" + nqNPC.getID().getEitherAsString()
                                 + "</highlight2>!"));
                     }
                 }));
