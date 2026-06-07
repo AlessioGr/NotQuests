@@ -496,7 +496,7 @@ public class AdminEditCommands {
                                         "<highlight>"
                                                 + counter
                                                 + ".</highlight> <main>ID:</main> <highlight2>"
-                                                + nqNPC.getID().toString())
+                                                + nqNPC.getNPCType() + ":" + nqNPC.getID().getEitherAsString())
                                 );
                                 counter++;
                             }
@@ -511,7 +511,7 @@ public class AdminEditCommands {
                                         "<highlight>"
                                                 + counter
                                                 + ".</highlight> <main>ID:</main> <highlight2>"
-                                                + nqNPC.getID().toString())
+                                                + nqNPC.getNPCType() + ":" + nqNPC.getID().getEitherAsString())
                                 );
                                 counter++;
                             }

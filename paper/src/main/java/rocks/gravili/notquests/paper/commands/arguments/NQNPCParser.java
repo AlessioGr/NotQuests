@@ -18,7 +18,6 @@
 
 package rocks.gravili.notquests.paper.commands.arguments;
 
-import org.bukkit.command.CommandSender;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.context.CommandInput;
@@ -100,7 +99,10 @@ public class NQNPCParser<C> implements ArgumentParser<C, NQNPCResult> {
                 if(npc == null){
                     return ArgumentParseResult.failure(new IllegalArgumentException("No NPC found: " + commandContext));
                 }
-                return ArgumentParseResult.success(new NQNPCResult(npc, allowNone, allowRightClickSelect));
+                // A concrete NPC was resolved, so this is neither a "none" nor a "rightClickSelect"
+                // request — passing the parser's allow* config here made every specified NPC behave
+                // like rightClickSelect.
+                return ArgumentParseResult.success(new NQNPCResult(npc, false, false));
             }
         }
         return ArgumentParseResult.failure(new IllegalArgumentException("No NPC found: " + commandContext));
@@ -111,10 +113,15 @@ public class NQNPCParser<C> implements ArgumentParser<C, NQNPCResult> {
     public @NonNull SuggestionProvider<C> suggestionProvider() {
         return (context, input) -> {
             List<Suggestion> entries = new java.util.ArrayList<>();
+            if (allowRightClickSelect) {
+                entries.add(Suggestion.suggestion("rightClickSelect"));
+            }
+            if (allowNone) {
+                entries.add(Suggestion.suggestion("none"));
+            }
             for (String npcIdentifier : main.getNPCManager().getAllNPCsString()) {
                 entries.add(Suggestion.suggestion(npcIdentifier));
             }
-            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.sender(), context.rawInput().input().split(" "), "[Player Name]", "[...]");
             return CompletableFuture.completedFuture(entries);
         };
     }
