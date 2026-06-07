@@ -139,7 +139,7 @@ public class UserCommands {
                         .hoverEvent(HoverEvent.showText(Component.text("Shows more information about a Quest", NamedTextColor.GREEN))))
                 .append(Component.newline())
                 .append(main.parse("<YELLOW>/nquests <GOLD>activeQuests")
-                        .clickEvent(ClickEvent.runCommand("/nquests activeQuests"))
+                        .clickEvent(main.getUtilManager().runCommandClick("nquests activeQuests"))
                         .hoverEvent(HoverEvent.showText(Component.text("Shows all your active Quests", NamedTextColor.GREEN))))
                 .append(Component.newline())
                 .append(main.parse("<YELLOW>/nquests <GOLD>progress <DARK_AQUA>[Quest Name]")
@@ -148,7 +148,7 @@ public class UserCommands {
                                 Component.text("Shows the progress of an active Quest", NamedTextColor.GREEN))))
                 .append(Component.newline())
                 .append(main.parse("<YELLOW>/nquests <GOLD>questPoints")
-                        .clickEvent(ClickEvent.runCommand("/nquests questPoints"))
+                        .clickEvent(main.getUtilManager().runCommandClick("nquests questPoints"))
                         .hoverEvent(HoverEvent.showText(Component.text("Shows how many Quest Points you have", NamedTextColor.GREEN))))
                 .append(Component.newline());
 

@@ -169,6 +169,22 @@ public class UtilManager {
     }
 
     /**
+     * Builds a clickable that runs a NotQuests command <b>server-side</b> when clicked, instead of a
+     * {@code run_command} chat click. Modern Minecraft shows a "Confirm Command Execution" prompt for
+     * run_command clicks on permission-gated commands (all NotQuests commands are, under native
+     * Brigadier) — running it server-side via a click callback avoids that prompt entirely.
+     *
+     * @param command the command to run, WITHOUT a leading slash (e.g. {@code "nquests take myquest"})
+     */
+    public net.kyori.adventure.text.event.ClickEvent runCommandClick(final String command) {
+        return net.kyori.adventure.text.event.ClickEvent.callback(audience -> {
+            if (audience instanceof Player clicker) {
+                clicker.performCommand(command);
+            }
+        });
+    }
+
+    /**
      * Renders the command-hint bar: the command typed so far (gray) followed by a highlighted hint
      * for what to type next. The already-typed tokens and the hint are added as plain text, never
      * parsed as MiniMessage, so a half-typed value like {@code <red>} can't break the bar.

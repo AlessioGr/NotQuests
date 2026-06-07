@@ -801,7 +801,7 @@ public class QuestManager {
             for (Quest quest : questsAttachedToNPC) {
 
                 Component acceptComponent = main.parse("<GREEN>[CHOOSE]")
-                        .clickEvent(ClickEvent.runCommand("/nquests preview " + quest.getIdentifier()))
+                        .clickEvent(main.getUtilManager().runCommandClick("nquests preview " + quest.getIdentifier()))
                         .hoverEvent(HoverEvent.showText(main.parse("<GREEN>Click to preview/choose the quest <highlight>" + quest.getDisplayNameOrIdentifier())));
 
                 Component component = main.parse("<YELLOW>" + counter + ". <highlight>" + quest.getDisplayNameOrIdentifier() + " ")
@@ -858,7 +858,7 @@ public class QuestManager {
             for (final Quest quest : questsAttachedToNPC) {
 
                 Component acceptComponent = main.parse("<GREEN>[CHOOSE]")
-                        .clickEvent(ClickEvent.runCommand("/nquests preview " + quest.getIdentifier()))
+                        .clickEvent(main.getUtilManager().runCommandClick("nquests preview " + quest.getIdentifier()))
                         .hoverEvent(HoverEvent.showText(main.parse("<GREEN>Click to preview/choose the quest <highlight>" + quest.getDisplayNameOrIdentifier())));
 
                 Component component = main.parse("<YELLOW>" + counter + ". <highlight>" + quest.getDisplayNameOrIdentifier() + " ")
@@ -1024,7 +1024,7 @@ public class QuestManager {
         ));
 
         Component acceptComponent = main.parse("<GREEN>**[ACCEPT THIS QUEST]")
-                .clickEvent(ClickEvent.runCommand("/nquests take " + quest.getIdentifier()))
+                .clickEvent(main.getUtilManager().runCommandClick("nquests take " + quest.getIdentifier()))
                 .hoverEvent(HoverEvent.showText(main.parse("<GREEN>Click to accept the Quest <highlight>" + quest.getDisplayNameOrIdentifier())));
 
         player.sendMessage(Component.empty());
