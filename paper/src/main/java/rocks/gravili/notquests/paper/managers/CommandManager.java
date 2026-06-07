@@ -28,20 +28,25 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.SenderMapper;
 import org.incendo.cloud.brigadier.CloudBrigadierManager;
 import org.incendo.cloud.bukkit.CloudBukkitCapabilities;
+import org.incendo.cloud.component.CommandComponent;
 import org.incendo.cloud.component.TypedCommandComponent;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.description.Description;
 import org.incendo.cloud.execution.ExecutionCoordinator;
+import org.incendo.cloud.execution.preprocessor.CommandPreprocessingContext;
+import org.incendo.cloud.internal.CommandNode;
 import org.incendo.cloud.minecraft.extras.AudienceProvider;
 import org.incendo.cloud.minecraft.extras.MinecraftExceptionHandler;
 import org.incendo.cloud.minecraft.extras.MinecraftHelp;
 import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import org.incendo.cloud.parser.flag.CommandFlag;
 import org.incendo.cloud.suggestion.Suggestion;
+import org.incendo.cloud.suggestion.SuggestionProcessor;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.*;
 import rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionParser;
@@ -354,6 +359,7 @@ public class CommandManager {
         // Cloud command framework
         try {
             commandManager = new LegacyPaperCommandManager<>(main.getMain(), ExecutionCoordinator.simpleCoordinator(), SenderMapper.identity());
+            installCommandHintProcessor();
         } catch (final Exception e) {
             main.getLogManager().severe("There was an error setting up the commands.");
             return;
@@ -375,7 +381,7 @@ public class CommandManager {
         try {
             commandManager.registerLegacyPaperBrigadier();
             CloudBrigadierManager<CommandSender, ?> cloudBrigadierManager = commandManager.brigadierManager();
-            cloudBrigadierManager.setNativeNumberSuggestions(false);
+            cloudBrigadierManager.setNativeNumberSuggestions(true);
 
             cloudBrigadierManager.registerMapping(
                     new TypeToken<StringVariableValueParser<CommandSender>>() {
@@ -605,6 +611,116 @@ public class CommandManager {
         adminConversationCommands =
                 new AdminConversationCommands(
                         main, commandManager, adminConversationCommandBuilder, conversationManager);
+    }
+
+    /**
+     * Installs a single suggestion processor that refreshes the player's command-hint action bar
+     * from the command tree on every completion request — for every argument, keyword steps
+     * included. This replaces the old approach where each argument parser pushed its own hint, which
+     * only covered custom-parser arguments and so was inconsistent.
+     */
+    private void installCommandHintProcessor() {
+        try {
+            final SuggestionProcessor<CommandSender> previous = commandManager.suggestionProcessor();
+            commandManager.suggestionProcessor((context, suggestions) -> {
+                try {
+                    showCommandHint(context);
+                } catch (final Throwable ignored) {
+                    // A hint failure must never affect the actual command suggestions.
+                }
+                return previous != null ? previous.process(context, suggestions) : suggestions;
+            });
+        } catch (final Throwable t) {
+            main.getLogManager().warn("Could not install the command-hint processor: " + t.getMessage());
+        }
+    }
+
+    private void showCommandHint(final CommandPreprocessingContext<CommandSender> context) {
+        if (!main.getConfiguration().isActionBarFancyCommandCompletionEnabled()
+                && !main.getConfiguration().isTitleFancyCommandCompletionEnabled()
+                && !main.getConfiguration().isBossBarFancyCommandCompletionEnabled()) {
+            return;
+        }
+        if (!(context.commandContext().sender() instanceof final Player player)) {
+            return;
+        }
+
+        final String fullInput = context.commandContext().rawInput().input();
+        final String trimmed = fullInput.strip();
+        if (trimmed.isEmpty()) {
+            return;
+        }
+        final boolean trailingSpace = fullInput.endsWith(" ");
+        final String[] tokens = trimmed.split("\\s+");
+        final int completed = trailingSpace ? tokens.length : tokens.length - 1;
+
+        // Walk the tree, consuming already-typed tokens, to the node whose children are the
+        // candidates for the argument currently being typed.
+        CommandNode<CommandSender> node = commandManager.commandTree().rootNode();
+        for (int i = 0; i < completed && node != null; i++) {
+            node = advanceNode(node, tokens[i]);
+        }
+        if (node == null) {
+            return;
+        }
+
+        final String hint = buildHint(node);
+        if (hint == null || hint.isBlank()) {
+            return;
+        }
+        main.getUtilManager().sendCommandHint(player, fullInput, hint);
+    }
+
+    private CommandNode<CommandSender> advanceNode(final CommandNode<CommandSender> node, final String token) {
+        CommandNode<CommandSender> valueChild = null;
+        for (final CommandNode<CommandSender> child : node.children()) {
+            final CommandComponent<CommandSender> component = child.component();
+            if (component == null) {
+                continue;
+            }
+            if (component.type() == CommandComponent.ComponentType.LITERAL) {
+                if (component.name().equalsIgnoreCase(token)
+                        || component.aliases().stream().anyMatch(alias -> alias.equalsIgnoreCase(token))) {
+                    return child; // exact keyword match wins
+                }
+            } else if (component.type() != CommandComponent.ComponentType.FLAG) {
+                valueChild = child; // a value argument consumes any token
+            }
+        }
+        return valueChild;
+    }
+
+    private String buildHint(final CommandNode<CommandSender> node) {
+        boolean hasLiteral = false;
+        CommandComponent<CommandSender> valueArg = null;
+        for (final CommandNode<CommandSender> child : node.children()) {
+            final CommandComponent<CommandSender> component = child.component();
+            if (component == null) {
+                continue;
+            }
+            switch (component.type()) {
+                case LITERAL -> hasLiteral = true;
+                case REQUIRED_VARIABLE, OPTIONAL_VARIABLE -> {
+                    if (valueArg == null) {
+                        valueArg = component;
+                    }
+                }
+                default -> {
+                    // flags etc. are not shown in the hint
+                }
+            }
+        }
+
+        // Keyword steps: don't dump every sub-command (it overflows the bar and is unreadable) — just
+        // signal that one of several options goes here. The vanilla tab popup still lists the real ones.
+        if (hasLiteral) {
+            return "<option>";
+        }
+        if (valueArg != null) {
+            final String description = valueArg.description().textDescription();
+            return "[" + (description != null && !description.isBlank() ? description : valueArg.name()) + "]";
+        }
+        return null;
     }
 
     public final LegacyPaperCommandManager<CommandSender> getPaperCommandManager() {

@@ -158,102 +158,70 @@ public class UtilManager {
         return sb.toString();
     }
 
-    private Component getFancyCommandTabCompletion(final String[] args, final String hintCurrentArg, String hintNextArgs) {
+    /**
+     * Renders the command-hint bar: the command typed so far (gray) followed by a highlighted hint
+     * for what to type next. The already-typed tokens and the hint are added as plain text, never
+     * parsed as MiniMessage, so a half-typed value like {@code <red>} can't break the bar.
+     */
+    private Component renderCommandHint(final String fullInput, final String hint) {
         final int maxPreviousArgs = main.getConfiguration().getFancyCommandCompletionMaxPreviousArgumentsDisplayed();
+        final boolean trailingSpace = fullInput.endsWith(" ");
+        final String trimmed = fullInput.strip();
+        final String[] tokens = trimmed.isEmpty() ? new String[0] : trimmed.split("\\s+");
+        // The last token is still being typed unless the input ends with a space.
+        final int completed = trailingSpace ? tokens.length : Math.max(0, tokens.length - 1);
+        final int start = Math.max(0, completed - maxPreviousArgs);
 
-        final StringBuilder argsTogether = new StringBuilder();
-
-
-        final int initialCutoff = (args.length) - maxPreviousArgs;
-        int cutoff = (args.length) - maxPreviousArgs;
-
-
-        for (int i = -1; i < args.length - 1; i++) {
-
-            if (cutoff == 0) {
-                if (i == -1) {
-                    argsTogether.append("/qa ");
-                } else {
-                    argsTogether.append(args[i]).append(" ");
-                }
-
-            } else {
-                if (cutoff > 0) {
-                    cutoff -= 1;
-                } else { //Just 1 arg
-                    argsTogether.append("/qa ");
-                }
-
-            }
+        final StringBuilder path = new StringBuilder(start == 0 ? "/" : "… ");
+        for (int i = start; i < completed; i++) {
+            path.append(tokens[i]).append(' ');
         }
 
-        if (initialCutoff > 0) {
-            argsTogether.insert(0, "[...] ");
-        }
-
-
-        Component currentCompletion;
-        if (args[args.length - 1].isBlank()) {
-            currentCompletion = main.parse(NotQuestColors.highlightMM + "<bold>" + hintCurrentArg + "</bold>");
-        } else {
-            currentCompletion = main.parse("<YELLOW><bold>" + args[args.length - 1] + "</bold>");
-
-        }
-
-        if (!hintNextArgs.isBlank()) {
-            //Chop off if too long
-            if (hintNextArgs.length() > 15) {
-                hintNextArgs = hintNextArgs.substring(0, 14) + "...";
-            }
-            return main.parse(NotQuestColors.lightHighlightMM + argsTogether)
-                    .append(currentCompletion)
-                    .append(main.parse("<GRAY> " + hintNextArgs));
-        } else {
-            if (!args[args.length - 1].isBlank()) { //Command finished
-                return main.parse(NotQuestColors.lightHighlightMM + argsTogether)
-                        .append(currentCompletion)
-                        .append(Component.text(" ✓", NamedTextColor.GREEN, TextDecoration.BOLD));
-            } else {
-                return main.parse(NotQuestColors.lightHighlightMM +  argsTogether)
-                        .append(currentCompletion);
-            }
-
-        }
-
+        return Component.text(path.toString(), NamedTextColor.GRAY)
+                .append(Component.text(hint, TextColor.color(0x00FFFB), TextDecoration.BOLD));
     }
 
-
-    public void sendFancyCommandCompletion(final CommandSender sender, final String[] args, final String hintCurrentArg, final String hintNextArgs) {
-        if (!main.getConfiguration().isActionBarFancyCommandCompletionEnabled() && !main.getConfiguration().isTitleFancyCommandCompletionEnabled() && !main.getConfiguration().isBossBarFancyCommandCompletionEnabled()) {
+    /**
+     * Shows a "what to type next" hint for a NotQuests command in the action bar (and/or the title /
+     * boss bar, per config). Driven centrally from the command tree by the suggestion processor in
+     * {@link CommandManager}, so it updates consistently at every argument — keyword steps included.
+     */
+    public void sendCommandHint(final Player player, final String fullInput, final String hint) {
+        if (!main.getConfiguration().isActionBarFancyCommandCompletionEnabled()
+                && !main.getConfiguration().isTitleFancyCommandCompletionEnabled()
+                && !main.getConfiguration().isBossBarFancyCommandCompletionEnabled()) {
             return;
         }
 
-        if(sender instanceof Player player){
-            final Component fancyTabCompletion = getFancyCommandTabCompletion(args, hintCurrentArg, hintNextArgs);
-            if (main.getConfiguration().isActionBarFancyCommandCompletionEnabled()) {
-                player.sendActionBar(fancyTabCompletion);
-            }
-            if (main.getConfiguration().isTitleFancyCommandCompletionEnabled()) {
-                player.showTitle(Title.title(Component.text(""), fancyTabCompletion));
-            }
-            if (main.getConfiguration().isBossBarFancyCommandCompletionEnabled()) {
-
-                final BossBar oldBossBar = playersAndBossBars.get(player);
-                if (oldBossBar != null) {
-                    oldBossBar.name(fancyTabCompletion);
-                    playersAndBossBars.replace(player, oldBossBar);
-                    player.showBossBar(oldBossBar);
-
-                } else {
-                    BossBar bossBarToShow = BossBar.bossBar(fancyTabCompletion, 1.0f, BossBar.Color.BLUE, BossBar.Overlay.PROGRESS);
-                    playersAndBossBars.put(player, bossBarToShow);
-                    player.showBossBar(bossBarToShow);
-                }
-
+        final Component bar = renderCommandHint(fullInput, hint);
+        if (main.getConfiguration().isActionBarFancyCommandCompletionEnabled()) {
+            player.sendActionBar(bar);
+        }
+        if (main.getConfiguration().isTitleFancyCommandCompletionEnabled()) {
+            player.showTitle(Title.title(Component.text(""), bar));
+        }
+        if (main.getConfiguration().isBossBarFancyCommandCompletionEnabled()) {
+            final BossBar oldBossBar = playersAndBossBars.get(player);
+            if (oldBossBar != null) {
+                oldBossBar.name(bar);
+                player.showBossBar(oldBossBar);
+            } else {
+                final BossBar bossBarToShow = BossBar.bossBar(bar, 1.0f, BossBar.Color.BLUE, BossBar.Overlay.PROGRESS);
+                playersAndBossBars.put(player, bossBarToShow);
+                player.showBossBar(bossBarToShow);
             }
         }
+    }
 
-
+    /**
+     * @deprecated Superseded by the central, command-tree-driven hint ({@link #sendCommandHint}).
+     *     Kept as a no-op so the many existing call sites in argument parsers compile unchanged. The
+     *     old per-parser approach only fired for arguments that had a custom parser, so the bar was
+     *     inconsistent and showed a useless {@code [...]} placeholder.
+     */
+    @Deprecated
+    public void sendFancyCommandCompletion(final CommandSender sender, final String[] args, final String hintCurrentArg, final String hintNextArgs) {
+        // no-op
     }
 
     public final HashMap<String, String> getExtraArguments(final String argumentString) {
