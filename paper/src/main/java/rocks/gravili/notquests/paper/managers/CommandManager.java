@@ -631,6 +631,8 @@ public class CommandManager {
         } catch (final Throwable t) {
             main.getLogManager().warn("Could not install the command-hint processor: " + t.getMessage());
         }
+        // Keep the action-bar hint alive across typing pauses (action bars fade after a few seconds).
+        main.getUtilManager().startCommandHintRefreshTask();
     }
 
     private void showCommandHint(final CommandPreprocessingContext<CommandSender> context) {

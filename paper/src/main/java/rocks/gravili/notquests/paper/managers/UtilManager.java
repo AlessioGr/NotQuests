@@ -47,6 +47,16 @@ public class UtilManager {
     private final static int CENTER_PX = 154;
     private final NotQuests main;
     private final HashMap<Player, BossBar> playersAndBossBars;
+
+    // Command-hint action bar: cache the last rendered bar per player so a repeating task can keep
+    // re-sending it. Action bars fade after a few seconds, so without this the hint vanishes the
+    // moment the player pauses typing.
+    private final java.util.concurrent.ConcurrentHashMap<java.util.UUID, Component> commandHintBars =
+            new java.util.concurrent.ConcurrentHashMap<>();
+    private final java.util.concurrent.ConcurrentHashMap<java.util.UUID, Integer> commandHintRefreshCycles =
+            new java.util.concurrent.ConcurrentHashMap<>();
+    private static final int HINT_REFRESH_INTERVAL_TICKS = 10; // re-send every ~0.5s
+    private static final int HINT_PERSIST_CYCLES = 12;         // keep alive ~6s after the last keystroke
     private final ArrayList<String> miniMessageTokens;
     
     public UtilManager(NotQuests main) {
@@ -177,8 +187,15 @@ public class UtilManager {
             path.append(tokens[i]).append(' ');
         }
 
-        return Component.text(path.toString(), NamedTextColor.GRAY)
-                .append(Component.text(hint, TextColor.color(0x00FFFB), TextDecoration.BOLD));
+        final Component base = Component.text(path.toString(), NamedTextColor.GRAY);
+        if (!trailingSpace && tokens.length > 0) {
+            // Mid-token: echo what the player is currently typing, so the bar shows progress instead
+            // of going blank between the "what to type next" steps.
+            return base.append(Component.text(
+                    tokens[tokens.length - 1], TextColor.color(0x00FFFB), TextDecoration.BOLD));
+        }
+        // Standing on a fresh argument: show the hint for what to type next.
+        return base.append(Component.text(hint, TextColor.color(0x00FFFB), TextDecoration.BOLD));
     }
 
     /**
@@ -196,6 +213,9 @@ public class UtilManager {
         final Component bar = renderCommandHint(fullInput, hint);
         if (main.getConfiguration().isActionBarFancyCommandCompletionEnabled()) {
             player.sendActionBar(bar);
+            // Cache it + (re)arm the refresh window so the repeating task keeps it visible on a pause.
+            commandHintBars.put(player.getUniqueId(), bar);
+            commandHintRefreshCycles.put(player.getUniqueId(), HINT_PERSIST_CYCLES);
         }
         if (main.getConfiguration().isTitleFancyCommandCompletionEnabled()) {
             player.showTitle(Title.title(Component.text(""), bar));
@@ -211,6 +231,35 @@ public class UtilManager {
                 player.showBossBar(bossBarToShow);
             }
         }
+    }
+
+    /**
+     * Keeps the command-hint action bar alive. Action bars fade after a few seconds, so this re-sends
+     * the last cached hint every {@link #HINT_REFRESH_INTERVAL_TICKS} ticks for up to
+     * {@link #HINT_PERSIST_CYCLES} cycles after the player's last keystroke (each keystroke re-arms
+     * the window). Started once when the command system is set up.
+     */
+    public void startCommandHintRefreshTask() {
+        Bukkit.getScheduler().runTaskTimer(main.getMain(), () -> {
+            if (commandHintRefreshCycles.isEmpty()) {
+                return;
+            }
+            final java.util.Iterator<java.util.Map.Entry<java.util.UUID, Integer>> it =
+                    commandHintRefreshCycles.entrySet().iterator();
+            while (it.hasNext()) {
+                final java.util.Map.Entry<java.util.UUID, Integer> entry = it.next();
+                final int remaining = entry.getValue() - 1;
+                final Player player = Bukkit.getPlayer(entry.getKey());
+                final Component bar = commandHintBars.get(entry.getKey());
+                if (remaining <= 0 || player == null || bar == null) {
+                    it.remove();
+                    commandHintBars.remove(entry.getKey());
+                } else {
+                    entry.setValue(remaining);
+                    player.sendActionBar(bar);
+                }
+            }
+        }, HINT_REFRESH_INTERVAL_TICKS, HINT_REFRESH_INTERVAL_TICKS);
     }
 
     /**
