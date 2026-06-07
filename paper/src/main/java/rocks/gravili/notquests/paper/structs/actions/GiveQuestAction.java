@@ -92,7 +92,15 @@ public class GiveQuestAction extends Action {
       return;
     }
     if (!isForceGive()) {
-      main.getQuestPlayerManager().acceptQuest(questPlayer, foundQuest, true, true);
+      // acceptQuest sends the formatted success message/title itself and returns the "accepted"
+      // sentinel on success, or a feedback message (e.g. "requirements not fulfilled") on failure.
+      // Forward only the failure message so accepting via a GUI / NPC / armor stand gives the same
+      // feedback as /q take, instead of silently closing the GUI with no indication.
+      final String result = main.getQuestPlayerManager().acceptQuest(questPlayer, foundQuest, true, true);
+      final var player = questPlayer.getPlayer();
+      if (player != null && result != null && !result.equals("accepted")) {
+        main.sendMessage(player, result);
+      }
     } else {
       main.getQuestPlayerManager().forceAcceptQuestSilent(questPlayer.getUniqueId(), foundQuest);
     }
