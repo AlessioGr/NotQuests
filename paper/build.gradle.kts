@@ -94,8 +94,8 @@ dependencies {
     // If every one of those repos disappeared, NotQuests would still compile. These are compileOnly
     // because the real plugin provides the classes at runtime. To update one, drop the new jar in
     // paper/libs/ and bump the filename here.
-    compileOnly(files("libs/Citizens-2.0.42-SNAPSHOT.jar"))
-    compileOnly(files("libs/FancyNpcs-2.9.2.jar"))
+    compileOnly(files("libs/Citizens-2.0.41-b4122.jar"))
+    compileOnly(files("libs/FancyNpcs-2.10.1-java21.jar"))
     compileOnly(files("libs/PlaceholderAPI-2.12.2.jar"))
     compileOnly(files("libs/VaultAPI-1.7.1.jar"))
     compileOnly(files("libs/Mythic-Dist-5.12.1.jar"))

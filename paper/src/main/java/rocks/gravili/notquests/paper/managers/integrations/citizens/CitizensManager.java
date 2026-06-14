@@ -38,6 +38,7 @@ import rocks.gravili.notquests.paper.structs.ActiveObjectiveHolder;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.objectives.hooks.citizens.EscortNPCObjective;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.function.Consumer;
@@ -80,7 +81,7 @@ public class CitizensManager {
     }
 
     for (final TraitInfo traitInfo : toDeregister) {
-      net.citizensnpcs.api.CitizensAPI.getTraitFactory().deregisterTrait(traitInfo);
+      deregisterTraitIfSupported(traitInfo);
     }
 
     net.citizensnpcs.api.CitizensAPI.getTraitFactory()
@@ -145,7 +146,23 @@ public class CitizensManager {
     // Actual nquestgiver trait de-registering happens here, to prevent a
     // ConcurrentModificationException
     for (final TraitInfo traitInfo : toDeregister) {
-      net.citizensnpcs.api.CitizensAPI.getTraitFactory().deregisterTrait(traitInfo);
+      deregisterTraitIfSupported(traitInfo);
+    }
+  }
+
+  private void deregisterTraitIfSupported(final TraitInfo traitInfo) {
+    try {
+      CitizensAPI.getTraitFactory()
+          .getClass()
+          .getMethod("deregisterTrait", TraitInfo.class)
+          .invoke(CitizensAPI.getTraitFactory(), traitInfo);
+    } catch (final NoSuchMethodException ignored) {
+      main.getLogManager().debug(
+          "Citizens TraitFactory does not expose deregisterTrait(TraitInfo); skipping deregistration for "
+              + traitInfo.getTraitName());
+    } catch (final IllegalAccessException | InvocationTargetException exception) {
+      main.getLogManager().warn(
+          "Failed to deregister Citizens trait " + traitInfo.getTraitName(), exception);
     }
   }
 
