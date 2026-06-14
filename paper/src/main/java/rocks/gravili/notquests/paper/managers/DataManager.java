@@ -661,11 +661,11 @@ public class DataManager {
                 "This controls if particles should be shown above the heads of Citizen NPCs with Quests attached to them"
         ));
 
-        configuration.setCitizensNPCQuestGiverIndicatorParticleType(Particle.valueOf(getGeneralConfigString(
+        configuration.setCitizensNPCQuestGiverIndicatorParticleType(getGeneralConfigParticle(
                 "visual.citizensnpc.quest-giver-indicator-particle.type",
-                "ANGRY_VILLAGER",
-            "Change the particle type here. Available particle types can be found at https://jd.papermc.io/paper/1.20/org/bukkit/Particle.html"
-        )));
+                Particle.ANGRY_VILLAGER,
+            "Change the particle type here. Available particle types can be found in the Paper Javadocs for your server version."
+        ));
         configuration.setCitizensNPCQuestGiverIndicatorText(getGeneralConfigString(
                 "visual.citizensnpc.quest-giver-indicator-above-name.text",
             "",
@@ -728,10 +728,10 @@ public class DataManager {
                 "This controls if particles should be shown above the heads of Armor Stands with Quests attached to them"
         ));
 
-        configuration.setArmorStandQuestGiverIndicatorParticleType(Particle.valueOf(getGeneralConfigString(
+        configuration.setArmorStandQuestGiverIndicatorParticleType(getGeneralConfigParticle(
                 "visual.armorstands.quest-giver-indicator-particle.type",
-                "ANGRY_VILLAGER"
-        )));
+                Particle.ANGRY_VILLAGER
+        ));
 
         configuration.setArmorStandQuestGiverIndicatorParticleSpawnInterval(getGeneralConfigInt(
                 "visual.armorstands.quest-giver-indicator-particle.spawn-interval",
@@ -1299,6 +1299,18 @@ public class DataManager {
         return getGeneralConfig().getString(key);
     }
 
+    public final Particle getGeneralConfigParticle(final String key, final Particle defaultValue, final String... commentLines) {
+        final String rawValue = getGeneralConfigString(key, defaultValue.name(), commentLines);
+        try {
+            return Particle.valueOf(rawValue.toUpperCase(Locale.ROOT));
+        } catch (final IllegalArgumentException exception) {
+            logConfigFallback(key, rawValue, defaultValue.name(), "particle");
+            getGeneralConfig().set(key, defaultValue.name());
+            valueChanged = true;
+            return defaultValue;
+        }
+    }
+
     public final boolean getGeneralConfigBoolean(final String key, final boolean defaultValue, final String... commentLines) {
         if (!getGeneralConfig().isBoolean(key)) {
             getGeneralConfig().set(key, defaultValue);
@@ -1333,13 +1345,34 @@ public class DataManager {
     }
 
     public final ItemStack getGeneralConfigItemStack(final String key, final ItemStack defaultValue, final String... commentLines) {
-        if (!getGeneralConfig().isItemStack(key)) {
+        ItemStack itemStack = null;
+        boolean valid = false;
+        try {
+            if (getGeneralConfig().isItemStack(key)) {
+                itemStack = getGeneralConfig().getItemStack(key);
+                valid = itemStack != null;
+            }
+        } catch (final RuntimeException exception) {
+            valid = false;
+        }
+
+        if (!valid) {
+            if (getGeneralConfig().contains(key)) {
+                logConfigFallback(key, getGeneralConfig().get(key), defaultValue.getType(), "item");
+            }
             getGeneralConfig().set(key, defaultValue);
+            itemStack = defaultValue;
             valueChanged = true;
         }
         final List<String> commentLinesList = new ArrayList<>(Arrays.asList(commentLines));
         getGeneralConfig().setComments(key, commentLinesList);
-        return getGeneralConfig().getItemStack(key);
+        return itemStack;
+    }
+
+    private void logConfigFallback(final String key, final Object invalidValue, final Object defaultValue, final String valueType) {
+        main.getLogManager().warn(
+                "Invalid general.yml " + valueType + " at '" + key + "': '" + invalidValue
+                        + "'. Falling back to '" + defaultValue + "' for this server version.");
     }
 
     public final List<String> getGeneralConfigStringList(final String key, final List<String> defaultValue, final String... commentLines) {
