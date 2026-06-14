@@ -83,7 +83,7 @@ paperweight {
 
 dependencies {
     implementation(project(path = ":common", configuration = "shadow"))
-    paperweight.paperDevBundle("1.21.11-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.21.1-R0.1-SNAPSHOT")
 
     compileOnly("org.projectlombok:lombok:1.18.46")
     annotationProcessor("org.projectlombok:lombok:1.18.46")
@@ -142,12 +142,12 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
-    // MockBukkit for Paper 1.21.11 (in-JVM mock server; no real server needed)
-    testImplementation("org.mockbukkit.mockbukkit:mockbukkit-v1.21:4.110.0")
+    // MockBukkit for Paper 1.21.1 (in-JVM mock server; no real server needed)
+    testImplementation("org.mockbukkit.mockbukkit:mockbukkit-v1.21:4.69.0")
     // MockBukkit does NOT bundle the Bukkit API (it assumes the plugin already provides it).
     // Our paper-api comes from the paperweight dev bundle, which is compileOnly (off the test
     // classpath), so add the regular paper-api + JetBrains annotations for the test compile.
-    testImplementation("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
+    testImplementation("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
     testImplementation("org.jetbrains:annotations:26.1.0")
 
     // Mockito (spies/mocks) — ready for future tests (e.g. failing-Connection DB tests)

@@ -60,7 +60,6 @@ public final class ItemStackSelectionArgument extends NQArgumentType<ItemStackSe
     // the next space (commas included), or a quoted phrase for NotQuests item names that contain
     // spaces. This does NOT swallow following arguments (it stops at the space before e.g. <amount>).
     // getNativeType() stays string() only as the client-facing argument shape.
-    @Override
     public <S> ItemStackSelection parse(final StringReader reader, final S source) throws CommandSyntaxException {
         return convert(readSelectionToken(reader), source);
     }
@@ -87,7 +86,6 @@ public final class ItemStackSelectionArgument extends NQArgumentType<ItemStackSe
         return convert(input, null);
     }
 
-    @Override
     public <S> ItemStackSelection convert(final String input, final S source) throws CommandSyntaxException {
         final CommandSender sender =
                 source instanceof CommandSourceStack stack ? stack.getSender() : null;

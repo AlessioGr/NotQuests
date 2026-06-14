@@ -54,7 +54,7 @@ public class PlayerHealthVariable extends Variable<Double> {
 
     @Override
     public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
-        AttributeInstance maxValueInstance = questPlayer.getPlayer().getAttribute(Attribute.MAX_HEALTH);
+        AttributeInstance maxValueInstance = questPlayer.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH);
         if (maxValueInstance == null) {
             return null;
         }

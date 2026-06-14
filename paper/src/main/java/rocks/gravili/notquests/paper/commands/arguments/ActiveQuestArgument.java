@@ -78,7 +78,6 @@ public final class ActiveQuestArgument extends NQArgumentType<ActiveQuest> {
     // Paper hands CustomArgumentType the command source, so we can resolve the sender's active quest
     // here (covers /nq abort, /nq progress and admin-on-self). The explicit "player" target (a prior
     // positional arg) isn't reachable at parse time and falls back to the sender.
-    @Override
     public <S> ActiveQuest convert(final String input, final S source) throws CommandSyntaxException {
         OfflinePlayer offlinePlayer = null;
         if (source instanceof CommandSourceStack sourceStack
