@@ -52,6 +52,11 @@ public final class NQArguments {
                     throw fail("'" + input + "' is not a whole number");
                 }
             }
+
+            @Override
+            protected List<String> suggest(final CommandContext<?> context, final String remaining) {
+                return List.of("1", "2", "3", "4", "5", "10", "16", "32", "64");
+            }
         };
     }
 
