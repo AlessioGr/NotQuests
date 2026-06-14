@@ -97,6 +97,8 @@ chat:
         base: 'Сломать блоки: <main>%BLOCKTOBREAK%'
       breed:
         base: 'Разводите мобов: <main>%ENTITYTOBREED%'
+      feedMobs:
+        base: 'Feed Mobs: <main>%ENTITYTOFEED%'
       pickupItems:
         base: 'Использовать предметы: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
       consumeItems:
