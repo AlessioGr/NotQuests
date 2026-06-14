@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import org.gradle.api.JavaVersion.VERSION_25
+import org.gradle.api.JavaVersion.VERSION_21
 
 
 plugins {
@@ -27,9 +27,9 @@ group = "rocks.gravili.notquests"
 version = rootProject.version
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(25))
-    sourceCompatibility = VERSION_25
-    targetCompatibility = VERSION_25
+    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+    sourceCompatibility = VERSION_21
+    targetCompatibility = VERSION_21
 }
 
 repositories {
@@ -95,13 +95,13 @@ dependencies {
     // because the real plugin provides the classes at runtime. To update one, drop the new jar in
     // paper/libs/ and bump the filename here.
     compileOnly(files("libs/Citizens-2.0.42-SNAPSHOT.jar"))
-    compileOnly(files("libs/FancyNpcs-2.10.1.jar"))
+    compileOnly(files("libs/FancyNpcs-2.9.2.jar"))
     compileOnly(files("libs/PlaceholderAPI-2.12.2.jar"))
     compileOnly(files("libs/VaultAPI-1.7.1.jar"))
     compileOnly(files("libs/Mythic-Dist-5.12.1.jar"))
     compileOnly(files("libs/EliteMobs-10.4.0.jar"))
-    compileOnly(files("libs/worldedit-core-7.4.3.jar"))
-    compileOnly(files("libs/worldedit-bukkit-7.4.3.jar"))
+    compileOnly(files("libs/worldedit-core-7.3.0-SNAPSHOT.jar"))
+    compileOnly(files("libs/worldedit-bukkit-7.3.0-SNAPSHOT.jar"))
     compileOnly(files("libs/Slimefun4-RC-37.jar"))
     compileOnly(files("libs/LuckPerms-api-5.5.jar"))
     compileOnly(files("libs/Towny-0.103.0.0.jar"))
@@ -122,7 +122,7 @@ dependencies {
     implementation("net.kyori:adventure-api:4.26.1") {}
 
     //InvUI
-    implementation("xyz.xenondevs.invui:invui:2.1.1")
+    implementation("xyz.xenondevs.invui:invui:2.0.0-beta.5")
 
     implementation("com.github.retrooper:packetevents-spigot:2.12.2")
 
@@ -243,7 +243,7 @@ tasks {
         mustRunAfter(":common:jar")
 
         options.encoding = Charsets.UTF_8.name()
-        options.release.set(25)
+        options.release.set(21)
     }
     javadoc {
         options.encoding = Charsets.UTF_8.name()

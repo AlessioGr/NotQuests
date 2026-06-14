@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import org.gradle.api.JavaVersion.VERSION_25
+import org.gradle.api.JavaVersion.VERSION_21
 
 plugins {
     `java-library`
@@ -48,9 +48,9 @@ dependencies {
 
 java {
     // Configure the java toolchain. This allows gradle to auto-provision JDK 21 on systems that only have JDK 11 installed for example.
-    toolchain.languageVersion = JavaLanguageVersion.of(25)
-    sourceCompatibility = VERSION_25
-    targetCompatibility = VERSION_25
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
+    sourceCompatibility = VERSION_21
+    targetCompatibility = VERSION_21
 }
 
 paperweight.reobfArtifactConfiguration = io.papermc.paperweight.userdev.ReobfArtifactConfiguration.MOJANG_PRODUCTION
@@ -71,7 +71,7 @@ tasks {
     //}
     compileJava {
         options.encoding = Charsets.UTF_8.name()
-        options.release.set(25)
+        options.release.set(21)
     }
     javadoc {
         options.encoding = Charsets.UTF_8.name()
