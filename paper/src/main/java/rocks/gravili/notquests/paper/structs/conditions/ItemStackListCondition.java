@@ -288,7 +288,7 @@ public class ItemStackListCondition extends Condition {
     public void load(FileConfiguration configuration, String initialPath) {
         this.variableName = configuration.getString(initialPath + ".specifics.variableName");
         this.operator = configuration.getString(initialPath + ".specifics.operator", "");
-        this.itemStack = configuration.getItemStack(initialPath + ".specifics.itemStack", null);
+        this.itemStack = loadStoredItemStack(configuration, initialPath + ".specifics.itemStack");
 
         final ConfigurationSection additionalStringsConfigurationSection = configuration.getConfigurationSection(initialPath + ".specifics.additionalStrings");
         if (additionalStringsConfigurationSection != null) {
@@ -329,7 +329,7 @@ public class ItemStackListCondition extends Condition {
         this.variableName = arguments.get(0);
 
         this.operator = arguments.get(1);
-        setItemStack(new ItemStack(Material.valueOf(arguments.get(2).toUpperCase(Locale.ROOT)), Integer.parseInt(arguments.get(3))));
+        setItemStack(new ItemStack(parseStoredMaterial(arguments.get(2)), Integer.parseInt(arguments.get(3))));
 
         if (arguments.size() >= 5) {
 
@@ -377,5 +377,30 @@ public class ItemStackListCondition extends Condition {
         this.additionalBooleanArguments = additionalBooleanArguments;
     }
 
+    private Material parseStoredMaterial(final String materialName) {
+        try {
+            return Material.valueOf(materialName.toUpperCase(Locale.ROOT));
+        } catch (final RuntimeException exception) {
+            main.getLogManager().warn(
+                    "Invalid ItemStackList condition material '" + materialName
+                            + "'. Falling back to STONE for this server version.");
+            return Material.STONE;
+        }
+    }
+
+    private ItemStack loadStoredItemStack(final FileConfiguration configuration, final String path) {
+        try {
+            final ItemStack stored = configuration.getItemStack(path, null);
+            if (stored != null) {
+                return stored;
+            }
+        } catch (final RuntimeException ignored) {
+            // fall through to clean warning and version-stable fallback
+        }
+        main.getLogManager().warn(
+                "Invalid ItemStackList condition item at '" + path
+                        + "'. Falling back to STONE for this server version.");
+        return new ItemStack(Material.STONE);
+    }
 
 }

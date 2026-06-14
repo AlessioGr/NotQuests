@@ -59,13 +59,33 @@ public class ItemStackSelection {
 
   public void addNqItemName(final String nqItemName) {
     if(nqItemName != null) {
-      addNqItem(main.getItemsManager().getItem(nqItemName));
+      final NQItem nqItem = main.getItemsManager().getItem(nqItemName);
+      if (nqItem == null) {
+        main.getLogManager().warn(
+            "Invalid NotQuests item reference '" + nqItemName
+                + "'. Skipping this item entry.");
+      } else {
+        addNqItem(nqItem);
+      }
     }
   }
 
   public void addItemStack(@Nullable final ItemStack itemStack) {
     if (itemStack != null) {
       this.itemStacks.add(itemStack);
+    }
+  }
+
+  public void addItemStackFromConfiguration(final FileConfiguration configuration, final String path) {
+    try {
+      final ItemStack itemStack = configuration.getItemStack(path);
+      if (itemStack == null) {
+        addFallbackItemStack(path, configuration.get(path));
+      } else {
+        addItemStack(itemStack);
+      }
+    } catch (final RuntimeException exception) {
+      addFallbackItemStack(path, configuration.get(path));
     }
   }
 
@@ -129,7 +149,17 @@ public class ItemStackSelection {
           configuration.getConfigurationSection(initialPath + ".itemStacks");
       if (itemStacksSection != null) {
         for (final String itemStackID : itemStacksSection.getKeys(false)) {
-          addItemStack(itemStacksSection.getItemStack(itemStackID));
+          final String itemPath = initialPath + ".itemStacks." + itemStackID;
+          try {
+            final ItemStack itemStack = itemStacksSection.getItemStack(itemStackID);
+            if (itemStack == null) {
+              addFallbackItemStack(itemPath, itemStacksSection.get(itemStackID));
+            } else {
+              addItemStack(itemStack);
+            }
+          } catch (final RuntimeException exception) {
+            addFallbackItemStack(itemPath, itemStacksSection.get(itemStackID));
+          }
         }
       }
     }
@@ -139,15 +169,37 @@ public class ItemStackSelection {
           configuration.getConfigurationSection(initialPath + ".materials");
       if (materialsSection != null) {
         for (final String materialID : materialsSection.getKeys(false)) {
+          final String materialPath = initialPath + ".materials." + materialID;
           final String materialString = materialsSection.getString(materialID);
           if (materialString != null) {
-            addMaterial(Material.getMaterial(materialString));
+            final Material material = Material.getMaterial(materialString.toUpperCase(Locale.ROOT));
+            if (material == null) {
+              addFallbackMaterial(materialPath, materialString);
+            } else {
+              addMaterial(material);
+            }
+          } else {
+            addFallbackMaterial(materialPath, materialsSection.get(materialID));
           }
         }
       }
     }
 
     this.any = configuration.getBoolean(initialPath + ".any");
+  }
+
+  private void addFallbackItemStack(final String path, final Object invalidValue) {
+    main.getLogManager().warn(
+        "Invalid item stack at '" + path + "': '" + invalidValue
+            + "'. Falling back to STONE for this server version.");
+    addItemStack(new ItemStack(Material.STONE));
+  }
+
+  private void addFallbackMaterial(final String path, final Object invalidValue) {
+    main.getLogManager().warn(
+        "Invalid item material at '" + path + "': '" + invalidValue
+            + "'. Falling back to STONE for this server version.");
+    addMaterial(Material.STONE);
   }
 
   public final String getAllMaterialsListedTranslated(String tag) {

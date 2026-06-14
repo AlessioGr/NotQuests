@@ -412,7 +412,28 @@ public class Category {
 
     this.conversationDelayInMS = getCategoryConfig().getInt("conversations.delay", 0);
 
-    this.guiItem = getCategoryConfig().getItemStack("guiItem", new ItemStack(Material.CHEST));
+    this.guiItem = loadGuiItem();
 
+  }
+
+  private ItemStack loadGuiItem() {
+    final ItemStack fallback = new ItemStack(Material.CHEST);
+    try {
+      final ItemStack itemStack = getCategoryConfig().getItemStack("guiItem", fallback);
+      if (itemStack != null) {
+        return itemStack;
+      }
+    } catch (final RuntimeException ignored) {
+      // fall through to clean warning and version-stable fallback
+    }
+
+    if (getCategoryConfig().contains("guiItem")) {
+      main.getLogManager().warn(
+          "Invalid category GUI item at '" + getCategoryFullName()
+              + "/guiItem'. Falling back to CHEST for this server version.");
+      getCategoryConfig().set("guiItem", fallback);
+      saveCategoryConfig();
+    }
+    return fallback;
   }
 }

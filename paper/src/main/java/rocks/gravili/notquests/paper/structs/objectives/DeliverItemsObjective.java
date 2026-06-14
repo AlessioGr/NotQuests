@@ -167,7 +167,7 @@ public class DeliverItemsObjective extends Objective {
             final String nqItemName = configuration.getString(initialPath + ".specifics.nqitem", "");
 
             if(nqItemName.isBlank()){
-                itemStackSelection.addItemStack(configuration.getItemStack(initialPath + ".specifics.itemToCollect.itemstack"));
+                itemStackSelection.addItemStackFromConfiguration(configuration, initialPath + ".specifics.itemToCollect.itemstack");
             }else{
                 itemStackSelection.addNqItemName(nqItemName);
             }

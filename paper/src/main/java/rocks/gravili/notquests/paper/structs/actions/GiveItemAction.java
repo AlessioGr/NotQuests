@@ -145,10 +145,8 @@ public class GiveItemAction extends Action {
             final String nqItemName = configuration.getString(initialPath + ".specifics.nqitem", "");
 
             if (nqItemName.isBlank()) {
-                itemStackSelection.addItemStack(
-                        configuration.getItemStack(initialPath + ".specifics.item"));
-                itemStackSelection.addItemStack(
-                        configuration.getItemStack(initialPath + ".specifics.rewardItem"));
+                itemStackSelection.addItemStackFromConfiguration(configuration, initialPath + ".specifics.item");
+                itemStackSelection.addItemStackFromConfiguration(configuration, initialPath + ".specifics.rewardItem");
             } else {
                 itemStackSelection.addNqItemName(nqItemName);
             }
@@ -169,7 +167,7 @@ public class GiveItemAction extends Action {
         NQItem nqItem = main.getItemsManager().getItem(itemName);
         if (nqItem == null) {
             final ItemStack itemStack =
-                    new ItemStack(Material.valueOf(arguments.get(0).toUpperCase(Locale.ROOT)));
+                    new ItemStack(parseStoredMaterial(arguments.get(0)));
             if (arguments.size() >= 2) {
                 itemStack.setAmount(Integer.parseInt(arguments.get(1)));
             }
@@ -179,6 +177,17 @@ public class GiveItemAction extends Action {
             this.itemStackSelection = new ItemStackSelection(main);
             itemStackSelection.addNqItem(nqItem);
             nqItemAmount = Integer.parseInt(arguments.get(1));
+        }
+    }
+
+    private Material parseStoredMaterial(final String materialName) {
+        try {
+            return Material.valueOf(materialName.toUpperCase(Locale.ROOT));
+        } catch (final RuntimeException exception) {
+            main.getLogManager().warn(
+                    "Invalid GiveItem material '" + materialName
+                            + "'. Falling back to STONE for this server version.");
+            return Material.STONE;
         }
     }
 }

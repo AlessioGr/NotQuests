@@ -89,8 +89,8 @@ public class FishItemsObjective extends Objective {
             final String nqItemName = configuration.getString(initialPath + ".specifics.nqitem", "");
 
             if (nqItemName.isBlank()) {
-                itemStackSelection.addItemStack(
-                        configuration.getItemStack(initialPath + ".specifics.itemToFish.itemstack"));
+                itemStackSelection.addItemStackFromConfiguration(
+                        configuration, initialPath + ".specifics.itemToFish.itemstack");
             } else {
                 itemStackSelection.addNqItemName(nqItemName);
             }
