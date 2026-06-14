@@ -39,10 +39,11 @@ import java.util.List;
  * otherwise the command sender (user commands like {@code /nq abort}).
  *
  * <p>NOTE: the Cloud parser read the target player from the command context / sender inside
- * {@code parse}. Brigadier does not hand {@code convert} a context, so resolution is delegated to
- * {@link #convert(CommandContext, String)}.
+ * {@code parse}. Paper 1.21.1's custom-argument API does not hand {@code convert} a context, so this
+ * argument parses the raw quest identifier and {@link #resolve(NotQuests, CommandContext, String)}
+ * resolves it from {@link rocks.gravili.notquests.paper.commands.framework.NQCommandContext#get}.
  */
-public final class ActiveQuestArgument extends NQArgumentType<ActiveQuest> {
+public final class ActiveQuestArgument extends NQArgumentType<String> {
     private final NotQuests main;
 
     public ActiveQuestArgument(final NotQuests main) {
@@ -58,7 +59,7 @@ public final class ActiveQuestArgument extends NQArgumentType<ActiveQuest> {
      * present, otherwise the command sender (user commands like /nq abort, where there is no "player"
      * argument and the sender is the player).
      */
-    private @Nullable OfflinePlayer resolveTargetPlayer(final @NonNull CommandContext<?> context) {
+    private static @Nullable OfflinePlayer resolveTargetPlayer(final @NonNull CommandContext<?> context) {
         try {
             return (OfflinePlayer) context.getArgument("player", Object.class);
         } catch (final IllegalArgumentException notAnArgument) {
@@ -71,38 +72,12 @@ public final class ActiveQuestArgument extends NQArgumentType<ActiveQuest> {
     }
 
     @Override
-    public ActiveQuest convert(final String input) throws CommandSyntaxException {
-        return convert(input, null);
+    public String convert(final String input) {
+        return input;
     }
 
-    // Paper hands CustomArgumentType the command source, so we can resolve the sender's active quest
-    // here (covers /nq abort, /nq progress and admin-on-self). The explicit "player" target (a prior
-    // positional arg) isn't reachable at parse time and falls back to the sender.
-    @Override
-    public <S> ActiveQuest convert(final String input, final S source) throws CommandSyntaxException {
-        OfflinePlayer offlinePlayer = null;
-        if (source instanceof CommandSourceStack sourceStack
-                && sourceStack.getSender() instanceof Player player) {
-            offlinePlayer = player;
-        }
-        final QuestPlayer activeQuestPlayer =
-                offlinePlayer == null
-                        ? null
-                        : main.getQuestPlayerManager().getActiveQuestPlayer(offlinePlayer.getUniqueId());
-        final ActiveQuest activeQuest =
-                activeQuestPlayer == null
-                        ? null
-                        : activeQuestPlayer.getActiveQuest(main.getQuestManager().getQuest(input));
-        if (activeQuest == null) {
-            throw fail(
-                    main.getLanguageManager()
-                            .getString("chat.quest-does-not-exist", (QuestPlayer) null)
-                            .replace("%QUESTNAME%", input));
-        }
-        return activeQuest;
-    }
-
-    public ActiveQuest convert(final CommandContext<?> context, final String input) throws CommandSyntaxException {
+    public static ActiveQuest resolve(final NotQuests main, final CommandContext<?> context, final String input)
+            throws CommandSyntaxException {
         final OfflinePlayer offlinePlayer = resolveTargetPlayer(context);
         final QuestPlayer activeQuestPlayer =
                 offlinePlayer == null

@@ -1,8 +1,10 @@
 package rocks.gravili.notquests.paper.commands.arguments.wrappers;
 
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.Nullable;
@@ -18,6 +20,7 @@ public class ItemStackSelection {
   private final ArrayList<ItemStack> itemStacks;
   private final ArrayList<Material> materials;
   private boolean any;
+  private boolean handRequested;
 
   public ItemStackSelection(final NotQuests main) {
     this.main = main;
@@ -33,6 +36,21 @@ public class ItemStackSelection {
 
   public void setAny(final boolean any) {
     this.any = any;
+  }
+
+  public void requestHand() {
+    this.handRequested = true;
+  }
+
+  public void resolveHand(final CommandSender sender) {
+    if (!handRequested) {
+      return;
+    }
+    if (!(sender instanceof final Player player)) {
+      throw new IllegalArgumentException("Cannot parse item argument 'hand'");
+    }
+    addItemStack(player.getInventory().getItemInMainHand());
+    handRequested = false;
   }
 
   public void addNqItem(final NQItem nqItem) {
@@ -204,6 +222,7 @@ public class ItemStackSelection {
         ", itemStacks=" + itemStacks +
         ", materials=" + materials +
         ", any=" + any +
+        ", handRequested=" + handRequested +
         '}';
   }
 

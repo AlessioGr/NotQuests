@@ -21,6 +21,9 @@ package rocks.gravili.notquests.paper.commands.framework;
 import com.mojang.brigadier.context.CommandContext;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.bukkit.command.CommandSender;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.ActiveQuestArgument;
+import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
 
 import java.util.Map;
 import java.util.Optional;
@@ -51,11 +54,28 @@ public final class NQCommandContext {
     /** Returns a positional argument (or flag value) by name, or {@code null} if absent. */
     @SuppressWarnings("unchecked")
     public <T> T get(final String name) {
+        Object value;
         try {
-            return (T) brigadier.getArgument(name, Object.class);
+            value = brigadier.getArgument(name, Object.class);
         } catch (final IllegalArgumentException notAnArgument) {
-            return (T) flagValues.get(name);
+            value = flagValues.get(name);
         }
+        if (value instanceof final ItemStackSelection itemStackSelection) {
+            itemStackSelection.resolveHand(sender());
+            return (T) itemStackSelection;
+        }
+        if (value instanceof final String raw && isActiveQuestArgument(name)) {
+            try {
+                return (T) ActiveQuestArgument.resolve(NotQuests.getInstance(), brigadier, raw);
+            } catch (final Exception exception) {
+                throw new IllegalArgumentException(exception.getMessage(), exception);
+            }
+        }
+        return (T) value;
+    }
+
+    private static boolean isActiveQuestArgument(final String name) {
+        return "activeQuest".equals(name) || "Active Quest".equals(name);
     }
 
     public <T> T getOrDefault(final String name, final T fallback) {
