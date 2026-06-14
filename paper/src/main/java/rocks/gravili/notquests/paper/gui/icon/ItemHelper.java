@@ -13,6 +13,7 @@ import rocks.gravili.notquests.paper.gui.GuiContext;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -21,7 +22,7 @@ public class ItemHelper {
     private static final String EMPTY_STRING_EXPRESSION = "EMPTY";
 
     public static ItemStack assembleItemStack(Icon icon, NotQuests notQuests, GuiContext guiContext) {
-        var material = fetchMaterial(icon, guiContext);
+        var material = fetchMaterial(icon, notQuests, guiContext);
 
         var itemStack = new ItemStack(material);
         var itemMeta = itemStack.getItemMeta();
@@ -106,21 +107,29 @@ public class ItemHelper {
         return itemStack;
     }
 
-    public static Material fetchMaterial(Icon item, GuiContext guiContext) {
-        if (item.material().equals("%QUEST_ITEM_MATERIAL%")) {
+    public static Material fetchMaterial(Icon item, NotQuests notQuests, GuiContext guiContext) {
+        final String materialName = item.material();
+        if ("%QUEST_ITEM_MATERIAL%".equals(materialName)) {
             if (guiContext.getActiveQuest() != null) {
                 return guiContext.getActiveQuest().getQuest().getTakeItem().getType();
             }
             if (guiContext.getQuest() != null) {
                 return guiContext.getQuest().getTakeItem().getType();
             }
-        } else if (item.material().equals("%CATEGORY_ITEM_MATERIAL%")) {
+        } else if ("%CATEGORY_ITEM_MATERIAL%".equals(materialName)) {
             if (guiContext.getCategory() != null) {
                 return guiContext.getCategory().getGuiItem().getType();
             }
         } else {
-
-            return Material.valueOf(item.material());
+            try {
+                if (materialName != null) {
+                    return Material.valueOf(materialName.toUpperCase(Locale.ROOT));
+                }
+            } catch (final IllegalArgumentException exception) {
+            }
+            notQuests.getLogManager().warn(
+                    "Invalid GUI item material '" + materialName
+                            + "'. Falling back to STONE for this server version.");
         }
         return Material.STONE;
     }
