@@ -30,7 +30,8 @@ mkdir -p "$RUN"
 echo "eula=true" > "$RUN/eula.txt"
 # Fresh, deterministic state every run: a stale/half-written world from a previously killed server
 # can hang the next boot, and old plugin data makes "already exists" noise. Both regenerate.
-rm -rf "$RUN/world" "$RUN/world_nether" "$RUN/world_the_end" "$RUN/plugins/NotQuests" 2>/dev/null
+rm -rf "$RUN/world" "$RUN/world_nether" "$RUN/world_the_end" "$RUN/config" "$RUN/plugins/NotQuests" 2>/dev/null
+rm -f "$RUN/plugins/NotQuests.jar" "$RUN"/plugins/NotQuests-*.jar 2>/dev/null
 
 # Fast, deterministic, offline boot: no auth round-trips, tiny flat world, no spawn protection.
 cat > "$RUN/server.properties" <<'PROPS'
