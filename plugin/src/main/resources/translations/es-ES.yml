@@ -97,6 +97,8 @@ chat:
         base: 'Romper bloques: <main>%BLOCKTOBREAK%'
       breed:
         base: 'Alimentar Mob: <main>%ENTITYTOBREED%'
+      feedMobs:
+        base: 'Feed Mobs: <main>%ENTITYTOFEED%'
       pickupItems:
         base: 'Recolectar: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
       consumeItems:
