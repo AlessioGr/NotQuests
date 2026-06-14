@@ -90,9 +90,11 @@ val shadowPath = "rocks.gravili.notquests"
 
 
 tasks {
-    // Run reobfJar on build
+    // Run reobfJar on build. The 1.21.x release jar must be uniformly Spigot-mapped so Paper can
+    // remap it to its Mojang-mapped runtime on load. Loading the Mojang-mapped shadow jar directly
+    // leaves shaded InvUI 1.x inventory-access classes in Spigot mappings (e.g. EntityHuman).
     build {
-        dependsOn(shadowJar)
+        dependsOn(reobfJar)
     }
     // Don't emit the thin (un-shaded) plugin jar into build/libs: it has a valid plugin.yml but
     // none of the shaded code, so loading it would crash at enable. NotQuests-<version>.jar
@@ -104,12 +106,21 @@ tasks {
         // DO NOT minimize the jar, since cloud doesnt like it
         // Reference: https://discord.com/channels/766366162388123678/1170254709722984460/1242027222773006376
 
-        // The :plugin module produces the real, server-ready jar. Name it NotQuests-<version>.jar so
-        // it is never confused with the intermediate :paper / :common library jars in build/libs.
+        // This shaded jar is only the dev/remap input. reobfJar writes the real server-ready artifact
+        // as NotQuests-<version>.jar below.
         archiveBaseName.set("NotQuests")
-        archiveClassifier.set("")
+        archiveClassifier.set("dev-all")
 
         relocate("io.papermc.lib", "$shadowPath.paperlib")
+
+        // InvUI 1.x's inventory-access adapters are Spigot-mapped. On 1.21.x, Paper plugins are
+        // assumed Mojang-mapped by default, while Bukkit plugins are remapped when needed. Keep the
+        // backport artifact Bukkit-style so Paper can remap the final Spigot-mapped reobf jar.
+        exclude("paper-plugin.yml")
+    }
+
+    reobfJar {
+        outputJar.set(layout.buildDirectory.file("libs/NotQuests-${project.version}.jar"))
     }
 
 
@@ -124,12 +135,13 @@ tasks {
     }
     processResources {
         filteringCharset = Charsets.UTF_8.name()
+        exclude("paper-plugin.yml")
     }
     runServer {
         // Configure the Minecraft version for our task.
         // This is the only required configuration besides applying the plugin.
-        // Your plugin's jar (or shadowJar if present) will be used automatically.
         minecraftVersion("1.21.11")
+        pluginJars(reobfJar.flatMap { it.outputJar })
     }
 
     register<Copy>("copyToServer") {
@@ -141,6 +153,10 @@ tasks {
         from(reobfJar)
         destinationDir = File(path)
     }
+}
+
+runPaper {
+    disablePluginJarDetection()
 }
 
 
