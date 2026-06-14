@@ -95,6 +95,8 @@ chat:
         base: 'Blocuri de pauză: <main>%BLOCKTOBREAK%'
       breed:
         base: 'Entități de rasă: <main>%ENTITYTOBREED%'
+      feedMobs:
+        base: 'Feed Mobs: <main>%ENTITYTOFEED%'
       pickupItems:
         base: 'Articole de ridicat: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
       consumeItems:
