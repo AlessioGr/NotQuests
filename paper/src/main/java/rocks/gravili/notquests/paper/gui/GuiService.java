@@ -10,6 +10,7 @@ import rocks.gravili.notquests.paper.gui.icon.Button;
 import rocks.gravili.notquests.paper.gui.icon.Icon;
 import rocks.gravili.notquests.paper.gui.typeserializer.IconTypeSerializer;
 import rocks.gravili.notquests.paper.gui.typeserializer.ItemTypeSerializer;
+import xyz.xenondevs.inventoryaccess.component.AdventureComponentWrapper;
 import xyz.xenondevs.invui.window.Window;
 
 import java.nio.file.Path;
@@ -36,10 +37,10 @@ public class GuiService {
             return;
         }
         var title = notQuests.getLanguageManager().getComponent(customGui.getPathToTitle(), player, guiContext.getAsObjectArray());
-        Window.builder()
+        Window.single()
                 .setViewer(player)
-                .setTitle(title)
-                .setUpperGui(customGui.buildGui(notQuests, guiContext))
+                .setTitle(new AdventureComponentWrapper(title))
+                .setGui(customGui.buildGui(notQuests, guiContext))
                 .build()
                 .open();
     }
