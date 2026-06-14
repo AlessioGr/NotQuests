@@ -55,12 +55,10 @@ public final class ItemStackSelectionArgument extends NQArgumentType<ItemStackSe
 
     // An item selection is a comma-separated run of materials/NotQuests-items (e.g.
     // "grass_block,acacia_boat", plus the "hand"/"any" keywords). A comma is NOT a legal character
-    // in an unquoted Brigadier string, so the default string() tokenizer stops at the first comma and
-    // leaves the rest as "trailing data". We therefore read the token ourselves: the whole run up to
-    // the next space (commas included), or a quoted phrase for NotQuests item names that contain
-    // spaces. This does NOT swallow following arguments (it stops at the space before e.g. <amount>).
-    // getNativeType() stays string() only as the client-facing argument shape.
-    @Override
+    // in Brigadier's vanilla single-token string parser, so the client can mark comma selections red
+    // even though the server parser below accepts them. Do NOT advertise this as greedyString() just
+    // to silence the client colour: Brigadier would stop reaching following args like <amount> for
+    // suggestions. We therefore keep the non-greedy native shape and read the token ourselves.
     public <S> ItemStackSelection parse(final StringReader reader, final S source) throws CommandSyntaxException {
         return convert(readSelectionToken(reader), source);
     }
