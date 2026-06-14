@@ -102,7 +102,7 @@ public final class ItemStackSelectionArgument extends NQArgumentType<ItemStackSe
                     if (sender instanceof final Player player) {
                         itemStackSelection.addItemStack(player.getInventory().getItemInMainHand());
                     } else {
-                        throw fail("Cannot parse item argument '" + inputPart + "'");
+                        itemStackSelection.requestHand();
                     }
                 } else if (inputPart.equalsIgnoreCase("any")) {
                     itemStackSelection.setAny(true);
