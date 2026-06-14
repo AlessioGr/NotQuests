@@ -7,7 +7,7 @@ name: E2E command sweep
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, 1.21.11, 1.21.1 ]
   pull_request:
 
 permissions:
@@ -17,15 +17,19 @@ jobs:
   e2e:
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        java-version: [ '21', '25' ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up JDK 25
+      - name: Set up JDK ${{ matrix.java-version }}
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '25'
+          java-version: ${{ matrix.java-version }}
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -37,6 +41,6 @@ jobs:
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
-          name: e2e-server-log
+          name: e2e-server-log-java-${{ matrix.java-version }}
           path: /tmp/nq-e2e-server.log
           if-no-files-found: ignore
