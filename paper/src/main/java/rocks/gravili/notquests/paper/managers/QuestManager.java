@@ -23,12 +23,15 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -625,7 +628,7 @@ public class QuestManager {
 
 
                     //TakeItem:
-                    quest.setTakeItem(category.getQuestsConfig().getItemStack("quests." + questName + ".takeItem"), false);
+                    quest.setTakeItem(loadQuestTakeItem(category, questName), false);
 
                     quests.add(quest);
                 }
@@ -636,6 +639,29 @@ public class QuestManager {
         }
 
 
+    }
+
+    private ItemStack loadQuestTakeItem(final Category category, final String questName) {
+        final String path = "quests." + questName + ".takeItem";
+        final FileConfiguration questsConfig = category.getQuestsConfig();
+        final ItemStack fallback = new ItemStack(Material.BOOK);
+        try {
+            final ItemStack takeItem = questsConfig.getItemStack(path);
+            if (takeItem != null) {
+                return takeItem;
+            }
+        } catch (final RuntimeException ignored) {
+            // fall through to clean warning and version-stable fallback
+        }
+
+        if (questsConfig.contains(path)) {
+            main.getLogManager().warn(
+                    "Invalid quest take item at '" + category.getCategoryFullName() + "/" + path
+                            + "'. Falling back to BOOK for this server version.");
+            questsConfig.set(path, fallback);
+            category.saveQuestsConfig();
+        }
+        return fallback;
     }
 
 

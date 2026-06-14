@@ -120,8 +120,8 @@ public class ConsumeItemsObjective extends Objective {
             final String nqItemName = configuration.getString(initialPath + ".specifics.nqitem", "");
 
             if (nqItemName.isBlank()) {
-                itemStackSelection.addItemStack(
-                        configuration.getItemStack(initialPath + ".specifics.itemToConsume.itemstack"));
+                itemStackSelection.addItemStackFromConfiguration(
+                        configuration, initialPath + ".specifics.itemToConsume.itemstack");
             } else {
                 itemStackSelection.addNqItemName(nqItemName);
             }

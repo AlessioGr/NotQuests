@@ -119,8 +119,8 @@ public class CraftItemsObjective extends Objective {
       final String nqItemName = configuration.getString(initialPath + ".specifics.nqitem", "");
 
       if (nqItemName.isBlank()) {
-        itemStackSelection.addItemStack(
-            configuration.getItemStack(initialPath + ".specifics.itemToCraft.itemstack"));
+        itemStackSelection.addItemStackFromConfiguration(
+            configuration, initialPath + ".specifics.itemToCraft.itemstack");
       } else {
         itemStackSelection.addNqItemName(nqItemName);
       }

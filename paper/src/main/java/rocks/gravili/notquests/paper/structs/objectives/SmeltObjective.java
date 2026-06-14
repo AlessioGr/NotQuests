@@ -121,8 +121,8 @@ public class SmeltObjective extends Objective {
             final String nqItemName = configuration.getString(initialPath + ".specifics.nqitem", "");
 
             if (nqItemName.isBlank()) {
-                itemStackSelection.addItemStack(
-                        configuration.getItemStack(initialPath + ".specifics.itemToSmelt.itemstack"));
+                itemStackSelection.addItemStackFromConfiguration(
+                        configuration, initialPath + ".specifics.itemToSmelt.itemstack");
             } else {
                 itemStackSelection.addNqItemName(nqItemName);
             }

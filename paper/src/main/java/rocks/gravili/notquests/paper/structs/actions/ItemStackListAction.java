@@ -389,7 +389,7 @@ public class ItemStackListAction extends Action {
 
     @Override
     public void load(final FileConfiguration configuration, String initialPath) {
-        this.itemStack = configuration.getItemStack(initialPath + ".specifics.itemStack", null);
+        this.itemStack = loadStoredItemStack(configuration, initialPath + ".specifics.itemStack");
 
         this.variableName = configuration.getString(initialPath + ".specifics.variableName");
         this.operator = configuration.getString(initialPath + ".specifics.operator", "");
@@ -422,7 +422,7 @@ public class ItemStackListAction extends Action {
         this.variableName = arguments.get(0);
 
         this.operator = arguments.get(1);
-        this.itemStack = new ItemStack(Material.valueOf(arguments.get(2).toUpperCase(Locale.ROOT)), Integer.parseInt(arguments.get(3)));
+        this.itemStack = new ItemStack(parseStoredMaterial(arguments.get(2)), Integer.parseInt(arguments.get(3)));
 
         if (arguments.size() >= 5) {
 
@@ -458,6 +458,32 @@ public class ItemStackListAction extends Action {
         }
 
 
+    }
+
+    private Material parseStoredMaterial(final String materialName) {
+        try {
+            return Material.valueOf(materialName.toUpperCase(Locale.ROOT));
+        } catch (final RuntimeException exception) {
+            main.getLogManager().warn(
+                    "Invalid ItemStackList action material '" + materialName
+                            + "'. Falling back to STONE for this server version.");
+            return Material.STONE;
+        }
+    }
+
+    private ItemStack loadStoredItemStack(final FileConfiguration configuration, final String path) {
+        try {
+            final ItemStack stored = configuration.getItemStack(path, null);
+            if (stored != null) {
+                return stored;
+            }
+        } catch (final RuntimeException ignored) {
+            // fall through to clean warning and version-stable fallback
+        }
+        main.getLogManager().warn(
+                "Invalid ItemStackList action item at '" + path
+                        + "'. Falling back to STONE for this server version.");
+        return new ItemStack(Material.STONE);
     }
 
 }
