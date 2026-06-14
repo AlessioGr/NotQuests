@@ -3,6 +3,7 @@ package rocks.gravili.notquests.paper.gui.item;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.gui.GuiContext;
@@ -11,10 +12,9 @@ import rocks.gravili.notquests.paper.gui.property.types.ListIconProperty;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
-import xyz.xenondevs.invui.Click;
-import xyz.xenondevs.invui.item.AbstractItem;
 import xyz.xenondevs.invui.item.ItemProvider;
 import xyz.xenondevs.invui.item.ItemWrapper;
+import xyz.xenondevs.invui.item.impl.AbstractItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +41,8 @@ public class ActionItem extends AbstractItem {
     }
 
     @Override
-    public void handleClick(@NotNull ClickType clickType, @NotNull Player player, @NotNull Click click) {
+    public void handleClick(
+            @NotNull ClickType clickType, @NotNull Player player, @NotNull InventoryClickEvent event) {
 
         if (notQuests.getConversationManager() == null) {
             return;

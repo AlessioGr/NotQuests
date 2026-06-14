@@ -9,6 +9,7 @@ import rocks.gravili.notquests.paper.gui.property.IconProperty;
 import rocks.gravili.notquests.paper.gui.property.types.StringIconProperty;
 import xyz.xenondevs.invui.item.Item;
 import xyz.xenondevs.invui.item.ItemWrapper;
+import xyz.xenondevs.invui.item.impl.SimpleItem;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -63,10 +64,10 @@ public class Button {
                 var itemStackInWrapper = new ItemWrapper(ItemHelper.assembleItemStack(icons.get(0), notQuests, guiContext));
                 var tabIndexPropertyOpt = iconProperties.stream().filter(iconProperty -> iconProperty.getKey().equals("tabindex")).findFirst();
                 if (tabIndexPropertyOpt.isEmpty()) {
-                    return Item.simple(itemStackInWrapper);
+                    return new SimpleItem(itemStackInWrapper);
                 }
                 if (!(tabIndexPropertyOpt.get().getValue() instanceof  StringIconProperty stringIconProperty)) {
-                    return Item.simple(itemStackInWrapper);
+                    return new SimpleItem(itemStackInWrapper);
                 }
                 var newTitleProperty = iconProperties.stream().filter(iconProperty -> iconProperty.getKey().equals("tabtitle")).findFirst();
                 Component newTitle = null;
@@ -88,11 +89,11 @@ public class Button {
             }
             default -> {
                 var itemStackInWrapper = new ItemWrapper(ItemHelper.assembleItemStack(icons.get(0), notQuests, guiContext));
-                return Item.simple(itemStackInWrapper);
+                return new SimpleItem(itemStackInWrapper);
             }
         }
         var itemStackInWrapper = new ItemWrapper(ItemHelper.assembleItemStack(icons.get(0), notQuests, guiContext));
-        return Item.simple(itemStackInWrapper);
+        return new SimpleItem(itemStackInWrapper);
     }
 
     public ButtonType getType() {

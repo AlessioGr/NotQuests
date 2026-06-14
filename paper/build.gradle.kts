@@ -121,8 +121,10 @@ dependencies {
     // 5.x — Paper provides 4.x at runtime, so a 5.x compile target would break against the server.
     implementation("net.kyori:adventure-api:4.26.1") {}
 
-    //InvUI
-    implementation("xyz.xenondevs.invui:invui:2.0.0-beta.5")
+    // InvUI 1.49 + the 1.21.1 inventory-access adapter. InvUI 2.x references Paper
+    // DataComponentTypes, which does not exist on Paper 1.21.1.
+    implementation("xyz.xenondevs.invui:invui-core:1.49")
+    implementation("xyz.xenondevs.invui:inventory-access-r20:1.49")
 
     implementation("com.github.retrooper:packetevents-spigot:2.12.2")
 
@@ -179,6 +181,7 @@ tasks {
         relocate("net.kyori.adventure.text.serializer.bungeecord", "$shadowPath.kyori.bungeecord")
 
         relocate("xyz.xenondevs.invui", "$shadowPath.invui")
+        relocate("xyz.xenondevs.inventoryaccess", "$shadowPath.invui.inventoryaccess")
 
         relocate("redempt.crunch", "$shadowPath.crunch")
 
