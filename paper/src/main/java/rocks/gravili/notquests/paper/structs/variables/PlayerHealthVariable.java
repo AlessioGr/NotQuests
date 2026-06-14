@@ -20,7 +20,6 @@ package rocks.gravili.notquests.paper.structs.variables;
 
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
@@ -54,15 +53,15 @@ public class PlayerHealthVariable extends Variable<Double> {
     }
 
     @Override
-    public List<Suggestion> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
+    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
         AttributeInstance maxValueInstance = questPlayer.getPlayer().getAttribute(Attribute.MAX_HEALTH);
         if (maxValueInstance == null) {
             return null;
         }
 
-        List<Suggestion> possibleValues = new ArrayList<>();
+        List<String> possibleValues = new ArrayList<>();
         for (double health = 0; health <= maxValueInstance.getValue(); health += 0.5d) {
-            possibleValues.add(Suggestion.suggestion(String.valueOf(health)));
+            possibleValues.add(String.valueOf(health));
         }
         return possibleValues;
     }

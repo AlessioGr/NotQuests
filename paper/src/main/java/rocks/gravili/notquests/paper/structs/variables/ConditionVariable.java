@@ -20,7 +20,6 @@ package rocks.gravili.notquests.paper.structs.variables;
 
 
 import org.bukkit.entity.Player;
-import org.incendo.cloud.suggestion.Suggestion;
 import redempt.crunch.CompiledExpression;
 import redempt.crunch.Crunch;
 import redempt.crunch.functional.EvaluationEnvironment;
@@ -30,7 +29,6 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 public class ConditionVariable extends Variable<Boolean> {
 
@@ -44,20 +42,18 @@ public class ConditionVariable extends Variable<Boolean> {
     public ConditionVariable(NotQuests main) {
         super(main);
 
-        addRequiredString(StringVariableValueParser.of("Conditions", null, (context, lastString) -> {
-            main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[Conditions(s) expression]", "[...]");
-
-            ArrayList<Suggestion> suggestions = new ArrayList<>();
+        addRequiredString(StringVariableValueParser.of("Conditions", null, (context, input) -> {
+            ArrayList<String> suggestions = new ArrayList<>();
             for (String conditionIdentifier :
                     main.getConditionsYMLManager().getConditionsAndIdentifiers().keySet()) {
-                if (lastString.input().endsWith(conditionIdentifier)) {
-                    suggestions.add(Suggestion.suggestion(lastString + "&"));
-                    suggestions.add(Suggestion.suggestion(lastString + "|"));
+                if (input.endsWith(conditionIdentifier)) {
+                    suggestions.add(input + "&");
+                    suggestions.add(input + "|");
                 } else {
-                    suggestions.add(Suggestion.suggestion(conditionIdentifier));
+                    suggestions.add(conditionIdentifier);
                 }
             }
-            return CompletableFuture.completedFuture(suggestions);
+            return suggestions;
         }));
     }
 
@@ -114,7 +110,7 @@ public class ConditionVariable extends Variable<Boolean> {
     }
 
     @Override
-    public List<Suggestion> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
+    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
         return null;
     }
 

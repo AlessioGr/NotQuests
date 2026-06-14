@@ -183,8 +183,14 @@ public abstract class ActiveObjectiveHolder {
       if (!silent) {
 
         if (player != null) {
-          player.playSound(
-              player.getLocation(), Sound.BLOCK_ANVIL_LAND, SoundCategory.MASTER, 75, 1.4f);
+          // playSound/getLocation are main-thread-only; objective completion can be driven from an
+          // async context (e.g. the async chat/conversation thread), so hop to main when needed.
+          if (Bukkit.isPrimaryThread()) {
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, SoundCategory.MASTER, 75, 1.4f);
+          } else {
+            Bukkit.getScheduler().runTask(main.getMain(), () ->
+                player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, SoundCategory.MASTER, 75, 1.4f));
+          }
 
           if (fullRewardString.isBlank()) {
             questPlayer.sendMessage(

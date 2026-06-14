@@ -23,19 +23,17 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-
-import static org.incendo.cloud.parser.standard.StringParser.greedyStringParser;
 
 public class ReachLocationObjective extends Objective {
     private Location min, max;
@@ -47,8 +45,8 @@ public class ReachLocationObjective extends Objective {
 
     public static void handleCommands(
             NotQuests main,
-            LegacyPaperCommandManager<CommandSender> manager,
-            Command.Builder<CommandSender> addObjectiveBuilder,
+            NQCommandManager manager,
+            NQCommandBuilder addObjectiveBuilder,
             final int level) {
         if (!main.getIntegrationsManager().isWorldEditEnabled()) {
             return;
@@ -56,11 +54,10 @@ public class ReachLocationObjective extends Objective {
 
         manager.command(addObjectiveBuilder
                 .literal("worldeditselection")
-                .required("Location Name", greedyStringParser(), Description.of("Location name"), (context, lastString) -> {
-                    main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "<Location Name>", "");
-                    ArrayList<Suggestion> completions = new ArrayList<>();
-                    completions.add(Suggestion.suggestion("<Enter new Location name>"));
-                    return CompletableFuture.completedFuture(completions);
+                .required("Location Name", NQArguments.greedyStringArgument(), NQDescription.of("Location name"), (context, input) -> {
+                    List<String> completions = new ArrayList<>();
+                    completions.add("<Enter new Location name>");
+                    return completions;
                 })
                 .handler((context) -> {
                     final String locationName = context.get("Location Name");

@@ -4,7 +4,6 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -12,23 +11,21 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 public class ItemInInventoryEnchantmentsVariable extends Variable<String[]> {
     public ItemInInventoryEnchantmentsVariable(NotQuests main) {
         super(main);
         setCanSetValue(false); // TODO: Add that to apply enchantments
 
-        addRequiredString(StringVariableValueParser.of("ItemSlot", null, (context, lastString) -> {
-            main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[Item Slot ID / Equipment Slot Name]", "[...]");
-            ArrayList<Suggestion> suggestions = new ArrayList<>();
+        addRequiredString(StringVariableValueParser.of("ItemSlot", null, (context, input) -> {
+            ArrayList<String> suggestions = new ArrayList<>();
             for (final EquipmentSlot equipmentSlot : EquipmentSlot.values()) {
-                suggestions.add(Suggestion.suggestion(equipmentSlot.name()));
+                suggestions.add(equipmentSlot.name());
             }
             for (int i = 0; i <= 35; i++) {
-                suggestions.add(Suggestion.suggestion(String.valueOf(i)));
+                suggestions.add(String.valueOf(i));
             }
-            return CompletableFuture.completedFuture(suggestions);
+            return suggestions;
         }));
     }
 
@@ -82,10 +79,10 @@ public class ItemInInventoryEnchantmentsVariable extends Variable<String[]> {
     }
 
     @Override
-    public List<Suggestion> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
+    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
         return Arrays.stream(Enchantment.values())
                 .map(Enchantment::getKey)
-                .map(namespacedKey -> Suggestion.suggestion(namespacedKey.asString()))
+                .map(namespacedKey -> namespacedKey.asString())
                 .toList();
     }
 

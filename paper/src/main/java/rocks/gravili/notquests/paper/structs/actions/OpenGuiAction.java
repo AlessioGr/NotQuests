@@ -1,16 +1,15 @@
 package rocks.gravili.notquests.paper.structs.actions;
 
-import org.incendo.cloud.Command;
-import org.incendo.cloud.bukkit.data.SinglePlayerSelector;
-import org.incendo.cloud.bukkit.parser.selector.SinglePlayerSelectorParser;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
-import static org.incendo.cloud.parser.standard.IntegerParser.integerParser;
-import static org.incendo.cloud.parser.standard.StringParser.stringParser;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
+import rocks.gravili.notquests.paper.commands.framework.NQFlag;
 
 import rocks.gravili.notquests.paper.gui.GuiContext;
 import rocks.gravili.notquests.paper.managers.FlagParser;
@@ -27,13 +26,13 @@ public class OpenGuiAction extends Action {
         super(main);
     }
 
-    public static void handleCommands(NotQuests main, LegacyPaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor actionFor) {
+    public static void handleCommands(NotQuests main, NQCommandManager manager, NQCommandBuilder builder, ActionFor actionFor) {
         manager.command(
-                builder.required("guiName", stringParser(), Description.of("Opens a gui for the player"))
-                        .flag(manager.flagBuilder("targetPlayer").withComponent(SinglePlayerSelectorParser.singlePlayerSelectorParser()).build())
-                        .flag(manager.flagBuilder("quest").withComponent(stringParser()).build())
-                        .flag(manager.flagBuilder("npc").withComponent(integerParser()).build())
-                        .flag(manager.flagBuilder("category").withComponent(stringParser()).build())
+                builder.required("guiName", NQArguments.stringArgument(), NQDescription.of("Opens a gui for the player"))
+                        .flag(NQFlag.builder("player").withArgument(NQArguments.stringArgument()).withDescription(NQDescription.of("Target player")).build())
+                        .flag(NQFlag.builder("quest").withArgument(NQArguments.stringArgument()).build())
+                        .flag(NQFlag.builder("npc").withArgument(NQArguments.integerArgument()).build())
+                        .flag(NQFlag.builder("category").withArgument(NQArguments.stringArgument()).build())
 
                 .handler(commandContext -> {
                     String guiName = commandContext.get("guiName");
@@ -42,8 +41,8 @@ public class OpenGuiAction extends Action {
                     var quest = questName == null ? null : main.getQuestManager().getQuest(questName);
 
 
-                    SinglePlayerSelector playerSelector = commandContext.flags().getValue("targetPlayer", null);
-                    var targetPlayer = playerSelector == null ? null : playerSelector.single();
+                    String targetPlayerName = commandContext.flags().getValue("player", null);
+                    Player targetPlayer = targetPlayerName == null ? null : Bukkit.getPlayerExact(targetPlayerName);
                     Integer npcId = commandContext.flags().getValue("npc", null);
 
                     String categoryName = commandContext.flags().getValue("category", null);
@@ -123,8 +122,14 @@ public class OpenGuiAction extends Action {
         }
 
         var npcId = (String) flags.get("npc");
-        if (npcId != null) {
-            this.guiContext.setNqnpc(main.getNPCManager().getOrCreateNQNpc("Citizens", NQNPCID.fromInteger(Integer.parseInt(npcId))));
+        // Skip unreplaced placeholders ("%NPCID%") and non-integer ids (FancyNPCs/armor stand use
+        // String/UUID ids) instead of crashing on Integer.parseInt. The NPC context is optional here.
+        if (npcId != null && !npcId.contains("%")) {
+            try {
+                this.guiContext.setNqnpc(main.getNPCManager().getOrCreateNQNpc("Citizens", NQNPCID.fromInteger(Integer.parseInt(npcId))));
+            } catch (final NumberFormatException e) {
+                main.getLogManager().debug("OpenGuiAction: NPC id '" + npcId + "' is not a Citizens integer id; skipping NPC context.");
+            }
         }
 
         var categoryName = (String) flags.get("category");
@@ -133,7 +138,7 @@ public class OpenGuiAction extends Action {
             guiContext.setCategory(category);
         }
 
-        var targetPlayer = (String) flags.get("targetPlayer");
+        var targetPlayer = (String) flags.get("player");
         if (targetPlayer != null) {
             var player = main.getMain().getServer().getPlayer(targetPlayer);
             if (player != null) {

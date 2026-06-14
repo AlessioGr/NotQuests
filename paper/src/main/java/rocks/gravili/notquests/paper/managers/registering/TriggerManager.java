@@ -17,12 +17,11 @@
  */
 
 package rocks.gravili.notquests.paper.managers.registering;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandContext;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
 
-import org.bukkit.command.CommandSender;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.context.CommandContext;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.Quest;
@@ -70,15 +69,15 @@ public class TriggerManager {
         try {
             Method commandHandler =
                     trigger.getMethod(
-                            "handleCommands", main.getClass(), LegacyPaperCommandManager.class, Command.Builder.class);
+                            "handleCommands", main.getClass(), NQCommandManager.class, NQCommandBuilder.class);
             commandHandler.invoke(
                     trigger,
                     main,
-                    main.getCommandManager().getPaperCommandManager(),
+                    main.getCommandManager().getNQCommandManager(),
                     main.getCommandManager()
                             .getAdminEditAddTriggerCommandBuilder()
                             .literal(identifier)
-                            .commandDescription(Description.of("Creates a new " + identifier + " trigger")));
+                            .commandDescription(NQDescription.of("Creates a new " + identifier + " trigger")));
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -109,7 +108,7 @@ public class TriggerManager {
         return triggers.keySet();
     }
 
-    public void addTrigger(Trigger trigger, CommandContext<CommandSender> context) {
+    public void addTrigger(Trigger trigger, NQCommandContext context) {
         Quest quest = context.getOrDefault("quest", null);
 
         final Action action = context.get("action");
@@ -122,8 +121,9 @@ public class TriggerManager {
                 context.flags().getValue(main.getCommandManager().triggerWorldString, "ALL");
 
         int amount = 1;
-        if (context.contains("amount")) {
-            amount = context.get("amount");
+        final Integer amountArgument = context.get("amount");
+        if (amountArgument != null) {
+            amount = amountArgument;
         }
 
         if (quest != null) {

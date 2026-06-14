@@ -18,17 +18,15 @@
 
 package rocks.gravili.notquests.paper.structs.conditions;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
-
-import static org.incendo.cloud.parser.standard.IntegerParser.integerParser;
 
 public class WorldTimeCondition extends Condition {
 
@@ -40,12 +38,12 @@ public class WorldTimeCondition extends Condition {
 
   public static void handleCommands(
       NotQuests main,
-      LegacyPaperCommandManager<CommandSender> manager,
-      Command.Builder<CommandSender> builder,
+      NQCommandManager manager,
+      NQCommandBuilder builder,
       ConditionFor conditionFor) {
     manager.command(builder
-            .required("minTime", integerParser(0, 24), Description.of("Minimum world time (24-hour clock)"))
-            .required("maxTime", integerParser(0, 24), Description.of("Maximum world time (24-hour clock)"))
+            .required("minTime", NQArguments.integerArgument(), NQDescription.of("Minimum world time (24-hour clock)"))
+            .required("maxTime", NQArguments.integerArgument(), NQDescription.of("Maximum world time (24-hour clock)"))
             .handler(
                 (context) -> {
                   final int minTime = context.get("minTime");

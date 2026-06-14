@@ -495,7 +495,7 @@ public class LanguageManager {
                     internalPlaceholderReplacements.put((String) key, () -> (String) providedInternalPlaceholderReplacements.get(key));
                 }
             } else if (internalPlaceholderObject instanceof final NQNPC nqnpc) {
-                internalPlaceholderReplacements.put("%NPCID%", () -> String.valueOf(nqnpc.getID().getIntegerID()));
+                internalPlaceholderReplacements.put("%NPCID%", () -> nqnpc.getID().getEitherAsString());
             } else if (internalPlaceholderObject instanceof final Category category) {
                 internalPlaceholderReplacements.put("%CATEGORYNAME%", category::getFinalName);
                 internalPlaceholderReplacements.put("%CATEGORYID%", category::getCategoryName);

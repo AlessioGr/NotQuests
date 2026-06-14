@@ -31,6 +31,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
+import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -40,6 +41,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityEnterLoveModeEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.CraftItemEvent;
@@ -822,6 +824,30 @@ public class QuestEvents implements Listener {
 
 
     @EventHandler(priority = EventPriority.HIGHEST)
+    private void onEntityEnterLoveMode(EntityEnterLoveModeEvent e) {
+        if (!e.isCancelled()) {
+            if (e.getHumanEntity() instanceof final Player player) {
+                final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
+                if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
+                    return;
+                }
+
+                questPlayer.queueObjectiveCheck(activeObjective -> {
+                    if (activeObjective.getObjective() instanceof final FeedMobsObjective feedMobsObjective) {
+                        if (feedMobsObjective.getEntityToFeedType().equalsIgnoreCase("any") || feedMobsObjective.getEntityToFeedType().equalsIgnoreCase(e.getEntityType().toString())) {
+                            activeObjective.addProgress(1);
+                        }
+
+                    }
+                });
+                questPlayer.checkQueuedObjectives();
+
+            }
+        }
+    }
+
+
+    @EventHandler(priority = EventPriority.HIGHEST)
     private void onBlockBreak(BlockBreakEvent e) {
         if (!e.isCancelled()) {
             final Player player = e.getPlayer();
@@ -1406,6 +1432,33 @@ public class QuestEvents implements Listener {
             });
             questPlayer.checkQueuedObjectives();
         }
+    }
+
+    // Milk Cow (right-click a cow with an empty bucket). There is no dedicated milk event in Bukkit,
+    // so we detect the interaction: a Cow (includes Mooshroom) right-clicked with an empty BUCKET.
+    @EventHandler(ignoreCancelled = true)
+    public void onMilkCow(final PlayerInteractEntityEvent e) {
+        if (!(e.getRightClicked() instanceof Cow)) {
+            return;
+        }
+        final Player player = e.getPlayer();
+        final ItemStack handItem = player.getInventory().getItem(e.getHand());
+        if (handItem == null || handItem.getType() != Material.BUCKET) {
+            return;
+        }
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
+        if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
+            return;
+        }
+        questPlayer.queueObjectiveCheck(activeObjective -> {
+            if (activeObjective.getObjective() instanceof final MilkCowObjective milkCowObjective) {
+                activeObjective.addProgress(1);
+                if (milkCowObjective.isCancelMilking()) {
+                    e.setCancelled(true);
+                }
+            }
+        });
+        questPlayer.checkQueuedObjectives();
     }
 
 

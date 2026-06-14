@@ -4,44 +4,42 @@ import net.kyori.adventure.text.Component;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.CommandManager;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.BaseCommand;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
+import rocks.gravili.notquests.paper.commands.framework.NQFlag;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.PredefinedProgressOrder;
 import rocks.gravili.notquests.paper.structs.Quest;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.concurrent.CompletableFuture;
+import java.util.List;
 
-import static org.incendo.cloud.parser.standard.StringParser.greedyStringParser;
-import static org.incendo.cloud.parser.standard.StringParser.stringParser;
-import static rocks.gravili.notquests.paper.commands.arguments.CategoryParser.categoryParser;
-import static rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionParser.itemStackSelectionParser;
+import static rocks.gravili.notquests.paper.commands.arguments.CategoryArgument.categoryArgument;
+import static rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionArgument.itemStackSelectionArgument;
 
 public class CategoryEditCommand extends BaseCommand {
-    public CategoryEditCommand(NotQuests notQuests, Command.Builder<CommandSender> builder) {
+    public CategoryEditCommand(NotQuests notQuests, NQCommandBuilder builder) {
         super(notQuests, builder);
     }
 
     @Override
-    public void apply(CommandManager<CommandSender> commandManager) {
+    public void apply(NQCommandManager commandManager) {
         builder = builder.literal("categories")
                 .literal("edit")
-                .required("category", categoryParser(notQuests), Description.of("Category to edit"));
+                .required("category", categoryArgument(notQuests), NQDescription.of("Category to edit"));
 
         commandManager.command(builder.literal("predefinedProgressOrder")
-                .literal("show", Description.of("Shows the current predefined order in which the quests inside this category need to be progressed for your quest."))
+                .literal("show", NQDescription.of("Shows the current predefined order in which the quests inside this category need to be progressed for your quest."))
                 .handler((context) -> {
                     final Category category = context.get("category");
                     context.sender().sendMessage(Component.empty());
@@ -57,7 +55,7 @@ public class CategoryEditCommand extends BaseCommand {
 
         commandManager.command(builder.literal("predefinedProgressOrder")
                 .literal("set")
-                .literal("none", Description.of("Removes predefined order in which the quests inside this category need to be progressed for your quest."))
+                .literal("none", NQDescription.of("Removes predefined order in which the quests inside this category need to be progressed for your quest."))
                 .handler((context) -> {
                     final Category category = context.get("category");
                     category.setPredefinedProgressOrder(null, true);
@@ -70,7 +68,7 @@ public class CategoryEditCommand extends BaseCommand {
 
         commandManager.command(builder.literal("predefinedProgressOrder")
                 .literal("set")
-                .literal("firstToLast", Description.of("Sets a predefined order in which the quests inside this category need to be progressed for your quest."))
+                .literal("firstToLast", NQDescription.of("Sets a predefined order in which the quests inside this category need to be progressed for your quest."))
                 .handler((context) -> {
                     final Category category = context.get("category");
                     category.setPredefinedProgressOrder(PredefinedProgressOrder.firstToLast(), true);
@@ -83,7 +81,7 @@ public class CategoryEditCommand extends BaseCommand {
 
         commandManager.command(builder.literal("predefinedProgressOrder")
                 .literal("set")
-                .literal("lastToFirst", Description.of("Sets a predefined order in which the quests inside this category need to be progressed for your quest."))
+                .literal("lastToFirst", NQDescription.of("Sets a predefined order in which the quests inside this category need to be progressed for your quest."))
                 .handler((context) -> {
                     final Category category = context.get("category");
                     category.setPredefinedProgressOrder(PredefinedProgressOrder.lastToFirst(), true);
@@ -96,18 +94,17 @@ public class CategoryEditCommand extends BaseCommand {
 
         commandManager.command(builder.literal("predefinedProgressOrder")
                 .literal("set")
-                .literal("custom", Description.description("Sets a predefined order in which the quests need to be progressed in this category."))
-                .required("order", greedyStringParser(),
+                .literal("custom", NQDescription.of("Sets a predefined order in which the quests need to be progressed in this category."))
+                .required("order", NQArguments.greedyStringArgument(), NQDescription.of("Custom order (numbers of objective IDs separated by space)"),
                         (context, input) -> {
-                            notQuests.getUtilManager().sendFancyCommandCompletion(context.sender(), input.input().split(" "), "<Enter custom order (numbers of objective IDs separated by space)>", "");
-                            ArrayList<Suggestion> completions = new ArrayList<>();
+                            final List<String> completions = new ArrayList<>();
                             final Category category = context.get("category");
 
                             for (final Quest quest : category.getQuests()) {
-                                completions.add(Suggestion.suggestion(quest.getIdentifier()));
+                                completions.add(quest.getIdentifier());
                             }
 
-                            return CompletableFuture.completedFuture(completions);
+                            return completions;
                         })
                 .handler((context) -> {
                     final Category category = context.get("category");
@@ -126,7 +123,7 @@ public class CategoryEditCommand extends BaseCommand {
 
 
         commandManager.command(builder.literal("displayName")
-                .literal("show", Description.of("Shows current Category display name."))
+                .literal("show", NQDescription.of("Shows current Category display name."))
                 .handler((context) -> {
                     final Category category = context.get("category");
 
@@ -136,7 +133,7 @@ public class CategoryEditCommand extends BaseCommand {
                     ));
                 }));
         commandManager.command(builder.literal("displayName")
-                .literal("remove", Description.of("Removes current Category display name."))
+                .literal("remove", NQDescription.of("Removes current Category display name."))
                 .handler((context) -> {
                     final Category category = context.get("category");
 
@@ -146,34 +143,34 @@ public class CategoryEditCommand extends BaseCommand {
                     ));
                 }));
 
-        commandManager.command(builder.commandDescription(Description.of("Sets the new display name of the Category."))
+        commandManager.command(builder.commandDescription(NQDescription.of("Sets the new display name of the Category."))
                 .literal("displayName")
                 .literal("set")
-                .required("display-name", stringParser(),
+                .required("display-name", NQArguments.greedyStringArgument(), NQDescription.of("New Category display name"),
                         (context, input) -> {
-                            notQuests.getUtilManager().sendFancyCommandCompletion(context.sender(), input.input().split(" "), "<Enter new Category display name>", "");
-                            ArrayList<Suggestion> completions = new ArrayList<>();
+                            final List<String> completions = new ArrayList<>();
 
-                            String rawInput = input.input();
-                            String lastString = input.input().split(" ")[input.input().split(" ").length - 1];
+                            final String rawInput = context.rawInput().input();
+                            final String[] splitInput = rawInput.split(" ");
+                            final String lastString = splitInput[splitInput.length - 1];
                             if (lastString.startsWith("{")) {
-                                notQuests.getCommandManager().getAdminCommands().placeholders.forEach(entry -> completions.add(Suggestion.suggestion(entry)));
+                                notQuests.getCommandManager().getAdminCommands().placeholders.forEach(completions::add);
                             } else {
                                 if (lastString.startsWith("<")) {
                                     for (String color : notQuests.getUtilManager().getMiniMessageTokens()) {
-                                        completions.add(Suggestion.suggestion("<" + color + ">"));
+                                        completions.add("<" + color + ">");
                                         //Now the closings. First we search IF it contains an opening and IF it doesnt contain more closings than the opening
-                                        if (input.input().contains("<" + color + ">")) {
+                                        if (rawInput.contains("<" + color + ">")) {
                                             if (StringUtils.countMatches(rawInput, "<" + color + ">") > StringUtils.countMatches(rawInput, "</" + color + ">")) {
-                                                completions.add(Suggestion.suggestion("</" + color + ">"));
+                                                completions.add("</" + color + ">");
                                             }
                                         }
                                     }
                                 } else {
-                                    completions.add(Suggestion.suggestion("<Enter new Category display name>"));
+                                    completions.add("<Enter new Category display name>");
                                 }
                             }
-                            return CompletableFuture.completedFuture(completions);
+                            return completions;
                         }
                 )
                 .handler((context) -> {
@@ -188,10 +185,10 @@ public class CategoryEditCommand extends BaseCommand {
                     ));
                 }));
 
-        commandManager.command(builder.commandDescription(Description.of("Sets the item displayed in the category GUI (default: book)."))
+        commandManager.command(builder.commandDescription(NQDescription.of("Sets the item displayed in the category GUI (default: book)."))
                 .literal("guiItem")
-                .required("material", itemStackSelectionParser(notQuests), Description.of("Material of item displayed in the category GUI."))
-                .flag(commandManager.flagBuilder("glow").withDescription(Description.of("Makes the item have the enchanted glow.")))
+                .required("material", itemStackSelectionArgument(notQuests), NQDescription.of("Material of item displayed in the category GUI."))
+                .flag(NQFlag.presence("glow", NQDescription.of("Makes the item have the enchanted glow.")))
                 .handler((context) -> {
                     final Category category = context.get("category");
                     final boolean glow = context.flags().isPresent("glow");

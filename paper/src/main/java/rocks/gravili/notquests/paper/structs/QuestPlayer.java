@@ -41,6 +41,7 @@ import rocks.gravili.notquests.paper.structs.triggers.ActiveTrigger;
 
 import java.time.Duration;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
@@ -63,15 +64,18 @@ public class QuestPlayer {
 
 
     private final CopyOnWriteArrayList<ActiveQuest> activeQuests;
-    private final ArrayList<ActiveQuest> questsToComplete;
-    private final ArrayList<ActiveQuest> questsToRemove;
-    private final ArrayList<CompletedQuest> completedQuests; //has to accept multiple entries of the same value
+    // Thread-safe: these are iterated by the async save while the main thread may add to them
+    // (quest complete/fail), which would otherwise throw ConcurrentModificationException mid-save.
+    private final CopyOnWriteArrayList<ActiveQuest> questsToComplete;
+    private final CopyOnWriteArrayList<ActiveQuest> questsToRemove;
+    private final CopyOnWriteArrayList<CompletedQuest> completedQuests; //has to accept multiple entries of the same value
 
-    private final ArrayList<FailedQuest> failedQuests; //has to accept multiple entries of the same value
+    private final CopyOnWriteArrayList<FailedQuest> failedQuests; //has to accept multiple entries of the same value
 
     private final HashMap<String, Location> locationsAndBeacons, activeLocationAndBeams;
-    //Tags
-    private final HashMap<String, Object> tags;
+    //Tags — ConcurrentHashMap: mutated on the main thread (gameplay) AND iterated by the async
+    //tag save/load. setTagValue treats a null value as "remove" (ConcurrentHashMap forbids nulls).
+    private final Map<String, Object> tags;
     private long questPoints;
     private ActiveObjective trackingObjective;
     private BossBar bossBar;
@@ -97,15 +101,15 @@ public class QuestPlayer {
         this.profile = profile;
 
         activeQuests = new CopyOnWriteArrayList<>();
-        questsToComplete = new ArrayList<>();
-        questsToRemove = new ArrayList<>();
-        completedQuests = new ArrayList<>();
-        failedQuests = new ArrayList<>();
+        questsToComplete = new CopyOnWriteArrayList<>();
+        questsToRemove = new CopyOnWriteArrayList<>();
+        completedQuests = new CopyOnWriteArrayList<>();
+        failedQuests = new CopyOnWriteArrayList<>();
 
         locationsAndBeacons = new HashMap<>();
         activeLocationAndBeams = new HashMap<>();
 
-        tags = new HashMap<>();
+        tags = new ConcurrentHashMap<>();
     }
 
     public final String getProfile(){
@@ -133,10 +137,15 @@ public class QuestPlayer {
     }
 
     public void setTagValue(final String tagIdentifier, final Object newValue) {
-        tags.put(tagIdentifier.toLowerCase(Locale.ROOT), newValue);
+        final String key = tagIdentifier.toLowerCase(Locale.ROOT);
+        if (newValue == null) {
+            tags.remove(key); // a null value means "remove the tag" (and ConcurrentHashMap forbids null values)
+        } else {
+            tags.put(key, newValue);
+        }
     }
 
-    public final HashMap<String, Object> getTags(){
+    public final Map<String, Object> getTags(){
         return tags;
     }
 
@@ -691,13 +700,40 @@ public class QuestPlayer {
         }
     }
 
-    public final ArrayList<CompletedQuest> getCompletedQuests() {
+    public final List<CompletedQuest> getCompletedQuests() {
         return completedQuests;
     }
-    public final ArrayList<FailedQuest> getFailedQuests() {
+    public final List<FailedQuest> getFailedQuests() {
         return failedQuests;
     }
 
+
+    /**
+     * Shows the quest-completed title + sound. showTitle/playSound/getLocation are main-thread-only,
+     * but quest completion can be driven from an async context (e.g. the async chat/conversation
+     * thread), so this hops to the main thread when needed.
+     */
+    private void showQuestCompletedVisuals(final ActiveQuest activeQuest) {
+        final Player player = getPlayer();
+        if (player == null) {
+            return;
+        }
+        final Runnable visuals = () -> {
+            if (main.getConfiguration().visualTitleQuestCompleted_enabled) {
+                player.showTitle(
+                        Title.title(main.parse(main.getLanguageManager().getString("titles.quest-completed.title", player)),
+                                main.parse(main.getLanguageManager().getString("titles.quest-completed.subtitle", player, this, activeQuest)),
+                                Title.Times.times(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
+                        ));
+            }
+            player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.MASTER, 100, 40);
+        };
+        if (Bukkit.isPrimaryThread()) {
+            visuals.run();
+        } else {
+            Bukkit.getScheduler().runTask(main.getMain(), visuals);
+        }
+    }
 
     public void forceActiveQuestCompleted(final ActiveQuest activeQuest) {
         sendDebugMessage("ForceActiveQuestCompleted...");
@@ -721,20 +757,7 @@ public class QuestPlayer {
 
         completedQuests.add(new CompletedQuest(activeQuest.getQuest(), this));
 
-        final Player player = getPlayer();
-        if (player != null) {
-            if (main.getConfiguration().visualTitleQuestCompleted_enabled) {
-                player.showTitle(
-                        Title.title(main.parse(main.getLanguageManager().getString("titles.quest-completed.title", player)),
-                                main.parse(main.getLanguageManager().getString("titles.quest-completed.subtitle", player, this, activeQuest)),
-                                Title.Times.times(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
-                        ));
-
-            }
-
-            player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.MASTER, 100, 40);
-
-        }
+        showQuestCompletedVisuals(activeQuest);
 
 
         for (final ActiveQuest activeQuest2 : activeQuests) {
@@ -776,17 +799,7 @@ public class QuestPlayer {
 
             //Give Quest completion reward & show Quest completion title
             giveReward(activeQuest.getQuest());
-            final Player player = getPlayer();
-            if (player != null) {
-                if (main.getConfiguration().visualTitleQuestCompleted_enabled) {
-                    player.showTitle(
-                            Title.title(main.parse(main.getLanguageManager().getString("titles.quest-completed.title", player)),
-                                    main.parse(main.getLanguageManager().getString("titles.quest-completed.subtitle", player, this, activeQuest)),
-                                    Title.Times.times(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
-                            ));
-                }
-                player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.MASTER, 100, 40);
-            }
+            showQuestCompletedVisuals(activeQuest);
 
         }
 

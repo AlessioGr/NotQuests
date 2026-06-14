@@ -17,14 +17,15 @@
  */
 
 package rocks.gravili.notquests.paper.managers.registering;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandContext;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQFlag;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.context.CommandContext;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
-import org.incendo.cloud.parser.flag.CommandFlag;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
@@ -42,17 +43,15 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
 
-import static org.incendo.cloud.bukkit.parser.PlayerParser.playerParser;
-
 public class ActionManager {
     private final NotQuests main;
-    private final CommandFlag<Player> playerSelectorCommandFlag;
+    private final NQFlag playerSelectorCommandFlag;
     private final HashMap<String, Class<? extends Action>> actions;
 
     public ActionManager(final NotQuests main) {
         this.main = main;
         actions = new HashMap<>();
-        playerSelectorCommandFlag = CommandFlag.builder("player").withComponent(playerParser()).build();
+        playerSelectorCommandFlag = NQFlag.builder("player").withArgument(NQArguments.playerArgument()).withDescription(NQDescription.of("Player selector")).build();
         registerDefaultActions();
     }
 
@@ -105,8 +104,8 @@ public class ActionManager {
                     action.getMethod(
                             "handleCommands",
                             main.getClass(),
-                            LegacyPaperCommandManager.class,
-                            Command.Builder.class,
+                            NQCommandManager.class,
+                            NQCommandBuilder.class,
                             ActionFor.class);
             if (action == NumberAction.class
                     || action == StringAction.class
@@ -116,26 +115,26 @@ public class ActionManager {
                 commandHandler.invoke(
                         action,
                         main,
-                        main.getCommandManager().getPaperCommandManager(),
+                        main.getCommandManager().getNQCommandManager(),
                         main.getCommandManager()
                                 .getAdminEditAddRewardCommandBuilder()
-                                .commandDescription(Description.of("Creates a new " + identifier + " action")),
+                                .commandDescription(NQDescription.of("Creates a new " + identifier + " action")),
                         ActionFor.QUEST);
                 commandHandler.invoke(
                         action,
                         main,
-                        main.getCommandManager().getPaperCommandManager(),
+                        main.getCommandManager().getNQCommandManager(),
                         main.getCommandManager()
                                 .getAdminEditObjectiveAddRewardCommandBuilder()
-                                .commandDescription(Description.of("Creates a new " + identifier + " action")),
+                                .commandDescription(NQDescription.of("Creates a new " + identifier + " action")),
                         ActionFor.OBJECTIVE);
                 commandHandler.invoke(
                         action,
                         main,
-                        main.getCommandManager().getPaperCommandManager(),
+                        main.getCommandManager().getNQCommandManager(),
                         main.getCommandManager()
                                 .getAdminAddActionCommandBuilder()
-                                .commandDescription(Description.of("Creates a new " + identifier + " action"))
+                                .commandDescription(NQDescription.of("Creates a new " + identifier + " action"))
                                 .flag(main.getCommandManager().categoryFlag)
                                 .flag(main.getCommandManager().delayFlag),
                         ActionFor.ActionsYML); // For Actions.yml
@@ -143,10 +142,10 @@ public class ActionManager {
                 commandHandler.invoke(
                         action,
                         main,
-                        main.getCommandManager().getPaperCommandManager(),
+                        main.getCommandManager().getNQCommandManager(),
                         main.getCommandManager()
                                 .getAdminExecuteActionCommandBuilder()
-                                .commandDescription(Description.of("Executes a new " + identifier + " action inline"))
+                                .commandDescription(NQDescription.of("Executes a new " + identifier + " action inline"))
                                 .flag(playerSelectorCommandFlag)
                                 .flag(main.getCommandManager().delayFlag),
                         ActionFor.INLINE); // For inline /qa actions execute
@@ -154,29 +153,29 @@ public class ActionManager {
                 commandHandler.invoke(
                         action,
                         main,
-                        main.getCommandManager().getPaperCommandManager(),
+                        main.getCommandManager().getNQCommandManager(),
                         main.getCommandManager()
                                 .getAdminEditAddRewardCommandBuilder()
                                 .literal(identifier)
-                                .commandDescription(Description.of("Creates a new " + identifier + " action")),
+                                .commandDescription(NQDescription.of("Creates a new " + identifier + " action")),
                         ActionFor.QUEST);
                 commandHandler.invoke(
                         action,
                         main,
-                        main.getCommandManager().getPaperCommandManager(),
+                        main.getCommandManager().getNQCommandManager(),
                         main.getCommandManager()
                                 .getAdminEditObjectiveAddRewardCommandBuilder()
                                 .literal(identifier)
-                                .commandDescription(Description.of("Creates a new " + identifier + " action")),
+                                .commandDescription(NQDescription.of("Creates a new " + identifier + " action")),
                         ActionFor.OBJECTIVE);
                 commandHandler.invoke(
                         action,
                         main,
-                        main.getCommandManager().getPaperCommandManager(),
+                        main.getCommandManager().getNQCommandManager(),
                         main.getCommandManager()
                                 .getAdminAddActionCommandBuilder()
                                 .literal(identifier)
-                                .commandDescription(Description.of("Creates a new " + identifier + " action"))
+                                .commandDescription(NQDescription.of("Creates a new " + identifier + " action"))
                                 .flag(main.getCommandManager().categoryFlag)
                                 .flag(main.getCommandManager().delayFlag),
                         ActionFor.ActionsYML); // For Actions.yml
@@ -185,11 +184,11 @@ public class ActionManager {
                 commandHandler.invoke(
                         action,
                         main,
-                        main.getCommandManager().getPaperCommandManager(),
+                        main.getCommandManager().getNQCommandManager(),
                         main.getCommandManager()
                                 .getAdminExecuteActionCommandBuilder()
                                 .literal(identifier)
-                                .commandDescription(Description.of("Executes a new " + identifier + " action inline"))
+                                .commandDescription(NQDescription.of("Executes a new " + identifier + " action inline"))
                                 .flag(playerSelectorCommandFlag)
                                 .flag(main.getCommandManager().delayFlag),
                         ActionFor.INLINE); // For inline /qa actions execute
@@ -225,11 +224,11 @@ public class ActionManager {
         return actions.keySet();
     }
 
-    public void addAction(final Action action, final CommandContext<CommandSender> context, final ActionFor actionFor) {
+    public void addAction(final Action action, final NQCommandContext context, final ActionFor actionFor) {
         final Quest quest = context.getOrDefault("quest", null);
         Objective objectiveOfQuest = null;
-        if (quest != null && context.contains("objectiveId")) {
-            objectiveOfQuest = context.get("objectiveId"); //TODO: Support nested objectives
+        if (quest != null && context.<Objective>get("objectiveId") != null) {
+            objectiveOfQuest = main.getCommandManager().getObjectiveFromContextAndLevel(context, 0); //TODO: Support nested objectives
         }
         final String actionIdentifier =
                 context.getOrDefault("Action Identifier", context.getOrDefault("action", ""));
@@ -402,8 +401,8 @@ public class ActionManager {
                         action.getMethod(
                                 "handleCommands",
                                 main.getClass(),
-                                LegacyPaperCommandManager.class,
-                                Command.Builder.class,
+                                NQCommandManager.class,
+                                NQCommandBuilder.class,
                                 ActionFor.class);
                 if (action == NumberAction.class
                         || action == StringAction.class
@@ -417,26 +416,26 @@ public class ActionManager {
                     commandHandler.invoke(
                             action,
                             main,
-                            main.getCommandManager().getPaperCommandManager(),
+                            main.getCommandManager().getNQCommandManager(),
                             main.getCommandManager()
                                     .getAdminEditAddRewardCommandBuilder()
-                                    .commandDescription(Description.of("Creates a new " + identifier + " action")),
+                                    .commandDescription(NQDescription.of("Creates a new " + identifier + " action")),
                             ActionFor.QUEST);
                     commandHandler.invoke(
                             action,
                             main,
-                            main.getCommandManager().getPaperCommandManager(),
+                            main.getCommandManager().getNQCommandManager(),
                             main.getCommandManager()
                                     .getAdminEditObjectiveAddRewardCommandBuilder()
-                                    .commandDescription(Description.of("Creates a new " + identifier + " action")),
+                                    .commandDescription(NQDescription.of("Creates a new " + identifier + " action")),
                             ActionFor.OBJECTIVE);
                     commandHandler.invoke(
                             action,
                             main,
-                            main.getCommandManager().getPaperCommandManager(),
+                            main.getCommandManager().getNQCommandManager(),
                             main.getCommandManager()
                                     .getAdminAddActionCommandBuilder()
-                                    .commandDescription(Description.of("Creates a new " + identifier + " action"))
+                                    .commandDescription(NQDescription.of("Creates a new " + identifier + " action"))
                                     .flag(main.getCommandManager().categoryFlag)
                                     .flag(main.getCommandManager().delayFlag),
                             ActionFor.ActionsYML); // For Actions.yml
@@ -444,10 +443,10 @@ public class ActionManager {
                     commandHandler.invoke(
                             action,
                             main,
-                            main.getCommandManager().getPaperCommandManager(),
+                            main.getCommandManager().getNQCommandManager(),
                             main.getCommandManager()
                                     .getAdminExecuteActionCommandBuilder()
-                                    .commandDescription(Description.of("Executes a new " + identifier + " action inline"))
+                                    .commandDescription(NQDescription.of("Executes a new " + identifier + " action inline"))
                                     .flag(playerSelectorCommandFlag)
                                     .flag(main.getCommandManager().delayFlag),
                             ActionFor.INLINE); // For inline /qa actions execute

@@ -3,13 +3,13 @@ package rocks.gravili.notquests.paper.commands.category.admin;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.CommandSender;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.CommandManager;
-import org.incendo.cloud.context.CommandContext;
-import org.incendo.cloud.description.Description;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.BaseCommand;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandContext;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.CompletedQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
@@ -17,22 +17,21 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
 
-import static org.incendo.cloud.bukkit.parser.OfflinePlayerParser.offlinePlayerParser;
-import static rocks.gravili.notquests.paper.commands.arguments.QuestParser.questParser;
+import static rocks.gravili.notquests.paper.commands.arguments.QuestArgument.questArgument;
 
 public class QuestResetAndRemoveCommand extends BaseCommand {
-    public QuestResetAndRemoveCommand(NotQuests notQuests, Command.Builder<CommandSender> builder) {
+    public QuestResetAndRemoveCommand(NotQuests notQuests, NQCommandBuilder builder) {
         super(notQuests, builder);
     }
 
     @Override
-    public void apply(CommandManager<CommandSender> commandManager) {
+    public void apply(NQCommandManager commandManager) {
 
-        builder = builder.commandDescription(Description.of("Removes the quest from a specific player players, removes it from completed quests, resets the accept cooldown and basically everything else."))
+        builder = builder.commandDescription(NQDescription.of("Removes the quest from a specific player players, removes it from completed quests, resets the accept cooldown and basically everything else."))
                 .literal("resetAndRemoveQuest");
         commandManager.command(builder
-                .required("player", offlinePlayerParser(), Description.of("Player name"))
-                .required("quest", questParser(notQuests), Description.of("Name of the Quest which should be reset and removed."))
+                .required("player", NQArguments.playerArgument(), NQDescription.of("Player name"))
+                .required("quest", questArgument(notQuests), NQDescription.of("Name of the Quest which should be reset and removed."))
                 .handler((context) -> {
                     context.sender().sendMessage(Component.empty());
                     final OfflinePlayer player = context.get("player");
@@ -43,7 +42,7 @@ public class QuestResetAndRemoveCommand extends BaseCommand {
 
         commandManager.command(builder
                 .literal("all")
-                .required("quest", questParser(notQuests), Description.of("Name of the Quest which should be reset and removed."))
+                .required("quest", questArgument(notQuests), NQDescription.of("Name of the Quest which should be reset and removed."))
                 .handler((context) -> {
                     context.sender().sendMessage(Component.empty());
 
@@ -55,7 +54,7 @@ public class QuestResetAndRemoveCommand extends BaseCommand {
                 }));
     }
 
-    private void removeQuest(OfflinePlayer offlinePlayer, CommandContext<CommandSender> context) {
+    private void removeQuest(OfflinePlayer offlinePlayer, NQCommandContext context) {
         final QuestPlayer questPlayer = notQuests.getQuestPlayerManager().getActiveQuestPlayer(offlinePlayer.getUniqueId());
 
         if (questPlayer == null) {

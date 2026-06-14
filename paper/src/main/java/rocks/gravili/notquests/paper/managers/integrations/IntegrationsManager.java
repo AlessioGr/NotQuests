@@ -24,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.events.hooks.*;
 import rocks.gravili.notquests.paper.managers.integrations.citizens.CitizensManager;
+import rocks.gravili.notquests.paper.managers.integrations.fancynpcs.FancyNPCsManager;
 import rocks.gravili.notquests.paper.placeholders.QuestPlaceholders;
 
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -39,6 +40,7 @@ public class IntegrationsManager {
   // Booleans
   private boolean vaultEnabled = false;
   private boolean citizensEnabled = false;
+  private boolean fancyNPCsEnabled = false;
   private boolean slimefunEnabled = false;
   private boolean townyEnabled = false;
   private boolean jobsRebornEnabled = false;
@@ -48,8 +50,7 @@ public class IntegrationsManager {
   private boolean eliteMobsEnabled = false;
   private boolean placeholderAPIEnabled = false;
   private boolean mythicMobsEnabled = false;
-  private boolean ecoBossesEnabled = false;
-  private boolean ultimateJobsEnabled = false;
+  private boolean ecoMobsEnabled = false;
 
   private boolean floodgateEnabled = false;
 
@@ -59,11 +60,12 @@ public class IntegrationsManager {
   private VaultManager vaultManager;
   private MythicMobsManager mythicMobsManager;
   private CitizensManager citizensManager;
+  private FancyNPCsManager fancyNPCsManager;
   private WorldEditManager worldEditManager;
   private SlimefunManager slimefunManager;
   private LuckpermsManager luckpermsManager;
 
-  private EcoBossesManager ecoBossesManager;
+  private EcoMobsManager ecoMobsManager;
   private FloodgateManager floodgateManager;
 
 
@@ -72,35 +74,19 @@ public class IntegrationsManager {
     this.main = main;
 
     integrations.add(
-        new Integration(main, "UltimateJobs")
-            .setEnableCondition(() -> main.getConfiguration().isIntegrationUltimateJobsEnabled())
+        new Integration(main, "EcoMobs")
+            .setEnableCondition(() -> main.getConfiguration().isIntegrationEcoMobsEnabled())
             .setRunWhenEnabled(
                 () -> {
-                  ultimateJobsEnabled = true;
-                  return true;
-                })
-            .setRunWhenRegisteringEventsOnTime(
-                () -> {
-                  main.getMain()
-                      .getServer()
-                      .getPluginManager()
-                      .registerEvents(new UltimateJobsEvents(main), main.getMain());
-                }));
-
-    integrations.add(
-        new Integration(main, "EcoBosses")
-            .setEnableCondition(() -> main.getConfiguration().isIntegrationEcoBossesEnabled())
-            .setRunWhenEnabled(
-                () -> {
-                  ecoBossesEnabled = true;
+                  ecoMobsEnabled = true;
                   main.getLogManager()
                       .info(
-                          "EcoBosses found! Enabling EcoBosses support... Bosses will be loaded in 10 seconds, because they are not loaded when the plugin starts. Don't blame me");
+                          "EcoMobs found! Enabling EcoMobs support... Mobs will be loaded in 10 seconds, because they are not loaded when the plugin starts. Don't blame me");
                   Bukkit.getScheduler()
                       .scheduleSyncDelayedTask(
                           main.getMain(),
                           () -> {
-                            ecoBossesManager = new EcoBossesManager(main);
+                            ecoMobsManager = new EcoMobsManager(main);
                             main.getDataManager().loadStandardCompletions();
                           },
                           200L);
@@ -111,7 +97,7 @@ public class IntegrationsManager {
                   main.getMain()
                       .getServer()
                       .getPluginManager()
-                      .registerEvents(new EcoBossesEvents(main), main.getMain());
+                      .registerEvents(new EcoMobsEvents(main), main.getMain());
                 }));
 
     integrations.add(
@@ -231,6 +217,39 @@ public class IntegrationsManager {
                   }
                 })
     );
+
+    // Enable 'FancyNpcs' integration (packet-based NPCs). Like Citizens, missing it just disables
+    // some NPC features (armor stands / Citizens can be used instead).
+    integrations.add(
+        new Integration(main, "FancyNpcs")
+            .setEnableCondition(() -> true)
+            .setRunWhenEnablingFailed(
+                () ->
+                    main.getLogManager()
+                        .info("FancyNpcs Dependency not found! You can use Citizens or armor stands instead."))
+            .setRunWhenEnabled(
+                () -> {
+                  fancyNPCsEnabled = true;
+                  fancyNPCsManager = new FancyNPCsManager(main);
+                  return true;
+                })
+            .setRunWhenRegisteringEventsOnTime(
+                () ->
+                    main.getMain()
+                        .getServer()
+                        .getPluginManager()
+                        .registerEvents(new FancyNPCsEvents(main), main.getMain()))
+            .setRunAlsoWhenEnabledLate(
+                () -> {
+                  main.getDataManager().setAlreadyLoadedNPCs(false);
+                  main.getMain()
+                      .getServer()
+                      .getPluginManager()
+                      .registerEvents(new FancyNPCsEvents(main), main.getMain());
+                  if (!main.getDataManager().isAlreadyLoadedNPCs()) {
+                    main.getDataManager().loadNPCData();
+                  }
+                }));
 
     integrations.add(
         new Integration(main, "Slimefun")
@@ -445,12 +464,8 @@ public class IntegrationsManager {
     return jobsRebornEnabled;
   }
 
-  public final boolean isEcoBossesEnabled() {
-    return ecoBossesEnabled;
-  }
-
-  public final boolean isUltimateJobsEnabled() {
-    return ultimateJobsEnabled;
+  public final boolean isEcoMobsEnabled() {
+    return ecoMobsEnabled;
   }
 
   public final boolean isFloodgateEnabled() {
@@ -461,8 +476,8 @@ public class IntegrationsManager {
     return mythicMobsManager;
   }
 
-  public final EcoBossesManager getEcoBossesManager() {
-    return ecoBossesManager;
+  public final EcoMobsManager getEcoMobsManager() {
+    return ecoMobsManager;
   }
 
   public final WorldEditManager getWorldEditManager() {
@@ -475,6 +490,14 @@ public class IntegrationsManager {
 
   public final CitizensManager getCitizensManager() {
     return citizensManager;
+  }
+
+  public final boolean isFancyNPCsEnabled() {
+    return fancyNPCsEnabled;
+  }
+
+  public final FancyNPCsManager getFancyNPCsManager() {
+    return fancyNPCsManager;
   }
 
   public final FloodgateManager getFloodgateManager() {

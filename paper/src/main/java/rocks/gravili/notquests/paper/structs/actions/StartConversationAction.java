@@ -20,10 +20,11 @@ package rocks.gravili.notquests.paper.structs.actions;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
+import rocks.gravili.notquests.paper.commands.framework.NQFlag;
 import rocks.gravili.notquests.paper.conversation.Conversation;
 import rocks.gravili.notquests.paper.conversation.ConversationPlayer;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -31,7 +32,7 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import static rocks.gravili.notquests.paper.commands.arguments.ConversationParser.conversationParser;
+import static rocks.gravili.notquests.paper.commands.arguments.ConversationArgument.conversationArgument;
 
 public class StartConversationAction extends Action {
 
@@ -44,11 +45,11 @@ public class StartConversationAction extends Action {
 
     public static void handleCommands(
             NotQuests main,
-            LegacyPaperCommandManager<CommandSender> manager,
-            Command.Builder<CommandSender> builder,
+            NQCommandManager manager,
+            NQCommandBuilder builder,
             ActionFor actionFor) {
-        manager.command(builder.required("conversation to start", conversationParser(main), Description.of("Name of the Conversation which should be started."))
-                .flag(manager.flagBuilder("endPrevious").withDescription(Description.of("Ends the previous conversation furst if the player is already in another conversation")))
+        manager.command(builder.required("conversation to start", conversationArgument(main), NQDescription.of("Name of the Conversation which should be started."))
+                .flag(NQFlag.presence("endPrevious", NQDescription.of("Ends the previous conversation furst if the player is already in another conversation")))
                 .handler((context) -> {
                     final Conversation foundConversation = context.get("conversation to start");
                     final boolean endPrevious = context.flags().isPresent("endPrevious");

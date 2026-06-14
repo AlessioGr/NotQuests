@@ -1,0 +1,126 @@
+# NotQuests server-side E2E command sweep.
+# One command per line, dependency-ordered. TestQuest is created by run-sweep.sh before this list.
+# Append "# PLAYER-ONLY", "# NEEDS-ECONOMY", "# UNSURE" or "# OBJECTIVE-SCOPED" to mark a line as
+# tolerated: it still runs (and still counts for type coverage) but its errors don't fail CI.
+# Annotations should shrink over time as exact arguments are confirmed.
+
+# ---- tags (all five types) ----
+qa tags create INTEGER testint
+qa tags create BOOLEAN testbool
+qa tags create STRING teststring
+qa tags create FLOAT testfloat
+qa tags create DOUBLE testdouble
+
+# ---- categories ----
+qa categories create TestCategory
+qa categories edit TestCategory displayName set Test Category With Spaces
+
+# ---- actions (literal-typed) ----
+qa actions add ActMsg SendMessage Hello there adventurer
+qa actions add ActBroadcast BroadcastMessage A server-wide announcement
+qa actions add ActConsole ConsoleCommand say hello from the console
+qa actions add ActPlayerCmd PlayerCommand me waves
+qa actions add ActChat Chat Hello from the player
+qa actions add ActGiveQuest GiveQuest TestQuest
+qa actions add ActCompleteQuest CompleteQuest TestQuest
+qa actions add ActFailQuest FailQuest TestQuest
+qa actions add ActTriggerCmd TriggerCommand mytrigger
+qa actions add ActGiveItem GiveItem stone,dirt 5
+qa actions add ActGiveItemBoat GiveItem acacia_boat 2
+qa actions add ActSpawnMob SpawnMob zombie 3 Location world 100 64 100
+qa actions add ActPlaySound PlaySound entity.experience_orb.pickup
+qa actions add ActBeam Beam mybeam spawn world 100 70 100               # UNSURE
+qa actions add ActGiveQP GiveQuestPoints 10                             # UNSURE
+qa actions add ActGrantPerm GrantPermission notquests.e2e.test          # UNSURE
+qa actions add ActOpenGui OpenGui questsoverview                        # PLAYER-ONLY
+qa actions add ActCloseInv CloseInventory                               # PLAYER-ONLY
+qa actions add ActStartConv StartConversation testconversation          # UNSURE
+qa actions add ActGiveMoney GiveMoney 100                               # NEEDS-ECONOMY
+# variable-based actions (Number/String/Boolean/List/ItemStackList) via tag/list/itemstack variables
+qa actions add ActNumber TagInteger testint set 5
+qa actions add ActString TagString teststring set hello
+qa actions add ActBoolean TagBoolean testbool set true
+qa actions add ActList ActiveQuests set TestQuest                       # UNSURE
+qa actions add ActItemStackList Inventory set stone 1                   # UNSURE
+# the "Action" action chains another existing action
+qa actions add ActChain Action ActMsg                                   # UNSURE
+
+# ---- conditions (literal-typed) ----
+qa conditions add CondTime WorldTime 0 12000
+qa conditions add CondQP QuestPoints more 5
+qa conditions add CondPerm Permission notquests.e2e.test                # UNSURE
+qa conditions add CondCompletedQuest CompletedQuest TestQuest           # UNSURE
+qa conditions add CondActiveQuest ActiveQuest TestQuest                 # UNSURE
+qa conditions add CondDate Date after 2024-01-01                        # UNSURE
+qa conditions add CondMoney Money 100                                   # NEEDS-ECONOMY
+qa conditions add CondCond Condition CondTime                           # UNSURE
+# variable-based conditions via tags
+qa conditions add CondNumber TagInteger testint moreThan 3
+qa conditions add CondStr TagString teststring equals hello
+qa conditions add CondBool TagBoolean testbool equals true
+qa conditions add CondList ActiveQuests contains TestQuest              # UNSURE
+qa conditions add CondItemList Inventory contains stone 1               # UNSURE
+
+# ---- quest-level edits ----
+qa edit TestQuest description set This is a smoke-test quest description
+qa edit TestQuest displayName set Smoke Test Quest
+qa edit TestQuest category set TestCategory
+
+# ---- objectives (literal-typed) ----
+qa edit TestQuest objectives add BreakBlocks grass_block,dirt,stone 5
+qa edit TestQuest objectives add PlaceBlocks stone,cobblestone 5
+qa edit TestQuest objectives add PickupItems acacia_boat,oak_boat 5
+qa edit TestQuest objectives add ConsumeItems apple,bread 5
+qa edit TestQuest objectives add CraftItems torch,stick 5
+qa edit TestQuest objectives add SmeltItems iron_ingot,gold_ingot 5
+qa edit TestQuest objectives add FishItems cod,salmon 5
+qa edit TestQuest objectives add Enchant sharpness diamond_sword,iron_sword 5
+qa edit TestQuest objectives add KillMobs zombie 5
+qa edit TestQuest objectives add BreedMobs cow 5
+qa edit TestQuest objectives add FeedMobs cow 5
+qa edit TestQuest objectives add Jump 10
+qa edit TestQuest objectives add Sneak 10
+qa edit TestQuest objectives add ShearSheep 5
+qa edit TestQuest objectives add MilkCow 5
+qa edit TestQuest objectives add OpenBuriedTreasure 1
+qa edit TestQuest objectives add RunCommand 1 /spawn
+qa edit TestQuest objectives add TriggerCommand mytrigger 1
+qa edit TestQuest objectives add OtherQuest TestQuest 1
+qa edit TestQuest objectives add Condition CondTime
+qa edit TestQuest objectives add NumberVariable TagInteger testint equals 5
+qa edit TestQuest objectives add DeliverItems stone,dirt 5 -1            # UNSURE
+qa edit TestQuest objectives add Interact 1 world 100 64 100            # UNSURE
+qa edit TestQuest objectives add Objective TestHolder                   # UNSURE
+qa edit TestQuest objectives add TalkToNPC -1                           # PLAYER-ONLY
+
+# ---- objective-scoped condition (needs an objective + a sibling objective id) ----
+qa edit TestQuest objectives edit 1 conditions add CompletedObjective 2  # OBJECTIVE-SCOPED
+
+# ---- requirements (quest conditions) ----
+qa edit TestQuest requirements add WorldTime 0 12000
+qa edit TestQuest requirements add TagInteger testint moreOrEqualThan 1
+
+# ---- rewards (quest actions) ----
+qa edit TestQuest rewards add SendMessage You finished the quest
+qa edit TestQuest rewards add GiveItem diamond 1
+qa edit TestQuest rewards add TagInteger testint add 10
+
+# ---- triggers (each references an existing action + an event) ----
+qa edit TestQuest triggers add ActMsg BEGIN
+qa edit TestQuest triggers add ActMsg COMPLETE
+qa edit TestQuest triggers add ActMsg FAIL
+qa edit TestQuest triggers add ActMsg DEATH 1
+qa edit TestQuest triggers add ActMsg DISCONNECT 1
+qa edit TestQuest triggers add ActMsg WORLDENTER world 1
+qa edit TestQuest triggers add ActMsg WORLDLEAVE world 1                 # UNSURE
+qa edit TestQuest triggers add ActMsg NPCDEATH 0 1                       # UNSURE
+
+# ---- read-only checks ----
+qa variables check TagInteger testint
+qa variables check RandomNumberBetweenRange 1 10
+qa variables check Block world 100 64 100
+qa conditions check WorldTime 0 12000
+qa edit TestQuest objectives list
+qa list
+qa actions
+qa conditions

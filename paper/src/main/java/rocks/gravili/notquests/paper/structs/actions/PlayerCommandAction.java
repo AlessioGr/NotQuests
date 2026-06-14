@@ -4,15 +4,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
 
-import static rocks.gravili.notquests.paper.commands.arguments.CommandParser.commandParser;
+import static rocks.gravili.notquests.paper.commands.arguments.CommandArgument.commandArgument;
 
 public class PlayerCommandAction extends Action {
   private String playerCommand = "";
@@ -23,10 +23,10 @@ public class PlayerCommandAction extends Action {
 
   public static void handleCommands(
       NotQuests main,
-      LegacyPaperCommandManager<CommandSender> manager,
-      Command.Builder<CommandSender> builder,
+      NQCommandManager manager,
+      NQCommandBuilder builder,
       ActionFor actionFor) {
-    manager.command(builder.required("Player Command", commandParser(main), Description.of("Command which will be executed from the player's perspective. A '/' at the beginning is not required."))
+    manager.command(builder.required("Player Command", commandArgument(main), NQDescription.of("Command which will be executed from the player's perspective. A '/' at the beginning is not required."))
             .handler(
                 (context) -> {
                   final String playerCommand = context.get("Player Command");

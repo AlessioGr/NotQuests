@@ -1,9 +1,9 @@
 package rocks.gravili.notquests.paper.structs.variables;
 
 import org.bukkit.inventory.ItemStack;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
+import rocks.gravili.notquests.paper.commands.framework.NQFlag;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.HashMap;
@@ -15,12 +15,12 @@ public class EnderChestVariable extends Variable<ItemStack[]>{
         setCanSetValue(true);
 
         addRequiredBooleanFlag(
-                main.getCommandManager().getPaperCommandManager().flagBuilder("addToInventoryIfEnderChestFull")
-                        .withDescription(Description.of("Puts the item in the player's inventory if their enderchest is full")).build()
+                NQFlag.presence("addToInventoryIfEnderChestFull",
+                        NQDescription.of("Puts the item in the player's inventory if their enderchest is full"))
         );
         addRequiredBooleanFlag(
-                main.getCommandManager().getPaperCommandManager().flagBuilder("skipItemIfEnderChestFull")
-                        .withDescription(Description.of("Does not drop the item if enderchest full if flag set")).build()
+                NQFlag.presence("skipItemIfEnderChestFull",
+                        NQDescription.of("Does not drop the item if enderchest full if flag set"))
         );
     }
 
@@ -74,7 +74,7 @@ public class EnderChestVariable extends Variable<ItemStack[]>{
 
 
     @Override
-    public List<Suggestion> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
+    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
         return null;
     }
 

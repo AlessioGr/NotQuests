@@ -40,6 +40,11 @@ public class NPCManager {
         npcs.add("citizens:"+npcID);
       }
     }
+    if(main.getIntegrationsManager().isFancyNPCsEnabled()){
+      for(final String npcID : main.getIntegrationsManager().getFancyNPCsManager().getAllNPCIds()){
+        npcs.add("fancynpcs:"+npcID);
+      }
+    }
     return npcs;
   }
 
@@ -64,6 +69,15 @@ public class NPCManager {
       final ArmorstandNPC newArmorStandNPC = new ArmorstandNPC(main, npcID);
       npcs.add(newArmorStandNPC);
       return newArmorStandNPC;
+    }else if(type.equalsIgnoreCase("fancynpcs")){
+      if(main.getIntegrationsManager().isFancyNPCsEnabled()){
+        final FancyNPC newFancyNPC = new FancyNPC(main, npcID);
+        npcs.add(newFancyNPC);
+        return newFancyNPC;
+      }else{
+        main.getLogManager().warn("Tried to create a FancyNPCs NQNPC with ID <highlight>%s</highlight>, but FancyNPCs is not active/loaded.", npcID);
+        return null;
+      }
     }
 
     return null;

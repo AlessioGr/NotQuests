@@ -24,17 +24,16 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Container;
 import org.bukkit.inventory.ItemStack;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser;
 import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
+import rocks.gravili.notquests.paper.commands.framework.NQFlag;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 public class ContainerInventoryVariable extends Variable<ItemStack[]> {
     public ContainerInventoryVariable(NotQuests main) {
@@ -42,20 +41,19 @@ public class ContainerInventoryVariable extends Variable<ItemStack[]> {
         setCanSetValue(true);
 
         addRequiredString(StringVariableValueParser.of("world", null, (context, input) -> {
-            main.getUtilManager().sendFancyCommandCompletion(context.sender(), input.input().split(" "), "[World Name]", "[...]");
-            ArrayList<Suggestion> suggestions = new ArrayList<>();
+            ArrayList<String> suggestions = new ArrayList<>();
             for (World world : Bukkit.getWorlds()) {
-                suggestions.add(Suggestion.suggestion(world.getName()));
+                suggestions.add(world.getName());
             }
-            return CompletableFuture.completedFuture(suggestions);
+            return suggestions;
         }));
 
         addRequiredNumber(NumberVariableValueParser.of("x", null));
         addRequiredNumber(NumberVariableValueParser.of("y", null));
         addRequiredNumber(NumberVariableValueParser.of("z", null));
 
-        addRequiredBooleanFlag(main.getCommandManager().getPaperCommandManager().flagBuilder("skipItemIfInventoryFull")
-                .withDescription(Description.of("Does not drop the item if inventory full if flag set")).build()
+        addRequiredBooleanFlag(NQFlag.presence("skipItemIfInventoryFull",
+                NQDescription.of("Does not drop the item if inventory full if flag set"))
         );
     }
 
@@ -123,7 +121,7 @@ public class ContainerInventoryVariable extends Variable<ItemStack[]> {
 
 
     @Override
-    public final List<Suggestion> getPossibleValues(final QuestPlayer questPlayer, final Object... objects) {
+    public final List<String> getPossibleValues(final QuestPlayer questPlayer, final Object... objects) {
         return null;
     }
 

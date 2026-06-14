@@ -31,18 +31,22 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class QuestPlayerManager {
   private final NotQuests main;
 
-  private final HashMap<UUID, List<QuestPlayer>> questPlayersAndUUIDs; //Can contain multiple profiles since one UUID can have multiple profiles => multiple QuestPlayer
-  private final HashMap<UUID, QuestPlayer> activeQuestPlayersAndUUIDs; //Only stores the current active profile
+  // ConcurrentHashMap: these are read/written from the main thread AND async save/load/quit tasks.
+  // Plain HashMaps could corrupt (lost entries / infinite loop) under concurrent structural changes.
+  private final Map<UUID, List<QuestPlayer>> questPlayersAndUUIDs; //Can contain multiple profiles since one UUID can have multiple profiles => multiple QuestPlayer
+  private final Map<UUID, QuestPlayer> activeQuestPlayersAndUUIDs; //Only stores the current active profile
 
 
   public QuestPlayerManager(NotQuests notQuests) {
     this.main = notQuests;
-    questPlayersAndUUIDs = new HashMap<>();
-    activeQuestPlayersAndUUIDs = new HashMap<>();
+    questPlayersAndUUIDs = new ConcurrentHashMap<>();
+    activeQuestPlayersAndUUIDs = new ConcurrentHashMap<>();
   }
 
   public void loadSinglePlayerData(final UUID uuid) {
@@ -172,7 +176,7 @@ public class QuestPlayerManager {
     }};
   }
 
-  public final HashMap<UUID, List<QuestPlayer>> getQuestPlayersForUUIDs() {
+  public final Map<UUID, List<QuestPlayer>> getQuestPlayersForUUIDs() {
     return questPlayersAndUUIDs;
   }
 
@@ -206,11 +210,9 @@ public class QuestPlayerManager {
       foundQuestPlayer.setFinishedLoadingGeneralData(true);
       foundQuestPlayer.setFinishedLoadingTags(true);
       foundQuestPlayer.setCurrentlyLoading(false);
-      if(questPlayersAndUUIDs.containsKey(uuid)){
-        questPlayersAndUUIDs.get(uuid).add(foundQuestPlayer);
-      } else {
-        questPlayersAndUUIDs.put(uuid, List.of(foundQuestPlayer));
-      }
+      // Atomic get-or-create of the per-UUID profile list, with a mutable thread-safe list.
+      // (The old `List.of(...)` was immutable and threw on the later `.add` for a 2nd profile.)
+      questPlayersAndUUIDs.computeIfAbsent(uuid, k -> new CopyOnWriteArrayList<>()).add(foundQuestPlayer);
       activeQuestPlayersAndUUIDs.put(uuid, foundQuestPlayer);
     }
     return foundQuestPlayer;
@@ -230,13 +232,7 @@ public class QuestPlayerManager {
 
 
 
-      if(questPlayersAndUUIDs.containsKey(uuid)){
-        questPlayersAndUUIDs.get(uuid).add(questPlayer);
-      } else {
-        final ArrayList<QuestPlayer> newQuestPlayers = new ArrayList<>();
-        newQuestPlayers.add(questPlayer);
-        questPlayersAndUUIDs.put(uuid, newQuestPlayers);
-      }
+      questPlayersAndUUIDs.computeIfAbsent(uuid, k -> new CopyOnWriteArrayList<>()).add(questPlayer);
       if(setAsCurrentProfile){
         activeQuestPlayersAndUUIDs.put(uuid, questPlayer);
       }
@@ -736,7 +732,14 @@ public class QuestPlayerManager {
 
 
   private void savePlayerDataInternal(final List<QuestPlayer> questPlayers) {
-    try (Connection connection = main.getDataManager().getConnection();
+    try (final Connection connection = main.getDataManager().getConnection()) {
+      // Save the player(s) in a single transaction. Without this, the save runs each
+      // DELETE/INSERT in autocommit, so a failure part-way through (a DB error, or a
+      // ConcurrentModificationException while iterating a player's quest data) leaves
+      // deleted-but-not-re-inserted rows = lost active quests / quest points. With the
+      // transaction, any such failure rolls back the whole save instead of corrupting it.
+      connection.setAutoCommit(false);
+      try (
          final PreparedStatement deleteFromQuestPlayerProfileDataPS = connection.prepareStatement("""
             DELETE FROM QuestPlayerProfileData WHERE PlayerUUID = ?;
          """);
@@ -868,6 +871,16 @@ public class QuestPlayerManager {
           insertIntoFailedQuestsPS.setLong(3, failedQuest.getTimeFailed());
           insertIntoFailedQuestsPS.setString(4, profile);
           insertIntoFailedQuestsPS.executeUpdate();
+        }
+      }
+        connection.commit();
+      } catch (final Exception transactionError) {
+        connection.rollback(); // all-or-nothing: never leave a half-written player
+        throw transactionError;
+      } finally {
+        try {
+          connection.setAutoCommit(true); // reset before the connection returns to the pool
+        } catch (final SQLException ignored) {
         }
       }
     } catch (Exception e) {

@@ -21,15 +21,15 @@ package rocks.gravili.notquests.paper.structs.objectives.hooks.slimefun;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
-import static rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser.numberVariableParser;
+import static rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableArgument.numberVariableArgument;
 
 public class SlimefunResearchObjective extends Objective {
 
@@ -39,15 +39,15 @@ public class SlimefunResearchObjective extends Objective {
 
     public static void handleCommands(
             NotQuests main,
-            LegacyPaperCommandManager<CommandSender> manager,
-            Command.Builder<CommandSender> addObjectiveBuilder,
+            NQCommandManager manager,
+            NQCommandBuilder addObjectiveBuilder,
             final int level) {
         if (!main.getIntegrationsManager().isSlimefunEnabled()) {
             return;
         }
 
         manager.command(addObjectiveBuilder
-                .required("amount", numberVariableParser("amount", null), Description.of("Amount to spend on research"))
+                .required("amount", numberVariableArgument("amount", null), NQDescription.of("Amount to spend on research"))
                 .handler((context) -> {
                     SlimefunResearchObjective slimefunResearchobjective = new SlimefunResearchObjective(main);
                     slimefunResearchobjective.setProgressNeededExpression(context.get("amount"));

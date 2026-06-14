@@ -21,15 +21,14 @@ package rocks.gravili.notquests.paper.structs.actions;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
-
-import static org.incendo.cloud.parser.standard.StringParser.greedyStringParser;
 
 public class BroadcastMessageAction extends Action {
 
@@ -41,12 +40,12 @@ public class BroadcastMessageAction extends Action {
 
     public static void handleCommands(
             NotQuests main,
-            LegacyPaperCommandManager<CommandSender> manager,
-            Command.Builder<CommandSender> builder,
+            NQCommandManager manager,
+            NQCommandBuilder builder,
             ActionFor actionFor) {
         manager.command(
                 builder
-                        .required("Broadcast Message", greedyStringParser(), Description.of("Message to broadcast"), main.getCommandManager().miniMessageSuggestions())
+                        .required("Broadcast Message", NQArguments.greedyStringArgument(), NQDescription.of("Message to broadcast"))
                         .handler((context) -> {
                             final String messageToBroadcast = (String) context.get("Broadcast Message");
                             BroadcastMessageAction broadcastMessageAction = new BroadcastMessageAction(main);

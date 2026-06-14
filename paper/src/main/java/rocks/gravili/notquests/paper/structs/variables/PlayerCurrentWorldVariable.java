@@ -20,7 +20,6 @@ package rocks.gravili.notquests.paper.structs.variables;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
@@ -56,8 +55,8 @@ public class PlayerCurrentWorldVariable extends Variable<String> {
   }
 
   @Override
-  public List<Suggestion> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
-    return Bukkit.getWorlds().stream().map(world -> Suggestion.suggestion(world.getName())).toList();
+  public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
+    return Bukkit.getWorlds().stream().map(world -> world.getName()).toList();
   }
 
   @Override

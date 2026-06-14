@@ -23,20 +23,19 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
-import org.incendo.cloud.paper.PaperCommandManager;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
 import rocks.gravili.notquests.paper.managers.items.NQItem;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
-import static org.incendo.cloud.parser.standard.IntegerParser.integerParser;
-import static rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionParser.itemStackSelectionParser;
+import static rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionArgument.itemStackSelectionArgument;
 
 public class GiveItemAction extends Action {
 
@@ -49,11 +48,11 @@ public class GiveItemAction extends Action {
 
     public static void handleCommands(
             NotQuests main,
-            LegacyPaperCommandManager<CommandSender> manager,
-            Command.Builder<CommandSender> builder,
+            NQCommandManager manager,
+            NQCommandBuilder builder,
             ActionFor actionFor) {
-        manager.command(builder.required("material", itemStackSelectionParser(main), Description.of("Material of the item which the player should receive. If you use 'hand', the item you are holding in your main hand will be used."))
-                .required("amount", integerParser(1), Description.of("Amount of items which the player will receive."))
+        manager.command(builder.required("material", itemStackSelectionArgument(main), NQDescription.of("Material of the item which the player should receive. If you use 'hand', the item you are holding in your main hand will be used."))
+                .required("amount", NQArguments.integerArgument(), NQDescription.of("Amount of items which the player will receive."))
                 .handler((context) -> {
                             final ItemStackSelection itemStackSelection = context.get("material");
                             final int itemRewardAmount = context.get("amount");

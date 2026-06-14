@@ -19,7 +19,6 @@
 package rocks.gravili.notquests.paper.structs.variables.hooks;
 
 import me.clip.placeholderapi.PlaceholderAPI;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -27,20 +26,18 @@ import rocks.gravili.notquests.paper.structs.variables.Variable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 public class PlaceholderAPIStringVariable extends Variable<String> {
 
     public PlaceholderAPIStringVariable(NotQuests main) {
         super(main);
-        addRequiredString(StringVariableValueParser.of("Placeholder", null, (context, lastString) -> {
-            main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[Quest Name]", "[...]");
-            ArrayList<Suggestion> suggestions = new ArrayList<>();
+        addRequiredString(StringVariableValueParser.of("Placeholder", null, (context, input) -> {
+            ArrayList<String> suggestions = new ArrayList<>();
             for (String identifier : PlaceholderAPI.getRegisteredIdentifiers()) {
-                suggestions.add(Suggestion.suggestion("%" + identifier + "_"));
+                suggestions.add("%" + identifier + "_");
             }
 
-            return CompletableFuture.completedFuture(suggestions);
+            return suggestions;
         }));
     }
 
@@ -60,7 +57,7 @@ public class PlaceholderAPIStringVariable extends Variable<String> {
     }
 
     @Override
-    public List<Suggestion> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
+    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
         return null;
     }
 

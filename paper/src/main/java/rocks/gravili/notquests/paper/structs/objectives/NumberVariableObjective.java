@@ -4,15 +4,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
-import org.incendo.cloud.parser.flag.CommandFlag;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueParser;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser;
 import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
+import rocks.gravili.notquests.paper.commands.framework.NQFlag;
 import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -21,10 +21,9 @@ import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.CompletableFuture;
+import java.util.List;
 
-import static org.incendo.cloud.parser.standard.StringParser.stringParser;
-import static rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser.numberVariableParser;
+import static rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableArgument.numberVariableArgument;
 
 public class NumberVariableObjective extends Objective { // TODO: Not done yet
     private String variableName;
@@ -44,8 +43,8 @@ public class NumberVariableObjective extends Objective { // TODO: Not done yet
 
     public static void handleCommands(
             final NotQuests main,
-            final LegacyPaperCommandManager<CommandSender> manager,
-            final Command.Builder<CommandSender> addObjectiveBuilder,
+            final NQCommandManager manager,
+            final NQCommandBuilder addObjectiveBuilder,
             final int level) {
 
         for (final String variableString : main.getVariablesManager().getVariableIdentifiers()) {
@@ -62,20 +61,19 @@ public class NumberVariableObjective extends Objective { // TODO: Not done yet
             }
 
             manager.command(main.getVariablesManager().registerVariableCommands(variableString, addObjectiveBuilder)
-                    .required("operator", stringParser(), Description.of("Math operator."), (context, lastString) -> {
-                        ArrayList<Suggestion> completions = new ArrayList<>();
-                        completions.add(Suggestion.suggestion("equals"));
-                        completions.add(Suggestion.suggestion("lessThan"));
-                        completions.add(Suggestion.suggestion("moreThan"));
-                        completions.add(Suggestion.suggestion("moreOrEqualThan"));
-                        completions.add(Suggestion.suggestion("lessOrEqualThan"));
+                    .required("operator", NQArguments.stringArgument(), NQDescription.of("Math operator."), (context, input) -> {
+                        List<String> completions = new ArrayList<>();
+                        completions.add("equals");
+                        completions.add("lessThan");
+                        completions.add("moreThan");
+                        completions.add("moreOrEqualThan");
+                        completions.add("lessOrEqualThan");
 
-                        main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[Math Comparison Operator]", "[...]");
-                        return CompletableFuture.completedFuture(completions);
+                        return completions;
                     })
-                    .required("amount", numberVariableParser("amount", null), Description.of("Amount"))
+                    .required("amount", numberVariableArgument("amount", null), NQDescription.of("Amount"))
 
-                    .flag(manager.flagBuilder("checkOnlyWhenCorrespondingVariableValueChanged").withDescription(Description.of("This checks this objective only, when the corresponding variable value is changed via an action, instead of checking every x seconds.")))
+                    .flag(NQFlag.builder("checkOnlyWhenCorrespondingVariableValueChanged").withDescription(NQDescription.of("This checks this objective only, when the corresponding variable value is changed via an action, instead of checking every x seconds.")).build())
                     .handler((context) -> {
                         String amountExpression = context.get("amount");
 
@@ -115,7 +113,7 @@ public class NumberVariableObjective extends Objective { // TODO: Not done yet
                         for (BooleanVariableValueParser booleanParser : variable.getRequiredBooleans()) {
                             additionalBooleanArguments.put(booleanParser.getIdentifier(), new NumberExpression(main, context.get(booleanParser.getIdentifier())));
                         }
-                        for (CommandFlag<?> commandFlag : variable.getRequiredBooleanFlags()) {
+                        for (rocks.gravili.notquests.paper.commands.framework.NQFlag commandFlag : variable.getRequiredBooleanFlags()) {
                             additionalBooleanArguments.put(commandFlag.name(), context.flags().isPresent(commandFlag.name()) ? NumberExpression.ofStatic(main, 1) : NumberExpression.ofStatic(main, 0));
                         }
                         numberVariableObjective.setAdditionalBooleanArguments(additionalBooleanArguments);

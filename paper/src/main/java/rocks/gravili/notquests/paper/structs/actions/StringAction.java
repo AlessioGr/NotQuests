@@ -21,15 +21,15 @@ package rocks.gravili.notquests.paper.structs.actions;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
-import org.incendo.cloud.parser.flag.CommandFlag;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.framework.NQFlag;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueParser;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser;
 import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
 import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
@@ -37,10 +37,9 @@ import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.CompletableFuture;
+import java.util.List;
 
-import static org.incendo.cloud.parser.standard.StringParser.stringParser;
-import static rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser.stringVariableParser;
+import static rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableArgument.stringVariableArgument;
 
 
 public class StringAction extends Action {
@@ -60,7 +59,7 @@ public class StringAction extends Action {
         additionalBooleanArguments = new HashMap<>();
     }
 
-    public static void handleCommands(NotQuests main, LegacyPaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor actionFor) {
+    public static void handleCommands(NotQuests main, NQCommandManager manager, NQCommandBuilder builder, ActionFor actionFor) {
 
         for(String variableString : main.getVariablesManager().getVariableIdentifiers()){
 
@@ -78,14 +77,13 @@ public class StringAction extends Action {
             }
 
             manager.command(main.getVariablesManager().registerVariableCommands(variableString, builder)
-                    .required("operator", stringParser(), Description.of("String operator."), (context, lastString) -> {
-                        ArrayList<Suggestion> completions = new ArrayList<>();
-                        completions.add(Suggestion.suggestion("set"));
-                        completions.add(Suggestion.suggestion("append"));
-                        main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[String Comparison Operator]", "[...]");
-                        return CompletableFuture.completedFuture(completions);
+                    .required("operator", NQArguments.stringArgument(), NQDescription.of("String operator."), (context, input) -> {
+                        List<String> completions = new ArrayList<>();
+                        completions.add("set");
+                        completions.add("append");
+                        return completions;
                     })
-                    .required("string", stringVariableParser("string", variable), Description.of("String"))
+                    .required("string", stringVariableArgument("string", variable), NQDescription.of("String"))
                     .handler((context) -> {
                         final String string = context.get("string");
                         final String stringOperator = context.get("operator");
@@ -112,7 +110,7 @@ public class StringAction extends Action {
                         for(BooleanVariableValueParser<CommandSender> booleanParser : variable.getRequiredBooleans()){
                             additionalBooleanArguments.put(booleanParser.getIdentifier(), new NumberExpression(main, context.get(booleanParser.getIdentifier())));
                         }
-                        for(CommandFlag<?> commandFlag : variable.getRequiredBooleanFlags()){
+                        for(NQFlag commandFlag : variable.getRequiredBooleanFlags()){
                             additionalBooleanArguments.put(commandFlag.name(), context.flags().isPresent(commandFlag.name()) ? NumberExpression.ofStatic(main, 1) : NumberExpression.ofStatic(main, 0));
                         }
                         stringAction.setAdditionalBooleanArguments(additionalBooleanArguments);

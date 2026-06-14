@@ -24,18 +24,18 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.util.Vector;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
+import rocks.gravili.notquests.paper.commands.framework.NQFlag;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.Map;
 
-import static org.incendo.cloud.bukkit.parser.WorldParser.worldParser;
-import static org.incendo.cloud.parser.standard.IntegerParser.integerParser;
-import static rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser.numberVariableParser;
+import static rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableArgument.numberVariableArgument;
 
 public class InteractObjective extends Objective {
 
@@ -51,12 +51,12 @@ public class InteractObjective extends Objective {
 
     public static void handleCommands(
             NotQuests main,
-            LegacyPaperCommandManager<CommandSender> manager,
-            Command.Builder<CommandSender> addObjectiveBuilder,
+            NQCommandManager manager,
+            NQCommandBuilder addObjectiveBuilder,
             final int level) {
         manager.command(addObjectiveBuilder
-                .required("amount", numberVariableParser("amount", null), Description.of("Amount of interactions needed"))
-                .required("world", worldParser(), Description.of("World name"))
+                .required("amount", numberVariableArgument("amount", null), NQDescription.of("Amount of interactions needed"))
+                .required("world", NQArguments.worldArgument(), NQDescription.of("World name"))
                 /* .argumentTriplet(
                         "coords",
                         TypeToken.get(Vector.class),
@@ -68,12 +68,12 @@ public class InteractObjective extends Objective {
                         ArgumentDescription.of("Coordinates")
                 )*/
                 // Commented out, because this somehow breaks flags
-                .required("x", integerParser(), Description.of("X coordinate"))
-                .required("y", integerParser(), Description.of("Y coordinate"))
-                .required("z", integerParser(), Description.of("Z coordinate"))
-                .flag(manager.flagBuilder("leftClick").withDescription(Description.of("Count left-clicks of the location.")))
-                .flag(manager.flagBuilder("rightClick").withDescription(Description.of("Count right-clicks of the location.")))
-                .flag(manager.flagBuilder("cancelInteraction").withDescription(Description.of("Makes it so the interaction will be cancelled while this objective is active")))
+                .required("x", NQArguments.integerArgument(), NQDescription.of("X coordinate"))
+                .required("y", NQArguments.integerArgument(), NQDescription.of("Y coordinate"))
+                .required("z", NQArguments.integerArgument(), NQDescription.of("Z coordinate"))
+                .flag(NQFlag.builder("leftClick").withDescription(NQDescription.of("Count left-clicks of the location.")).build())
+                .flag(NQFlag.builder("rightClick").withDescription(NQDescription.of("Count right-clicks of the location.")).build())
+                .flag(NQFlag.builder("cancelInteraction").withDescription(NQDescription.of("Makes it so the interaction will be cancelled while this objective is active")).build())
                 .flag(main.getCommandManager().maxDistance)
                 .handler(
                         (context) -> {

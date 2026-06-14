@@ -2,24 +2,24 @@ package rocks.gravili.notquests.paper.commands.category.admin;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.CommandManager;
-import org.incendo.cloud.description.Description;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.BaseCommand;
 import rocks.gravili.notquests.paper.structs.Quest;
 
 public class ListCommand extends BaseCommand {
 
-    public ListCommand(NotQuests notQuests, Command.Builder<CommandSender> builder) {
+    public ListCommand(NotQuests notQuests, NQCommandBuilder builder) {
         super(notQuests, builder);
     }
 
     @Override
-    public void apply(CommandManager<CommandSender> commandManager) {
+    public void apply(NQCommandManager commandManager) {
         builder = builder.literal("list");
 
-        commandManager.command(builder.commandDescription(Description.of("Shows you a list of all available Objective Types."))
+        commandManager.command(builder.commandDescription(NQDescription.of("Shows you a list of all available Objective Types."))
                 .literal("ObjectiveTypes")
                 .handler((context) -> {
                     context.sender().sendMessage(Component.empty());
@@ -29,7 +29,7 @@ public class ListCommand extends BaseCommand {
                     }
                 }));
 
-        commandManager.command(builder.commandDescription(Description.of("Shows you a list of all available Requirement Types."))
+        commandManager.command(builder.commandDescription(NQDescription.of("Shows you a list of all available Requirement Types."))
                 .literal("RequirementTypes")
                 .handler((context) -> {
                     context.sender().sendMessage(Component.empty());
@@ -39,7 +39,7 @@ public class ListCommand extends BaseCommand {
                     }
                 }));
 
-        commandManager.command(builder.commandDescription(Description.of("Shows you a list of all available Action (Reward) Types."))
+        commandManager.command(builder.commandDescription(NQDescription.of("Shows you a list of all available Action (Reward) Types."))
                 .literal("ActionTypes")
                 .handler((context) -> {
                     context.sender().sendMessage(Component.empty());
@@ -49,7 +49,7 @@ public class ListCommand extends BaseCommand {
                     }
                 }));
 
-        commandManager.command(builder.commandDescription(Description.of("Shows you a list of all available Trigger Types."))
+        commandManager.command(builder.commandDescription(NQDescription.of("Shows you a list of all available Trigger Types."))
                 .literal("TriggerTypes")
                 .handler((context) -> {
                     context.sender().sendMessage(Component.empty());
@@ -59,7 +59,7 @@ public class ListCommand extends BaseCommand {
                     }
                 }));
 
-        commandManager.command(builder.commandDescription(Description.of("Shows you a list of all created Quests."))
+        commandManager.command(builder.commandDescription(NQDescription.of("Shows you a list of all created Quests."))
                 .literal("AllQuests")
                 .handler((context) -> {
                     context.sender().sendMessage(Component.empty());
@@ -72,7 +72,7 @@ public class ListCommand extends BaseCommand {
 
                 }));
 
-        commandManager.command(builder.commandDescription(Description.of("Shows you a list of all available Placeholders which can be used in Trigger or Action commands."))
+        commandManager.command(builder.commandDescription(NQDescription.of("Shows you a list of all available Placeholders which can be used in Trigger or Action commands."))
                 .literal("Placeholders")
                 .handler((context) -> {
                     context.sender().sendMessage(Component.empty());

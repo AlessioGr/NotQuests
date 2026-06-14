@@ -18,15 +18,13 @@
 
 package rocks.gravili.notquests.paper.structs.triggers.types;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
 import rocks.gravili.notquests.paper.structs.triggers.Trigger;
-
-import static org.incendo.cloud.parser.standard.IntegerParser.integerParser;
 
 public class DeathTrigger extends Trigger {
 
@@ -36,13 +34,13 @@ public class DeathTrigger extends Trigger {
 
     public static void handleCommands(
             NotQuests main,
-            LegacyPaperCommandManager<CommandSender> manager,
-            Command.Builder<CommandSender> addTriggerBuilder) {
+            NQCommandManager manager,
+            NQCommandBuilder addTriggerBuilder) {
         manager.command(addTriggerBuilder
-                .required("amount", integerParser(1), Description.description("Amount of deaths needed for the Trigger to trigger."))
+                .required("amount", NQArguments.integerArgument(), NQDescription.of("Amount of deaths needed for the Trigger to trigger."))
                 .flag(main.getCommandManager().applyOn)
                 .flag(main.getCommandManager().triggerWorldString)
-                .commandDescription(Description.of("Triggers when a the Player dies."))
+                .commandDescription(NQDescription.of("Triggers when a the Player dies."))
                 .handler(
                         (context) -> {
                             DeathTrigger deathTrigger = new DeathTrigger(main);

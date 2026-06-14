@@ -1,32 +1,25 @@
 package rocks.gravili.notquests.paper.commands.category.admin;
 
-import org.bukkit.command.CommandSender;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.CommandManager;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.BaseCommand;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
 import rocks.gravili.notquests.paper.managers.data.Category;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-
-import static org.incendo.cloud.parser.standard.StringParser.stringParser;
 
 public class QuestCreateCommand extends BaseCommand {
-    public QuestCreateCommand(NotQuests notQuests, Command.Builder<CommandSender> builder) {
+    public QuestCreateCommand(NotQuests notQuests, NQCommandBuilder builder) {
         super(notQuests, builder);
     }
 
     @Override
-    public void apply(CommandManager<CommandSender> commandManager) {
-        commandManager.command(builder.literal("create", Description.of("Create a new quest."))
-                .required("questName", stringParser(), Description.of("Quest Name"), (context, input) -> {
-                    notQuests.getUtilManager().sendFancyCommandCompletion(context.sender(), input.input().split(" "), "[New Quest Name]", "");
-
-                    return CompletableFuture.completedFuture(List.of(Suggestion.suggestion("<Enter new Quest Name>")));
-                })
+    public void apply(NQCommandManager commandManager) {
+        commandManager.command(builder.literal("create", NQDescription.of("Create a new quest."))
+                .required("questName", NQArguments.stringArgument(), NQDescription.of("Quest Name"), (context, input) ->
+                        List.of("<Enter new Quest Name>"))
                 .flag(notQuests.getCommandManager().categoryFlag)
                 .handler((context) -> {
                     if (context.flags().contains(notQuests.getCommandManager().categoryFlag)) {

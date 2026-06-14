@@ -3,28 +3,28 @@ package rocks.gravili.notquests.paper.commands.category.admin;
 import net.kyori.adventure.text.Component;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.CommandManager;
-import org.incendo.cloud.description.Description;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.BaseCommand;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
-import static org.incendo.cloud.bukkit.parser.OfflinePlayerParser.offlinePlayerParser;
-import static rocks.gravili.notquests.paper.commands.arguments.ActiveQuestParser.activeQuestParser;
+import static rocks.gravili.notquests.paper.commands.arguments.ActiveQuestArgument.activeQuestArgument;
 
 public class QuestProgressCommand extends BaseCommand {
 
-    public QuestProgressCommand(NotQuests notQuests, Command.Builder<CommandSender> builder) {
+    public QuestProgressCommand(NotQuests notQuests, NQCommandBuilder builder) {
         super(notQuests, builder);
     }
 
     @Override
-    public void apply(CommandManager<CommandSender> commandManager) {
-        commandManager.command(builder.literal("progress", Description.of("Shows the progress for a quest of another player"))
-                .required("player", offlinePlayerParser(), Description.of("Player progress you want to see"))
-                .required("activeQuest", activeQuestParser(notQuests), Description.of("Quest name of the quest you wish to see the progress for."))
+    public void apply(NQCommandManager commandManager) {
+        commandManager.command(builder.literal("progress", NQDescription.of("Shows the progress for a quest of another player"))
+                .required("player", NQArguments.playerArgument(), NQDescription.of("Player progress you want to see"))
+                .required("activeQuest", activeQuestArgument(notQuests), NQDescription.of("Quest name of the quest you wish to see the progress for."))
                 .handler((context) -> {
                     final OfflinePlayer offlinePlayer = context.get("player");
                     getProgress(context.sender(), offlinePlayer, context.get("activeQuest"));
@@ -44,7 +44,7 @@ public class QuestProgressCommand extends BaseCommand {
                 notQuests.getQuestManager().sendCompletedObjectivesAndProgress(questPlayer, activeQuest);
 
                 sender.sendMessage(notQuests.parse(
-                        "<main>>Active Objectives for Quest <highlight>" + activeQuest.getQuest().getIdentifier() + "</highlight> of player <highlight2>"
+                        "<main>Active Objectives for Quest <highlight>" + activeQuest.getQuest().getIdentifier() + "</highlight> of player <highlight2>"
                                 + offlinePlayer.getName() + "</highlight2>" + getOfflineOnline(offlinePlayer) + ":"
                 ));
                 notQuests.getQuestManager().sendActiveObjectivesAndProgress(questPlayer, activeQuest, 0);
@@ -68,6 +68,6 @@ public class QuestProgressCommand extends BaseCommand {
     }
 
     private String getOfflineOnline(OfflinePlayer offlinePlayer) {
-        return ((offlinePlayer.isOnline() ? ")<green>(online)</green>" : "<red>(offline)</red>"));
+        return ((offlinePlayer.isOnline() ? " <green>(online)</green>" : " <red>(offline)</red>"));
     }
 }

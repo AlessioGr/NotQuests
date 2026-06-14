@@ -19,6 +19,8 @@
 package rocks.gravili.notquests.paper.events.hooks;
 
 import com.gamingmesh.jobs.api.JobsLevelUpEvent;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -32,32 +34,79 @@ public class JobsRebornEvents implements Listener {
 
     public JobsRebornEvents(NotQuests main) {
         this.main = main;
+        startLevelSyncTask();
+    }
+
+    /**
+     * "Reach job level" objectives should always reflect the player's real job level, however they
+     * reached it. {@link JobsLevelUpEvent} only fires on natural level-ups (admin commands such as
+     * {@code /jobs level <player> <job> add} bypass it), so we additionally poll every few seconds
+     * and re-sync the progress to the live level. {@code setProgress} is a no-op when nothing changed,
+     * so this is cheap and never double-counts.
+     */
+    private void startLevelSyncTask() {
+        Bukkit.getScheduler()
+                .runTaskTimer(
+                        main.getMain(),
+                        () -> {
+                            if (main.getDataManager().isDisabled()
+                                    || !main.getIntegrationsManager().isJobsRebornEnabled()) {
+                                return;
+                            }
+                            for (final Player player : Bukkit.getOnlinePlayers()) {
+                                final QuestPlayer questPlayer =
+                                        main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
+                                if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
+                                    continue;
+                                }
+                                syncObjectives(questPlayer);
+                            }
+                        },
+                        60L,
+                        60L);
+    }
+
+    private void syncObjectives(final QuestPlayer questPlayer) {
+        for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+            for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
+                if (activeObjective.isUnlocked()
+                        && activeObjective.getObjective()
+                                instanceof final JobsRebornReachJobLevelObjective jobsObjective) {
+                    jobsObjective.updateProgressToCurrentLevel(activeObjective);
+                }
+            }
+            activeQuest.removeCompletedObjectives(true);
+        }
+        questPlayer.removeCompletedQuests();
     }
 
     @EventHandler
     public void onJobsLevelUp(JobsLevelUpEvent e) {
-        if (!e.isCancelled()) {
-            final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(e.getPlayer().getUniqueId());
-            if (questPlayer != null) {
-                if (questPlayer.getActiveQuests().size() > 0) {
-                    for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                        for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                            if (activeObjective.isUnlocked()) {
-                                if (activeObjective.getObjective() instanceof JobsRebornReachJobLevelObjective jobsRebornReachJobLevel) {
-                                    if (!e.getJob().getName().equalsIgnoreCase(jobsRebornReachJobLevel.getJobName())) {
-                                        continue;
-                                    }
-                                    activeObjective.addProgress(1);
-                                }
-                            }
-                        }
-                        activeQuest.removeCompletedObjectives(true);
+        if (e.isCancelled()) {
+            return;
+        }
+        final QuestPlayer questPlayer =
+                main.getQuestPlayerManager().getActiveQuestPlayer(e.getPlayer().getUniqueId());
+        if (questPlayer == null || questPlayer.getActiveQuests().isEmpty()) {
+            return;
+        }
+        for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+            for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
+                if (activeObjective.isUnlocked()
+                        && activeObjective.getObjective()
+                                instanceof final JobsRebornReachJobLevelObjective jobsObjective) {
+                    if (!e.getJob().getName().equalsIgnoreCase(jobsObjective.getJobName())) {
+                        continue;
                     }
-                    questPlayer.removeCompletedQuests();
+                    if (jobsObjective.isCountPreviousLevels()) {
+                        jobsObjective.updateProgressToCurrentLevel(activeObjective);
+                    } else {
+                        activeObjective.addProgress(1);
+                    }
                 }
             }
+            activeQuest.removeCompletedObjectives(true);
         }
+        questPlayer.removeCompletedQuests();
     }
-
-
 }

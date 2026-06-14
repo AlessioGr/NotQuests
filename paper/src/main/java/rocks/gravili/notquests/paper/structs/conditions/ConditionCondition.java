@@ -18,17 +18,16 @@
 
 package rocks.gravili.notquests.paper.structs.conditions;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
 
-import static rocks.gravili.notquests.paper.commands.arguments.ConditionParser.conditionParser;
+import static rocks.gravili.notquests.paper.commands.arguments.ConditionArgument.conditionArgument;
 
 public class ConditionCondition extends Condition {
 
@@ -40,10 +39,10 @@ public class ConditionCondition extends Condition {
 
   public static void handleCommands(
       NotQuests main,
-      LegacyPaperCommandManager<CommandSender> manager,
-      Command.Builder<CommandSender> builder,
+      NQCommandManager manager,
+      NQCommandBuilder builder,
       ConditionFor conditionFor) {
-    manager.command(builder.required("Condition", conditionParser(main), Description.of("Name of the condition which will be checked"))
+    manager.command(builder.required("Condition", conditionArgument(main), NQDescription.of("Name of the condition which will be checked"))
             .handler(
                 (context) -> {
                   final Condition condition = context.get("Condition");

@@ -27,15 +27,14 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
 import rocks.gravili.notquests.paper.conversation.ConversationLine;
 import rocks.gravili.notquests.paper.conversation.ConversationPlayer;
 import rocks.gravili.notquests.paper.managers.data.Category;
@@ -48,23 +47,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
-import static org.incendo.cloud.parser.standard.IntegerParser.integerParser;
-import static org.incendo.cloud.parser.standard.StringParser.stringParser;
-import static rocks.gravili.notquests.paper.commands.arguments.ActiveQuestParser.activeQuestParser;
-import static rocks.gravili.notquests.paper.commands.arguments.CategoryParser.categoryParser;
-import static rocks.gravili.notquests.paper.commands.arguments.QuestParser.questParser;
+import static rocks.gravili.notquests.paper.commands.arguments.ActiveQuestArgument.activeQuestArgument;
+import static rocks.gravili.notquests.paper.commands.arguments.CategoryArgument.categoryArgument;
+import static rocks.gravili.notquests.paper.commands.arguments.QuestArgument.questArgument;
 
 public class UserCommands {
     private final NotQuests main;
-    private final LegacyPaperCommandManager<CommandSender> manager;
-    private final Command.Builder<CommandSender> builder;
+    private final NQCommandManager manager;
+    private final NQCommandBuilder builder;
     private final Component firstLevelCommands;
 
     private final ItemStack chest, abort, coins, books, info;
 
-    public UserCommands(final NotQuests main, LegacyPaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder) {
+    public UserCommands(final NotQuests main, NQCommandManager manager, NQCommandBuilder builder) {
         this.main = main;
         this.manager = manager;
         this.builder = builder;
@@ -139,7 +135,7 @@ public class UserCommands {
                         .hoverEvent(HoverEvent.showText(Component.text("Shows more information about a Quest", NamedTextColor.GREEN))))
                 .append(Component.newline())
                 .append(main.parse("<YELLOW>/nquests <GOLD>activeQuests")
-                        .clickEvent(ClickEvent.runCommand("/nquests activeQuests"))
+                        .clickEvent(main.getUtilManager().runCommandClick("nquests activeQuests"))
                         .hoverEvent(HoverEvent.showText(Component.text("Shows all your active Quests", NamedTextColor.GREEN))))
                 .append(Component.newline())
                 .append(main.parse("<YELLOW>/nquests <GOLD>progress <DARK_AQUA>[Quest Name]")
@@ -148,7 +144,7 @@ public class UserCommands {
                                 Component.text("Shows the progress of an active Quest", NamedTextColor.GREEN))))
                 .append(Component.newline())
                 .append(main.parse("<YELLOW>/nquests <GOLD>questPoints")
-                        .clickEvent(ClickEvent.runCommand("/nquests questPoints"))
+                        .clickEvent(main.getUtilManager().runCommandClick("nquests questPoints"))
                         .hoverEvent(HoverEvent.showText(Component.text("Shows how many Quest Points you have", NamedTextColor.GREEN))))
                 .append(Component.newline());
 
@@ -161,7 +157,7 @@ public class UserCommands {
     }
 
     public void constructCommands() {
-        manager.command(builder.commandDescription(Description.of("Shows current profile and lists other profiles."))
+        manager.command(builder.commandDescription(NQDescription.of("Shows current profile and lists other profiles."))
                 .literal("profiles").literal("show", "view", "list", "")
                 .permission("notquests.user.profiles")
                 .senderType(Player.class)
@@ -197,23 +193,21 @@ public class UserCommands {
                 }));
 
         manager.command(builder.literal("profiles").literal("change", "set", "switch")
-                .required("profile-name", stringParser(), Description.of("Name of the existing profile."), (context, input) -> {
-                            main.getUtilManager().sendFancyCommandCompletion(context.sender(), input.input().split(" "), "<enter the name of the profile you want to change to>", "");
-
-                            final ArrayList<Suggestion> completions = new ArrayList<>();
+                .required("profile-name", NQArguments.stringArgument(), NQDescription.of("Name of the existing profile."), (context, input) -> {
+                            final ArrayList<String> completions = new ArrayList<>();
                             final Player player = (Player) context.sender();
                             final List<QuestPlayer> allQuestPlayers = main.getQuestPlayerManager().getQuestPlayersForUUIDs().get(player.getUniqueId());
                             final QuestPlayer currentQuestPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
                             for (final QuestPlayer questPlayer : allQuestPlayers) {
                                 if (!questPlayer.getProfile().equals(currentQuestPlayer.getProfile())) {
-                                    completions.add(Suggestion.suggestion(questPlayer.getProfile()));
+                                    completions.add(questPlayer.getProfile());
                                 }
                             }
-                            return CompletableFuture.completedFuture(completions);
+                            return completions;
                         }
                 )
                 .permission("notquests.user.profiles")
-                .senderType(Player.class).commandDescription(Description.of("Shows current profile and lists other profiles."))
+                .senderType(Player.class).commandDescription(NQDescription.of("Shows current profile and lists other profiles."))
                 .handler((context) -> {
                     final Player player = (Player) context.sender();
                     final QuestPlayer currentQuestPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
@@ -259,17 +253,15 @@ public class UserCommands {
                 }));
 
         manager.command(builder.literal("profiles").literal("create", "new", "add")
-                .required("profile-name", stringParser(), Description.of("Name of the trigger which should be triggered."),
+                .required("profile-name", NQArguments.stringArgument(), NQDescription.of("Name of the trigger which should be triggered."),
                         (context, input) -> {
-                            main.getUtilManager().sendFancyCommandCompletion(context.sender(), input.input().split(" "), "<enter the name of the profile you want to change to>", "");
-
-                            final ArrayList<Suggestion> completions = new ArrayList<>();
-                            completions.add(Suggestion.suggestion("<enter new profile-name (no spaces!)"));
-                            return CompletableFuture.completedFuture(completions);
+                            final ArrayList<String> completions = new ArrayList<>();
+                            completions.add("<enter new profile-name (no spaces!)");
+                            return completions;
                         }
                 )
                 .permission("notquests.user.profiles")
-                .senderType(Player.class).commandDescription(Description.of("Creates a new profile."))
+                .senderType(Player.class).commandDescription(NQDescription.of("Creates a new profile."))
                 .handler((context) -> {
                     final Player player = (Player) context.sender();
                     final QuestPlayer currentQuestPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
@@ -316,11 +308,11 @@ public class UserCommands {
 
         manager.command(builder.literal("take")
                 .senderType(Player.class)
-                .required("questName", questParser(main, true), Description.of("Quest Name"))
-                .commandDescription(Description.of("Starts a Quest."))
+                .required("questName", questArgument(main, true), NQDescription.of("Quest Name"))
+                .commandDescription(NQDescription.of("Starts a Quest."))
                 .handler((context) -> {
                     final Quest quest = context.get("questName");
-                    final Player player = context.sender();
+                    final Player player = (Player) context.sender();
                     final String result = main.getQuestPlayerManager().acceptQuest(player, quest, true, true);
 
                     if (!result.equals("accepted")) {
@@ -330,9 +322,9 @@ public class UserCommands {
 
         manager.command(builder.literal("questPoints")
                 .senderType(Player.class)
-                .commandDescription(Description.of("Starts a Quest."))
+                .commandDescription(NQDescription.of("Starts a Quest."))
                 .handler((context) -> {
-                    final Player player = context.sender();
+                    final Player player = (Player) context.sender();
                     QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
 
                     if (questPlayer != null) {
@@ -344,36 +336,35 @@ public class UserCommands {
 
         manager.command(builder.literal("continueConversation")
                 .senderType(Player.class)
-                .required("optionID", integerParser(1), Description.of("Option message to continue conversation"), (context, input) -> {
-                    main.getUtilManager().sendFancyCommandCompletion(context.sender(), input.input().split(" "), "<Enter option message to continue conversation>", "");
-                    List<Suggestion> completions = new ArrayList<>();
+                .required("optionID", NQArguments.integerArgument(), NQDescription.of("Option message to continue conversation"), (context, input) -> {
+                    List<String> completions = new ArrayList<>();
 
                     if (main.getConversationManager() == null) {
-                        return CompletableFuture.completedFuture(completions);
+                        return completions;
                     }
 
-                    final Player player = context.sender();
+                    final Player player = (Player) context.sender();
                     final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
                     if (questPlayer == null) {
-                        return CompletableFuture.completedFuture(completions);
+                        return completions;
                     }
                     final ConversationPlayer openConversationPlayer = main.getConversationManager().getOpenConversation(questPlayer.getUniqueId());
                     if (openConversationPlayer == null) {
-                        return CompletableFuture.completedFuture(completions);
+                        return completions;
                     }
 
                     for (int i = 1; i <= openConversationPlayer.getCurrentPlayerLines().size(); i++) {
-                        completions.add(Suggestion.suggestion(String.valueOf(i)));
+                        completions.add(String.valueOf(i));
                     }
 
-                    return CompletableFuture.completedFuture(completions);
+                    return completions;
                 })
-                .commandDescription(Description.of("Selects an answer for the currently open conversation"))
+                .commandDescription(NQDescription.of("Selects an answer for the currently open conversation"))
                 .handler((context) -> {
                     if (main.getConversationManager() == null) {
                         return;
                     }
-                    final Player player = context.sender();
+                    final Player player = (Player) context.sender();
                     QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
 
                     if (questPlayer != null) {
@@ -395,10 +386,10 @@ public class UserCommands {
     }
 
     public void constructGUICommands() {
-        manager.command(builder.senderType(Player.class).commandDescription(Description.of("Opens NotQuests GUI."))
+        manager.command(builder.senderType(Player.class).commandDescription(NQDescription.of("Opens NotQuests GUI."))
                 .handler(
                         (context) -> {
-                            final Player player = context.sender();
+                            final Player player = (Player) context.sender();
                             final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
                             final var guiContext = new GuiContext();
                             guiContext.setPlayer(player);
@@ -406,10 +397,10 @@ public class UserCommands {
                         }));
 
         manager.command(builder.literal("take")
-                .senderType(Player.class).commandDescription(Description.of("Starts a Quest."))
+                .senderType(Player.class).commandDescription(NQDescription.of("Starts a Quest."))
                 .handler(
                         (context) -> {
-                            final Player player = context.sender();
+                            final Player player = (Player) context.sender();
                             QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
                             final var guiContext = new GuiContext();
                             guiContext.setPlayer(player);
@@ -417,10 +408,10 @@ public class UserCommands {
                         }));
 
         manager.command(builder.literal("activeQuests")
-                .senderType(Player.class).commandDescription(Description.of("Shows your active Quests."))
+                .senderType(Player.class).commandDescription(NQDescription.of("Shows your active Quests."))
                 .handler(
                         (context) -> {
-                            final Player player = context.sender();
+                            final Player player = (Player) context.sender();
                             final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
                             final var guiContext = new GuiContext();
                             guiContext.setPlayer(player);
@@ -428,9 +419,9 @@ public class UserCommands {
                         }));
 
         manager.command(builder.literal("abort")
-                .senderType(Player.class).commandDescription(Description.of("Aborts an active Quest."))
+                .senderType(Player.class).commandDescription(NQDescription.of("Aborts an active Quest."))
                 .handler((context) -> {
-                    final Player player = context.sender();
+                    final Player player = (Player) context.sender();
                     final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
                     if (questPlayer != null) {
                         final var guiContext = new GuiContext();
@@ -442,10 +433,10 @@ public class UserCommands {
                 }));
 
         manager.command(builder.literal("preview")
-                .senderType(Player.class).commandDescription(Description.of("Shows a Preview for a Quest."))
+                .senderType(Player.class).commandDescription(NQDescription.of("Shows a Preview for a Quest."))
                 .handler(
                         (context) -> {
-                            final Player player = context.sender();
+                            final Player player = (Player) context.sender();
                             final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
                             final var guiContext = new GuiContext();
                             guiContext.setPlayer(player);
@@ -454,9 +445,9 @@ public class UserCommands {
 
         manager.command(builder.literal("abort")
                 .senderType(Player.class)
-                .required("Active Quest", activeQuestParser(main), Description.of("Name of the active Quest which should be aborted/failed")).commandDescription(Description.of("Aborts an active Quest"))
+                .required("Active Quest", activeQuestArgument(main), NQDescription.of("Name of the active Quest which should be aborted/failed")).commandDescription(NQDescription.of("Aborts an active Quest"))
                 .handler((context) -> {
-                    final Player player = context.sender();
+                    final Player player = (Player) context.sender();
                     QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
                     final ActiveQuest activeQuest = context.get("Active Quest");
                     if (questPlayer != null && questPlayer.getActiveQuests().size() > 0) {
@@ -470,9 +461,9 @@ public class UserCommands {
                 }));
 
         manager.command(builder.literal("preview").senderType(Player.class)
-                .required("questName", questParser(main, true), Description.of("Quest Name")).commandDescription(Description.of("Previews a Quest"))
+                .required("questName", questArgument(main, true), NQDescription.of("Quest Name")).commandDescription(NQDescription.of("Previews a Quest"))
                 .handler((context) -> {
-                    final Player player = context.sender();
+                    final Player player = (Player) context.sender();
                     final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer((player.getUniqueId()));
                     final Quest quest = context.get("questName");
                     final var guiContext = new GuiContext();
@@ -483,11 +474,11 @@ public class UserCommands {
 
         manager.command(builder.literal("progress")
                         .senderType(Player.class)
-                        .required("Active Quest", activeQuestParser(main), Description.of("Name of the active Quest of which you want to see the progress"))
-                        .commandDescription(Description.of("Shows progress for an active Quest"))
+                        .required("Active Quest", activeQuestArgument(main), NQDescription.of("Name of the active Quest of which you want to see the progress"))
+                        .commandDescription(NQDescription.of("Shows progress for an active Quest"))
                         //TODO: This does text stuff. Add better GUI later
                         .handler((context) -> {
-                            final Player player = context.sender();
+                            final Player player = (Player) context.sender();
                             QuestPlayer questPlayer =
                                     main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
                             if (!questPlayer.getActiveQuests().isEmpty()) {
@@ -549,10 +540,10 @@ public class UserCommands {
                 })*/);
         manager.command(builder.literal("category")
                 .senderType(Player.class)
-                .required("Category", categoryParser(main), Description.of("Category Name"))
-                .commandDescription(Description.of("Opens the category view"))
+                .required("Category", categoryArgument(main), NQDescription.of("Category Name"))
+                .commandDescription(NQDescription.of("Opens the category view"))
                 .handler((context) -> {
-                    final Player player = context.sender();
+                    final Player player = (Player) context.sender();
                     final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer((player.getUniqueId()));
                     final Category category = context.get("Category");
                     final var guiContext = new GuiContext();
@@ -563,7 +554,7 @@ public class UserCommands {
     }
 
     public void constructTextCommands() {
-        manager.command(builder.senderType(Player.class).commandDescription(Description.of("Opens NotQuests GUI."))
+        manager.command(builder.senderType(Player.class).commandDescription(NQDescription.of("Opens NotQuests GUI."))
                 .handler(
                         (context) -> {
                             context.sender().sendMessage(Component.empty());
@@ -571,16 +562,16 @@ public class UserCommands {
                         }));
 
         manager.command(builder.literal("take")
-                .senderType(Player.class).commandDescription(Description.of("Starts a Quest."))
+                .senderType(Player.class).commandDescription(NQDescription.of("Starts a Quest."))
                 .handler(
                         (context) -> context.sender().sendMessage(main.parse("<RED>Please specify the <highlight>name of the quest</highlight> you wish to take.\n"
                                 + "<YELLOW>/nquests <GOLD>take <DARK_AQUA>[Quest Name]"))));
 
         manager.command(builder.literal("activeQuests")
-                .senderType(Player.class).commandDescription(Description.of("Shows your active Quests."))
+                .senderType(Player.class).commandDescription(NQDescription.of("Shows your active Quests."))
                 .handler(
                         (context) -> {
-                            final Player player = context.sender();
+                            final Player player = (Player) context.sender();
                             final QuestPlayer questPlayer =
                                     main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
                             if (questPlayer != null) {
@@ -597,9 +588,9 @@ public class UserCommands {
                         }));
 
         manager.command(builder.literal("abort")
-                .senderType(Player.class).commandDescription(Description.of("Aborts an active Quest."))
+                .senderType(Player.class).commandDescription(NQDescription.of("Aborts an active Quest."))
                 .handler((context) -> {
-                    final Player player = context.sender();
+                    final Player player = (Player) context.sender();
                     final QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
                     if (questPlayer != null) {
                         context.sender().sendMessage(main.parse("<RED>Please specify the <highlight>name of the quest</highlight> you wish to abort (fail).\n"
@@ -610,17 +601,17 @@ public class UserCommands {
                 }));
 
         manager.command(builder.literal("preview")
-                .senderType(Player.class).commandDescription(Description.of("Shows a Preview for a Quest."))
+                .senderType(Player.class).commandDescription(NQDescription.of("Shows a Preview for a Quest."))
                 .handler((context) -> context.sender().sendMessage(main.parse("<RED>Please specify the <highlight>name of the quest</highlight> you wish to preview.\n"
                         + "<YELLOW>/nquests <GOLD>preview <DARK_AQUA>[Quest Name]"))));
 
         manager.command(builder.literal("abort")
                 .senderType(Player.class)
-                .required("Active Quest", activeQuestParser(main), Description.of("Name of the active Quest which should be aborted/failed"))
-                .commandDescription(Description.of("Aborts an active Quest"))
+                .required("Active Quest", activeQuestArgument(main), NQDescription.of("Name of the active Quest which should be aborted/failed"))
+                .commandDescription(NQDescription.of("Aborts an active Quest"))
                 .handler(
                         (context) -> {
-                            final Player player = context.sender();
+                            final Player player = (Player) context.sender();
                             QuestPlayer questPlayer = main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
                             if (questPlayer != null && !questPlayer.getActiveQuests().isEmpty()) {
                                 final ActiveQuest activeQuest = context.get("Active Quest");
@@ -640,10 +631,10 @@ public class UserCommands {
 
         manager.command(builder.literal("preview")
                 .senderType(Player.class)
-                .required("questName", questParser(main, true), Description.of("Quest Name"))
-                .commandDescription(Description.of("Previews a Quest"))
+                .required("questName", questArgument(main, true), NQDescription.of("Quest Name"))
+                .commandDescription(NQDescription.of("Previews a Quest"))
                 .handler((context) -> {
-                    final Player player = context.sender();
+                    final Player player = (Player) context.sender();
                     final Quest quest = context.get("questName");
                     main.getQuestManager().sendSingleQuestPreview(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), quest);
                 }));

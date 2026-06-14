@@ -4,17 +4,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
-import java.util.concurrent.CompletableFuture;
-
-import static org.incendo.cloud.parser.standard.StringParser.quotedStringParser;
+import java.util.List;
 
 public class ChatAction extends Action {
     private String chatMessage = "";
@@ -25,14 +23,13 @@ public class ChatAction extends Action {
 
     public static void handleCommands(
             NotQuests main,
-            LegacyPaperCommandManager<CommandSender> manager,
-            Command.Builder<CommandSender> builder,
+            NQCommandManager manager,
+            NQCommandBuilder builder,
             ActionFor actionFor) {
-        manager.command(builder.required("Chat Message", quotedStringParser(), Description.of("Message which will be sent / chatted from the player's perspective."), (context, lastString) -> {
-                    main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "<enter chat message. Wrap in \"\" to use spaces>", "");
-                    ArrayList<Suggestion> completions = new ArrayList<>();
-                    completions.add(Suggestion.suggestion("<enter chat message. Wrap in \"\" to use spaces>"));
-                    return CompletableFuture.completedFuture(completions);
+        manager.command(builder.required("Chat Message", NQArguments.stringArgument(), NQDescription.of("Message which will be sent / chatted from the player's perspective."), (context, input) -> {
+                    List<String> completions = new ArrayList<>();
+                    completions.add("<enter chat message. Wrap in \"\" to use spaces>");
+                    return completions;
                 })
                 .handler((context) -> {
                     final String chatMessage = context.get("Chat Message");

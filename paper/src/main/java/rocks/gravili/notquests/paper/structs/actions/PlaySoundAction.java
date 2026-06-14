@@ -6,21 +6,17 @@ import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.component.TypedCommandComponent;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
-import org.incendo.cloud.parser.flag.CommandFlag;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
+import rocks.gravili.notquests.paper.commands.framework.NQFlag;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.CompletableFuture;
-
-import static org.incendo.cloud.parser.standard.FloatParser.floatParser;
-import static org.incendo.cloud.parser.standard.StringParser.stringParser;
 
 public class PlaySoundAction extends Action {
 
@@ -48,45 +44,44 @@ public class PlaySoundAction extends Action {
 
     public static void handleCommands(
             NotQuests main,
-            LegacyPaperCommandManager<CommandSender> manager,
-            Command.Builder<CommandSender> builder,
+            NQCommandManager manager,
+            NQCommandBuilder builder,
             ActionFor actionFor) {
 
-        final CommandFlag<Float> volumeFlag = CommandFlag.builder("volume")
-                .withComponent(TypedCommandComponent.builder("volume", floatParser(0)))
-                .withDescription(Description.of("Sound volume (between 0 and 1)"))
+        final NQFlag volumeFlag = NQFlag.builder("volume")
+                .withArgument(NQArguments.doubleArgument())
+                .withDescription(NQDescription.of("Sound volume (between 0 and 1)"))
                 .build();
 
-        final CommandFlag<Float> pitchFlag = CommandFlag.builder("pitch")
-                .withComponent(TypedCommandComponent.builder("pitch", floatParser(0)))
-                .withDescription(Description.of("Sound pitch"))
+        final NQFlag pitchFlag = NQFlag.builder("pitch")
+                .withArgument(NQArguments.doubleArgument())
+                .withDescription(NQDescription.of("Sound pitch"))
                 .build();
 
-        final CommandFlag<String> soundCategoryFlag = CommandFlag.builder("SoundCategory")
-                .withComponent(TypedCommandComponent.builder("SoundCategory", stringParser()).suggestionProvider((context, lastString) -> {
-                    main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.sender(), lastString.input().split(" "), "[Sound category]", "");
-                    final ArrayList<Suggestion> completions = new ArrayList<>();
+        final NQFlag soundCategoryFlag = NQFlag.builder("SoundCategory")
+                .withArgument(NQArguments.stringArgument())
+                .withSuggestions((context, input) -> {
+                    final List<String> completions = new ArrayList<>();
                     for (final SoundCategory soundCategory : SoundCategory.values()) {
-                        completions.add(Suggestion.suggestion(soundCategory.name().toLowerCase()));
+                        completions.add(soundCategory.name().toLowerCase());
                     }
-                    return CompletableFuture.completedFuture(completions);
-                }))
-                .withDescription(Description.of("Sound category. Default: master"))
+                    return completions;
+                })
+                .withDescription(NQDescription.of("Sound category. Default: master"))
                 .build();
 
-        manager.command(builder.required("Sound", stringParser(), Description.of("Name of the sound which should be played"), (context, lastString) -> {
-                            main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[Sound name]", "");
-                            final ArrayList<Suggestion> completions = new ArrayList<>();
+        manager.command(builder.required("Sound", NQArguments.stringArgument(), NQDescription.of("Name of the sound which should be played"), (context, input) -> {
+                            final List<String> completions = new ArrayList<>();
                             final var soundRegistry = RegistryAccess.registryAccess().getRegistry(RegistryKey.SOUND_EVENT);
                             for (final Sound sound : soundRegistry) {
-                                completions.add(Suggestion.suggestion(soundRegistry.getKeyOrThrow(sound).asString()));
+                                completions.add(soundRegistry.getKeyOrThrow(sound).asString());
                             }
-                            return CompletableFuture.completedFuture(completions);
+                            return completions;
                         }
                 )
-                .flag(manager.flagBuilder("stopOtherSounds").withDescription(Description.of("Stops all other, currently playing sounds")))
-                .flag(manager.flagBuilder("playForEveryoneAtSetLocation").withDescription(Description.of("All online players will hear the sound if they are close to set location")))
-                .flag(manager.flagBuilder("playForEveryoneAtTheirLocation").withDescription(Description.of("Plays the sound for all online players at their own location")))
+                .flag(NQFlag.presence("stopOtherSounds", NQDescription.of("Stops all other, currently playing sounds")))
+                .flag(NQFlag.presence("playForEveryoneAtSetLocation", NQDescription.of("All online players will hear the sound if they are close to set location")))
+                .flag(NQFlag.presence("playForEveryoneAtTheirLocation", NQDescription.of("Plays the sound for all online players at their own location")))
                 .flag(main.getCommandManager().world)
                 .flag(main.getCommandManager().locationX)
                 .flag(main.getCommandManager().locationY)
@@ -101,16 +96,16 @@ public class PlaySoundAction extends Action {
                             final boolean playForEveryoneAtSetLocationFlagResult = context.flags().isPresent("playForEveryoneAtSetLocation");
                             final boolean playForEveryoneAtTheirLocationFlagResult = context.flags().isPresent("playForEveryoneAtTheirLocation");
 
-                            final World world = context.flags().getValue(main.getCommandManager().world, null);
+                            final World world = context.flags().getValue("world", null);
 
-                            final double locationX = context.flags().getValue(main.getCommandManager().locationX, -1d);
-                            final double locationY = context.flags().getValue(main.getCommandManager().locationY, -1d);
-                            final double locationZ = context.flags().getValue(main.getCommandManager().locationZ, -1d);
+                            final double locationX = context.flags().<Double>getValue("locationX", -1d);
+                            final double locationY = context.flags().<Double>getValue("locationY", -1d);
+                            final double locationZ = context.flags().<Double>getValue("locationZ", -1d);
 
-                            final float volume = context.flags().getValue(volumeFlag, -1f);
-                            final float pitch = context.flags().getValue(pitchFlag, -1f);
+                            final float volume = context.flags().<Double>getValue("volume", -1d).floatValue();
+                            final float pitch = context.flags().<Double>getValue("pitch", -1d).floatValue();
 
-                            final String soundCategoryValue = context.flags().getValue(soundCategoryFlag, "master");
+                            final String soundCategoryValue = context.flags().getValue("SoundCategory", "master");
 
                             final PlaySoundAction playSoundAction =
                                     new PlaySoundAction(main);

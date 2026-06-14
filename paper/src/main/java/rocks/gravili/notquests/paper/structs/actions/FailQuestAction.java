@@ -20,17 +20,17 @@ package rocks.gravili.notquests.paper.structs.actions;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
 
-import static rocks.gravili.notquests.paper.commands.arguments.QuestParser.questParser;
+import static rocks.gravili.notquests.paper.commands.arguments.QuestArgument.questArgument;
 
 public class FailQuestAction extends Action {
 
@@ -42,10 +42,10 @@ public class FailQuestAction extends Action {
 
     public static void handleCommands(
             NotQuests main,
-            LegacyPaperCommandManager<CommandSender> manager,
-            Command.Builder<CommandSender> builder,
+            NQCommandManager manager,
+            NQCommandBuilder builder,
             ActionFor actionFor) {
-        manager.command(builder.required("quest to fail", questParser(main), Description.of("Name of the Quest which should be failed for the player."))
+        manager.command(builder.required("quest to fail", questArgument(main), NQDescription.of("Name of the Quest which should be failed for the player."))
                 .handler(
                         (context) -> {
                             final Quest foundQuest = context.get("quest to fail");

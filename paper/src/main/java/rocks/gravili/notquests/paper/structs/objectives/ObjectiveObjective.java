@@ -3,16 +3,15 @@ package rocks.gravili.notquests.paper.structs.objectives;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.Map;
-
-import static org.incendo.cloud.parser.standard.StringParser.greedyStringParser;
 
 //Basically just a holder for sub-objectives
 public class ObjectiveObjective extends Objective {
@@ -24,13 +23,13 @@ public class ObjectiveObjective extends Objective {
 
     public static void handleCommands(
             NotQuests main,
-            LegacyPaperCommandManager<CommandSender> manager,
-            Command.Builder<CommandSender> addObjectiveBuilder,
+            NQCommandManager manager,
+            NQCommandBuilder addObjectiveBuilder,
             final int level) {
 
 
         manager.command(addObjectiveBuilder
-                .required("Objective Holder Name", greedyStringParser(), Description.description("Name of the objective holder"))
+                .required("Objective Holder Name", NQArguments.greedyStringArgument(), NQDescription.of("Name of the objective holder"))
                 .handler((context) -> {
                     final String objectiveHolderName = context.get("Objective Holder Name");
 

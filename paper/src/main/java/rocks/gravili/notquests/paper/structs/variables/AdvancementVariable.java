@@ -22,8 +22,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.advancement.AdvancementProgress;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -31,9 +29,6 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-
-import static rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser.stringVariableParser;
 
 public class AdvancementVariable extends Variable<Boolean> {
     public AdvancementVariable(NotQuests main) {
@@ -42,14 +37,13 @@ public class AdvancementVariable extends Variable<Boolean> {
 
         addRequiredString(StringVariableValueParser.of("Advancement", null,
                 (context, input) -> {
-                    main.getUtilManager().sendFancyCommandCompletion(context.sender(), input.input().split(" "), "[Advancement Name]", "[...]");
-                    ArrayList<Suggestion> suggestions = new ArrayList<>();
+                    ArrayList<String> suggestions = new ArrayList<>();
                     Iterator<Advancement> advancements = Bukkit.getServer().advancementIterator();
                     while (advancements.hasNext()) {
                         Advancement advancement = advancements.next();
-                        suggestions.add(Suggestion.suggestion(advancement.getKey().getKey()));
+                        suggestions.add(advancement.getKey().getKey());
                     }
-                    return CompletableFuture.completedFuture(suggestions);
+                    return suggestions;
                 }));
     }
 
@@ -94,7 +88,7 @@ public class AdvancementVariable extends Variable<Boolean> {
     }
 
     @Override
-    public List<Suggestion> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
+    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
         return null;
     }
 

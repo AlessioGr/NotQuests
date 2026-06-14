@@ -22,12 +22,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.NQNPCResult;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
 import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.managers.npc.NQNPCID;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
@@ -37,9 +37,9 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import java.util.Map;
 import java.util.UUID;
 
-import static rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionParser.itemStackSelectionParser;
-import static rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser.numberVariableParser;
-import static rocks.gravili.notquests.paper.commands.arguments.NQNPCParser.nqNPCParser;
+import static rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionArgument.itemStackSelectionArgument;
+import static rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableArgument.numberVariableArgument;
+import static rocks.gravili.notquests.paper.commands.arguments.NQNPCArgument.nqNPCArgument;
 
 public class DeliverItemsObjective extends Objective {
 
@@ -53,12 +53,12 @@ public class DeliverItemsObjective extends Objective {
         super(main);
     }
 
-    public static void handleCommands(NotQuests main, LegacyPaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder,
+    public static void handleCommands(NotQuests main, NQCommandManager manager, NQCommandBuilder addObjectiveBuilder,
                                       final int level) {
         manager.command(addObjectiveBuilder
-                        .required("materials", itemStackSelectionParser(main), Description.of("Material of the item which needs to be delivered"))
-                        .required("amount", numberVariableParser("amount", null), Description.of("Amount of items which need to be delivered"))
-                        .required("NPC", nqNPCParser(main, false, true), Description.of("NPC to whom the items should be delivered."))
+                        .required("materials", itemStackSelectionArgument(main), NQDescription.of("Material of the item which needs to be delivered"))
+                        .required("amount", numberVariableArgument("amount", null), NQDescription.of("Amount of items which need to be delivered"))
+                        .required("NPC", nqNPCArgument(main, false, true), NQDescription.of("NPC to whom the items should be delivered."))
                 .handler((context) -> {
                     final Quest quest = context.get("quest");
                     final String amountToDeliverExpression = context.get("amount");

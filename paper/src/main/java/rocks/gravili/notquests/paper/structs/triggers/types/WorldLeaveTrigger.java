@@ -20,20 +20,16 @@ package rocks.gravili.notquests.paper.structs.triggers.types;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
 import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 
 import java.util.ArrayList;
-import java.util.concurrent.CompletableFuture;
-
-import static org.incendo.cloud.parser.standard.IntegerParser.integerParser;
-import static org.incendo.cloud.parser.standard.StringParser.stringParser;
+import java.util.List;
 
 public class WorldLeaveTrigger extends Trigger {
 
@@ -45,23 +41,22 @@ public class WorldLeaveTrigger extends Trigger {
 
     public static void handleCommands(
             NotQuests main,
-            LegacyPaperCommandManager<CommandSender> manager,
-            Command.Builder<CommandSender> addTriggerBuilder) {
+            NQCommandManager manager,
+            NQCommandBuilder addTriggerBuilder) {
         manager.command(addTriggerBuilder
-                .required("world to leave", stringParser(), Description.of("Name of the world which needs to be left"), (context, lastString) -> {
-                    main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[World Name / 'ALL']", "[Amount of Leaves]");
-                    ArrayList<Suggestion> completions = new ArrayList<>();
-                    completions.add(Suggestion.suggestion("ALL"));
+                .required("world to leave", NQArguments.stringArgument(), NQDescription.of("Name of the world which needs to be left"), (context, input) -> {
+                    List<String> completions = new ArrayList<>();
+                    completions.add("ALL");
                     for (final World world : Bukkit.getWorlds()) {
-                        completions.add(Suggestion.suggestion(world.getName()));
+                        completions.add(world.getName());
                     }
-                    return CompletableFuture.completedFuture(completions);
+                    return completions;
                 })
 
-                .required("amount", integerParser(1), Description.of("Amount of times the world needs to be left."))
+                .required("amount", NQArguments.integerArgument(), NQDescription.of("Amount of times the world needs to be left."))
                 .flag(main.getCommandManager().applyOn)
                 .flag(main.getCommandManager().triggerWorldString)
-                .commandDescription(Description.of("Triggers when the player leaves a specific world."))
+                .commandDescription(NQDescription.of("Triggers when the player leaves a specific world."))
                 .handler(
                         (context) -> {
                             final String worldToLeaveName = context.get("world to leave");

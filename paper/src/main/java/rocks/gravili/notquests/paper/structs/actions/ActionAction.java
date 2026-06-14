@@ -20,21 +20,20 @@ package rocks.gravili.notquests.paper.structs.actions;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.component.TypedCommandComponent;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
-import org.incendo.cloud.parser.flag.CommandFlag;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.ActionList;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
+import rocks.gravili.notquests.paper.commands.framework.NQFlag;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 
 import java.time.Duration;
 import java.util.*;
 
-import static org.incendo.cloud.parser.standard.DurationParser.durationParser;
-import static org.incendo.cloud.parser.standard.IntegerParser.integerParser;
-import static rocks.gravili.notquests.paper.commands.arguments.MultiActionsParser.multiActionsParser;
+import static rocks.gravili.notquests.paper.commands.arguments.MultiActionsArgument.multiActionsArgument;
 
 public class ActionAction extends Action {
 
@@ -54,41 +53,42 @@ public class ActionAction extends Action {
 
     public static void handleCommands(
             NotQuests main,
-            LegacyPaperCommandManager<CommandSender> manager,
-            Command.Builder<CommandSender> builder,
+            NQCommandManager manager,
+            NQCommandBuilder builder,
             ActionFor actionFor) {
 
-        CommandFlag<Integer> minRandomFlag = CommandFlag.builder("minRandom")
-                .withComponent(TypedCommandComponent.builder("minRandom", integerParser(1)))
-                .withDescription(Description.of("If this is set, it will only execute a random amount of quests with this minimum"))
+        NQFlag minRandomFlag = NQFlag.builder("minRandom")
+                .withArgument(NQArguments.integerArgument())
+                .withDescription(NQDescription.of("If this is set, it will only execute a random amount of quests with this minimum"))
                 .build();
 
-        CommandFlag<Integer> maxRandomFlag = CommandFlag.builder("maxRandom")
-                .withComponent(TypedCommandComponent.builder("maxRandom", integerParser(1)))
-                .withDescription(Description.of("If this is set, it will only execute a random amount of quests with this maximum"))
+        NQFlag maxRandomFlag = NQFlag.builder("maxRandom")
+                .withArgument(NQArguments.integerArgument())
+                .withDescription(NQDescription.of("If this is set, it will only execute a random amount of quests with this maximum"))
                 .build();
 
-        CommandFlag<Duration> executedActionDelay = CommandFlag.builder("executedActionDelay")
-                .withComponent(TypedCommandComponent.builder("executedActionDelay", durationParser()))
-                .withDescription(Description.of("Delay its actions will be executed in milliseconds. This overrides the existing delay of sub-actions."))
+        NQFlag executedActionDelay = NQFlag.builder("executedActionDelay")
+                .withArgument(NQArguments.durationArgument())
+                .withDescription(NQDescription.of("Delay its actions will be executed in milliseconds. This overrides the existing delay of sub-actions."))
                 .build();
 
         manager.command(builder
-                .required("Actions", multiActionsParser(main), Description.of("Name of the actions which will be executed"))
-                .required("amount", integerParser(1), Description.of("Amount of times the action will be executed."))
-                .flag(manager.flagBuilder("ignoreConditions").withDescription(Description.of("Ignores action conditions")))
+                .required("Actions", multiActionsArgument(main), NQDescription.of("Name of the actions which will be executed"))
+                .required("amount", NQArguments.integerArgument(), NQDescription.of("Amount of times the action will be executed."))
+                .flag(NQFlag.presence("ignoreConditions", NQDescription.of("Ignores action conditions")))
                 .flag(minRandomFlag)
                 .flag(maxRandomFlag)
                 .flag(executedActionDelay)
-                .flag(manager.flagBuilder("onlyCountForRandomIfConditionsFulfilled").withDescription(Description.of("Does not count an action to the min or max random counter if its conditions are not fulfilled, if this flag is set")))
+                .flag(NQFlag.presence("onlyCountForRandomIfConditionsFulfilled", NQDescription.of("Does not count an action to the min or max random counter if its conditions are not fulfilled, if this flag is set")))
                 .handler(
                         (context) -> {
-                            final ArrayList<Action> foundActions = context.get("Actions");
+                            final ArrayList<Action> foundActions =
+                                    new ArrayList<>(context.<ActionList>get("Actions").getValues());
                             final int amount = context.get("amount");
                             final boolean ignoreConditions = context.flags().isPresent("ignoreConditions");
 
-                            final int minRandom = context.flags().getValue(minRandomFlag, -1);
-                            final int maxRandom = context.flags().getValue(maxRandomFlag, -1);
+                            final int minRandom = context.flags().getValue("minRandom", -1);
+                            final int maxRandom = context.flags().getValue("maxRandom", -1);
                             final boolean onlyCountForRandomIfConditionsFulfilled =
                                     context.flags().isPresent("onlyCountForRandomIfConditionsFulfilled");
 
@@ -103,16 +103,10 @@ public class ActionAction extends Action {
 
                             actionAction.setIgnoreConditions(ignoreConditions);
 
-                            if (context.flags().contains(executedActionDelay)) {
-                                final Duration delayDuration =
-                                        context
-                                                .flags()
-                                                .getValue(
-                                                        executedActionDelay,
-                                                        null);
-                                if (delayDuration != null) {
-                                    actionAction.setExecutedActionDelay(delayDuration.toMillis());
-                                }
+                            final Duration delayDuration =
+                                    context.flags().getValue("executedActionDelay", null);
+                            if (delayDuration != null) {
+                                actionAction.setExecutedActionDelay(delayDuration.toMillis());
                             }
 
                             main.getActionManager().addAction(actionAction, context, actionFor);

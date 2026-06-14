@@ -25,20 +25,16 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.util.Vector;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.CompletableFuture;
-
-import static org.incendo.cloud.bukkit.parser.WorldParser.worldParser;
-import static org.incendo.cloud.parser.standard.IntegerParser.integerParser;
-import static org.incendo.cloud.parser.standard.StringParser.stringParser;
 
 public class BeamAction extends Action {
 
@@ -52,14 +48,13 @@ public class BeamAction extends Action {
 
     public static void handleCommands(
             NotQuests main,
-            LegacyPaperCommandManager<CommandSender> manager,
-            Command.Builder<CommandSender> builder,
+            NQCommandManager manager,
+            NQCommandBuilder builder,
             ActionFor actionFor) {
-        manager.command(builder.required("beamName", stringParser(), Description.of("Beam Name."), (context, lastString) -> {
-                    ArrayList<Suggestion> completions = new ArrayList<>();
-                    completions.add(Suggestion.suggestion("<Enter beam name>"));
-                    main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[Beam Name]", "[...]");
-                    return CompletableFuture.completedFuture(completions);
+        manager.command(builder.required("beamName", NQArguments.stringArgument(), NQDescription.of("Beam Name."), (context, input) -> {
+                    List<String> completions = new ArrayList<>();
+                    completions.add("<Enter beam name>");
+                    return completions;
                 })
                 .literal("remove")
                 .handler((context) -> {
@@ -70,17 +65,16 @@ public class BeamAction extends Action {
                     main.getActionManager().addAction(beamAction, context, actionFor);
                 }));
 
-        manager.command(builder.required("beamName", stringParser(), Description.of("Beam Name."), (context, lastString) -> {
-                    ArrayList<Suggestion> completions = new ArrayList<>();
-                    completions.add(Suggestion.suggestion("<Enter beam name>"));
-                    main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[Beam Name]", "[...]");
-                    return CompletableFuture.completedFuture(completions);
+        manager.command(builder.required("beamName", NQArguments.stringArgument(), NQDescription.of("Beam Name."), (context, input) -> {
+                    List<String> completions = new ArrayList<>();
+                    completions.add("<Enter beam name>");
+                    return completions;
                 })
                 .literal("spawn")
-                .required("world", worldParser(), Description.of("World name"))
-                .required("x", integerParser(), Description.of("X coordinate"))
-                .required("y", integerParser(), Description.of("Y coordinate"))
-                .required("z", integerParser(), Description.of("Z coordinate"))
+                .required("world", NQArguments.worldArgument(), NQDescription.of("World name"))
+                .required("x", NQArguments.integerArgument(), NQDescription.of("X coordinate"))
+                .required("y", NQArguments.integerArgument(), NQDescription.of("Y coordinate"))
+                .required("z", NQArguments.integerArgument(), NQDescription.of("Z coordinate"))
                 .handler(
                         (context) -> {
                             String beamName = context.get("beamName");

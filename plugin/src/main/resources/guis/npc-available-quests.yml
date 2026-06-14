@@ -1,4 +1,4 @@
-title: gui.npc-available-quest.title
+title: gui.npc-available-quests.title
 type: PAGED_ITEMS
 structure:
   - "F F F F F F F F F"
@@ -36,8 +36,8 @@ icons:
 
 items:
   quests:
-    displayname: gui.npc-available-quest.button.quests.name
-    lore: gui.npc-available-quest.button.quests.lore
+    displayname: gui.npc-available-quests.button.quest.name
+    lore: gui.npc-available-quests.button.quest.lore
     material: "%QUEST_ITEM_MATERIAL%"
 
   emptyspacefiller:
@@ -50,8 +50,8 @@ items:
 
   back:
     material: PAPER
-    displayname: gui.npc-available-quest.button.back.name
+    displayname: gui.npc-available-quests.button.back.name
 
   forward:
     material: PAPER
-    displayname: gui.npc-available-quest.button.forward.name
+    displayname: gui.npc-available-quests.button.forward.name

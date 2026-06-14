@@ -21,20 +21,19 @@ package rocks.gravili.notquests.paper.structs.objectives;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
-import static org.incendo.cloud.parser.standard.StringParser.stringParser;
-import static rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser.numberVariableParser;
+import static rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableArgument.numberVariableArgument;
 
 public class TriggerCommandObjective extends Objective {
 
@@ -46,17 +45,16 @@ public class TriggerCommandObjective extends Objective {
 
     public static void handleCommands(
             NotQuests main,
-            LegacyPaperCommandManager<CommandSender> manager,
-            Command.Builder<CommandSender> addObjectiveBuilder,
+            NQCommandManager manager,
+            NQCommandBuilder addObjectiveBuilder,
             final int level) {
         manager.command(addObjectiveBuilder
-                .required("Trigger name", stringParser(), Description.of("Triggercommand name"), (context, lastString) -> {
-                    main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[New Trigger Name]", "[Amount of triggers needed]");
-                    ArrayList<Suggestion> completions = new ArrayList<>();
-                    completions.add(Suggestion.suggestion("<Enter new TriggerCommand name>"));
-                    return CompletableFuture.completedFuture(completions);
+                .required("Trigger name", NQArguments.stringArgument(), NQDescription.of("Triggercommand name"), (context, input) -> {
+                    List<String> completions = new ArrayList<>();
+                    completions.add("<Enter new TriggerCommand name>");
+                    return completions;
                 })
-                .required("amount", numberVariableParser("amount", null), Description.of("Amount of times the trigger needs to be triggered to complete this objective."))
+                .required("amount", numberVariableArgument("amount", null), NQDescription.of("Amount of times the trigger needs to be triggered to complete this objective."))
                 .handler((context) -> {
                     final String triggerName = context.get("Trigger name");
                     final String amountExpression = context.get("amount");

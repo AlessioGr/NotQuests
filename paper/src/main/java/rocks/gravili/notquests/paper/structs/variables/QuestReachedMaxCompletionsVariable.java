@@ -18,7 +18,6 @@
 
 package rocks.gravili.notquests.paper.structs.variables;
 
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
 import rocks.gravili.notquests.paper.structs.CompletedQuest;
@@ -27,7 +26,6 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * This variable is true if the amount of times the player has previously completed this Quest is
@@ -36,13 +34,12 @@ import java.util.concurrent.CompletableFuture;
 public class QuestReachedMaxCompletionsVariable extends Variable<Boolean> {
     public QuestReachedMaxCompletionsVariable(NotQuests main) {
         super(main);
-        addRequiredString(StringVariableValueParser.of("Quest to check", null, (context, lastString) -> {
-            main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[Quest Name]", "[...]");
-            ArrayList<Suggestion> suggestions = new ArrayList<>();
+        addRequiredString(StringVariableValueParser.of("Quest to check", null, (context, input) -> {
+            ArrayList<String> suggestions = new ArrayList<>();
             for (Quest quest : main.getQuestManager().getAllQuests()) {
-                suggestions.add(Suggestion.suggestion(quest.getIdentifier()));
+                suggestions.add(quest.getIdentifier());
             }
-            return CompletableFuture.completedFuture(suggestions);
+            return suggestions;
         }));
     }
 
@@ -77,7 +74,7 @@ public class QuestReachedMaxCompletionsVariable extends Variable<Boolean> {
     }
 
     @Override
-    public List<Suggestion> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
+    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
         return null;
     }
 

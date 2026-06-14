@@ -19,30 +19,26 @@
 package rocks.gravili.notquests.paper.structs.variables;
 
 import org.bukkit.Statistic;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 public class PlayerStatisticVariable extends Variable<Integer> {
     public PlayerStatisticVariable(NotQuests main) {
         super(main);
         setCanSetValue(true);
-        addRequiredString(StringVariableValueParser.of("Statistic", null, (context, lastString) -> {
-            main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[Statistic]", "[...]");
-
-            final ArrayList<Suggestion> suggestions = new ArrayList<>();
+        addRequiredString(StringVariableValueParser.of("Statistic", null, (context, input) -> {
+            final ArrayList<String> suggestions = new ArrayList<>();
             for (final Statistic statistic : Statistic.values()) {
                 if (statistic.getType() == Statistic.Type.UNTYPED) {
-                    suggestions.add(Suggestion.suggestion(statistic.name()));
+                    suggestions.add(statistic.name());
                 }
             }
-            suggestions.add(Suggestion.suggestion("<Enter Statistic name>"));
-            return CompletableFuture.completedFuture(suggestions);
+            suggestions.add("<Enter Statistic name>");
+            return suggestions;
         }));
     }
 
@@ -83,7 +79,7 @@ public class PlayerStatisticVariable extends Variable<Integer> {
     }
 
     @Override
-    public List<Suggestion> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
+    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
         return null;
     }
 

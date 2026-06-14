@@ -21,18 +21,19 @@ package rocks.gravili.notquests.paper.structs.objectives;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
+import rocks.gravili.notquests.paper.commands.framework.NQFlag;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.Map;
 
-import static rocks.gravili.notquests.paper.commands.arguments.QuestParser.questParser;
-import static rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser.numberVariableParser;
+import static rocks.gravili.notquests.paper.commands.arguments.QuestArgument.questArgument;
+import static rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableArgument.numberVariableArgument;
 
 public class OtherQuestObjective extends Objective {
     private String otherQuestName = "";
@@ -44,13 +45,13 @@ public class OtherQuestObjective extends Objective {
 
     public static void handleCommands(
             NotQuests main,
-            LegacyPaperCommandManager<CommandSender> manager,
-            Command.Builder<CommandSender> addObjectiveBuilder,
+            NQCommandManager manager,
+            NQCommandBuilder addObjectiveBuilder,
             final int level) {
         manager.command(addObjectiveBuilder
-                .required("other quest name", questParser(main), Description.of("Name of the other Quest the player has to complete"))
-                .required("amount", numberVariableParser("amount", null), Description.of("Amount of times the Quest needs to be completed"))
-                .flag(manager.flagBuilder("countPreviouslyCompletedQuests").withDescription(Description.of("Makes it so quests completed before this OtherQuest objective becomes active will be counted towards the progress too.")))
+                .required("other quest name", questArgument(main), NQDescription.of("Name of the other Quest the player has to complete"))
+                .required("amount", numberVariableArgument("amount", null), NQDescription.of("Amount of times the Quest needs to be completed"))
+                .flag(NQFlag.builder("countPreviouslyCompletedQuests").withDescription(NQDescription.of("Makes it so quests completed before this OtherQuest objective becomes active will be counted towards the progress too.")).build())
                 .handler((context) -> {
                     final Quest otherQuest = context.get("other quest name");
                     final String amountExpression = context.get("amount");

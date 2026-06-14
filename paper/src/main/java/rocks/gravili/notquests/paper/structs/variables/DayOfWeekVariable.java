@@ -18,7 +18,6 @@
 
 package rocks.gravili.notquests.paper.structs.variables;
 
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
@@ -46,10 +45,10 @@ public class DayOfWeekVariable extends Variable<String> {
   }
 
   @Override
-  public List<Suggestion> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
-    List<Suggestion> possibleValues = new ArrayList<>();
+  public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
+    List<String> possibleValues = new ArrayList<>();
     for (DayOfWeek dayOfWeek : DayOfWeek.values()) {
-      possibleValues.add(Suggestion.suggestion(dayOfWeek.name().toLowerCase(Locale.ROOT)));
+      possibleValues.add(dayOfWeek.name().toLowerCase(Locale.ROOT));
     }
     return possibleValues;
   }

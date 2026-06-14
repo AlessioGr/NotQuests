@@ -19,42 +19,38 @@
 package rocks.gravili.notquests.paper.commands.category.item;
 
 import org.bukkit.Material;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.CommandManager;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.BaseCommand;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.managers.items.NQItem;
 
 import java.util.Arrays;
 
-import static org.incendo.cloud.bukkit.parser.PlayerParser.playerParser;
-import static org.incendo.cloud.parser.standard.StringParser.greedyStringParser;
-import static org.incendo.cloud.parser.standard.IntegerParser.integerParser;
-import static org.incendo.cloud.parser.standard.StringParser.stringParser;
-import static rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionParser.itemStackSelectionParser;
-import static rocks.gravili.notquests.paper.commands.arguments.NQNPCParser.nqNPCParser;
+import static rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionArgument.itemStackSelectionArgument;
+import static rocks.gravili.notquests.paper.commands.arguments.NQNPCArgument.nqNPCArgument;
 
-public class AdminItemsCommand extends BaseCommand {
+public class AdminItemsCommand {
 
-    public AdminItemsCommand(NotQuests notQuests, LegacyPaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder) {
-        super(notQuests, builder);
-    }
+    private final NotQuests notQuests;
+    private final NQCommandManager manager;
+    private final NQCommandBuilder builder;
 
-    @Override
-    public void apply(CommandManager<CommandSender> commandManager) {
-        
+    public AdminItemsCommand(NotQuests notQuests, NQCommandManager manager, NQCommandBuilder builder) {
+        this.notQuests = notQuests;
+        this.manager = manager;
+        this.builder = builder;
+
         var editBuilder = builder.literal("items");
-        commandManager.command(editBuilder
-                .literal("create", Description.of("Creates a new Item."))
-                .required("name", stringParser(), Description.of("Item Name"))
-                .required("material", itemStackSelectionParser(notQuests), Description.of("Material of what this item should be based on. If you use 'hand', the item you are holding in your notQuests hand will be used."))
+        manager.command(editBuilder
+                .literal("create", NQDescription.of("Creates a new Item."))
+                .required("name", NQArguments.stringArgument(), NQDescription.of("Item Name"))
+                .required("material", itemStackSelectionArgument(notQuests), NQDescription.of("Material of what this item should be based on. If you use 'hand', the item you are holding in your notQuests hand will be used."))
                 .handler(context -> {
                     final String itemName = context.get("name");
 
@@ -87,7 +83,7 @@ public class AdminItemsCommand extends BaseCommand {
 
                     NQItem nqItem = new NQItem(notQuests, itemName, itemStack);
 
-                    if (context.flags().contains(notQuests.getCommandManager().categoryFlag)) {
+                    if (context.flags().isPresent(notQuests.getCommandManager().categoryFlag)) {
                         final Category category = context.flags().getValue(
                                 notQuests.getCommandManager().categoryFlag,
                                 notQuests.getDataManager().getDefaultCategory()
@@ -103,7 +99,7 @@ public class AdminItemsCommand extends BaseCommand {
                     );
                 }));
 
-        commandManager.command(editBuilder.commandDescription(Description.of("Lists all items"))
+        manager.command(editBuilder.commandDescription(NQDescription.of("Lists all items"))
                 .literal("list")
                 .handler((context) -> {
                     context.sender().sendMessage(notQuests.parse("<highlight>All Items:"));
@@ -125,15 +121,15 @@ public class AdminItemsCommand extends BaseCommand {
                     }
                 }));
 
-        Command.Builder<CommandSender> admitItemsEditBuilder = editBuilder
+        NQCommandBuilder admitItemsEditBuilder = editBuilder
                 .literal("edit", "e")
-                .required("item", nqNPCParser(notQuests), Description.of("NotQuests Item which you want to edit."));
+                .required("item", nqNPCArgument(notQuests), NQDescription.of("NotQuests Item which you want to edit."));
 
 
-        commandManager.command(admitItemsEditBuilder.commandDescription(Description.of("Gives the player the item."))
+        manager.command(admitItemsEditBuilder.commandDescription(NQDescription.of("Gives the player the item."))
                 .literal("give")
-                .required("player", playerParser(), Description.of("Player who should receive the item"))
-                .required("amount", integerParser(1), Description.of("Amount of items the player should receive"))
+                .required("player", rocks.gravili.notquests.paper.commands.framework.NQArguments.playerArgument(), NQDescription.of("Player who should receive the item"))
+                .required("amount", NQArguments.integerArgument(), NQDescription.of("Amount of items the player should receive"))
                 .handler((context) -> {
                     NQItem nqItem = context.get("item");
                     int amount = context.get("amount");
@@ -152,7 +148,7 @@ public class AdminItemsCommand extends BaseCommand {
                     );
                 }));
 
-        commandManager.command(admitItemsEditBuilder.commandDescription(Description.of("Removes a NotQuests Item."))
+        manager.command(admitItemsEditBuilder.commandDescription(NQDescription.of("Removes a NotQuests Item."))
                 .literal("remove", "delete")
                 .handler((context) -> {
                     NQItem nqItem = context.get("item");
@@ -166,10 +162,10 @@ public class AdminItemsCommand extends BaseCommand {
                     );
                 }));
 
-        commandManager.command(admitItemsEditBuilder.commandDescription(Description.of("Sets an item's display name."))
+        manager.command(admitItemsEditBuilder.commandDescription(NQDescription.of("Sets an item's display name."))
                 .literal("displayName")
                 .literal("set")
-                .required("display-name", greedyStringParser(), Description.of("New display name"), notQuests.getCommandManager().miniMessageSuggestions())
+                .required("display-name", NQArguments.greedyStringArgument(), NQDescription.of("New display name"))
                 .handler((context) -> {
                     NQItem nqItem = context.get("item");
                     final String displayName = (String) context.get("display-name");
@@ -184,7 +180,7 @@ public class AdminItemsCommand extends BaseCommand {
                     );
                 }));
 
-        commandManager.command(admitItemsEditBuilder.commandDescription(Description.of("Removes an item's display name."))
+        manager.command(admitItemsEditBuilder.commandDescription(NQDescription.of("Removes an item's display name."))
                 .literal("displayName")
                 .literal("remove")
                 .handler((context) -> {
@@ -199,7 +195,7 @@ public class AdminItemsCommand extends BaseCommand {
                     );
                 }));
 
-        commandManager.command(admitItemsEditBuilder.commandDescription(Description.of("Shows an item's current display name."))
+        manager.command(admitItemsEditBuilder.commandDescription(NQDescription.of("Shows an item's current display name."))
                 .literal("displayName")
                 .literal("show")
                 .handler((context) -> {

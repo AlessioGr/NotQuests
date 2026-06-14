@@ -23,7 +23,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser;
 import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
@@ -34,7 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
-import java.util.concurrent.CompletableFuture;
 
 public class BlockVariable extends Variable<String> {
     public BlockVariable(NotQuests main) {
@@ -42,17 +40,16 @@ public class BlockVariable extends Variable<String> {
         setCanSetValue(true);
 
         addRequiredString(StringVariableValueParser.of("world", null, (context, input) -> {
-            main.getUtilManager().sendFancyCommandCompletion(context.sender(), input.input().split(" "), "[World Name]", "[...]");
-            ArrayList<Suggestion> suggestions = new ArrayList<>();
+            ArrayList<String> suggestions = new ArrayList<>();
             for (World world : Bukkit.getWorlds()) {
-                suggestions.add(Suggestion.suggestion(world.getName()));
+                suggestions.add(world.getName());
             }
-            return CompletableFuture.completedFuture(suggestions);
+            return suggestions;
         }));
 
         addRequiredNumber(NumberVariableValueParser.of("x", null));
-        addRequiredNumber(NumberVariableValueParser.of("x", null));
-        addRequiredNumber(NumberVariableValueParser.of("x", null));
+        addRequiredNumber(NumberVariableValueParser.of("y", null));
+        addRequiredNumber(NumberVariableValueParser.of("z", null));
     }
 
 
@@ -118,18 +115,18 @@ public class BlockVariable extends Variable<String> {
     }
 
     @Override
-    public List<Suggestion> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
-        final List<Suggestion> completions = new ArrayList<>();
+    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
+        final List<String> completions = new ArrayList<>();
         for (Material value : Material.values()) {
-            completions.add(Suggestion.suggestion(value.name().toLowerCase()));
+            completions.add(value.name().toLowerCase());
         }
 
         for (NQItem nqItem : NotQuests.getInstance().getItemsManager().getItems()) {
-            completions.add(Suggestion.suggestion(nqItem.getItemName()));
+            completions.add(nqItem.getItemName());
         }
 
-        completions.add(Suggestion.suggestion("hand"));
-        completions.add(Suggestion.suggestion("any"));
+        completions.add("hand");
+        completions.add("any");
 
         return completions;
     }

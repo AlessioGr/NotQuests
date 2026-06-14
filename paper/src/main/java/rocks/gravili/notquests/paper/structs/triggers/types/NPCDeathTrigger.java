@@ -18,19 +18,16 @@
 
 package rocks.gravili.notquests.paper.structs.triggers.types;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
 import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 
 import java.util.ArrayList;
-import java.util.concurrent.CompletableFuture;
-
-import static org.incendo.cloud.parser.standard.IntegerParser.integerParser;
+import java.util.List;
 
 public class NPCDeathTrigger extends Trigger { //TODO: Add support for other NPC systems
 
@@ -42,23 +39,21 @@ public class NPCDeathTrigger extends Trigger { //TODO: Add support for other NPC
 
     public static void handleCommands(
             NotQuests main,
-            LegacyPaperCommandManager<CommandSender> manager,
-            Command.Builder<CommandSender> addTriggerBuilder) {
+            NQCommandManager manager,
+            NQCommandBuilder addTriggerBuilder) {
         manager.command(
                 addTriggerBuilder
-                        .required("NPC", integerParser(0), Description.of("ID of the Citizens NPC the player has to escort."), (context, lastString) -> {
-                            final ArrayList<Suggestion> completions = new ArrayList<>();
+                        .required("NPC", NQArguments.integerArgument(), NQDescription.of("ID of the Citizens NPC the player has to escort."), (context, input) -> {
+                            final List<String> completions = new ArrayList<>();
                             for (final int npcID : main.getIntegrationsManager().getCitizensManager().getAllNPCIDs()) {
-                                completions.add(Suggestion.suggestion(String.valueOf(npcID)));
+                                completions.add(String.valueOf(npcID));
                             }
-                            main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[NPC ID]", "[Amount of Deaths]");
-
-                            return CompletableFuture.completedFuture(completions);
+                            return completions;
                         })
-                        .required("amount", integerParser(1), Description.of("Amount of times the NPC needs to die."))
+                        .required("amount", NQArguments.integerArgument(), NQDescription.of("Amount of times the NPC needs to die."))
                         .flag(main.getCommandManager().applyOn)
                         .flag(main.getCommandManager().triggerWorldString)
-                        .commandDescription(Description.of("Triggers when specified Citizens NPC dies."))
+                        .commandDescription(NQDescription.of("Triggers when specified Citizens NPC dies."))
                         .handler(
                                 (context) -> {
                                     final int npcToDieID = context.get("NPC");

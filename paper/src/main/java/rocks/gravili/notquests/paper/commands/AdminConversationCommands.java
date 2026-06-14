@@ -28,12 +28,13 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.NQNPCResult;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
+import rocks.gravili.notquests.paper.commands.framework.NQFlag;
 import rocks.gravili.notquests.paper.conversation.Conversation;
 import rocks.gravili.notquests.paper.conversation.ConversationLine;
 import rocks.gravili.notquests.paper.conversation.ConversationManager;
@@ -47,24 +48,22 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
-import static org.incendo.cloud.parser.standard.StringParser.stringParser;
-import static rocks.gravili.notquests.paper.commands.arguments.CategoryParser.categoryParser;
-import static rocks.gravili.notquests.paper.commands.arguments.ConversationParser.conversationParser;
-import static rocks.gravili.notquests.paper.commands.arguments.NQNPCParser.nqNPCParser;
-import static rocks.gravili.notquests.paper.commands.arguments.SpeakerParser.speakerParser;
+import static rocks.gravili.notquests.paper.commands.arguments.CategoryArgument.categoryArgument;
+import static rocks.gravili.notquests.paper.commands.arguments.ConversationArgument.conversationArgument;
+import static rocks.gravili.notquests.paper.commands.arguments.NQNPCArgument.nqNPCArgument;
+import static rocks.gravili.notquests.paper.commands.arguments.SpeakerArgument.speakerArgument;
 
 public class AdminConversationCommands {
     private final NotQuests main;
-    private final LegacyPaperCommandManager<CommandSender> manager;
-    private final Command.Builder<CommandSender> conversationBuilder;
+    private final NQCommandManager manager;
+    private final NQCommandBuilder conversationBuilder;
 
     private final ConversationManager conversationManager;
 
     public AdminConversationCommands(final NotQuests main,
-                                     LegacyPaperCommandManager<CommandSender> manager,
-                                     Command.Builder<CommandSender> conversationBuilder,
+                                     NQCommandManager manager,
+                                     NQCommandBuilder conversationBuilder,
                                      final ConversationManager conversationManager) {
         this.main = main;
         this.manager = manager;
@@ -74,14 +73,13 @@ public class AdminConversationCommands {
 
         manager.command(conversationBuilder
                 .literal("create")
-                .required("conversation-name", stringParser(), Description.of("conversation-name"), (context, input) -> {
-                    main.getUtilManager().sendFancyCommandCompletion(context.sender(), input.input().split(" "), "[New conversation-name]", "");
-                    ArrayList<Suggestion> completions = new ArrayList<>();
-                    completions.add(Suggestion.suggestion("<Enter new conversation-name>"));
-                    return CompletableFuture.completedFuture(completions);
+                .required("conversation-name", NQArguments.stringArgument(), NQDescription.of("conversation-name"), (context, input) -> {
+                    List<String> completions = new ArrayList<>();
+                    completions.add("<Enter new conversation-name>");
+                    return completions;
                 })
-                .flag(manager.flagBuilder("demo").withDescription(Description.of("Fills the new conversation file with demo data")))
-                .flag(main.getCommandManager().categoryFlag).commandDescription(Description.of("Creates a new conversation file."))
+                .flag(NQFlag.presence("demo", NQDescription.of("Fills the new conversation file with demo data")))
+                .flag(main.getCommandManager().categoryFlag).commandDescription(NQDescription.of("Creates a new conversation file."))
                 .handler((context) -> {
                     String conversationName = context.get("conversation-name");
                     final boolean demo = context.flags().isPresent("demo");
@@ -91,7 +89,7 @@ public class AdminConversationCommands {
                     final Conversation existingConversation = main.getConversationManager().getConversation(conversationName);
 
                     Category category = main.getDataManager().getDefaultCategory();
-                    if (context.flags().contains(main.getCommandManager().categoryFlag)) {
+                    if (context.flags().isPresent(main.getCommandManager().categoryFlag)) {
                         category = context.flags().getValue(
                                 main.getCommandManager().categoryFlag,
                                 main.getDataManager().getDefaultCategory()
@@ -157,33 +155,33 @@ public class AdminConversationCommands {
         if (main.getConfiguration().debug) {
             manager.command(conversationBuilder
                     .literal("test")
-                    .senderType(Player.class).commandDescription(Description.of("Starts a test conversation."))
+                    .senderType(Player.class).commandDescription(NQDescription.of("Starts a test conversation."))
                     .handler((context) -> {
-                        final Player player = context.sender();
+                        final Player player = (Player) context.sender();
                         context.sender().sendMessage(main.parse("<main>Playing test conversation..."));
                         conversationManager.playConversation(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), conversationManager.createTestConversation(), null);
                     }));
         }
 
         manager.command(conversationBuilder
-                .literal("list").commandDescription(Description.of("Lists all conversations."))
+                .literal("list").commandDescription(NQDescription.of("Lists all conversations."))
                 .handler((context) -> {
                     context.sender().sendMessage(main.parse("<highlight>All conversations:"));
                     int counter = 1;
                     for (final Conversation conversation : conversationManager.getAllConversations()) {
                         context.sender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + conversation.getIdentifier()));
-                        context.sender().sendMessage(main.parse("<unimportant>--- Attached to NPC:</unimportant> <main>" + conversation.getNPCs().toString())); //TODO: Fix this
+                        context.sender().sendMessage(main.parse("<unimportant>--- Attached to NPC:</unimportant> <main>" + formatAttachedNPCs(conversation.getNPCs())));
                         context.sender().sendMessage(main.parse("<unimportant>--- Amount of starting conversation lines:</unimportant> <main>" + conversation.getStartingLines().size()));
                     }
                 }));
 
         manager.command(conversationBuilder
                 .literal("analyze")
-                .required("conversation", conversationParser(main), Description.of("Name of the Conversation."))
-                .flag(manager.flagBuilder("printToConsole").withDescription(Description.of("Prints the output to the console"))).commandDescription(Description.of("Analyze specific conversations."))
+                .required("conversation", conversationArgument(main), NQDescription.of("Name of the Conversation."))
+                .flag(NQFlag.presence("printToConsole", NQDescription.of("Prints the output to the console"))).commandDescription(NQDescription.of("Analyze specific conversations."))
                 .handler((context) -> {
                     final Conversation foundConversation = context.get("conversation");
-                    final boolean printToConsole = context.flags().contains("printToConsole");
+                    final boolean printToConsole = context.flags().isPresent("printToConsole");
                     for (final ConversationLine conversationLine : foundConversation.getStartingLines()) {
                         final String analyzed = main.getConversationManager().analyze(conversationLine, "  ");
 
@@ -198,10 +196,10 @@ public class AdminConversationCommands {
 
         manager.command(conversationBuilder
                 .literal("start")
-                .required("conversation", conversationParser(main), Description.of("Name of the Conversation."))
-                .senderType(Player.class).commandDescription(Description.of("Starts a conversation."))
+                .required("conversation", conversationArgument(main), NQDescription.of("Name of the Conversation."))
+                .senderType(Player.class).commandDescription(NQDescription.of("Starts a conversation."))
                 .handler((context) -> {
-                    final Player player = context.sender();
+                    final Player player = (Player) context.sender();
                     final Conversation foundConversation = context.get("conversation");
 
                     context.sender().sendMessage(main.parse("<main>Playing <highlight>"
@@ -211,13 +209,13 @@ public class AdminConversationCommands {
                             foundConversation, null);
                 }));
 
-        final Command.Builder<CommandSender> conversationEditBuilder = conversationBuilder.literal("edit")
-                .required("conversation", conversationParser(main), Description.of("Name of the Conversation."));
+        final NQCommandBuilder conversationEditBuilder = conversationBuilder.literal("edit")
+                .required("conversation", conversationArgument(main), NQDescription.of("Name of the Conversation."));
 
         manager.command(conversationEditBuilder
                 .literal("npcs")
                 .literal("add")
-                .required("NPC", nqNPCParser(main), Description.of("ID of the NPC which should start the conversation")).commandDescription(Description.of("Add conversation to NPC"))
+                .required("NPC", nqNPCArgument(main, false, true), NQDescription.of("ID of the NPC which should start the conversation")).commandDescription(NQDescription.of("Add conversation to NPC"))
                 .handler((context) -> {
                     final Conversation foundConversation = context.get("conversation");
                     final NQNPCResult nqNPCResult = context.get("NPC");
@@ -230,7 +228,7 @@ public class AdminConversationCommands {
                                         context.sender().sendMessage(main.parse("<main>NPCs of conversation <highlight>"
                                                 + foundConversation.getIdentifier()
                                                 + "</highlight> has been added by <highlight2>"
-                                                + nqnpc.getID().toString()
+                                                + nqnpc.getNPCType() + ":" + nqnpc.getID().getEitherAsString()
                                                 + "</highlight2>!"));
                                     },
                                     player,
@@ -255,7 +253,7 @@ public class AdminConversationCommands {
                         context.sender().sendMessage(main.parse("<main>NPCs of conversation <highlight>"
                                 + foundConversation.getIdentifier()
                                 + "</highlight> has been added by <highlight2>"
-                                + nqNPC.getID().toString()
+                                + nqNPC.getNPCType() + ":" + nqNPC.getID().getEitherAsString()
                                 + "</highlight2>!"));
                     }
                 }));
@@ -264,9 +262,9 @@ public class AdminConversationCommands {
         manager.command(conversationEditBuilder
                 .literal("armorstand")
                 .literal("remove", "delete")
-                .senderType(Player.class).commandDescription(Description.of("Gives you an item to remove all conversations from an armorstand"))
+                .senderType(Player.class).commandDescription(NQDescription.of("Gives you an item to remove all conversations from an armorstand"))
                 .handler((context) -> {
-                    final Player player = context.sender();
+                    final Player player = (Player) context.sender();
 
                     ItemStack itemStack = new ItemStack(Material.PAPER, 1);
                     // give a specialitem. clicking an armorstand with that special item will remove
@@ -300,18 +298,12 @@ public class AdminConversationCommands {
         manager.command(conversationEditBuilder
                 .literal("speakers")
                 .literal("add", "create")
-                .required("speaker-name", stringParser(), Description.of("Speaker Name"), (context, input) -> {
-                    main.getUtilManager().sendFancyCommandCompletion(
-                            context.sender(),
-                            input.input().split(" "),
-                            "[New Speaker Name]",
-                            "");
-
-                    ArrayList<Suggestion> completions = new ArrayList<>();
-                    completions.add(Suggestion.suggestion("<Enter new Speaker Name>"));
-                    return CompletableFuture.completedFuture(completions);
+                .required("speaker-name", NQArguments.stringArgument(), NQDescription.of("Speaker Name"), (context, input) -> {
+                    List<String> completions = new ArrayList<>();
+                    completions.add("<Enter new Speaker Name>");
+                    return completions;
                 })
-                .flag(main.getCommandManager().speakerColor).commandDescription(Description.of("Adds / creates a new speaker for the conversation."))
+                .flag(main.getCommandManager().speakerColor).commandDescription(NQDescription.of("Adds / creates a new speaker for the conversation."))
                 .handler((context) -> {
                     final Conversation foundConversation = context.get("conversation");
 
@@ -342,7 +334,7 @@ public class AdminConversationCommands {
 
         manager.command(conversationEditBuilder
                 .literal("speakers")
-                .literal("list", "show").commandDescription(Description.of("Adds / creates a new speaker for the conversation."))
+                .literal("list", "show").commandDescription(NQDescription.of("Adds / creates a new speaker for the conversation."))
                 .handler((context) -> {
                     final Conversation foundConversation = context.get("conversation");
 
@@ -373,11 +365,11 @@ public class AdminConversationCommands {
         manager.command(conversationEditBuilder
                 .literal("speakers")
                 .literal("remove", "delete")
-                .required("speaker", speakerParser(main, "conversation")).commandDescription(Description.of("Adds / creates a new speaker for the conversation."))
+                .required("speaker", speakerArgument(main, "conversation")).commandDescription(NQDescription.of("Adds / creates a new speaker for the conversation."))
                 .handler((context) -> {
                     final Conversation foundConversation = context.get("conversation");
 
-                    final Speaker speaker = context.get("Speaker");
+                    final Speaker speaker = rocks.gravili.notquests.paper.commands.arguments.SpeakerArgument.resolveSpeaker(foundConversation, context.get("speaker"));
 
                     if (foundConversation.hasSpeaker(speaker) && foundConversation.removeSpeaker(speaker, true)) {
                         // TODO: Reload conversation here
@@ -399,7 +391,7 @@ public class AdminConversationCommands {
 
         manager.command(conversationEditBuilder
                 .literal("category")
-                .literal("show").commandDescription(Description.of("Shows the current category of this Conversation.."))
+                .literal("show").commandDescription(NQDescription.of("Shows the current category of this Conversation.."))
                 .handler((context) -> {
                     final Conversation conversation = context.get("conversation");
                     context.sender().sendMessage(main.parse(
@@ -414,7 +406,7 @@ public class AdminConversationCommands {
         manager.command(conversationEditBuilder
                 .literal("category")
                 .literal("set")
-                .required("category", categoryParser(main), Description.of("New category for this Conversation.")).commandDescription(Description.of("Changes the current category of this Conversation."))
+                .required("category", categoryArgument(main), NQDescription.of("New category for this Conversation.")).commandDescription(NQDescription.of("Changes the current category of this Conversation."))
                 .handler((context) -> {
                     final Conversation conversation = context.get("conversation");
                     final Category category = context.get("category");
@@ -439,6 +431,22 @@ public class AdminConversationCommands {
                 }));
 
         handleLinesCommands();
+    }
+
+    static String formatAttachedNPCs(final List<NQNPC> npcs) {
+        if (npcs == null || npcs.isEmpty()) {
+            return "none";
+        }
+        final List<String> formatted = new ArrayList<>();
+        for (final NQNPC npc : npcs) {
+            if (npc == null) {
+                continue;
+            }
+            final String id = npc.getNPCType() + ":" + npc.getID().getEitherAsString();
+            final String name = npc.getName();
+            formatted.add(name == null || name.isBlank() ? id : id + " (" + name + ")");
+        }
+        return formatted.isEmpty() ? "none" : String.join(", ", formatted);
     }
 
     public void handleLinesCommands() {

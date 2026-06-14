@@ -18,7 +18,6 @@
 
 package rocks.gravili.notquests.paper.structs.variables;
 
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
@@ -77,8 +76,8 @@ public class ActiveQuestsVariable extends Variable<String[]> {
   }
 
   @Override
-  public List<Suggestion> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
-    return main.getQuestManager().getAllQuests().stream().map(quest -> Suggestion.suggestion(quest.getIdentifier())).toList();
+  public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
+    return main.getQuestManager().getAllQuests().stream().map(quest -> quest.getIdentifier()).toList();
   }
 
   @Override

@@ -2,12 +2,11 @@ package rocks.gravili.notquests.paper.commands.category.admin;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.CommandManager;
-import org.incendo.cloud.description.Description;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.BaseCommand;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.CompletedQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
@@ -15,19 +14,19 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
 
-import static rocks.gravili.notquests.paper.commands.arguments.QuestParser.questParser;
+import static rocks.gravili.notquests.paper.commands.arguments.QuestArgument.questArgument;
 
 public class QuestResetAndFailCommand extends BaseCommand {
 
-    public QuestResetAndFailCommand(NotQuests notQuests, Command.Builder<CommandSender> builder) {
+    public QuestResetAndFailCommand(NotQuests notQuests, NQCommandBuilder builder) {
         super(notQuests, builder);
     }
 
     @Override
-    public void apply(CommandManager<CommandSender> commandManager) {
-        commandManager.command(builder.commandDescription(Description.of("Fails the quest from all players, removes it from completed quests, resets the accept cooldown and basically everything else."))
+    public void apply(NQCommandManager commandManager) {
+        commandManager.command(builder.commandDescription(NQDescription.of("Fails the quest from all players, removes it from completed quests, resets the accept cooldown and basically everything else."))
                 .literal("resetAndFailQuestForAllPlayers")
-                .required("quest", questParser(notQuests), Description.of("Name of the Quest which should be reset and failed."))
+                .required("quest", questArgument(notQuests), NQDescription.of("Name of the Quest which should be reset and failed."))
                 .handler((context) -> {
                     context.sender().sendMessage(Component.empty());
 

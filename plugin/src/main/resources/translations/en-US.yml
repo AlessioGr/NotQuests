@@ -97,6 +97,8 @@ chat:
         base: 'Break Blocks: <main>%BLOCKTOBREAK%'
       breed:
         base: 'Breed Mobs: <main>%ENTITYTOBREED%'
+      feedMobs:
+        base: 'Feed Mobs: <main>%ENTITYTOFEED%'
       pickupItems:
         base: 'Pickup Items: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
       consumeItems:
@@ -145,6 +147,8 @@ chat:
         base: 'Open buried treasures'
       shearSheep:
         base: 'Shear <main>%AMOUNTOFSHEEP%</main> sheep'
+      milkCow:
+        base: 'Milk <main>%AMOUNTOFCOWS%</main> cows'
       townyReachResidentCount:
         base: 'Reach resident amount: <main>%AMOUNT%'
       townyNationReachTownCount:
@@ -157,8 +161,6 @@ chat:
         base: 'Use Ability: <main>%ABILITY%'
       BetonQuestCompleteObjective:
         base: 'Finish Objective: <main>%BETONQUESTOBJECTIVENAME%'
-      ultimateJobsReachJobLevel:
-        base: 'Reach job level <main>%AMOUNT%</main> with job <main>%JOBID%'
   conditions:
     boolean:
       not-fulfilled: "<warn>Following needs to be %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."

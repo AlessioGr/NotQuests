@@ -125,8 +125,7 @@ public class Configuration {
   private boolean integrationUltimateClansEnabled = true;
   private boolean integrationTownyEnabled = true;
   private boolean integrationJobsRebornEnabled = true;
-  private boolean integrationEcoBossesEnabled = true;
-  private boolean integrationUltimateJobsEnabled = true;
+  private boolean integrationEcoMobsEnabled = true;
 
 
 
@@ -795,20 +794,12 @@ public class Configuration {
     this.integrationJobsRebornEnabled = integrationJobsRebornEnabled;
   }
 
-  public boolean isIntegrationEcoBossesEnabled() {
-    return integrationEcoBossesEnabled;
+  public boolean isIntegrationEcoMobsEnabled() {
+    return integrationEcoMobsEnabled;
   }
 
-  public void setIntegrationEcoBossesEnabled(boolean integrationEcoBossesEnabled) {
-    this.integrationEcoBossesEnabled = integrationEcoBossesEnabled;
-  }
-
-  public boolean isIntegrationUltimateJobsEnabled() {
-    return integrationUltimateJobsEnabled;
-  }
-
-  public void setIntegrationUltimateJobsEnabled(boolean integrationUltimateJobsEnabled) {
-    this.integrationUltimateJobsEnabled = integrationUltimateJobsEnabled;
+  public void setIntegrationEcoMobsEnabled(boolean integrationEcoMobsEnabled) {
+    this.integrationEcoMobsEnabled = integrationEcoMobsEnabled;
   }
 
   public boolean isActionBarFancyCommandCompletionEnabled() {

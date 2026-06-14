@@ -25,23 +25,21 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.component.TypedCommandComponent;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
-import org.incendo.cloud.parser.flag.CommandFlag;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
+import rocks.gravili.notquests.paper.commands.framework.NQFlag;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
-import static org.incendo.cloud.bukkit.parser.location.LocationParser.locationParser;
-import static org.incendo.cloud.parser.standard.IntegerParser.integerParser;
+import static rocks.gravili.notquests.paper.commands.arguments.LocationArgument.locationArgument;
 
 public class EscortNPCObjective extends Objective { //TODO: Add support for other NPC systems
 
@@ -55,41 +53,39 @@ public class EscortNPCObjective extends Objective { //TODO: Add support for othe
 
     public static void handleCommands(
             NotQuests main,
-            LegacyPaperCommandManager<CommandSender> manager,
-            Command.Builder<CommandSender> addObjectiveBuilder,
+            NQCommandManager manager,
+            NQCommandBuilder addObjectiveBuilder,
             final int level) {
         if (!main.getIntegrationsManager().isCitizensEnabled()) {
             return;
         }
 
-        CommandFlag<Location> spawnLocationCommandFlag = CommandFlag.builder("spawnLocation")
-                .withComponent(TypedCommandComponent.builder("spawnLocation", locationParser()))
-                .withDescription(Description.of("Spawn Location"))
+        NQFlag spawnLocationCommandFlag = NQFlag.builder("spawnLocation")
+                .withArgument(locationArgument())
+                .withDescription(NQDescription.of("Spawn Location"))
                 .build();
 
         manager.command(addObjectiveBuilder
-                        .required("NPC to escort", integerParser(), Description.of("ID of the Citizens NPC the player has to escort."), (context, lastString) -> {
-                            final ArrayList<Suggestion> completions = new ArrayList<>();
+                        .required("NPC to escort", NQArguments.integerArgument(), NQDescription.of("ID of the Citizens NPC the player has to escort."), (context, input) -> {
+                            final List<String> completions = new ArrayList<>();
                             for (final int npcID : main.getIntegrationsManager().getCitizensManager().getAllNPCIDs()) {
-                                completions.add(Suggestion.suggestion("" + npcID));
+                                completions.add("" + npcID);
                             }
-                            main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[NPC to escort ID]", "[Destination NPC ID]");
-                            return CompletableFuture.completedFuture(completions);
+                            return completions;
                         })
-                        .required("Destination NPC", integerParser(), Description.of("ID of the destination Citizens NPC where the player has to escort the NPC to escort to."), (context, lastString) -> {
-                            final ArrayList<Suggestion> completions = new ArrayList<>();
+                        .required("Destination NPC", NQArguments.integerArgument(), NQDescription.of("ID of the destination Citizens NPC where the player has to escort the NPC to escort to."), (context, input) -> {
+                            final List<String> completions = new ArrayList<>();
                             try {
                                 int npcToEscortID = context.get("NPC to escort");
                                 for (final int npcID : main.getIntegrationsManager().getCitizensManager().getAllNPCIDs()) {
                                     if (npcID != npcToEscortID) {
-                                        completions.add(Suggestion.suggestion(String.valueOf(npcID)));
+                                        completions.add(String.valueOf(npcID));
                                     }
                                 }
                             } catch (Exception ignored) {
 
                             }
-                            main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[Destination NPC ID]", "");
-                            return CompletableFuture.completedFuture(completions);
+                            return completions;
                         })
                         .flag(spawnLocationCommandFlag)
                         .handler((context) -> {

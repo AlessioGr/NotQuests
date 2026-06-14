@@ -1,61 +1,129 @@
-start: Atlas.specialgreeting,Atlas.greeting1
+# ════════════════════════════════════════════════════════════════════════
+#  NotQuests — Demo Conversation: "Atlas, the Keeper of Time"
+# ════════════════════════════════════════════════════════════════════════
+#  Fully playable out of the box. It showcases:
+#
+#   • Multiple speakers with their own colors & typing delays
+#   • A grand, SHOUTED entrance (shout: true  ->  bold text)
+#   • Randomized lines (texts:)  -> a random one is picked every time
+#   • MiniMessage formatting: <gradient>, <rainbow>, <bold>, <italic>
+#   • A branching menu the player can loop back to as often as they like
+#   • A nested sub-branch (the borrow-time yes/no choice)
+#   • A clean, graceful ending (a line with no "next:" ends the talk)
+#
+#  ── PACING / DELAYS — IMPORTANT ─────────────────────────────────────────
+#  The engine does NOT chain delays: after a line is scheduled it advances
+#  to the next line immediately, so every delay is measured from the SAME
+#  moment (when you interact / click an answer), not "after the last line".
+#  Two rules keep things in order:
+#    1. Use ONE NPC line per turn (consecutive NPC lines fire at once).
+#    2. The Player speaker's delay must be LARGER than Atlas's, so the
+#       answer menu always appears AFTER he finishes speaking.
+#
+#  Attach it to an NPC in-game with:
+#     /nq admin conversations start demo <npc>
+#  ...or add an "npcs:" section (commented example at the bottom).
+#
+#  ── OPTIONAL: conditions & actions ──────────────────────────────────────
+#  Any line may gate itself behind conditions or fire actions. They are
+#  LEFT OUT here on purpose so the demo never dead-ends. To use them, first
+#  create the condition/action (/nq conditions … , /nq actions …) and then:
+#
+#     someLine:
+#       text: "Only shown if you are worthy."
+#       conditions:
+#         - condition NameOfYourCondition      # ! prefix = negate
+#       actions:
+#         - action NameOfYourAction
+#         - QuestPoints add 5                  # inline variable action
+#
+#  A line with text: "/skip/" sends nothing and is handy purely for
+#  running actions. See the wiki for the full reference.
+# ════════════════════════════════════════════════════════════════════════
+
+start: Atlas.entrance
+
 Lines:
   Atlas:
-    color: "<BLUE>"
-    delay: 200
-    greeting1:
-      text: "Hello traveler! I am atlas, the keeper of time!"
-      next: Player.greeting1,Player.greeting2
+    # Golden gradient name + a short beat before he answers you.
+    color: "<gradient:#FFD700:#FFB000>"
+    delay: 800
+
+    entrance:
+      # Random greeting — Atlas never says hello the same way twice.
+      texts:
+        - "<gradient:#FFE259:#FFA751>Mortal! You step into the hour that was never promised to you.</gradient> Speak — what would you ask of Time itself?"
+        - "<gradient:#FFE259:#FFA751>So — another traveler washes up on the shores of Now.</gradient> Ask, and I shall answer."
+        - "<gradient:#FFE259:#FFA751>Ah. The sand of your hourglass shivers; I felt you arrive.</gradient> Speak your question."
+      shout: true          # bold, attention-grabbing entrance
+      delay: 0             # greet instantly the moment you interact
+      next: Player.askWho,Player.askTime,Player.askLend,Player.askAround,Player.farewell
+
+    # ── Each answer is ONE line, then loops back to the menu ──────────────
+    answerWho:
+      text: "I am <bold><gold>Atlas</gold></bold>, <italic>Keeper of Time</italic> — <rainbow>the pause between your heartbeats</rainbow>, the rust on every blade, the wrinkle you have not yet earned. <gray>Ask on, or be on your way.</gray>"
+      next: Player.askWho,Player.askTime,Player.askLend,Player.askAround,Player.farewell
+
+    answerTime:
+      text: "<gold>Time</gold> is the only currency you are born rich in — and the only one you can never earn back. <italic>Spend it wisely.</italic> <gray>What else?</gray>"
+      next: Player.askWho,Player.askTime,Player.askLend,Player.askAround,Player.farewell
+
+    answerAround:
+      text: "This is the <bold>Threshold</bold> — where every road you did not take still gathers dust, waiting. <gray>Ask on, traveler.</gray>"
+      next: Player.askWho,Player.askTime,Player.askLend,Player.askAround,Player.farewell
+
+    # ── Nested sub-branch: lend me some time ─────────────────────────────
+    offerLend:
+      text: "Bold. <italic>Refreshing.</italic> A loan of hours, then — but every borrowed minute is repaid with interest. Still keen?"
+      next: Player.yesLend,Player.noLend
+
+    handsTime:
+      text: "<gradient:#A0FFE6:#7DD3FC>[Atlas tips a glowing hourglass — sand pours upward into your hands]</gradient> Spend it well. I shall be <italic>watching the ledger.</italic> <gray>Anything more?</gray>"
+      next: Player.askWho,Player.askTime,Player.askLend,Player.askAround,Player.farewell
+
+    respectChoice:
+      text: "Wise. The richest mortals are those who never had to ask. <gray>What else would you know?</gray>"
+      next: Player.askWho,Player.askTime,Player.askLend,Player.askAround,Player.farewell
+
+    # ── Ending: a line with NO 'next:' ends the conversation cleanly ─────
+    goodbye:
+      texts:
+        - "Go. The hours are already counting you. <gradient:#FFD700:#FF8C00>Farewell, traveler.</gradient>"
+        - "Off with you, then — and mind the sand. <gradient:#FFD700:#FF8C00>Until the clock turns again.</gradient>"
       shout: true
-    specialgreeting:
-      text: "I don't wanna talk to you while you fulfill this condition. Bye!"
-      conditions:
-        - condition replaceThisWithTheNameOfYourCondition
-    answer1:
-      text: "That's a secret, but without me, you all wouldn't exist."
-      next: Atlas.answer3
-    notime:
-      text: "Time is a rare good. Au revoir!"
-    answer3:
-      text: "Anyways though, what are you doing here?"
-      next: Player.three,Player.four,Player.five
-    answer4:
-      text: "Oooh I see! I'm sure you are in need for some time, then. Should I lend you some?"
-      next: Player.lend,Player.nolend
-    answer5:
-      text: "Here it is!"
-      next: Atlas.answer6
-    answer6:
-      text: "[Hands time]"
-      next: Player.bye
-    nicebye:
-      text: "You're very welcome. Good luck on your ventures!"
-      actions:
-        - "action replaceThisWithTheNameOfYourAction"
-        - "action anotherAction"
+
   Player:
-    delay: 200
-    greeting1:
-      text: "Nice to meet you! Why do you need to keep time?"
-      next: Atlas.answer1
-    greeting2:
-      text: "I have no time for you."
-      next: Atlas.notime
-    three:
-      text: "I'm just exploring the area!"
-      next: Atlas.answer4
-    four:
-      text: "I'm on a mission."
-      next: Atlas.answer4
-    five:
-      text: "I'm here to meet the king."
-      next: Atlas.answer4
-    lend:
-      text: "Yes, please! I could use some time"
-      next: Atlas.answer5
-    nolend:
-      text: "No, sorry, I have enough time. Thank you for the offer, though!"
-      next: Atlas.notime
-    bye:
-      text: "Thank you a lot, time keeper. See you around!"
-      next: Atlas.nicebye
+    color: "<green>"
+    # MUST be larger than Atlas's delay so the menu appears AFTER he speaks.
+    delay: 1600
+
+    askWho:
+      text: "Who — or what — are you, exactly?"
+      next: Atlas.answerWho
+    askTime:
+      text: "Tell me about this 'Time' you guard."
+      next: Atlas.answerTime
+    askLend:
+      text: "I could use more time. Could you lend me some?"
+      next: Atlas.offerLend
+    askAround:
+      text: "Where am I? What is this place?"
+      next: Atlas.answerAround
+    farewell:
+      text: "I should keep moving. Thank you, Keeper."
+      next: Atlas.goodbye
+
+    # Nested choice under "askLend"
+    yesLend:
+      text: "Yes — lend me the hours. I'll repay them."
+      next: Atlas.handsTime
+    noLend:
+      text: "On second thought... I'll spend my own. Thank you."
+      next: Atlas.respectChoice
+
+# ── OPTIONAL: attach this conversation to NPCs via config instead of /nq ──
+# npcs:
+#   '0':
+#     PluginNPCID: 0
+#     PluginNPCType: citizens
+# ════════════════════════════════════════════════════════════════════════

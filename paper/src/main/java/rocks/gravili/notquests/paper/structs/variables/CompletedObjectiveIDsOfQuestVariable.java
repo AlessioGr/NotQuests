@@ -18,7 +18,6 @@
 
 package rocks.gravili.notquests.paper.structs.variables;
 
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
@@ -29,20 +28,18 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 public class CompletedObjectiveIDsOfQuestVariable extends Variable<String[]> {
     public CompletedObjectiveIDsOfQuestVariable(NotQuests main) {
         super(main);
         setCanSetValue(true);
 
-        addRequiredString(StringVariableValueParser.of("QuestName", null, (context, lastString) -> {
-            main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[Quest Name]", "[...]");
-            ArrayList<Suggestion> suggestions = new ArrayList<>();
+        addRequiredString(StringVariableValueParser.of("QuestName", null, (context, input) -> {
+            ArrayList<String> suggestions = new ArrayList<>();
             for (Quest quest : main.getQuestManager().getAllQuests()) {
-                suggestions.add(Suggestion.suggestion(quest.getIdentifier()));
+                suggestions.add(quest.getIdentifier());
             }
-            return CompletableFuture.completedFuture(suggestions);
+            return suggestions;
         }));
     }
 
@@ -101,7 +98,7 @@ public class CompletedObjectiveIDsOfQuestVariable extends Variable<String[]> {
     }
 
     @Override
-    public List<Suggestion> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
+    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
         return null;
     }
 

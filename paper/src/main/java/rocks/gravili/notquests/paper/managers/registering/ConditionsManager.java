@@ -17,15 +17,14 @@
  */
 
 package rocks.gravili.notquests.paper.managers.registering;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandContext;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQFlag;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.component.TypedCommandComponent;
-import org.incendo.cloud.context.CommandContext;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
-import org.incendo.cloud.parser.flag.CommandFlag;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
@@ -41,11 +40,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
 
-import static org.incendo.cloud.bukkit.parser.PlayerParser.playerParser;
-
 public class ConditionsManager {
     private final NotQuests main;
-    private final CommandFlag<Player> playerSelectorCommandFlag;
+    private final NQFlag playerSelectorCommandFlag;
 
     private final HashMap<String, Class<? extends Condition>> conditions;
 
@@ -53,7 +50,7 @@ public class ConditionsManager {
     public ConditionsManager(final NotQuests main) {
         this.main = main;
         conditions = new HashMap<>();
-        playerSelectorCommandFlag = CommandFlag.builder("player").withComponent(TypedCommandComponent.builder("player", playerParser())).build();
+        playerSelectorCommandFlag = NQFlag.builder("player").withArgument(NQArguments.playerArgument()).withDescription(NQDescription.of("Player selector")).build();
         registerDefaultConditions();
 
     }
@@ -95,68 +92,64 @@ public class ConditionsManager {
         conditions.put(identifier, condition);
 
         try {
-            final Method commandHandler = condition.getMethod("handleCommands", main.getClass(), LegacyPaperCommandManager.class, Command.Builder.class, ConditionFor.class);
+            final Method commandHandler = condition.getMethod("handleCommands", main.getClass(), NQCommandManager.class, NQCommandBuilder.class, ConditionFor.class);
 
             commandHandler.setAccessible(true);
 
+            final NQFlag negateFlag = NQFlag.builder("negate").withDescription(NQDescription.of("Negates this condition")).build();
+            final NQFlag allowProgressDecreaseIfNotFulfilledFlag = NQFlag.builder("allowProgressDecreaseIfNotFulfilled").withDescription(NQDescription.of("By default, if this condition is not fulfilled, the objective progress also wont be allowed to decrease. Setting this flag would allow it to decrease in any case, while only not allowing progress to be increased if the condition is not fulfilled")).build();
+
             if (condition == NumberCondition.class || condition == StringCondition.class || condition == BooleanCondition.class || condition == ListCondition.class || condition == ItemStackListCondition.class) {
-                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRequirementCommandBuilder().flag(main.getCommandManager().getPaperCommandManager().flagBuilder("negate").withDescription(Description.of("Negates this condition")))
-                        .commandDescription(Description.of("Creates a new " + identifier + " condition")), ConditionFor.QUEST);
+                commandHandler.invoke(condition, main, main.getCommandManager().getNQCommandManager(), main.getCommandManager().getAdminEditAddRequirementCommandBuilder().flag(negateFlag)
+                        .commandDescription(NQDescription.of("Creates a new " + identifier + " condition")), ConditionFor.QUEST);
 
 
-                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddUnlockConditionCommandBuilder().flag(main.getCommandManager().getPaperCommandManager().flagBuilder("negate").withDescription(Description.of("Negates this condition")))
-                        .commandDescription(Description.of("Creates a new " + identifier + " unlock condition")), ConditionFor.OBJECTIVEUNLOCK);
+                commandHandler.invoke(condition, main, main.getCommandManager().getNQCommandManager(), main.getCommandManager().getAdminEditObjectiveAddUnlockConditionCommandBuilder().flag(negateFlag)
+                        .commandDescription(NQDescription.of("Creates a new " + identifier + " unlock condition")), ConditionFor.OBJECTIVEUNLOCK);
 
-                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddProgressConditionCommandBuilder()
-                        .flag(main.getCommandManager().getPaperCommandManager().flagBuilder("negate").withDescription(Description.of("Negates this condition")))
-                        .flag(main.getCommandManager().getPaperCommandManager().flagBuilder("allowProgressDecreaseIfNotFulfilled").withDescription(Description.of("By default, if this condition is not fulfilled, the objective progress also wont be allowed to decrease. Setting this flag would allow it to decrease in any case, while only not allowing progress to be increased if the condition is not fulfilled")))
-                        .commandDescription(Description.of("Creates a new " + identifier + " progress condition")), ConditionFor.OBJECTIVEPROGRESS);
+                commandHandler.invoke(condition, main, main.getCommandManager().getNQCommandManager(), main.getCommandManager().getAdminEditObjectiveAddProgressConditionCommandBuilder()
+                        .flag(negateFlag)
+                        .flag(allowProgressDecreaseIfNotFulfilledFlag)
+                        .commandDescription(NQDescription.of("Creates a new " + identifier + " progress condition")), ConditionFor.OBJECTIVEPROGRESS);
 
-                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddCompleteConditionCommandBuilder().flag(
-                                main.getCommandManager().getPaperCommandManager().flagBuilder("negate").withDescription(Description.of("Negates this condition")))
-                        .commandDescription(Description.of("Creates a new " + identifier + " complete condition")), ConditionFor.OBJECTIVECOMPLETE);
+                commandHandler.invoke(condition, main, main.getCommandManager().getNQCommandManager(), main.getCommandManager().getAdminEditObjectiveAddCompleteConditionCommandBuilder().flag(negateFlag)
+                        .commandDescription(NQDescription.of("Creates a new " + identifier + " complete condition")), ConditionFor.OBJECTIVECOMPLETE);
 
 
-                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminAddConditionCommandBuilder().flag(main.getCommandManager().getPaperCommandManager().flagBuilder("negate").withDescription(Description.of("Negates this condition")))
-                        .commandDescription(Description.of("Creates a new " + identifier + " condition: " + ConditionFor.ConditionsYML))
+                commandHandler.invoke(condition, main, main.getCommandManager().getNQCommandManager(), main.getCommandManager().getAdminAddConditionCommandBuilder().flag(negateFlag)
+                        .commandDescription(NQDescription.of("Creates a new " + identifier + " condition: " + ConditionFor.ConditionsYML))
                         .flag(main.getCommandManager().categoryFlag), ConditionFor.ConditionsYML); //For conditions.yml
 
-                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminActionsAddConditionCommandBuilder().flag(
-                                main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
-                                        .withDescription(Description.of("Negates this condition"))
-                        )
-                        .commandDescription(Description.of("Creates a new " + identifier + " condition: " + ConditionFor.Action)), ConditionFor.Action); //For conditions.yml
+                commandHandler.invoke(condition, main, main.getCommandManager().getNQCommandManager(), main.getCommandManager().getAdminActionsAddConditionCommandBuilder().flag(negateFlag)
+                        .commandDescription(NQDescription.of("Creates a new " + identifier + " condition: " + ConditionFor.Action)), ConditionFor.Action); //For conditions.yml
 
-                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminConditionCheckCommandBuilder().flag(main.getCommandManager().getPaperCommandManager().flagBuilder("negate").withDescription(Description.of("Negates this condition")))
-                        .commandDescription(Description.of("Checks a " + identifier + " condition inline"))
+                commandHandler.invoke(condition, main, main.getCommandManager().getNQCommandManager(), main.getCommandManager().getAdminConditionCheckCommandBuilder().flag(negateFlag)
+                        .commandDescription(NQDescription.of("Checks a " + identifier + " condition inline"))
                         .flag(playerSelectorCommandFlag), ConditionFor.INLINE); //For inline /qa conditions check
             } else {
-                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRequirementCommandBuilder().literal(identifier).flag(main.getCommandManager().getPaperCommandManager().flagBuilder("negate").withDescription(Description.of("Negates this condition")))
-                        .commandDescription(Description.of("Creates a new " + identifier + " condition")), ConditionFor.QUEST);
+                commandHandler.invoke(condition, main, main.getCommandManager().getNQCommandManager(), main.getCommandManager().getAdminEditAddRequirementCommandBuilder().literal(identifier).flag(negateFlag)
+                        .commandDescription(NQDescription.of("Creates a new " + identifier + " condition")), ConditionFor.QUEST);
 
 
-                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddUnlockConditionCommandBuilder().literal(identifier).flag(
-                                main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
-                                        .withDescription(Description.of("Negates this condition"))
-                        )
-                        .commandDescription(Description.of("Creates a new " + identifier + " unlock condition")), ConditionFor.OBJECTIVEUNLOCK);
+                commandHandler.invoke(condition, main, main.getCommandManager().getNQCommandManager(), main.getCommandManager().getAdminEditObjectiveAddUnlockConditionCommandBuilder().literal(identifier).flag(negateFlag)
+                        .commandDescription(NQDescription.of("Creates a new " + identifier + " unlock condition")), ConditionFor.OBJECTIVEUNLOCK);
 
-                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddProgressConditionCommandBuilder().literal(identifier).flag(main.getCommandManager().getPaperCommandManager().flagBuilder("negate").withDescription(Description.of("Negates this condition")))
-                        .flag(main.getCommandManager().getPaperCommandManager().flagBuilder("allowProgressDecreaseIfNotFulfilled").withDescription(Description.of("By default, if this condition is not fulfilled, the objective progress also wont be allowed to decrease. Setting this flag would allow it to decrease in any case, while only not allowing progress to be increased if the condition is not fulfilled")))
-                        .commandDescription(Description.of("Creates a new " + identifier + " progress condition")),  ConditionFor.OBJECTIVEPROGRESS);
+                commandHandler.invoke(condition, main, main.getCommandManager().getNQCommandManager(), main.getCommandManager().getAdminEditObjectiveAddProgressConditionCommandBuilder().literal(identifier).flag(negateFlag)
+                        .flag(allowProgressDecreaseIfNotFulfilledFlag)
+                        .commandDescription(NQDescription.of("Creates a new " + identifier + " progress condition")),  ConditionFor.OBJECTIVEPROGRESS);
 
-                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddCompleteConditionCommandBuilder().literal(identifier).flag(main.getCommandManager().getPaperCommandManager().flagBuilder("negate").withDescription(Description.of("Negates this condition")))
-                        .commandDescription(Description.of("Creates a new " + identifier + " complete condition")), ConditionFor.OBJECTIVECOMPLETE);
+                commandHandler.invoke(condition, main, main.getCommandManager().getNQCommandManager(), main.getCommandManager().getAdminEditObjectiveAddCompleteConditionCommandBuilder().literal(identifier).flag(negateFlag)
+                        .commandDescription(NQDescription.of("Creates a new " + identifier + " complete condition")), ConditionFor.OBJECTIVECOMPLETE);
 
-                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminAddConditionCommandBuilder().literal(identifier).flag(main.getCommandManager().getPaperCommandManager().flagBuilder("negate").withDescription(Description.of("Negates this condition")))
-                        .commandDescription(Description.of("Creates a new " + identifier + " condition"))
+                commandHandler.invoke(condition, main, main.getCommandManager().getNQCommandManager(), main.getCommandManager().getAdminAddConditionCommandBuilder().literal(identifier).flag(negateFlag)
+                        .commandDescription(NQDescription.of("Creates a new " + identifier + " condition"))
                         .flag(main.getCommandManager().categoryFlag), ConditionFor.ConditionsYML); //For conditions.yml
 
-                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminActionsAddConditionCommandBuilder().literal(identifier).flag(main.getCommandManager().getPaperCommandManager().flagBuilder("negate").withDescription(Description.of("Negates this condition")))
-                        .commandDescription(Description.of("Creates a new " + identifier + " condition: " + ConditionFor.Action)), ConditionFor.Action); //For conditions.yml
+                commandHandler.invoke(condition, main, main.getCommandManager().getNQCommandManager(), main.getCommandManager().getAdminActionsAddConditionCommandBuilder().literal(identifier).flag(negateFlag)
+                        .commandDescription(NQDescription.of("Creates a new " + identifier + " condition: " + ConditionFor.Action)), ConditionFor.Action); //For conditions.yml
 
-                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminConditionCheckCommandBuilder().literal(identifier).flag(main.getCommandManager().getPaperCommandManager().flagBuilder("negate").withDescription(Description.of("Negates this condition")))
-                        .commandDescription(Description.of("Checks a " + identifier + " condition inline"))
+                commandHandler.invoke(condition, main, main.getCommandManager().getNQCommandManager(), main.getCommandManager().getAdminConditionCheckCommandBuilder().literal(identifier).flag(negateFlag)
+                        .commandDescription(NQDescription.of("Checks a " + identifier + " condition inline"))
                         .flag(playerSelectorCommandFlag), ConditionFor.INLINE); //For inline /qa conditions check
 
             }
@@ -192,14 +185,14 @@ public class ConditionsManager {
         return conditions.keySet();
     }
 
-    public void addCondition(final Condition condition, final CommandContext<CommandSender> context, final ConditionFor conditionFor) {
+    public void addCondition(final Condition condition, final NQCommandContext context, final ConditionFor conditionFor) {
         condition.setNegated(context.flags().isPresent("negate"));
 
 
         final Quest quest = context.getOrDefault("quest", null);
         Objective objectiveOfQuest = null;
-        if (quest != null && context.contains("objectiveId")) {
-            objectiveOfQuest = context.get("objectiveId"); //TODO: Support nested objectives
+        if (quest != null && context.<Objective>get("objectiveId") != null) {
+            objectiveOfQuest = main.getCommandManager().getObjectiveFromContextAndLevel(context, 0); //TODO: Support nested objectives
         }
 
         final String conditionIdentifier = context.getOrDefault("Condition Identifier", "");
@@ -317,58 +310,37 @@ public class ConditionsManager {
             for (final Class<? extends Condition> condition : getConditions()) {
                 final String identifier = getConditionType(condition);
 
-                final Method commandHandler = condition.getMethod("handleCommands", main.getClass(), LegacyPaperCommandManager.class, Command.Builder.class, ConditionFor.class);
+                final Method commandHandler = condition.getMethod("handleCommands", main.getClass(), NQCommandManager.class, NQCommandBuilder.class, ConditionFor.class);
 
                 commandHandler.setAccessible(true);
                 if (condition == NumberCondition.class || condition == StringCondition.class || condition == BooleanCondition.class || condition == ListCondition.class || condition == ItemStackListCondition.class) {
 
                     main.getLogManager().info("Re-registering condition " + identifier + " due to variable changes...");
 
-                    commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRequirementCommandBuilder().flag(
-                                    main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
-                                            .withDescription(Description.of("Negates this condition"))
-                            )
-                            .commandDescription(Description.of("Creates a new " + identifier + " condition")), ConditionFor.QUEST);
+                    final NQFlag negateFlag = NQFlag.builder("negate").withDescription(NQDescription.of("Negates this condition")).build();
+                    final NQFlag allowProgressDecreaseIfNotFulfilledFlag = NQFlag.builder("allowProgressDecreaseIfNotFulfilled").withDescription(NQDescription.of("By default, if this condition is not fulfilled, the objective progress also wont be allowed to decrease. Setting this flag would allow it to decrease in any case, while only not allowing progress to be increased if the condition is not fulfilled")).build();
+
+                    commandHandler.invoke(condition, main, main.getCommandManager().getNQCommandManager(), main.getCommandManager().getAdminEditAddRequirementCommandBuilder().flag(negateFlag)
+                            .commandDescription(NQDescription.of("Creates a new " + identifier + " condition")), ConditionFor.QUEST);
 
 
-                    commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddUnlockConditionCommandBuilder().flag(
-                                    main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
-                                            .withDescription(Description.of("Negates this condition"))
-                            )
-                            .commandDescription(Description.of("Creates a new " + identifier + " unlock condition")), ConditionFor.OBJECTIVEUNLOCK);
-                    commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddProgressConditionCommandBuilder().flag(
-                                    main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
-                                            .withDescription(Description.of("Negates this condition"))
-                            )
-                            .flag(
-                                    main.getCommandManager().getPaperCommandManager().flagBuilder("allowProgressDecreaseIfNotFulfilled")
-                                            .withDescription(Description.of("By default, if this condition is not fulfilled, the objective progress also wont be allowed to decrease. Setting this flag would allow it to decrease in any case, while only not allowing progress to be increased if the condition is not fulfilled"))
-                            )
-                            .commandDescription(Description.of("Creates a new " + identifier + " progress condition")), ConditionFor.OBJECTIVEPROGRESS);
-                    commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddCompleteConditionCommandBuilder().flag(
-                                    main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
-                                            .withDescription(Description.of("Negates this condition"))
-                            )
-                            .commandDescription(Description.of("Creates a new " + identifier + " complete condition")), ConditionFor.OBJECTIVECOMPLETE);
+                    commandHandler.invoke(condition, main, main.getCommandManager().getNQCommandManager(), main.getCommandManager().getAdminEditObjectiveAddUnlockConditionCommandBuilder().flag(negateFlag)
+                            .commandDescription(NQDescription.of("Creates a new " + identifier + " unlock condition")), ConditionFor.OBJECTIVEUNLOCK);
+                    commandHandler.invoke(condition, main, main.getCommandManager().getNQCommandManager(), main.getCommandManager().getAdminEditObjectiveAddProgressConditionCommandBuilder().flag(negateFlag)
+                            .flag(allowProgressDecreaseIfNotFulfilledFlag)
+                            .commandDescription(NQDescription.of("Creates a new " + identifier + " progress condition")), ConditionFor.OBJECTIVEPROGRESS);
+                    commandHandler.invoke(condition, main, main.getCommandManager().getNQCommandManager(), main.getCommandManager().getAdminEditObjectiveAddCompleteConditionCommandBuilder().flag(negateFlag)
+                            .commandDescription(NQDescription.of("Creates a new " + identifier + " complete condition")), ConditionFor.OBJECTIVECOMPLETE);
 
 
-                    commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminAddConditionCommandBuilder().flag(
-                                    main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
-                                            .withDescription(Description.of("Negates this condition"))
-                            )
-                            .commandDescription(Description.of("Creates a new " + identifier + " condition: " + ConditionFor.ConditionsYML)) //For conditions.yml
+                    commandHandler.invoke(condition, main, main.getCommandManager().getNQCommandManager(), main.getCommandManager().getAdminAddConditionCommandBuilder().flag(negateFlag)
+                            .commandDescription(NQDescription.of("Creates a new " + identifier + " condition: " + ConditionFor.ConditionsYML)) //For conditions.yml
                             .flag(main.getCommandManager().categoryFlag), ConditionFor.ConditionsYML); //For conditions.yml
-                    commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminActionsAddConditionCommandBuilder().flag(
-                                    main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
-                                            .withDescription(Description.of("Negates this condition"))
-                            )
-                            .commandDescription(Description.of("Creates a new " + identifier + " condition:" + ConditionFor.Action))); //For conditions.yml
+                    commandHandler.invoke(condition, main, main.getCommandManager().getNQCommandManager(), main.getCommandManager().getAdminActionsAddConditionCommandBuilder().flag(negateFlag)
+                            .commandDescription(NQDescription.of("Creates a new " + identifier + " condition:" + ConditionFor.Action))); //For conditions.yml
 
-                    commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminConditionCheckCommandBuilder().flag(
-                                    main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
-                                            .withDescription(Description.of("Negates this condition"))
-                            )
-                            .commandDescription(Description.of("Checks a " + identifier + " condition inline"))
+                    commandHandler.invoke(condition, main, main.getCommandManager().getNQCommandManager(), main.getCommandManager().getAdminConditionCheckCommandBuilder().flag(negateFlag)
+                            .commandDescription(NQDescription.of("Checks a " + identifier + " condition inline"))
                             .flag(playerSelectorCommandFlag), ConditionFor.INLINE); //For inline /qa conditions check
 
                 }

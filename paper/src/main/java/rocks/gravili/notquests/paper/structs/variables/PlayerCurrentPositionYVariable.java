@@ -19,7 +19,6 @@
 package rocks.gravili.notquests.paper.structs.variables;
 
 import org.bukkit.Location;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
@@ -58,7 +57,7 @@ public class PlayerCurrentPositionYVariable extends Variable<Double> {
   }
 
   @Override
-  public List<Suggestion> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
+  public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
     return null;
   }
 

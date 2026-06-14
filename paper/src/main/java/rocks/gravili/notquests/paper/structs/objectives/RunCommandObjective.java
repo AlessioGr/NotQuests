@@ -21,20 +21,20 @@ package rocks.gravili.notquests.paper.structs.objectives;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
+import rocks.gravili.notquests.paper.commands.framework.NQFlag;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
-import static org.incendo.cloud.parser.standard.StringParser.quotedStringParser;
-import static rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser.numberVariableParser;
+import static rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableArgument.numberVariableArgument;
 
 public class RunCommandObjective extends Objective {
 
@@ -48,19 +48,18 @@ public class RunCommandObjective extends Objective {
 
   public static void handleCommands(
       NotQuests main,
-      LegacyPaperCommandManager<CommandSender> manager,
-      Command.Builder<CommandSender> addObjectiveBuilder,
+      NQCommandManager manager,
+      NQCommandBuilder addObjectiveBuilder,
       final int level) {
     manager.command(addObjectiveBuilder
-            .required("amount", numberVariableParser("amount", null), Description.of("Amount of times the command needs to be run"))
-                    .required("Command", quotedStringParser(), Description.of("Command to run"), (context, lastString) -> {
-                        main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[Enter command (put between \" \" if you want to use spaces)]", "");
-                        ArrayList<Suggestion> completions = new ArrayList<>();
-                        completions.add(Suggestion.suggestion("<Enter command (put between \" \" if you want to use spaces)>"));
-                        return CompletableFuture.completedFuture(completions);
+            .required("amount", numberVariableArgument("amount", null), NQDescription.of("Amount of times the command needs to be run"))
+                    .required("Command", NQArguments.stringArgument(), NQDescription.of("Command to run"), (context, input) -> {
+                        List<String> completions = new ArrayList<>();
+                        completions.add("<Enter command (put between \" \" if you want to use spaces)>");
+                        return completions;
                     })
-            .flag(manager.flagBuilder("ignoreCase").withDescription(Description.of("Makes it so it doesn't matter whether the player uses uppercase or lowercase characters")))
-            .flag(manager.flagBuilder("cancelCommand").withDescription(Description.of("Makes it so the command will be cancelled (not actually run) when entered while this objective is active")))
+            .flag(NQFlag.builder("ignoreCase").withDescription(NQDescription.of("Makes it so it doesn't matter whether the player uses uppercase or lowercase characters")).build())
+            .flag(NQFlag.builder("cancelCommand").withDescription(NQDescription.of("Makes it so the command will be cancelled (not actually run) when entered while this objective is active")).build())
             .handler(
                 (context) -> {
                   String command = context.get("Command");

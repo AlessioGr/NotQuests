@@ -18,14 +18,12 @@
 
 package rocks.gravili.notquests.paper.structs.variables;
 
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 public class PermissionVariable extends Variable<Boolean> {
     public PermissionVariable(NotQuests main) {
@@ -34,11 +32,10 @@ public class PermissionVariable extends Variable<Boolean> {
             setCanSetValue(true);
         }
 
-        addRequiredString(StringVariableValueParser.of("Permission", null, (context, lastString) -> {
-            main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[Permission Node]", "[...]");
-            ArrayList<Suggestion> suggestions = new ArrayList<>();
-            suggestions.add(Suggestion.suggestion("<Enter Permission node>"));
-            return CompletableFuture.completedFuture(suggestions);
+        addRequiredString(StringVariableValueParser.of("Permission", null, (context, input) -> {
+            ArrayList<String> suggestions = new ArrayList<>();
+            suggestions.add("<Enter Permission node>");
+            return suggestions;
         }));
     }
 
@@ -68,7 +65,7 @@ public class PermissionVariable extends Variable<Boolean> {
     }
 
     @Override
-    public List<Suggestion> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
+    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
         return null;
     }
 

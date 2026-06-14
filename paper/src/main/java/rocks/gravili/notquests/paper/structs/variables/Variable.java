@@ -21,12 +21,11 @@ package rocks.gravili.notquests.paper.structs.variables;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
-import org.incendo.cloud.parser.flag.CommandFlag;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueParser;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser;
 import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
+import rocks.gravili.notquests.paper.commands.framework.NQFlag;
 import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
@@ -45,7 +44,7 @@ public abstract class Variable<T> {
     private final ArrayList<StringVariableValueParser<CommandSender>> requiredStrings;
     private final ArrayList<NumberVariableValueParser<CommandSender>> requiredNumbers;
     private final ArrayList<BooleanVariableValueParser<CommandSender>> requiredBooleans;
-    private final ArrayList<org.incendo.cloud.parser.flag.CommandFlag<Void>> requiredBooleanFlags;
+    private final ArrayList<NQFlag> requiredBooleanFlags;
 
     private final ArrayList<String> setOnlyRequiredValues = new ArrayList<>(); //TODO: Implement
     private final ArrayList<String> getOnlyRequiredValues = new ArrayList<>(); //TODO: Implement
@@ -132,7 +131,7 @@ public abstract class Variable<T> {
         requiredBooleans.add(booleanArgument);
     }
 
-    protected void addRequiredBooleanFlag(final org.incendo.cloud.parser.flag.CommandFlag<Void> commandFlag){
+    protected void addRequiredBooleanFlag(final NQFlag commandFlag){
         requiredBooleanFlags.add(commandFlag);
     }
 
@@ -148,7 +147,7 @@ public abstract class Variable<T> {
         return requiredBooleans;
     }
 
-    public final ArrayList<CommandFlag<Void>> getRequiredBooleanFlags() {
+    public final ArrayList<NQFlag> getRequiredBooleanFlags() {
         return requiredBooleanFlags;
     }
 
@@ -249,7 +248,7 @@ public abstract class Variable<T> {
 
     public abstract boolean setValueInternally(final T newValue, final QuestPlayer questPlayer, final Object... objects);
 
-    public abstract List<Suggestion> getPossibleValues(final QuestPlayer questPlayer, final Object... objects);
+    public abstract List<String> getPossibleValues(final QuestPlayer questPlayer, final Object... objects);
 
     public final String getVariableType() {
         return main.getVariablesManager().getVariableType(this.getClass());

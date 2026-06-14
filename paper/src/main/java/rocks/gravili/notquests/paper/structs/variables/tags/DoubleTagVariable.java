@@ -18,7 +18,6 @@
 
 package rocks.gravili.notquests.paper.structs.variables.tags;
 
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
 import rocks.gravili.notquests.paper.managers.tags.Tag;
@@ -28,22 +27,20 @@ import rocks.gravili.notquests.paper.structs.variables.Variable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 public class DoubleTagVariable extends Variable<Double> {
 
     public DoubleTagVariable(final NotQuests main) {
         super(main);
 
-        addRequiredString(StringVariableValueParser.of("TagName", null, (context, lastString) -> {
-            main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[Item Slot ID / Equipment Slot Name]", "[...]");
-            ArrayList<Suggestion> suggestions = new ArrayList<>();
+        addRequiredString(StringVariableValueParser.of("TagName", null, (context, input) -> {
+            ArrayList<String> suggestions = new ArrayList<>();
             for (final Tag tag : main.getTagManager().getTags()) {
                 if (tag.getTagType() == TagType.DOUBLE) {
-                    suggestions.add(Suggestion.suggestion(tag.getTagName()));
+                    suggestions.add(tag.getTagName());
                 }
             }
-            return CompletableFuture.completedFuture(suggestions);
+            return suggestions;
         }));
         setCanSetValue(true);
     }
@@ -100,7 +97,7 @@ public class DoubleTagVariable extends Variable<Double> {
 
 
     @Override
-    public final List<Suggestion> getPossibleValues(final QuestPlayer questPlayer, final Object... objects) {
+    public final List<String> getPossibleValues(final QuestPlayer questPlayer, final Object... objects) {
         return null;
     }
 

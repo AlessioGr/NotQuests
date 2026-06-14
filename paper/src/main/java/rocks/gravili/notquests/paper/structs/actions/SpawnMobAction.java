@@ -26,21 +26,18 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
-import org.incendo.cloud.Command;
-import static rocks.gravili.notquests.paper.commands.arguments.EntityTypeParser.entityTypeParser;
-import org.incendo.cloud.component.TypedCommandComponent;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
-import org.incendo.cloud.parser.flag.CommandFlag;
+import static rocks.gravili.notquests.paper.commands.arguments.EntityTypeArgument.entityTypeArgument;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
+import rocks.gravili.notquests.paper.commands.framework.NQFlag;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Random;
-
-import static org.incendo.cloud.bukkit.parser.WorldParser.worldParser;
-import static org.incendo.cloud.parser.standard.IntegerParser.integerParser;
 
 public class SpawnMobAction extends Action {
 
@@ -58,29 +55,29 @@ public class SpawnMobAction extends Action {
 
     public static void handleCommands(
             NotQuests main,
-            LegacyPaperCommandManager<CommandSender> manager,
-            Command.Builder<CommandSender> builder,
+            NQCommandManager manager,
+            NQCommandBuilder builder,
             ActionFor actionFor) {
 
-        CommandFlag<Integer> spawnRadiusX = CommandFlag.builder("spawnRadiusX")
-                .withComponent(TypedCommandComponent.builder("spawnRadiusX", integerParser(0)))
+        NQFlag spawnRadiusX = NQFlag.builder("spawnRadiusX")
+                .withArgument(NQArguments.integerArgument())
                 .build();
 
-        CommandFlag<Integer> spawnRadiusY = CommandFlag.builder("spawnRadiusY")
-                .withComponent(TypedCommandComponent.builder("spawnRadiusY", integerParser(0)))
+        NQFlag spawnRadiusY = NQFlag.builder("spawnRadiusY")
+                .withArgument(NQArguments.integerArgument())
                 .build();
 
-        CommandFlag<Integer> spawnRadiusZ = CommandFlag.builder("spawnRadiusZ")
-                .withComponent(TypedCommandComponent.builder("spawnRadiusZ", integerParser(0)))
+        NQFlag spawnRadiusZ = NQFlag.builder("spawnRadiusZ")
+                .withArgument(NQArguments.integerArgument())
                 .build();
 
-        Command.Builder<CommandSender> commonBuilder = builder.required("entityType", entityTypeParser(main), Description.of("Type of Entity which should be spawned."))
-                .required("amount", integerParser(1), Description.of("Amount of mobs which should be spawned"))
+        NQCommandBuilder commonBuilder = builder.required("entityType", entityTypeArgument(main), NQDescription.of("Type of Entity which should be spawned."))
+                .required("amount", NQArguments.integerArgument(), NQDescription.of("Amount of mobs which should be spawned"))
                 .flag(spawnRadiusX)
                 .flag(spawnRadiusY)
                 .flag(spawnRadiusZ);
 
-        manager.command(commonBuilder.literal("PlayerLocation", Description.of("Takes the location the player currently is in (when executing the action). So, this is a dynamic location."))
+        manager.command(commonBuilder.literal("PlayerLocation")
                 .handler(
                         (context) -> {
                             final String entityType = context.get("entityType");
@@ -91,9 +88,9 @@ public class SpawnMobAction extends Action {
                             spawnMobAction.setSpawnAmount(amountToSpawn);
                             spawnMobAction.setUsePlayerLocation(true);
 
-                            final int spawnRadiusXValue = context.flags().getValue(spawnRadiusX, 0);
-                            final int spawnRadiusYValue = context.flags().getValue(spawnRadiusY, 0);
-                            final int spawnRadiusZValue = context.flags().getValue(spawnRadiusZ, 0);
+                            final int spawnRadiusXValue = context.flags().getValue("spawnRadiusX", 0);
+                            final int spawnRadiusYValue = context.flags().getValue("spawnRadiusY", 0);
+                            final int spawnRadiusZValue = context.flags().getValue("spawnRadiusZ", 0);
                             spawnMobAction.setSpawnRadiusX(spawnRadiusXValue);
                             spawnMobAction.setSpawnRadiusY(spawnRadiusYValue);
                             spawnMobAction.setSpawnRadiusZ(spawnRadiusZValue);
@@ -101,8 +98,8 @@ public class SpawnMobAction extends Action {
                             main.getActionManager().addAction(spawnMobAction, context, actionFor);
                         }));
 
-        manager.command(commonBuilder.literal("Location", Description.of("Takes the location you enter"))
-                        .required("world", worldParser(), Description.of("World name"))
+        manager.command(commonBuilder.literal("Location")
+                        .required("world", NQArguments.worldArgument(), NQDescription.of("World name"))
                         /* .argumentTriplet(
                                 "coords",
                                 TypeToken.get(Vector.class),
@@ -114,9 +111,9 @@ public class SpawnMobAction extends Action {
                                 ArgumentDescription.of("Coordinates")
                         )*/
                         // Commented out, because this somehow breaks flags
-                        .required("x", integerParser(), Description.of("X coordinate"))
-                        .required("y", integerParser(), Description.of("Y coordinate"))
-                        .required("z", integerParser(), Description.of("Z coordinate"))
+                        .required("x", NQArguments.integerArgument(), NQDescription.of("X coordinate"))
+                        .required("y", NQArguments.integerArgument(), NQDescription.of("Y coordinate"))
+                        .required("z", NQArguments.integerArgument(), NQDescription.of("Z coordinate"))
                         .handler(
                                 (context) -> {
                                     final String entityType = context.get("entityType");
@@ -127,9 +124,9 @@ public class SpawnMobAction extends Action {
                                     spawnMobAction.setSpawnAmount(amountToSpawn);
                                     spawnMobAction.setUsePlayerLocation(false);
 
-                                    final int spawnRadiusXValue = context.flags().getValue(spawnRadiusX, 0);
-                                    final int spawnRadiusYValue = context.flags().getValue(spawnRadiusY, 0);
-                                    final int spawnRadiusZValue = context.flags().getValue(spawnRadiusZ, 0);
+                                    final int spawnRadiusXValue = context.flags().getValue("spawnRadiusX", 0);
+                                    final int spawnRadiusYValue = context.flags().getValue("spawnRadiusY", 0);
+                                    final int spawnRadiusZValue = context.flags().getValue("spawnRadiusZ", 0);
                                     spawnMobAction.setSpawnRadiusX(spawnRadiusXValue);
                                     spawnMobAction.setSpawnRadiusY(spawnRadiusYValue);
                                     spawnMobAction.setSpawnRadiusZ(spawnRadiusZValue);
@@ -265,15 +262,15 @@ public class SpawnMobAction extends Action {
                             .getMythicMobsManager()
                             .spawnMob(getMobToSpawnType(), getSpawnLocation(), getSpawnAmount(), this);
                 }
-            } else if (main.getIntegrationsManager().isEcoBossesEnabled()
-                    && main.getIntegrationsManager().getEcoBossesManager().isEcoBoss(getMobToSpawnType())) {
+            } else if (main.getIntegrationsManager().isEcoMobsEnabled()
+                    && main.getIntegrationsManager().getEcoMobsManager().isEcoMob(getMobToSpawnType())) {
                 if (isUsePlayerLocation()) {
                     main.getIntegrationsManager()
-                            .getEcoBossesManager()
+                            .getEcoMobsManager()
                             .spawnMob(getMobToSpawnType(), player.getLocation(), getSpawnAmount(), this);
                 } else {
                     main.getIntegrationsManager()
-                            .getEcoBossesManager()
+                            .getEcoMobsManager()
                             .spawnMob(getMobToSpawnType(), getSpawnLocation(), getSpawnAmount(), this);
                 }
             } else {

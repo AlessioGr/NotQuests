@@ -1,37 +1,31 @@
 package rocks.gravili.notquests.paper.commands.category.admin;
 
-import org.bukkit.command.CommandSender;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.CommandManager;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.BaseCommand;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
 import rocks.gravili.notquests.paper.structs.Quest;
 
 import java.util.ArrayList;
-import java.util.concurrent.CompletableFuture;
+import java.util.List;
 
-import static org.incendo.cloud.parser.standard.StringParser.stringParser;
-import static rocks.gravili.notquests.paper.commands.arguments.QuestParser.questParser;
+import static rocks.gravili.notquests.paper.commands.arguments.QuestArgument.questArgument;
 
 public class QuestDeleteCommand extends BaseCommand {
-    public QuestDeleteCommand(NotQuests notQuests, Command.Builder<CommandSender> builder) {
+    public QuestDeleteCommand(NotQuests notQuests, NQCommandBuilder builder) {
         super(notQuests, builder);
     }
 
     @Override
-    public void apply(CommandManager<CommandSender> commandManager) {
-        commandManager.command(builder.literal("delete", Description.of("Delete an existing Quest."))
-                .required("questName", questParser(notQuests), Description.of("Quest Name"), (context, input) -> {
-                    notQuests.getUtilManager().sendFancyCommandCompletion(context.sender(), input.input().split(" "), "[Name of the Quest you want to delete]", "");
-
-                    ArrayList<Suggestion> completions = new ArrayList<>();
-
-                    for (Quest quest : notQuests.getQuestManager().getAllQuests()) {
-                        completions.add(Suggestion.suggestion(quest.getIdentifier()));
+    public void apply(NQCommandManager commandManager) {
+        commandManager.command(builder.literal("delete", NQDescription.of("Delete an existing Quest."))
+                .required("questName", questArgument(notQuests), NQDescription.of("Quest Name"), (context, input) -> {
+                    final List<String> completions = new ArrayList<>();
+                    for (final Quest quest : notQuests.getQuestManager().getAllQuests()) {
+                        completions.add(quest.getIdentifier());
                     }
-                    return CompletableFuture.completedFuture(completions);
+                    return completions;
                 })
                 .handler((context) -> {
                     final Quest quest = context.get("questName");

@@ -22,23 +22,21 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.component.TypedCommandComponent;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
-import org.incendo.cloud.parser.flag.CommandFlag;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
+import rocks.gravili.notquests.paper.commands.framework.NQFlag;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
-import static org.incendo.cloud.parser.standard.StringParser.stringParser;
-import static rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser.numberVariableParser;
+import static rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableArgument.numberVariableArgument;
 
 public class KillEliteMobsObjective extends Objective {
 
@@ -55,79 +53,67 @@ public class KillEliteMobsObjective extends Objective {
 
     public static void handleCommands(
             NotQuests main,
-            LegacyPaperCommandManager<CommandSender> manager,
-            Command.Builder<CommandSender> addObjectiveBuilder,
+            NQCommandManager manager,
+            NQCommandBuilder addObjectiveBuilder,
             final int level) {
         if (!main.getIntegrationsManager().isEliteMobsEnabled()) {
             return;
         }
 
-        CommandFlag<String> mobname = CommandFlag.builder("mobname")
-                .withComponent(TypedCommandComponent.builder("mobname", stringParser())
-                        .suggestionProvider((context, lastString) -> {
-                            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.sender(), lastString.input().split(" "), "[Part of Elite Mob Name]", "");
-
-                            ArrayList<Suggestion> completions = new ArrayList<>();
-                            completions.add(Suggestion.suggestion("any"));
+        NQFlag mobname = NQFlag.builder("mobname")
+                .withArgument(NQArguments.stringArgument())
+                .withSuggestions((context, input) -> {
+                            List<String> completions = new ArrayList<>();
+                            completions.add("any");
                             if (main.getIntegrationsManager().isEliteMobsEnabled()) {
-                                completions.addAll(main.getDataManager().standardEliteMobNamesCompletions.stream().map(Suggestion::suggestion).toList());
+                                completions.addAll(main.getDataManager().standardEliteMobNamesCompletions);
                             }
-                            return CompletableFuture.completedFuture(completions);
-                        }))
-                .withDescription(Description.of("Name of the Elite Mob"))
+                            return completions;
+                        })
+                .withDescription(NQDescription.of("Name of the Elite Mob"))
                 .build();
 
-        CommandFlag<String> minimumLevel = CommandFlag.builder("minimumLevel")
-                .withComponent(TypedCommandComponent.builder("Minimum level", stringParser())
-                        .suggestionProvider((context, lastString) -> {
-                            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.sender(), lastString.input().split(" "), "[Minimum Level]", "");
-                            return CompletableFuture.completedFuture(main.getDataManager().numberPositiveCompletions.stream().map(Suggestion::suggestion).toList());
-                        }))
-                .withDescription(Description.of("Minimum level"))
+        NQFlag minimumLevel = NQFlag.builder("minimumLevel")
+                .withArgument(NQArguments.stringArgument())
+                .withSuggestions((context, input) -> main.getDataManager().numberPositiveCompletions)
+                .withDescription(NQDescription.of("Minimum level"))
                 .build();
 
-        CommandFlag<String> maximumLevel = CommandFlag.builder("maximumLevel")
-                .withComponent(TypedCommandComponent.builder("Maximum level", stringParser())
-                        .suggestionProvider((context, lastString) -> {
-                            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.sender(), lastString.input().split(" "), "[Minimum Level]", "");
-                            return CompletableFuture.completedFuture(main.getDataManager().numberPositiveCompletions.stream().map(Suggestion::suggestion).toList());
-                        }))
-                .withDescription(Description.of("Maximum level"))
+        NQFlag maximumLevel = NQFlag.builder("maximumLevel")
+                .withArgument(NQArguments.stringArgument())
+                .withSuggestions((context, input) -> main.getDataManager().numberPositiveCompletions)
+                .withDescription(NQDescription.of("Maximum level"))
                 .build();
 
-        CommandFlag<String> spawnReason = CommandFlag.builder("spawnReason")
-                .withComponent(TypedCommandComponent.builder("Spawn Reason", stringParser())
-                        .suggestionProvider((context, lastString) -> {
-                            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.sender(), lastString.input().split(" "), "[Spawn Reason]", "");
-
-                            ArrayList<Suggestion> completions = new ArrayList<>();
-                            completions.add(Suggestion.suggestion("any"));
+        NQFlag spawnReason = NQFlag.builder("spawnReason")
+                .withArgument(NQArguments.stringArgument())
+                .withSuggestions((context, input) -> {
+                            List<String> completions = new ArrayList<>();
+                            completions.add("any");
                             for (final CreatureSpawnEvent.SpawnReason spawnReasonS : CreatureSpawnEvent.SpawnReason.values()) {
-                                completions.add(Suggestion.suggestion(spawnReasonS.toString()));
+                                completions.add(spawnReasonS.toString());
                             }
-                            return CompletableFuture.completedFuture(completions);
-                        }))
-                .withDescription(Description.of("Spawn Reason"))
+                            return completions;
+                        })
+                .withDescription(NQDescription.of("Spawn Reason"))
                 .build();
 
-        CommandFlag<String> minimumDamagePercentage = CommandFlag.builder("minimumDamagePercentage")
-                .withComponent(TypedCommandComponent.builder("Minimum Damage Percentage", stringParser())
-                        .suggestionProvider((context, lastString) -> {
-                            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.sender(), lastString.input().split(" "), "[Minimum Damage Percentage]", "");
-
-                            ArrayList<Suggestion> completions = new ArrayList<>();
+        NQFlag minimumDamagePercentage = NQFlag.builder("minimumDamagePercentage")
+                .withArgument(NQArguments.stringArgument())
+                .withSuggestions((context, input) -> {
+                            List<String> completions = new ArrayList<>();
                             for (int i = 50; i <= 100; i++) {
-                                completions.add(Suggestion.suggestion("" + i));
+                                completions.add("" + i);
                             }
 
-                            return CompletableFuture.completedFuture(completions);
-                        }))
-                .withDescription(Description.of("Minimum Damage Percentage"))
+                            return completions;
+                        })
+                .withDescription(NQDescription.of("Minimum Damage Percentage"))
                 .build();
 
         manager.command(addObjectiveBuilder
                 .literal("KillEliteMobs")
-                .required("amount", numberVariableParser("amount", null), Description.of("Amount of kills needed"))
+                .required("amount", numberVariableArgument("amount", null), NQDescription.of("Amount of kills needed"))
                 .flag(mobname)
                 .flag(minimumLevel)
                 .flag(maximumLevel)

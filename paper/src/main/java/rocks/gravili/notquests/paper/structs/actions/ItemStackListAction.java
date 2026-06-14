@@ -24,15 +24,15 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
-import org.incendo.cloud.parser.flag.CommandFlag;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.framework.NQFlag;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueParser;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser;
 import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
 import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
@@ -41,12 +41,10 @@ import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.CompletableFuture;
 
-import static org.incendo.cloud.parser.standard.IntegerParser.integerParser;
-import static org.incendo.cloud.parser.standard.StringParser.stringParser;
-import static rocks.gravili.notquests.paper.commands.arguments.variables.ItemStackListVariableValueParser.itemStackListVariableParser;
+import static rocks.gravili.notquests.paper.commands.arguments.variables.ItemStackListVariableArgument.itemStackListVariableArgument;
 
 
 public class ItemStackListAction extends Action {
@@ -66,7 +64,7 @@ public class ItemStackListAction extends Action {
         additionalBooleanArguments = new HashMap<>();
     }
 
-    public static void handleCommands(NotQuests main, LegacyPaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor actionFor) {
+    public static void handleCommands(NotQuests main, NQCommandManager manager, NQCommandBuilder builder, ActionFor actionFor) {
         for (String variableString : main.getVariablesManager().getVariableIdentifiers()) {
 
             Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
@@ -84,19 +82,17 @@ public class ItemStackListAction extends Action {
 
 
             manager.command(main.getVariablesManager().registerVariableCommands(variableString, builder)
-                    .required("operator", stringParser(), Description.of("Operator."), (context, lastString) -> {
-                        ArrayList<Suggestion> completions = new ArrayList<>();
-                        completions.add(Suggestion.suggestion("set"));
-                        completions.add(Suggestion.suggestion("add"));
-                        completions.add(Suggestion.suggestion("remove"));
-                        completions.add(Suggestion.suggestion("clear"));
-                        main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[Operator]", "[...]");
-
-                        return CompletableFuture.completedFuture(completions);
+                    .required("operator", NQArguments.stringArgument(), NQDescription.of("Operator."), (context, input) -> {
+                        List<String> completions = new ArrayList<>();
+                        completions.add("set");
+                        completions.add("add");
+                        completions.add("remove");
+                        completions.add("clear");
+                        return completions;
                     })
 
-                    .required("expression", itemStackListVariableParser("expression", variable), Description.of("Expression"))
-                    .required("amount", integerParser(1), Description.of("Amount of items"))
+                    .required("expression", itemStackListVariableArgument("expression", variable), NQDescription.of("Expression"))
+                    .required("amount", NQArguments.integerArgument(), NQDescription.of("Amount of items"))
                     .handler((context) -> {
 
                         final String expression = context.get("expression");
@@ -148,7 +144,7 @@ public class ItemStackListAction extends Action {
                         for (BooleanVariableValueParser<CommandSender> booleanParser : variable.getRequiredBooleans()) {
                             additionalBooleanArguments.put(booleanParser.getIdentifier(), new NumberExpression(main, context.get(booleanParser.getIdentifier())));
                         }
-                        for (CommandFlag<?> commandFlag : variable.getRequiredBooleanFlags()) {
+                        for (NQFlag commandFlag : variable.getRequiredBooleanFlags()) {
                             additionalBooleanArguments.put(commandFlag.name(), context.flags().isPresent(commandFlag.name()) ? NumberExpression.ofStatic(main, 1) : NumberExpression.ofStatic(main, 0));
                         }
                         listAction.setAdditionalBooleanArguments(additionalBooleanArguments);

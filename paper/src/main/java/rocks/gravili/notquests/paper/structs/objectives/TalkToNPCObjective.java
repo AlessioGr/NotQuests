@@ -22,11 +22,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.NQNPCResult;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
 import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.managers.npc.NQNPCID;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
@@ -36,7 +36,7 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import java.util.Map;
 import java.util.UUID;
 
-import static rocks.gravili.notquests.paper.commands.arguments.NQNPCParser.nqNPCParser;
+import static rocks.gravili.notquests.paper.commands.arguments.NQNPCArgument.nqNPCArgument;
 
 public class TalkToNPCObjective extends Objective {
 
@@ -46,10 +46,10 @@ public class TalkToNPCObjective extends Objective {
         super(main);
     }
 
-    public static void handleCommands(NotQuests main, LegacyPaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder,
+    public static void handleCommands(NotQuests main, NQCommandManager manager, NQCommandBuilder addObjectiveBuilder,
                                       final int level) {
         manager.command(addObjectiveBuilder
-                .required("NPC", nqNPCParser(main), Description.of("NPC to whom you should talk."))
+                .required("NPC", nqNPCArgument(main), NQDescription.of("NPC to whom you should talk."))
                 .handler((context) -> {
                     final Quest quest = context.get("quest");
 

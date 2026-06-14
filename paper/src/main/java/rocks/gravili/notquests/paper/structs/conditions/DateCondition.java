@@ -18,26 +18,21 @@
 
 package rocks.gravili.notquests.paper.structs.conditions;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.component.TypedCommandComponent;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
-import org.incendo.cloud.parser.flag.CommandFlag;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
+import rocks.gravili.notquests.paper.commands.framework.NQFlag;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
-import java.util.concurrent.CompletableFuture;
-
-import static org.incendo.cloud.parser.standard.IntegerParser.integerParser;
-import static org.incendo.cloud.parser.standard.StringParser.stringParser;
 
 public class DateCondition extends Condition {
 
@@ -57,49 +52,48 @@ public class DateCondition extends Condition {
 
     public static void handleCommands(
             NotQuests main,
-            LegacyPaperCommandManager<CommandSender> manager,
-            Command.Builder<CommandSender> builder,
+            NQCommandManager manager,
+            NQCommandBuilder builder,
             ConditionFor conditionFor) {
-        final CommandFlag<Integer> year = CommandFlag.builder("year")
-                .withComponent(TypedCommandComponent.builder("year", integerParser(0)))
-                .withDescription(Description.of("Enter year."))
+        final NQFlag year = NQFlag.builder("year")
+                .withArgument(NQArguments.integerArgument())
+                .withDescription(NQDescription.of("Enter year."))
                 .build();
-        final CommandFlag<Integer> month = CommandFlag.builder("month")
-                .withComponent(TypedCommandComponent.builder("month", integerParser(0, 12)))
-                .withDescription(Description.of("Enter month."))
+        final NQFlag month = NQFlag.builder("month")
+                .withArgument(NQArguments.integerArgument())
+                .withDescription(NQDescription.of("Enter month."))
                 .build();
-        final CommandFlag<Integer> day = CommandFlag.builder("day")
-                .withComponent(TypedCommandComponent.builder("day", integerParser(0, 31)))
-                .withDescription(Description.of("Enter day."))
+        final NQFlag day = NQFlag.builder("day")
+                .withArgument(NQArguments.integerArgument())
+                .withDescription(NQDescription.of("Enter day."))
                 .build();
-        final CommandFlag<Integer> hours = CommandFlag.builder("hours")
-                .withComponent(TypedCommandComponent.builder("hours", integerParser(0, 24)))
-                .withDescription(Description.of("Enter hours."))
-                .build();
-
-        final CommandFlag<Integer> minutes = CommandFlag.builder("minutes")
-                .withComponent(TypedCommandComponent.builder("minutes", integerParser(0, 60)))
-                .withDescription(Description.of("Enter minutes."))
+        final NQFlag hours = NQFlag.builder("hours")
+                .withArgument(NQArguments.integerArgument())
+                .withDescription(NQDescription.of("Enter hours."))
                 .build();
 
-        final CommandFlag<Integer> seconds = CommandFlag.builder("seconds")
-                .withComponent(TypedCommandComponent.builder("seconds", integerParser(0, 60)))
-                .withDescription(Description.of("Enter seconds."))
+        final NQFlag minutes = NQFlag.builder("minutes")
+                .withArgument(NQArguments.integerArgument())
+                .withDescription(NQDescription.of("Enter minutes."))
                 .build();
 
-        final CommandFlag<String> timeZone = CommandFlag.builder("timeZone")
-                .withComponent(TypedCommandComponent.builder("timeZone", stringParser())
-                        .suggestionProvider((context, lastString) -> {
-                            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.sender(), lastString.input().split(" "), "[timezone]", "");
-                            return CompletableFuture.completedFuture(Arrays.stream(TimeZone.getAvailableIDs()).map(Suggestion::suggestion).toList());
-                        })).build();
+        final NQFlag seconds = NQFlag.builder("seconds")
+                .withArgument(NQArguments.integerArgument())
+                .withDescription(NQDescription.of("Enter seconds."))
+                .build();
 
-        manager.command(builder.required("Date operation", stringParser(), Description.of("Date operation"), (context, lastString) -> {
-                    main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[Date operation]", "<optional flags>");
-                    ArrayList<Suggestion> completions = new ArrayList<>();
-                    completions.add(Suggestion.suggestion("after"));
-                    completions.add(Suggestion.suggestion("before"));
-                    return CompletableFuture.completedFuture(completions);
+        final NQFlag timeZone = NQFlag.builder("timeZone")
+                .withArgument(NQArguments.stringArgument())
+                .withDescription(NQDescription.of("Enter timezone."))
+                .withSuggestions((context, input) ->
+                        Arrays.stream(TimeZone.getAvailableIDs()).toList())
+                .build();
+
+        manager.command(builder.required("Date operation", NQArguments.stringArgument(), NQDescription.of("Date operation"), (context, input) -> {
+                    List<String> completions = new ArrayList<>();
+                    completions.add("after");
+                    completions.add("before");
+                    return completions;
                 })
                 .flag(year)
                 .flag(month)
@@ -117,14 +111,14 @@ public class DateCondition extends Condition {
                                 return;
                             }
 
-                            final int yearValue = context.flags().getValue(year, -1);
-                            final int monthValue = context.flags().getValue(month, -1);
-                            final int dayValue = context.flags().getValue(day, -1);
-                            final int hoursValue = context.flags().getValue(hours, -1);
-                            final int minutesValue = context.flags().getValue(minutes, -1);
-                            final int secondsValue = context.flags().getValue(seconds, -1);
+                            final int yearValue = context.flags().getValue(year.name(), -1);
+                            final int monthValue = context.flags().getValue(month.name(), -1);
+                            final int dayValue = context.flags().getValue(day.name(), -1);
+                            final int hoursValue = context.flags().getValue(hours.name(), -1);
+                            final int minutesValue = context.flags().getValue(minutes.name(), -1);
+                            final int secondsValue = context.flags().getValue(seconds.name(), -1);
 
-                            final String timeZoneValue = context.flags().getValue(timeZone, "");
+                            final String timeZoneValue = context.flags().getValue(timeZone.name(), "");
 
                             final TimeZone timeZoneObjectValue = TimeZone.getTimeZone(timeZoneValue);
 

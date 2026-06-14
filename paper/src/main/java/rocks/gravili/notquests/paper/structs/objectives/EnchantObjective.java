@@ -4,23 +4,21 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
+import rocks.gravili.notquests.paper.commands.framework.NQFlag;
 import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.Map;
 
-import static org.incendo.cloud.bukkit.parser.EnchantmentParser.enchantmentParser;
-import org.incendo.cloud.component.TypedCommandComponent;
-import org.incendo.cloud.parser.flag.CommandFlag;
-
-import static rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionParser.itemStackSelectionParser;
-import static rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser.numberVariableParser;
+import static rocks.gravili.notquests.paper.commands.arguments.EnchantmentArgument.enchantmentArgument;
+import static rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionArgument.itemStackSelectionArgument;
+import static rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableArgument.numberVariableArgument;
 
 public class EnchantObjective extends Objective {
     private String enchantment;
@@ -38,15 +36,15 @@ public class EnchantObjective extends Objective {
 
     public static void handleCommands(
             NotQuests main,
-            LegacyPaperCommandManager<CommandSender> manager,
-            Command.Builder<CommandSender> addObjectiveBuilder,
+            NQCommandManager manager,
+            NQCommandBuilder addObjectiveBuilder,
             final int level) {
         manager.command(addObjectiveBuilder
-                .required("enchantment", enchantmentParser(), Description.of("Enchantment which needs to be applied to the item"))
-                .required("materials", itemStackSelectionParser(main), Description.of("Material of the item which needs to be enchanted"))
-                .required("amount", numberVariableParser("amount", null), Description.of("Amount of times the item needs to be enchanted"))
-                .flag(manager.flagBuilder("min").withComponent(TypedCommandComponent.builder("min", numberVariableParser("min", null))))
-                .flag(manager.flagBuilder("max").withComponent(TypedCommandComponent.builder("max", numberVariableParser("max", null))))
+                .required("enchantment", enchantmentArgument(), NQDescription.of("Enchantment which needs to be applied to the item"))
+                .required("materials", itemStackSelectionArgument(main), NQDescription.of("Material of the item which needs to be enchanted"))
+                .required("amount", numberVariableArgument("amount", null), NQDescription.of("Amount of times the item needs to be enchanted"))
+                .flag(NQFlag.builder("min").withArgument(numberVariableArgument("min", null)).build())
+                .flag(NQFlag.builder("max").withArgument(numberVariableArgument("max", null)).build())
                 .handler(
                         (context) -> {
                             final Enchantment enchantment1 = context.get("enchantment");

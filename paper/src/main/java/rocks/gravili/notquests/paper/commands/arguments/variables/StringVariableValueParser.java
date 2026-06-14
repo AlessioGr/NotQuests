@@ -19,32 +19,19 @@
 package rocks.gravili.notquests.paper.commands.arguments.variables;
 
 import lombok.Getter;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.incendo.cloud.context.CommandContext;
-import org.incendo.cloud.context.CommandInput;
-import org.incendo.cloud.parser.ArgumentParseResult;
-import org.incendo.cloud.parser.ArgumentParser;
-import org.incendo.cloud.parser.ParserDescriptor;
-import org.incendo.cloud.suggestion.Suggestion;
-import org.incendo.cloud.suggestion.SuggestionProvider;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.structs.QuestPlayer;
+import rocks.gravili.notquests.paper.commands.framework.NQSuggestionProvider;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-
 @Getter
-public class StringVariableValueParser<C> implements ArgumentParser<C, String> {
+public class StringVariableValueParser<C> {
     private final NotQuests main;
 
     private final String identifier;
     private final Variable<?> variable;
 
-    private SuggestionProvider<C> suggestionProvider;
+    private NQSuggestionProvider suggestionProvider;
 
     protected StringVariableValueParser(String identifier, Variable<?> variable) {
         this.main = NotQuests.getInstance();
@@ -52,7 +39,7 @@ public class StringVariableValueParser<C> implements ArgumentParser<C, String> {
         this.variable = variable;
     }
 
-    public static <C> @NonNull StringVariableValueParser<C> of(String identifier, Variable<?> variable, SuggestionProvider<C> suggestionProvider) {
+    public static <C> @NonNull StringVariableValueParser<C> of(String identifier, Variable<?> variable, NQSuggestionProvider suggestionProvider) {
         StringVariableValueParser<C> parser = new StringVariableValueParser<>(identifier, variable);
         parser.suggestionProvider = suggestionProvider;
         return parser;
@@ -60,50 +47,6 @@ public class StringVariableValueParser<C> implements ArgumentParser<C, String> {
 
     public static <C> @NonNull StringVariableValueParser<C> of(String identifier, Variable<?> variable) {
         return new StringVariableValueParser<>(identifier, variable);
-    }
-
-    public static <C> @NonNull ParserDescriptor<C, String> stringVariableParser(String identifier, Variable<?> variable) {
-        return ParserDescriptor.of(new StringVariableValueParser<>(identifier, variable), String.class);
-    }
-
-    @Override
-    public @NonNull ArgumentParseResult<@NonNull String> parse(@NonNull CommandContext<@NonNull C> commandContext, @NonNull CommandInput commandInput) {
-        if (commandInput.isEmpty()) {
-            return ArgumentParseResult.failure(new IllegalArgumentException("No input provided"));
-        }
-        return ArgumentParseResult.success(commandInput.peekString());
-    }
-
-
-    @Override
-    public @NonNull SuggestionProvider<C> suggestionProvider() {
-        if(suggestionProvider != null) return suggestionProvider;
-
-        return ((context, input) ->  {
-            List<Suggestion> completions = new ArrayList<>();
-            completions.add(Suggestion.suggestion("<Enter String>"));
-
-            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.sender(), input.input().split(" "), "[Enter String]", "[...]");
-
-
-            if(context.sender() instanceof Player player) {
-                final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
-                if (variable.getPossibleValues(questPlayer) == null) {
-                    return CompletableFuture.completedFuture(completions);
-                }
-                completions.addAll(variable.getPossibleValues(questPlayer));
-            }else{
-                if(variable.getPossibleValues(null) == null){
-                    return CompletableFuture.completedFuture(completions);
-                }
-                completions.addAll(variable.getPossibleValues(null));
-            }
-            return CompletableFuture.completedFuture(completions);
-        });
-    }
-
-    public ParserDescriptor<C, String> getParserDescriptor() {
-        return ParserDescriptor.of(this, String.class);
     }
 
     public String getIdentifier() {

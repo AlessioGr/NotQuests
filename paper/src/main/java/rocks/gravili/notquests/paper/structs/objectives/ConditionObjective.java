@@ -21,15 +21,16 @@ package rocks.gravili.notquests.paper.structs.objectives;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
+import rocks.gravili.notquests.paper.commands.framework.NQFlag;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 
-import static rocks.gravili.notquests.paper.commands.arguments.ConditionParser.conditionParser;
+import static rocks.gravili.notquests.paper.commands.arguments.ConditionArgument.conditionArgument;
 
 public class ConditionObjective extends Objective {
     private Condition condition = null;
@@ -41,12 +42,12 @@ public class ConditionObjective extends Objective {
 
     public static void handleCommands(
             NotQuests main,
-            LegacyPaperCommandManager<CommandSender> manager,
-            Command.Builder<CommandSender> addObjectiveBuilder,
+            NQCommandManager manager,
+            NQCommandBuilder addObjectiveBuilder,
             final int level) {
         manager.command(addObjectiveBuilder
-                .required("condition", conditionParser(main), Description.of("Condition Name"))
-                .flag(manager.flagBuilder("checkOnlyWhenCorrespondingVariableValueChanged").withDescription(Description.of("This checks this condition only, when the corresponding variable value is changed via an action, instead of checking every x seconds.")))
+                .required("condition", conditionArgument(main), NQDescription.of("Condition Name"))
+                .flag(NQFlag.builder("checkOnlyWhenCorrespondingVariableValueChanged").withDescription(NQDescription.of("This checks this condition only, when the corresponding variable value is changed via an action, instead of checking every x seconds.")).build())
                 .handler(
                         (context) -> {
                             final Condition condition = context.get("condition");

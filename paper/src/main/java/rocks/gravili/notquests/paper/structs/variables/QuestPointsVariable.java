@@ -18,9 +18,9 @@
 
 package rocks.gravili.notquests.paper.structs.variables;
 
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
+import rocks.gravili.notquests.paper.commands.framework.NQFlag;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.List;
@@ -30,13 +30,10 @@ public class QuestPointsVariable extends Variable<Long> {
     super(main);
     setCanSetValue(true);
     addRequiredBooleanFlag(
-        main.getCommandManager()
-            .getPaperCommandManager()
-            .flagBuilder("notifyPlayer")
-            .withDescription(
-                    Description.of(
-                    "Notifies the player for when their QuestPoints are changed or set"))
-            .build() // TODO: setOnlyRequiredValues once implemented
+        NQFlag.presence(
+            "notifyPlayer",
+            NQDescription.of(
+                "Notifies the player for when their QuestPoints are changed or set")) // TODO: setOnlyRequiredValues once implemented
         );
   }
 
@@ -58,7 +55,7 @@ public class QuestPointsVariable extends Variable<Long> {
   }
 
   @Override
-  public List<Suggestion> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
+  public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
     return null;
   }
 

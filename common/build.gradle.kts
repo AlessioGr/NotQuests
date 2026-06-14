@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import org.gradle.api.JavaVersion.VERSION_21
+import org.gradle.api.JavaVersion.VERSION_25
 
 
 group = "rocks.gravili.notquests"
@@ -24,9 +24,9 @@ version = rootProject.version
 
 java {
     // Configure the java toolchain. This allows gradle to auto-provision JDK 21 on systems that only have JDK 11 installed for example.
-    toolchain.languageVersion = JavaLanguageVersion.of(21)
-    sourceCompatibility = VERSION_21
-    targetCompatibility = VERSION_21
+    toolchain.languageVersion = JavaLanguageVersion.of(25)
+    sourceCompatibility = VERSION_25
+    targetCompatibility = VERSION_25
 }
 
 repositories {
@@ -37,7 +37,7 @@ repositories {
 
 dependencies {
     //implementation("net.kyori:adventure-api:4.11.0")
-    implementation("org.spongepowered:configurate-gson:4.1.2")
+    implementation("org.spongepowered:configurate-gson:4.2.0")
 }
 
 /**
@@ -62,7 +62,7 @@ tasks {
     //}
     compileJava {
         options.encoding = Charsets.UTF_8.name()
-        options.release.set(21)
+        options.release.set(25)
     }
     javadoc {
         options.encoding = Charsets.UTF_8.name()

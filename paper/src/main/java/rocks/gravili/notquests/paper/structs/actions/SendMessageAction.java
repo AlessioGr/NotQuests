@@ -20,15 +20,14 @@ package rocks.gravili.notquests.paper.structs.actions;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
-
-import static org.incendo.cloud.parser.standard.StringParser.greedyStringParser;
 
 public class SendMessageAction extends Action {
 
@@ -40,11 +39,11 @@ public class SendMessageAction extends Action {
 
   public static void handleCommands(
       NotQuests main,
-      LegacyPaperCommandManager<CommandSender> manager,
-      Command.Builder<CommandSender> builder,
+      NQCommandManager manager,
+      NQCommandBuilder builder,
       ActionFor actionFor) {
     manager.command(
-        builder.required("Sending Message", greedyStringParser(), Description.of("Message to broadcast"), main.getCommandManager().miniMessageSuggestions())
+        builder.required("Sending Message", NQArguments.greedyStringArgument(), NQDescription.of("Message to broadcast"))
             .handler((context) -> {
                   final String messageToSend = (String) context.get("Sending Message");
                   SendMessageAction sendMessageAction = new SendMessageAction(main);

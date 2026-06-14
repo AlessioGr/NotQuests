@@ -19,7 +19,6 @@
 package rocks.gravili.notquests.paper.structs.variables;
 
 import org.bukkit.GameMode;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
@@ -53,10 +52,10 @@ public class PlayerGameModeVariable extends Variable<String> {
   }
 
   @Override
-  public List<Suggestion> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
-    List<Suggestion> possibleValues = new ArrayList<>();
+  public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
+    List<String> possibleValues = new ArrayList<>();
     for (GameMode gameMode : GameMode.values()) {
-      possibleValues.add(Suggestion.suggestion(gameMode.name().toLowerCase(Locale.ROOT)));
+      possibleValues.add(gameMode.name().toLowerCase(Locale.ROOT));
     }
     return possibleValues;
   }

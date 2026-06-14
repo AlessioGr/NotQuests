@@ -20,7 +20,6 @@ package rocks.gravili.notquests.paper.structs.variables;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
@@ -52,8 +51,8 @@ public class PlayerNameVariable extends Variable<String> {
   }
 
   @Override
-  public List<Suggestion> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
-    return Bukkit.getOnlinePlayers().stream().map(playerObject -> Suggestion.suggestion(playerObject.getName())).toList();
+  public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
+    return Bukkit.getOnlinePlayers().stream().map(playerObject -> playerObject.getName()).toList();
   }
 
   @Override

@@ -1,36 +1,31 @@
 package rocks.gravili.notquests.paper.commands.category.admin.category;
 
-import org.bukkit.command.CommandSender;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.CommandManager;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.BaseCommand;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
 import rocks.gravili.notquests.paper.managers.data.Category;
 
 import java.util.ArrayList;
-import java.util.concurrent.CompletableFuture;
-
-import static org.incendo.cloud.parser.standard.StringParser.stringParser;
+import java.util.List;
 
 public class CategoryCreateCommand extends BaseCommand {
-    public CategoryCreateCommand(NotQuests notQuests, Command.Builder<CommandSender> builder) {
+    public CategoryCreateCommand(NotQuests notQuests, NQCommandBuilder builder) {
         super(notQuests, builder);
     }
 
     @Override
-    public void apply(CommandManager<CommandSender> commandManager) {
+    public void apply(NQCommandManager commandManager) {
         builder = builder.literal("categories").literal("create");
 
-        commandManager.command(builder.required("categoryName", stringParser(), Description.of("Name of your new category"), (context, input) -> {
-                            notQuests.getUtilManager().sendFancyCommandCompletion(context.sender(), input.input().split(" "), "[Name of your new category]", "");
+        commandManager.command(builder.required("categoryName", NQArguments.stringArgument(), NQDescription.of("Name of your new category"), (context, input) -> {
+                            final List<String> suggestions = new ArrayList<>();
+                            suggestions.add("<Enter new category name>");
+                            suggestions.addAll(notQuests.getDataManager().getCategories().stream().map(Category::getDisplayName).toList());
 
-                            final ArrayList<Suggestion> suggestions = new ArrayList<>();
-                            suggestions.add(Suggestion.suggestion("<Enter new category name>"));
-                            suggestions.addAll(notQuests.getDataManager().getCategories().stream().map(category -> Suggestion.suggestion(category.getDisplayName())).toList());
-
-                            return CompletableFuture.completedFuture(suggestions);
+                            return suggestions;
                         }
                 )
                 .handler((context) -> {

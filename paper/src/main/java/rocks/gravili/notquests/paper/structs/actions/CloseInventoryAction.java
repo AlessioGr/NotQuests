@@ -1,10 +1,10 @@
 package rocks.gravili.notquests.paper.structs.actions;
 
-import org.incendo.cloud.Command;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ public class CloseInventoryAction extends Action {
     }
 
 
-    public static void handleCommands(NotQuests main, LegacyPaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor actionFor) {
+    public static void handleCommands(NotQuests main, NQCommandManager manager, NQCommandBuilder builder, ActionFor actionFor) {
         manager.command(builder.handler(commandContext -> {
             main.getActionManager().addAction(new CloseInventoryAction(main), commandContext, actionFor);
         }));

@@ -64,8 +64,32 @@ public class SendClickableText implements
     final Component toSend =
         main.parse(toSendString)
             .clickEvent(
-                ClickEvent.runCommand(
-                    "/notquests continueConversation " + optionNumber))
+                // Server-side callback instead of a run_command: modern Minecraft shows a "Confirm
+                // Command Execution" prompt for run_command clicks on permission-gated commands
+                // (/notquests is permission-gated under native Brigadier). This advances the
+                // conversation directly, exactly like the /notquests continueConversation command.
+                ClickEvent.callback(audience -> {
+                  if (main.getConversationManager() == null) {
+                    return;
+                  }
+                  final QuestPlayer clickingQuestPlayer =
+                      main.getQuestPlayerManager().getActiveQuestPlayer(player.getUniqueId());
+                  if (clickingQuestPlayer == null) {
+                    return;
+                  }
+                  final ConversationPlayer openConversationPlayer =
+                      main.getConversationManager().getOpenConversation(player.getUniqueId());
+                  if (openConversationPlayer == null) {
+                    return;
+                  }
+                  final var currentLines = openConversationPlayer.getCurrentPlayerLines();
+                  if (optionNumber >= 1 && optionNumber <= currentLines.size()) {
+                    final ConversationLine chosen = currentLines.get(optionNumber - 1);
+                    if (chosen != null) {
+                      openConversationPlayer.chooseOption(chosen);
+                    }
+                  }
+                }))
             .hoverEvent(
                 HoverEvent.showText(
                     main.parse(

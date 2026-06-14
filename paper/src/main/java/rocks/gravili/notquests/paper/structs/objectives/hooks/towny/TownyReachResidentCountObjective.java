@@ -25,17 +25,18 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
+import rocks.gravili.notquests.paper.commands.framework.NQFlag;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
 import java.util.Map;
 
-import static rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser.numberVariableParser;
+import static rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableArgument.numberVariableArgument;
 
 public class TownyReachResidentCountObjective extends Objective {
 
@@ -47,16 +48,16 @@ public class TownyReachResidentCountObjective extends Objective {
 
     public static void handleCommands(
             NotQuests main,
-            LegacyPaperCommandManager<CommandSender> manager,
-            Command.Builder<CommandSender> addObjectiveBuilder,
+            NQCommandManager manager,
+            NQCommandBuilder addObjectiveBuilder,
             final int level) {
         if (!main.getIntegrationsManager().isTownyEnabled()) {
             return;
         }
 
         manager.command(addObjectiveBuilder
-                .required("amount", numberVariableParser("amount", null), Description.of("Minimum amount of residents"))
-                .flag(manager.flagBuilder("doNotCountPreviousResidents").withDescription(Description.of("Makes it so only additional residents from the time of unlocking this Objective will count (and previous/existing counts will not count, so it starts from zero)")))
+                .required("amount", numberVariableArgument("amount", null), NQDescription.of("Minimum amount of residents"))
+                .flag(NQFlag.builder("doNotCountPreviousResidents").withDescription(NQDescription.of("Makes it so only additional residents from the time of unlocking this Objective will count (and previous/existing counts will not count, so it starts from zero)")).build())
                 .handler((context) -> {
                     final String amountExpression = context.get("amount");
                     final boolean countPreviousResidents = !context.flags().isPresent("doNotCountPreviousResidents");

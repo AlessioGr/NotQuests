@@ -1,13 +1,12 @@
 package rocks.gravili.notquests.paper.commands.category.admin.structs;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.CommandManager;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.BaseCommand;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
 import rocks.gravili.notquests.paper.managers.npc.NQNPC;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
@@ -17,36 +16,31 @@ import rocks.gravili.notquests.paper.structs.objectives.Objective;
 import rocks.gravili.notquests.paper.structs.objectives.TriggerCommandObjective;
 
 import java.util.ArrayList;
-import java.util.concurrent.CompletableFuture;
-
-import static org.incendo.cloud.bukkit.parser.PlayerParser.playerParser;
-import static org.incendo.cloud.parser.standard.StringParser.stringParser;
+import java.util.List;
 
 public class ObjectiveTriggerCommand extends BaseCommand {
 
-    public ObjectiveTriggerCommand(NotQuests notQuests, Command.Builder<CommandSender> builder) {
+    public ObjectiveTriggerCommand(NotQuests notQuests, NQCommandBuilder builder) {
         super(notQuests, builder);
     }
 
     @Override
-    public void apply(CommandManager<CommandSender> commandManager) {
-        commandManager.command(builder.commandDescription(Description.of("This triggers the Trigger Command which is needed to complete a TriggerObjective (don't mistake it with Triggers & actions)."))
+    public void apply(NQCommandManager commandManager) {
+        commandManager.command(builder.commandDescription(NQDescription.of("This triggers the Trigger Command which is needed to complete a TriggerObjective (don't mistake it with Triggers & actions)."))
                 .literal("triggerObjective")
-                .required("trigger-name", stringParser(), Description.of("Name of the trigger which should be triggered."), (context, input) -> {
-                            notQuests.getUtilManager().sendFancyCommandCompletion(context.sender(), input.input().split(" "), "[Trigger Name]", "[Player Name]");
-
-                            ArrayList<Suggestion> completions = new ArrayList<>();
+                .required("trigger-name", NQArguments.stringArgument(), NQDescription.of("Name of the trigger which should be triggered."), (context, input) -> {
+                            final List<String> completions = new ArrayList<>();
                             for (final Quest quest : notQuests.getQuestManager().getAllQuests()) {
                                 for (final Objective objective : quest.getObjectives()) {
                                     if (objective instanceof final TriggerCommandObjective triggerCommandObjective) {
-                                        completions.add(Suggestion.suggestion(triggerCommandObjective.getTriggerName()));
+                                        completions.add(triggerCommandObjective.getTriggerName());
                                     }
                                 }
                             }
-                            return CompletableFuture.completedFuture(completions);
+                            return completions;
                         }
                 )
-                .required("player", playerParser(), Description.of("Player whose trigger should e triggered."))
+                .required("player", NQArguments.playerArgument(), NQDescription.of("Player whose trigger should e triggered."))
                 .handler((context) -> {
                     final String triggerName = context.get("trigger-name");
                     final Player player = context.get("player");

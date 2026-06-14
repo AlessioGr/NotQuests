@@ -181,25 +181,36 @@ public class QuestGiverNPCTrait extends Trait {
               .getConfiguration()
               .getCitizensNPCQuestGiverIndicatorParticleSpawnInterval()) {
 
-        final Entity npcEntity = getNPC().getEntity();
-        final Location location = npcEntity.getLocation();
         particleTimer = 0;
-        npcEntity
-            .getWorld()
-            .spawnParticle(
-                main
-                    .getDataManager()
-                    .getConfiguration()
-                    .getCitizensNPCQuestGiverIndicatorParticleType(),
-                location.getX() - 0.25 + (Math.random() / 2),
-                location.getY() + 1.75 + (Math.random() / 2),
-                location.getZ() - 0.25 + (Math.random() / 2),
-                main
-                    .getDataManager()
-                    .getConfiguration()
-                    .getCitizensNPCQuestGiverIndicatorParticleCount());
 
-        // System.out.println("§eSpawned particle!");
+        // Only show the indicator if the NPC is actually still a quest giver / conversation NPC.
+        // The "nquestgiver" trait can linger (Citizens persists it to disk, and it can outlive a
+        // clear), and without this check the particle kept showing even after the quest was detached.
+        final var nqnpc =
+            main.getNPCManager().getOrCreateNQNpc("Citizens", NQNPCID.fromInteger(getNPC().getId()));
+        final boolean stillAttached =
+            !main.getQuestManager().getAllQuestsAttachedToNPC(nqnpc).isEmpty()
+                || (main.getConversationManager() != null
+                    && main.getConversationManager().getConversationForNPC(nqnpc) != null);
+
+        if (stillAttached) {
+          final Entity npcEntity = getNPC().getEntity();
+          final Location location = npcEntity.getLocation();
+          npcEntity
+              .getWorld()
+              .spawnParticle(
+                  main
+                      .getDataManager()
+                      .getConfiguration()
+                      .getCitizensNPCQuestGiverIndicatorParticleType(),
+                  location.getX() - 0.25 + (Math.random() / 2),
+                  location.getY() + 1.75 + (Math.random() / 2),
+                  location.getZ() - 0.25 + (Math.random() / 2),
+                  main
+                      .getDataManager()
+                      .getConfiguration()
+                      .getCitizensNPCQuestGiverIndicatorParticleCount());
+        }
       }
 
       particleTimer += 1;

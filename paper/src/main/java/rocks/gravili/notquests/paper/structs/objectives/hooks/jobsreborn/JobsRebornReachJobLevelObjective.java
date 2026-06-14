@@ -25,21 +25,21 @@ import com.gamingmesh.jobs.container.JobsPlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
+import rocks.gravili.notquests.paper.commands.framework.NQFlag;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
-import static org.incendo.cloud.parser.standard.StringParser.stringParser;
-import static rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser.numberVariableParser;
+import static rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableArgument.numberVariableArgument;
 
 public class JobsRebornReachJobLevelObjective extends Objective {
 
@@ -52,24 +52,23 @@ public class JobsRebornReachJobLevelObjective extends Objective {
 
     public static void handleCommands(
             NotQuests main,
-            LegacyPaperCommandManager<CommandSender> manager,
-            Command.Builder<CommandSender> addObjectiveBuilder,
+            NQCommandManager manager,
+            NQCommandBuilder addObjectiveBuilder,
             final int level) {
         if (!main.getIntegrationsManager().isJobsRebornEnabled()) {
             return;
         }
 
         manager.command(addObjectiveBuilder
-                .required("Job Name", stringParser(), Description.of("Name of the job"), (context, lastString) -> {
-                    main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[Job Name]", "");
-                    ArrayList<Suggestion> completions = new ArrayList<>();
+                .required("Job Name", NQArguments.stringArgument(), NQDescription.of("Name of the job"), (context, input) -> {
+                    List<String> completions = new ArrayList<>();
                     for (Job job : Jobs.getJobs()) {
-                        completions.add(Suggestion.suggestion(job.getName()));
+                        completions.add(job.getName());
                     }
-                    return CompletableFuture.completedFuture(completions);
+                    return completions;
                 })
-                .required("level", numberVariableParser("level", null), Description.of("Job level which needs to be reached"))
-                .flag(manager.flagBuilder("doNotCountPreviousLevels").withDescription(Description.of("Makes it so only additional levels gained from the time of unlocking this Objective will count (and previous/existing counts will not count, so it starts from zero)")))
+                .required("level", numberVariableArgument("level", null), NQDescription.of("Job level which needs to be reached"))
+                .flag(NQFlag.builder("doNotCountPreviousLevels").withDescription(NQDescription.of("Makes it so only additional levels gained from the time of unlocking this Objective will count (and previous/existing counts will not count, so it starts from zero)")).build())
                 .handler((context) -> {
                     final String amountExpression = context.get("level");
                     final boolean countPreviousLevels = !context.flags().isPresent("doNotCountPreviousLevels");
@@ -148,35 +147,41 @@ public class JobsRebornReachJobLevelObjective extends Objective {
         if (unlockedDuringPluginStartupQuestLoadingProcess) {
             return;
         }
-        if (activeObjective.getCurrentProgress() != 0) {
+        if (isCountPreviousLevels()) {
+            // "Reach job level N": progress simply mirrors the player's current job level, and is kept
+            // in sync afterwards (JobsRebornEvents handles level-ups + a periodic re-sync). This also
+            // completes the objective immediately if the player is already at/above the target level.
+            updateProgressToCurrentLevel(activeObjective);
+        } else if (activeObjective.getCurrentProgress() == 0) {
+            // "Gain N levels from now": start counting from here (incremented on each level-up).
+            activeObjective.addProgress(1); // Job levels start at 1 and not 0
+        }
+    }
+
+    /**
+     * Re-syncs this objective's progress to the player's <b>current</b> job level (only in the
+     * count-previous-levels "reach level" mode). Safe to call repeatedly: {@link
+     * ActiveObjective#setProgress(double, boolean)} is a no-op when the value is unchanged, so this
+     * can be driven from both the Jobs level-up event and a periodic task without double-counting.
+     * This is what makes the objective track the real level no matter how it changed (including admin
+     * commands like {@code /jobs level add}, which do not fire a level-up event).
+     */
+    public void updateProgressToCurrentLevel(final ActiveObjective activeObjective) {
+        if (!isCountPreviousLevels() || !main.getIntegrationsManager().isJobsRebornEnabled()) {
             return;
         }
-
-        activeObjective.addProgress(1); // Job levels start at 1 and not 0
-        if (!main.getIntegrationsManager().isJobsRebornEnabled() || !isCountPreviousLevels()) {
-            return;
-        }
-
         final Job job = Jobs.getJob(getJobName());
         if (job == null) {
-            main.getLogManager()
-                    .warn("The job <highlight>" + getJobName() + "</highlight> does not exist.");
             return;
         }
-
         final JobsPlayer jobsPlayer =
                 Jobs.getPlayerManager().getJobsPlayer(activeObjective.getQuestPlayer().getUniqueId());
         if (jobsPlayer == null) {
             return;
         }
-
-        JobProgression jobProgression = jobsPlayer.getJobProgression(job);
-
-        if (jobProgression == null) {
-            return;
-        }
-
-        activeObjective.addProgress(jobProgression.getLevel());
+        final JobProgression jobProgression = jobsPlayer.getJobProgression(job);
+        final int level = (jobProgression == null) ? 0 : jobProgression.getLevel();
+        activeObjective.setProgress(level, true);
     }
 
     @Override

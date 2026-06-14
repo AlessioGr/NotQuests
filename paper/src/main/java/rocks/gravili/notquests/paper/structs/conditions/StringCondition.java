@@ -18,18 +18,17 @@
 
 package rocks.gravili.notquests.paper.structs.conditions;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
-import org.incendo.cloud.parser.flag.CommandFlag;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.framework.NQFlag;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueParser;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser;
 import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
 import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
@@ -37,10 +36,9 @@ import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.CompletableFuture;
+import java.util.List;
 
-import static org.incendo.cloud.parser.standard.StringParser.stringParser;
-import static rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser.stringVariableParser;
+import static rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableArgument.stringVariableArgument;
 
 public class StringCondition extends Condition {
 
@@ -60,7 +58,7 @@ public class StringCondition extends Condition {
         additionalBooleanArguments = new HashMap<>();
     }
 
-    public static void handleCommands(NotQuests main, LegacyPaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
+    public static void handleCommands(NotQuests main, NQCommandManager manager, NQCommandBuilder builder, ConditionFor conditionFor) {
         for (String variableString : main.getVariablesManager().getVariableIdentifiers()) {
 
             Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
@@ -78,19 +76,18 @@ public class StringCondition extends Condition {
 
 
             manager.command(main.getVariablesManager().registerVariableCommands(variableString, builder)
-                    .required("operator", stringParser(), Description.of("String operator."),(context, lastString) -> {
-                        ArrayList<Suggestion> completions = new ArrayList<>();
-                        completions.add(Suggestion.suggestion("equals"));
-                        completions.add(Suggestion.suggestion("equalsIgnoreCase"));
-                        completions.add(Suggestion.suggestion("contains"));
-                        completions.add(Suggestion.suggestion("startsWith"));
-                        completions.add(Suggestion.suggestion("endsWith"));
-                        completions.add(Suggestion.suggestion("isEmpty"));
-                        main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[String Comparison Operator]", "[...]");
+                    .required("operator", NQArguments.stringArgument(), NQDescription.of("String operator."),(context, input) -> {
+                        List<String> completions = new ArrayList<>();
+                        completions.add("equals");
+                        completions.add("equalsIgnoreCase");
+                        completions.add("contains");
+                        completions.add("startsWith");
+                        completions.add("endsWith");
+                        completions.add("isEmpty");
 
-                        return CompletableFuture.completedFuture(completions);
+                        return completions;
                     })
-                    .required("string", stringVariableParser("string", variable), Description.of("String"))
+                    .required("string", stringVariableArgument("string", variable), NQDescription.of("String"))
                     .handler((context) -> {
                         String string = context.get("string");
                         string = string.replace("__", " ");
@@ -120,7 +117,7 @@ public class StringCondition extends Condition {
                         for(BooleanVariableValueParser booleanParser : variable.getRequiredBooleans()){
                             additionalBooleanArguments.put(booleanParser.getIdentifier(), new NumberExpression(main, context.get(booleanParser.getIdentifier())));
                         }
-                        for(CommandFlag<?> commandFlag : variable.getRequiredBooleanFlags()){
+                        for(NQFlag commandFlag : variable.getRequiredBooleanFlags()){
                             additionalBooleanArguments.put(commandFlag.name(), context.flags().isPresent(commandFlag.name()) ? NumberExpression.ofStatic(main, 1) : NumberExpression.ofStatic(main, 0));
                         }
                         stringCondition.setAdditionalBooleanArguments(additionalBooleanArguments);

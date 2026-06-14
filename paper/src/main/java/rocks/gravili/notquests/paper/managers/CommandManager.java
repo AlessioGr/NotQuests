@@ -18,136 +18,85 @@
 
 package rocks.gravili.notquests.paper.managers;
 
-import com.mojang.brigadier.arguments.StringArgumentType;
-import io.leangen.geantyref.TypeToken;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.Style;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandMap;
-import org.bukkit.command.CommandSender;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.SenderMapper;
-import org.incendo.cloud.brigadier.CloudBrigadierManager;
-import org.incendo.cloud.bukkit.CloudBukkitCapabilities;
-import org.incendo.cloud.component.TypedCommandComponent;
-import org.incendo.cloud.context.CommandContext;
-import org.incendo.cloud.description.Description;
-import org.incendo.cloud.execution.ExecutionCoordinator;
-import org.incendo.cloud.minecraft.extras.AudienceProvider;
-import org.incendo.cloud.minecraft.extras.MinecraftExceptionHandler;
-import org.incendo.cloud.minecraft.extras.MinecraftHelp;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
-import org.incendo.cloud.parser.flag.CommandFlag;
-import org.incendo.cloud.suggestion.Suggestion;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.*;
-import rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionParser;
-import rocks.gravili.notquests.paper.commands.arguments.MultiActionsParser;
-import rocks.gravili.notquests.paper.commands.arguments.NQNPCParser;
-import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueParser;
-import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueParser;
-import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueParser;
 import rocks.gravili.notquests.paper.commands.category.item.AdminItemsCommand;
 import rocks.gravili.notquests.paper.commands.category.tag.AdminTagCommands;
+import rocks.gravili.notquests.paper.commands.framework.NQArguments;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandBuilder;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandContext;
+import rocks.gravili.notquests.paper.commands.framework.NQCommandManager;
+import rocks.gravili.notquests.paper.commands.framework.NQCommands;
+import rocks.gravili.notquests.paper.commands.framework.NQDescription;
+import rocks.gravili.notquests.paper.commands.framework.NQFlag;
+import static rocks.gravili.notquests.paper.commands.arguments.ActionArgument.actionArgument;
+import static rocks.gravili.notquests.paper.commands.arguments.CategoryArgument.categoryArgument;
+import static rocks.gravili.notquests.paper.commands.arguments.ObjectiveArgument.objectiveArgument;
+import static rocks.gravili.notquests.paper.commands.arguments.QuestArgument.questArgument;
 import rocks.gravili.notquests.paper.conversation.ConversationManager;
-import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 import rocks.gravili.notquests.paper.structs.objectives.ObjectiveHolder;
 
 import java.lang.reflect.Field;
-import java.time.Duration;
 import java.util.ArrayList;
-import java.util.concurrent.CompletableFuture;
-
-import static org.incendo.cloud.bukkit.parser.WorldParser.worldParser;
-import static org.incendo.cloud.minecraft.extras.parser.ComponentParser.miniMessageParser;
-import static org.incendo.cloud.parser.standard.DoubleParser.doubleParser;
-import static org.incendo.cloud.parser.standard.DurationParser.durationParser;
-import static org.incendo.cloud.parser.standard.IntegerParser.integerParser;
-import static org.incendo.cloud.parser.standard.LongParser.longParser;
-import static org.incendo.cloud.parser.standard.StringArrayParser.stringArrayParser;
-import static org.incendo.cloud.parser.standard.StringParser.greedyStringParser;
-import static org.incendo.cloud.parser.standard.StringParser.stringParser;
-import static rocks.gravili.notquests.paper.commands.arguments.ActionParser.actionParser;
-import static rocks.gravili.notquests.paper.commands.arguments.ApplyOnParser.applyOnParser;
-import static rocks.gravili.notquests.paper.commands.arguments.CategoryParser.categoryParser;
-import static rocks.gravili.notquests.paper.commands.arguments.ObjectiveParser.objectiveParser;
-import static rocks.gravili.notquests.paper.commands.arguments.QuestParser.questParser;
 
 public class CommandManager {
     private final NotQuests main;
     // Re-usable value flags
-    public CommandFlag<String[]> nametag_containsany;
-    public CommandFlag<String[]> nametag_equals;
-    public CommandFlag<Component> taskDescription;
-    public CommandFlag<Integer> maxDistance;
-    public CommandFlag<Category> categoryFlag;
-    public CommandFlag<Duration> delayFlag;
+    public NQFlag nametag_containsany;
+    public NQFlag nametag_equals;
+    public NQFlag taskDescription;
+    public NQFlag maxDistance;
+    public NQFlag categoryFlag;
+    public NQFlag delayFlag;
 
-    public CommandFlag<String> speakerColor;
-    public CommandFlag<Integer> applyOn; // 0 = Quest
-    public CommandFlag<World> world;
-    public CommandFlag<Double> locationX;
-    public CommandFlag<Double> locationY;
-    public CommandFlag<Double> locationZ;
+    public NQFlag speakerColor;
+    public NQFlag applyOn; // 0 = Quest
+    public NQFlag world;
+    public NQFlag locationX;
+    public NQFlag locationY;
+    public NQFlag locationZ;
 
-    public CommandFlag<String> triggerWorldString;
-    public CommandFlag<Long> minimumTimeAfterCompletion;
-    private LegacyPaperCommandManager<CommandSender> commandManager;
+    public NQFlag triggerWorldString;
+    public NQFlag minimumTimeAfterCompletion;
+    // NotQuests' own native-Brigadier command framework (migration target off Cloud).
+    private NQCommands nqCommands;
+    private NQCommandManager nqCommandManager;
 
-    /**
-     * Returns a SuggestionProvider that suggests MiniMessage tags like &lt;red&gt;, &lt;bold&gt;, etc.
-     * Use this with greedyStringParser() to get MiniMessage suggestions while keeping String return type.
-     */
-    public org.incendo.cloud.suggestion.SuggestionProvider<CommandSender> miniMessageSuggestions() {
-        return (context, input) -> {
-            java.util.List<Suggestion> completions = new java.util.ArrayList<>();
-            // input.input() returns all remaining input — use lastString for the current token
-            String rawInput = input.input();
-            String[] parts = rawInput.split(" ");
-            String lastString = parts.length > 0 ? parts[parts.length - 1] : "";
+    // SOLE remaining Cloud shim. The command tree itself no longer uses Cloud, but six not-yet-migrated
+    // variable classes (EnderChestVariable, InventoryVariable, ContainerInventoryVariable,
+    // QuestPointsVariable, PlaceholderAPINumberVariable and the Boolean/Number*VariableArgument
+    // suggestion bridges) still build Cloud CommandFlags / construct a Cloud CommandContext via this
+    // manager. It is kept only so those files compile until they are migrated. Fully-qualified on
+    // purpose so the only Cloud reference in this file is this single, clearly-marked accessor.
 
-            if (lastString.startsWith("{")) {
-                completions.addAll(getAdminCommands().placeholders.stream().map(Suggestion::suggestion).toList());
-            } else if (lastString.startsWith("<")) {
-                for (String tag : main.getUtilManager().getMiniMessageTokens()) {
-                    completions.add(Suggestion.suggestion("<" + tag + ">"));
-                    if (rawInput.contains("<" + tag + ">")) {
-                        if (org.apache.commons.lang3.StringUtils.countMatches(rawInput, "<" + tag + ">") > org.apache.commons.lang3.StringUtils.countMatches(rawInput, "</" + tag + ">")) {
-                            completions.add(Suggestion.suggestion("</" + tag + ">"));
-                        }
-                    }
-                }
-            }
-            return java.util.concurrent.CompletableFuture.completedFuture(completions);
-        };
-    }
     // Builders
-    private Command.Builder<CommandSender> adminCommandBuilder;
-    private Command.Builder<CommandSender> adminEditCommandBuilder;
-    private Command.Builder<CommandSender> adminTagCommandBuilder;
-    private Command.Builder<CommandSender> adminItemsCommandBuilder;
-    private Command.Builder<CommandSender> adminConversationCommandBuilder;
-    private Command.Builder<CommandSender> adminEditAddObjectiveCommandBuilder;
-    private Command.Builder<CommandSender> adminEditAddRequirementCommandBuilder;
-    private Command.Builder<CommandSender> adminEditAddRewardCommandBuilder;
-    private Command.Builder<CommandSender> adminEditAddTriggerCommandBuilder;
-    private Command.Builder<CommandSender> adminEditObjectiveAddUnlockConditionCommandBuilder;
-    private Command.Builder<CommandSender> adminEditObjectiveAddProgressConditionCommandBuilder;
-    private Command.Builder<CommandSender> adminEditObjectiveAddCompleteConditionCommandBuilder;
+    private NQCommandBuilder adminCommandBuilder;
+    private NQCommandBuilder adminEditCommandBuilder;
+    private NQCommandBuilder adminTagCommandBuilder;
+    private NQCommandBuilder adminItemsCommandBuilder;
+    private NQCommandBuilder adminConversationCommandBuilder;
+    private NQCommandBuilder adminEditAddObjectiveCommandBuilder;
+    private NQCommandBuilder adminEditAddRequirementCommandBuilder;
+    private NQCommandBuilder adminEditAddRewardCommandBuilder;
+    private NQCommandBuilder adminEditAddTriggerCommandBuilder;
+    private NQCommandBuilder adminEditObjectiveAddUnlockConditionCommandBuilder;
+    private NQCommandBuilder adminEditObjectiveAddProgressConditionCommandBuilder;
+    private NQCommandBuilder adminEditObjectiveAddCompleteConditionCommandBuilder;
 
-    private Command.Builder<CommandSender> adminEditObjectiveAddRewardCommandBuilder;
-    private Command.Builder<CommandSender> adminAddActionCommandBuilder;
-    private Command.Builder<CommandSender> adminExecuteActionCommandBuilder;
+    private NQCommandBuilder adminEditObjectiveAddRewardCommandBuilder;
+    private NQCommandBuilder adminAddActionCommandBuilder;
+    private NQCommandBuilder adminExecuteActionCommandBuilder;
 
-    private Command.Builder<CommandSender> adminActionsCommandBuilder;
-    private Command.Builder<CommandSender> adminActionsEditCommandBuilder;
-    private Command.Builder<CommandSender> adminActionsAddConditionCommandBuilder;
-    private Command.Builder<CommandSender> adminAddConditionCommandBuilder;
-    private Command.Builder<CommandSender> adminConditionCheckCommandBuilder;
+    private NQCommandBuilder adminActionsCommandBuilder;
+    private NQCommandBuilder adminActionsEditCommandBuilder;
+    private NQCommandBuilder adminActionsAddConditionCommandBuilder;
+    private NQCommandBuilder adminAddConditionCommandBuilder;
+    private NQCommandBuilder adminConditionCheckCommandBuilder;
 
     private AdminCommands adminCommands;
     private AdminEditCommands adminEditCommands;
@@ -155,16 +104,12 @@ public class CommandManager {
     private AdminItemsCommand adminItemsCommands;
     private AdminConversationCommands adminConversationCommands;
     // User
-    private MinecraftHelp<CommandSender> minecraftUserHelp;
-    private Command.Builder<CommandSender> userCommandBuilder;
+    private NQCommandBuilder userCommandBuilder;
     private UserCommands userCommands;
     // Admin
-    private MinecraftHelp<CommandSender> minecraftAdminHelp;
-    private Command.Builder<CommandSender> adminEditObjectivesBuilder;
+    private NQCommandBuilder adminEditObjectivesBuilder;
 
     private CommandMap commandMap;
-
-    private CommandPostProcessor<CommandSender> commandPostProcessor;
 
     public CommandManager(final NotQuests main) {
         this.main = main;
@@ -181,168 +126,90 @@ public class CommandManager {
     }
 
     public void createCommandFlags() {
-        nametag_containsany = CommandFlag.builder("nametag_containsany")
-                .withComponent(TypedCommandComponent.builder("nametag_containsany", stringArrayParser())
-                        .suggestionProvider((context, lastString) -> {
-                            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.sender(), lastString.input().split(" "), "<Enter nametag_containsany flag value>", "");
-                            ArrayList<Suggestion> completions = new ArrayList<>();
-                            completions.add(Suggestion.suggestion("<nametag_containsany flag value>"));
-                            return CompletableFuture.completedFuture(completions);
-                        }))
-                .withDescription(Description.of("This word or every word seperated by a space needs to be part of the nametag"))
+        nametag_containsany = NQFlag.builder("nametag_containsany")
+                .withArgument(NQArguments.stringArrayArgument())
+                .withDescription(NQDescription.of("This word or every word seperated by a space needs to be part of the nametag"))
                 .build();
 
-
-        nametag_equals = CommandFlag.builder("nametag_equals")
-                .withComponent(TypedCommandComponent.builder("nametag_equals", stringArrayParser())
-                        .suggestionProvider((context, lastString) -> {
-                            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.sender(), lastString.input().split(" "), "<Enter nametag_equals flag value>", "");
-                            ArrayList<Suggestion> completions = new ArrayList<>();
-                            completions.add(Suggestion.suggestion("<Enter nametag_equals flag value>"));
-                            return CompletableFuture.completedFuture(completions);
-                        }))
-                .withDescription(Description.of("What the nametag has to be equal"))
+        nametag_equals = NQFlag.builder("nametag_equals")
+                .withArgument(NQArguments.stringArrayArgument())
+                .withDescription(NQDescription.of("What the nametag has to be equal"))
                 .build();
 
-        taskDescription = CommandFlag.builder("taskDescription")
-                .withComponent(TypedCommandComponent.builder("taskDescription", miniMessageParser())
-                        .suggestionProvider((context, lastString) -> {
-                            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.sender(), lastString.input().split(" "), "[Enter task description]", "");
-                            ArrayList<Suggestion> completions = new ArrayList<>();
-                            completions.add(Suggestion.suggestion("[Enter task description]"));
-                            return CompletableFuture.completedFuture(completions);
-                        }))
-                .withDescription(Description.of("Custom description of the task"))
+        taskDescription = NQFlag.builder("taskDescription")
+                .withArgument(NQArguments.componentArgument(main))
+                .withDescription(NQDescription.of("Custom description of the task"))
                 .build();
 
-        speakerColor = CommandFlag.builder("speakerColor")
-                .withComponent(TypedCommandComponent.builder("speakerColor", stringParser())
-                        .suggestionProvider((context, lastString) -> {
-                            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.sender(), lastString.input().split(" "), "[Enter speaker color (default: <WHITE>)]", "");
-                            ArrayList<Suggestion> completions = new ArrayList<>();
-                            for (NamedTextColor namedTextColor : NamedTextColor.NAMES.values()) {
-                                completions.add(Suggestion.suggestion("<" + namedTextColor.toString() + ">"));
-                            }
-                            return CompletableFuture.completedFuture(completions);
-                        }))
-                .withDescription(Description.of("Color of the speaker name"))
+        speakerColor = NQFlag.builder("speakerColor")
+                .withArgument(NQArguments.stringArgument())
+                .withSuggestions((context, input) -> {
+                    final ArrayList<String> completions = new ArrayList<>();
+                    for (final NamedTextColor namedTextColor : NamedTextColor.NAMES.values()) {
+                        completions.add("<" + namedTextColor + ">");
+                    }
+                    return completions;
+                })
+                .withDescription(NQDescription.of("Color of the speaker name"))
                 .build();
 
-        maxDistance = CommandFlag.builder("maxDistance")
-                .withComponent(TypedCommandComponent.builder("maxDistance", integerParser(0))
-                        .suggestionProvider((context, lastString) -> {
-                            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.sender(), lastString.input().split(" "), "[Enter maximum distance of two locations]", "");
-                            ArrayList<Suggestion> completions = new ArrayList<>();
-                            completions.add(Suggestion.suggestion("[Enter maximum distance of two locations]"));
-                            return CompletableFuture.completedFuture(completions);
-                        }))
-                .withDescription(Description.of("Enter maximum distance of two locations"))
+        maxDistance = NQFlag.builder("maxDistance")
+                .withArgument(NQArguments.integerArgument())
+                .withDescription(NQDescription.of("Enter maximum distance of two locations"))
                 .build();
 
-        world = CommandFlag.builder("world")
-                .withComponent(TypedCommandComponent.builder("world", worldParser())
-                        .suggestionProvider((context, lastString) -> {
-                            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.sender(), lastString.input().split(" "), "[World Name]", "");
-                            ArrayList<Suggestion> completions = new ArrayList<>();
-                            for (final World world : Bukkit.getWorlds()) {
-                                completions.add(Suggestion.suggestion(world.getName()));
-                            }
-                            return CompletableFuture.completedFuture(completions);
-                        }))
-                .withDescription(Description.of("World Name"))
+        world = NQFlag.builder("world")
+                .withArgument(NQArguments.worldArgument())
+                .withDescription(NQDescription.of("World Name"))
                 .build();
 
-        applyOn = CommandFlag.builder("applyOn")
-                .withComponent(TypedCommandComponent.builder("applyOn", applyOnParser(main, "quest"))
-                        .suggestionProvider((context, lastString) -> {
-                            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.sender(), lastString.input().split(" "), "[0 = Quest, 1 = Objective 1, 2 = Objective 2, ...]", "");
-                            ArrayList<Suggestion> completions = new ArrayList<>();
-                            completions.add(Suggestion.suggestion("0"));
-                            completions.add(Suggestion.suggestion("1"));
-                            completions.add(Suggestion.suggestion("2"));
-                            return CompletableFuture.completedFuture(completions);
-                        }))
-                .withDescription(Description.of("To which part of the Quest it should apply (Examples: 'Quest', 'O1', 'O2. (O1 = Objective 1)."))
+        applyOn = NQFlag.builder("applyOn")
+                .withArgument(NQArguments.integerArgument())
+                .withSuggestions((context, input) -> java.util.List.of("0", "1", "2"))
+                .withDescription(NQDescription.of("To which part of the Quest it should apply (Examples: 'Quest', 'O1', 'O2. (O1 = Objective 1)."))
                 .build();
 
-        triggerWorldString = CommandFlag.builder("world_name")
-                .withComponent(TypedCommandComponent.builder("world_name", stringParser())
-                        .suggestionProvider((context, lastString) -> {
-                            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.sender(), lastString.input().split(" "), "[World Name / 'ALL']", "");
-                            ArrayList<Suggestion> completions = new ArrayList<>();
-                            completions.add(Suggestion.suggestion("ALL"));
-                            for (final World world : Bukkit.getWorlds()) {
-                                completions.add(Suggestion.suggestion(world.getName()));
-                            }
-                            return CompletableFuture.completedFuture(completions);
-                        }))
-                .withDescription(Description.of("World where the Trigger applies (Examples: 'world_the_end', 'farmworld', 'world', 'ALL')."))
+        triggerWorldString = NQFlag.builder("world_name")
+                .withArgument(NQArguments.stringArgument())
+                .withSuggestions((context, input) -> {
+                    final ArrayList<String> completions = new ArrayList<>();
+                    completions.add("ALL");
+                    for (final World world : Bukkit.getWorlds()) {
+                        completions.add(world.getName());
+                    }
+                    return completions;
+                })
+                .withDescription(NQDescription.of("World where the Trigger applies (Examples: 'world_the_end', 'farmworld', 'world', 'ALL')."))
                 .build();
 
-        minimumTimeAfterCompletion = CommandFlag.builder("waitTimeAfterCompletion")
-                .withComponent(TypedCommandComponent.builder("waitTimeAfterCompletion", longParser(0))
-                        .suggestionProvider((context, lastString) -> {
-                            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.sender(), lastString.input().split(" "), "[Enter minimum time you have to wait after completion.]", "");
-                            ArrayList<Suggestion> completions = new ArrayList<>();
-                            completions.add(Suggestion.suggestion("0"));
-                            return CompletableFuture.completedFuture(completions);
-                        }))
-                .withDescription(Description.of("Enter minimum time you have to wait after completion."))
-                .build(); // 0 = Quest
-
-        categoryFlag = CommandFlag.builder("category")
-                .withComponent(TypedCommandComponent.builder("category", categoryParser(main))
-                        .suggestionProvider((context, lastString) -> {
-                            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.sender(), lastString.input().split(" "), "[Category Name]", "");
-                            ArrayList<Suggestion> completions = new ArrayList<>();
-                            completions.add(Suggestion.suggestion("[Enter Category Name]"));
-                            return CompletableFuture.completedFuture(completions);
-                        }))
-                .withDescription(Description.of("Category name"))
+        minimumTimeAfterCompletion = NQFlag.builder("waitTimeAfterCompletion")
+                .withArgument(NQArguments.longArgument())
+                .withDescription(NQDescription.of("Enter minimum time you have to wait after completion."))
                 .build();
 
-        delayFlag = CommandFlag.builder("delay")
-                .withComponent(TypedCommandComponent.builder("delay", durationParser())
-                        .suggestionProvider((context, lastString) -> {
-                            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.sender(), lastString.input().split(" "), "[Enter delay in milliseconds]", "");
-                            ArrayList<Suggestion> completions = new ArrayList<>();
-                            completions.add(Suggestion.suggestion("[Enter delay in milliseconds]"));
-                            return CompletableFuture.completedFuture(completions);
-                        }))
-                .withDescription(Description.of("Delay in milliseconds"))
+        categoryFlag = NQFlag.builder("category")
+                .withArgument(categoryArgument(main))
+                .withDescription(NQDescription.of("Category name"))
                 .build();
 
-        locationX = CommandFlag.builder("locationX")
-                .withComponent(TypedCommandComponent.builder("locationX", doubleParser())
-                        .suggestionProvider((context, lastString) -> {
-                            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.sender(), lastString.input().split(" "), "[Enter x coordinate location]", "");
-                            ArrayList<Suggestion> completions = new ArrayList<>();
-                            completions.add(Suggestion.suggestion("[Enter x coordinate location]"));
-                            return CompletableFuture.completedFuture(completions);
-                        }))
-                .withDescription(Description.of("Enter x coordinate location"))
+        delayFlag = NQFlag.builder("delay")
+                .withArgument(NQArguments.durationArgument())
+                .withDescription(NQDescription.of("Delay in milliseconds"))
                 .build();
 
-        locationY = CommandFlag.builder("locationY")
-                .withComponent(TypedCommandComponent.builder("locationY", doubleParser())
-                        .suggestionProvider((context, lastString) -> {
-                            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.sender(), lastString.input().split(" "), "[Enter y coordinate location]", "");
-                            ArrayList<Suggestion> completions = new ArrayList<>();
-                            completions.add(Suggestion.suggestion("[Enter y coordinate location]"));
-                            return CompletableFuture.completedFuture(completions);
-                        }))
-                .withDescription(Description.of("Enter y coordinate location"))
+        locationX = NQFlag.builder("locationX")
+                .withArgument(NQArguments.doubleArgument())
+                .withDescription(NQDescription.of("Enter x coordinate location"))
                 .build();
 
-        locationZ = CommandFlag.builder("locationZ")
-                .withComponent(TypedCommandComponent.builder("locationZ", doubleParser())
-                        .suggestionProvider((context, lastString) -> {
-                            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.sender(), lastString.input().split(" "), "[Enter z coordinate location]", "");
-                            ArrayList<Suggestion> completions = new ArrayList<>();
-                            completions.add(Suggestion.suggestion("[Enter z coordinate location]"));
-                            return CompletableFuture.completedFuture(completions);
-                        }))
-                .withDescription(Description.of("Enter z coordinate location"))
+        locationY = NQFlag.builder("locationY")
+                .withArgument(NQArguments.doubleArgument())
+                .withDescription(NQDescription.of("Enter y coordinate location"))
+                .build();
+
+        locationZ = NQFlag.builder("locationZ")
+                .withArgument(NQArguments.doubleArgument())
+                .withDescription(NQDescription.of("Enter z coordinate location"))
                 .build();
     }
 
@@ -351,12 +218,13 @@ public class CommandManager {
     }
 
     public void preSetupCommands() {
-        // Cloud command framework
+        // NotQuests' own native-Brigadier command framework (commands.framework package).
         try {
-            commandManager = new LegacyPaperCommandManager<>(main.getMain(), ExecutionCoordinator.simpleCoordinator(), SenderMapper.identity());
-        } catch (final Exception e) {
-            main.getLogManager().severe("There was an error setting up the commands.");
-            return;
+            nqCommands = new NQCommands(main);
+            nqCommands.hook();
+            nqCommandManager = new NQCommandManager(main, nqCommands);
+        } catch (final Throwable t) {
+            main.getLogManager().warn("Could not initialize the native command framework: " + t.getMessage());
         }
 
         preSetupGeneralCommands();
@@ -365,65 +233,12 @@ public class CommandManager {
     }
 
     public void preSetupGeneralCommands() {
-        // asynchronous completions
-        if (commandManager.hasCapability(CloudBukkitCapabilities.ASYNCHRONOUS_COMPLETION)) {
-            commandManager.registerAsynchronousCompletions();
-        }
-
-
-        // brigadier
-        try {
-            commandManager.registerLegacyPaperBrigadier();
-            CloudBrigadierManager<CommandSender, ?> cloudBrigadierManager = commandManager.brigadierManager();
-            cloudBrigadierManager.setNativeNumberSuggestions(false);
-
-            cloudBrigadierManager.registerMapping(
-                    new TypeToken<StringVariableValueParser<CommandSender>>() {
-                    }, builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
-
-            // Greedy string to prevent false, red brigardier color when entering special symbols like a
-            // comma
-            cloudBrigadierManager.registerMapping(
-                    new TypeToken<NumberVariableValueParser<CommandSender>>() {
-                    },
-                    builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
-            cloudBrigadierManager.registerMapping(
-                    new TypeToken<BooleanVariableValueParser<CommandSender>>() {
-                    },
-                    builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
-            cloudBrigadierManager.registerMapping(
-                    new TypeToken<MultiActionsParser<CommandSender>>() {
-                    },
-                    builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
-            cloudBrigadierManager.registerMapping(
-                    new TypeToken<ItemStackSelectionParser<CommandSender>>() {
-                    },
-                    builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
-
-            cloudBrigadierManager.registerMapping(
-                    new TypeToken<NQNPCParser<CommandSender>>() {
-                    },
-                    builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
-        } catch (final Exception e) {
-            main.getLogManager().warn("Failed to initialize Brigadier support: <highlight>" + e.getMessage());
-        }
-
-        commandPostProcessor = new CommandPostProcessor<>(main);
-        commandManager.registerCommandPostProcessor(commandPostProcessor);
     }
 
     public void preSetupUserCommands() {
-        minecraftUserHelp = MinecraftHelp.create("/nq help", commandManager, AudienceProvider.nativeAudience());
-
-        minecraftUserHelp.colors().primary().styleApply(Style.style(NotQuestColors.main).toBuilder());
-        minecraftUserHelp.colors().highlight().styleApply(Style.style(NamedTextColor.WHITE).toBuilder());
-        minecraftUserHelp.colors().alternateHighlight().styleApply(Style.style(NotQuestColors.highlight).toBuilder());
-        minecraftUserHelp.colors().text().styleApply(Style.style(NamedTextColor.GRAY).toBuilder());
-        minecraftUserHelp.colors().accent().styleApply(Style.style(NamedTextColor.DARK_GRAY).toBuilder());
-
-        userCommandBuilder = commandManager.commandBuilder(
+        userCommandBuilder = nqCommandManager.commandBuilder(
                         "nq",
-                        Description.of("Player commands for NotQuests"),
+                        NQDescription.of("Player commands for NotQuests"),
                         "notquests",
                         "nquests",
                         "nquest",
@@ -436,18 +251,9 @@ public class CommandManager {
     }
 
     public void preSetupAdminCommands() {
-
-        minecraftAdminHelp = MinecraftHelp.create("/qa help", commandManager, AudienceProvider.nativeAudience());
-
-        minecraftAdminHelp.colors().primary().styleApply(Style.style(NotQuestColors.main).toBuilder());
-        minecraftAdminHelp.colors().highlight().styleApply(Style.style(NamedTextColor.WHITE).toBuilder());
-        minecraftAdminHelp.colors().alternateHighlight().styleApply(Style.style(NotQuestColors.highlight).toBuilder());
-        minecraftAdminHelp.colors().text().styleApply(Style.style(NamedTextColor.GRAY).toBuilder());
-        minecraftAdminHelp.colors().accent().styleApply(Style.style(NamedTextColor.DARK_GRAY).toBuilder());
-
-        adminCommandBuilder = commandManager.commandBuilder(
+        adminCommandBuilder = nqCommandManager.commandBuilder(
                         "nqa",
-                        Description.of("Admin commands for NotQuests"),
+                        NQDescription.of("Admin commands for NotQuests"),
                         "nquestsadmin",
                         "nquestadmin",
                         "notquestadmin",
@@ -458,7 +264,7 @@ public class CommandManager {
                         "notquestsadmin")
                 .permission("notquests.admin");
 
-        adminEditCommandBuilder = adminCommandBuilder.literal("edit", "e").required("quest", questParser(main), Description.of("Quest Name"));
+        adminEditCommandBuilder = adminCommandBuilder.literal("edit", "e").required("quest", questArgument(main), NQDescription.of("Quest Name"));
         adminTagCommandBuilder = adminCommandBuilder.literal("tags", "t");
         adminItemsCommandBuilder = adminCommandBuilder.literal("items", "item", "i");
         adminConversationCommandBuilder = adminCommandBuilder.literal("conversations", "c");
@@ -466,14 +272,14 @@ public class CommandManager {
         adminEditAddRequirementCommandBuilder = adminEditCommandBuilder.literal("requirements", "req").literal("add");
         adminEditAddRewardCommandBuilder = adminEditCommandBuilder.literal("rewards", "rew").literal("add");
         adminEditAddTriggerCommandBuilder = adminEditCommandBuilder.literal("triggers", "t")
-                .literal("add").required("action", actionParser(main), Description.of("Action which will be executed when the Trigger triggers."));
+                .literal("add").required("action", actionArgument(main), NQDescription.of("Action which will be executed when the Trigger triggers."));
 
-        adminEditObjectivesBuilder = adminEditCommandBuilder.literal("objectives").literal("edit").required("objectiveId", objectiveParser(main, 0), Description.of("Objective-ID"));
+        adminEditObjectivesBuilder = adminEditCommandBuilder.literal("objectives").literal("edit").required("objectiveId", objectiveArgument(main, 0), NQDescription.of("Objective-ID"));
         adminEditObjectiveAddUnlockConditionCommandBuilder = adminEditObjectivesBuilder.literal("conditions").literal("unlock").literal("add");
         adminEditObjectiveAddProgressConditionCommandBuilder = adminEditObjectivesBuilder.literal("conditions").literal("progress").literal("add");
         adminEditObjectiveAddCompleteConditionCommandBuilder = adminEditObjectivesBuilder.literal("conditions").literal("complete").literal("add");
         adminActionsCommandBuilder = adminCommandBuilder.literal("actions");
-        adminActionsEditCommandBuilder = adminActionsCommandBuilder.literal("edit").required("action", actionParser(main), Description.of("Action Name"));
+        adminActionsEditCommandBuilder = adminActionsCommandBuilder.literal("edit").required("action", actionArgument(main), NQDescription.of("Action Name"));
 
         adminActionsAddConditionCommandBuilder =
                 adminActionsEditCommandBuilder.literal("conditions").literal("add");
@@ -484,12 +290,8 @@ public class CommandManager {
         adminAddConditionCommandBuilder = adminCommandBuilder
                 .literal("conditions")
                 .literal("add")
-                .required("Condition Identifier", stringParser(), Description.of("Condition Identifier"), (context, lastString) -> {
-                    main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[New, unique Condition Identifier]", "...");
-                    ArrayList<Suggestion> completions = new ArrayList<>();
-                    completions.add(Suggestion.suggestion("[Enter new, unique Condition Identifier]"));
-                    return CompletableFuture.completedFuture(completions);
-                });
+                .required("Condition Identifier", NQArguments.stringArgument(), NQDescription.of("Condition Identifier"),
+                        (context, input) -> java.util.List.of("[Enter new, unique Condition Identifier]"));
 
 
         adminConditionCheckCommandBuilder = adminCommandBuilder
@@ -499,13 +301,8 @@ public class CommandManager {
         adminAddActionCommandBuilder = adminCommandBuilder
                 .literal("actions")
                 .literal("add")
-                .required("Action Identifier", stringParser(), Description.of("Action Identifier"), (context, lastString) -> {
-                    main.getUtilManager().sendFancyCommandCompletion(context.sender(), lastString.input().split(" "), "[New, unique Action Identifier]", "...");
-                    ArrayList<Suggestion> completions = new ArrayList<>();
-
-                    completions.add(Suggestion.suggestion("[Enter new, unique Action Identifier]"));
-                    return CompletableFuture.completedFuture(completions);
-                });
+                .required("Action Identifier", NQArguments.stringArgument(), NQDescription.of("Action Identifier"),
+                        (context, input) -> java.util.List.of("[Enter new, unique Action Identifier]"));
 
         adminExecuteActionCommandBuilder = adminCommandBuilder
                 .literal("actions")
@@ -538,65 +335,48 @@ public class CommandManager {
 
     public void constructCommands() {
 
-        // General Stuff
-        MinecraftExceptionHandler.<CommandSender>create(sender -> sender)
-                .decorator(message -> main.parse("<main>NotQuests > ").append(message))
-                .handler(org.incendo.cloud.exception.ArgumentParseException.class, (formatter, ctx) -> {
-                    var cause = ctx.exception().getCause();
-                    main.getLogManager().debug("Command (argument parse): " + cause.getMessage());
-                    if (main.getConfiguration().debug) {
-                        ctx.exception().printStackTrace();
-                    }
-                    return main.parse("<error>" + cause.getMessage());
-                })
-                .handler(org.incendo.cloud.exception.CommandExecutionException.class, (formatter, ctx) -> {
-                    var cause = ctx.exception().getCause();
-                    main.getLogManager().debug("Command (execution): " + cause.getMessage());
-                    if (main.getConfiguration().debug) {
-                        ctx.exception().printStackTrace();
-                    }
-                    return main.parse("<error>" + cause.getMessage());
-                })
-                .handler(org.incendo.cloud.exception.InvalidSyntaxException.class, (formatter, ctx) -> {
-                    main.getLogManager().debug("Command (syntax): " + ctx.exception().getMessage());
-                    if (main.getConfiguration().debug) {
-                        ctx.exception().printStackTrace();
-                    }
-                    return main.parse("<error>Invalid syntax! Correct syntax is: <main>" + ctx.exception().correctSyntax());
-                })
-                .defaultInvalidSenderHandler()
-                .defaultNoPermissionHandler()
-                .registerTo(commandManager);
         // User Stuff
         // Help menu
-
-        commandManager.command(
+        nqCommandManager.command(
                 userCommandBuilder
                         .literal("help")
-                        .required("query", greedyStringParser())
-                        .handler(context -> minecraftUserHelp.queryCommands(context.getOrDefault("query", "nq *"), context.sender())));
+                        .required("query", NQArguments.greedyStringArgument())
+                        .handler(context -> {
+                            main.sendMessage(context.sender(), "<main>NotQuests <unimportant>— available commands:");
+                            for (final String usageLine : nqCommandManager.rootUsage("nq")) {
+                                main.sendMessage(context.sender(), "<unimportant>" + usageLine);
+                            }
+                        }));
 
-        userCommands = new UserCommands(main, commandManager, userCommandBuilder);
+        userCommands = new UserCommands(main, nqCommandManager, userCommandBuilder);
 
         // Admin Stuff
         // Help Menu
-        commandManager.command(adminCommandBuilder.commandDescription(Description.of("Opens the help menu"))
+        nqCommandManager.command(adminCommandBuilder.commandDescription(NQDescription.of("Opens the help menu"))
                 .handler((context) -> {
-                    minecraftAdminHelp.queryCommands("qa *", context.sender());
+                    main.sendMessage(context.sender(), "<main>NotQuests <unimportant>— available admin commands:");
+                    for (final String usageLine : nqCommandManager.rootUsage("nqa")) {
+                        main.sendMessage(context.sender(), "<unimportant>" + usageLine);
+                    }
                     main.getUtilManager().sendFancyCommandCompletion(context.sender(), context.rawInput().input().split(" "), "[What would you like to do?]", "[...]");
                 }));
-        commandManager.command(adminCommandBuilder
+        nqCommandManager.command(adminCommandBuilder
                 .literal("help")
-                .optional("query", greedyStringParser())
-                .handler(context -> minecraftAdminHelp.queryCommands(context.getOrDefault("query", "qa *"), context.sender())));
+                .optional("query", NQArguments.greedyStringArgument())
+                .handler(context -> {
+                    main.sendMessage(context.sender(), "<main>NotQuests <unimportant>— available admin commands:");
+                    for (final String usageLine : nqCommandManager.rootUsage("nqa")) {
+                        main.sendMessage(context.sender(), "<unimportant>" + usageLine);
+                    }
+                }));
 
-        adminCommands = new AdminCommands(main, commandManager, adminCommandBuilder);
+        adminCommands = new AdminCommands(main, nqCommandManager, adminCommandBuilder);
 
-        adminEditCommands = new AdminEditCommands(main, commandManager, adminEditCommandBuilder);
+        adminEditCommands = new AdminEditCommands(main, nqCommandManager, adminEditCommandBuilder);
 
-        adminTagCommands = new AdminTagCommands(main, commandManager, adminTagCommandBuilder);
+        adminTagCommands = new AdminTagCommands(main, nqCommandManager, adminTagCommandBuilder);
 
-        adminItemsCommands = new AdminItemsCommand(main, commandManager, adminItemsCommandBuilder);
+        adminItemsCommands = new AdminItemsCommand(main, nqCommandManager, adminItemsCommandBuilder);
     }
 
     public void setupAdminConversationCommands(
@@ -604,94 +384,104 @@ public class CommandManager {
                     conversationManager) { // Has to be done after ConversationManager is initialized
         adminConversationCommands =
                 new AdminConversationCommands(
-                        main, commandManager, adminConversationCommandBuilder, conversationManager);
+                        main, nqCommandManager, adminConversationCommandBuilder, conversationManager);
     }
 
-    public final LegacyPaperCommandManager<CommandSender> getPaperCommandManager() {
-        return commandManager;
+    public final NQCommands getNQCommands() {
+        return nqCommands;
     }
 
-    public final Command.Builder<CommandSender> getAdminCommandBuilder() {
+    public final NQCommandManager getNQCommandManager() {
+        return nqCommandManager;
+    }
+
+    /**
+     * Sole remaining Cloud accessor — kept only for the six not-yet-migrated variable classes that
+     * still construct Cloud CommandFlags / a Cloud CommandContext from this manager. Do not add new
+     * callers; migrate them to the native framework instead.
+     */
+
+    public final NQCommandBuilder getAdminCommandBuilder() {
         return adminCommandBuilder;
     }
 
-    public final Command.Builder<CommandSender> getAdminEditCommandBuilder() {
+    public final NQCommandBuilder getAdminEditCommandBuilder() {
         return adminEditCommandBuilder;
     }
 
-    public final Command.Builder<CommandSender> getAdminItemsCommandBuilder() {
+    public final NQCommandBuilder getAdminItemsCommandBuilder() {
         return adminItemsCommandBuilder;
     }
 
-    public final Command.Builder<CommandSender> getAdminTagCommandBuilder() {
+    public final NQCommandBuilder getAdminTagCommandBuilder() {
         return adminTagCommandBuilder;
     }
 
-    public final Command.Builder<CommandSender> getAdminConversationCommandBuilder() {
+    public final NQCommandBuilder getAdminConversationCommandBuilder() {
         return adminConversationCommandBuilder;
     }
 
-    public final Command.Builder<CommandSender> getAdminEditAddObjectiveCommandBuilder() {
+    public final NQCommandBuilder getAdminEditAddObjectiveCommandBuilder() {
         return adminEditAddObjectiveCommandBuilder;
     }
 
-    public final Command.Builder<CommandSender> getAdminEditAddRequirementCommandBuilder() {
+    public final NQCommandBuilder getAdminEditAddRequirementCommandBuilder() {
         return adminEditAddRequirementCommandBuilder;
     }
 
-    public final Command.Builder<CommandSender> getAdminEditObjectiveAddUnlockConditionCommandBuilder() {
+    public final NQCommandBuilder getAdminEditObjectiveAddUnlockConditionCommandBuilder() {
         return adminEditObjectiveAddUnlockConditionCommandBuilder;
     }
 
-    public final Command.Builder<CommandSender> getAdminEditObjectiveAddProgressConditionCommandBuilder() {
+    public final NQCommandBuilder getAdminEditObjectiveAddProgressConditionCommandBuilder() {
         return adminEditObjectiveAddProgressConditionCommandBuilder;
     }
 
-    public final Command.Builder<CommandSender> getAdminEditObjectiveAddCompleteConditionCommandBuilder() {
+    public final NQCommandBuilder getAdminEditObjectiveAddCompleteConditionCommandBuilder() {
         return adminEditObjectiveAddCompleteConditionCommandBuilder;
     }
 
-    public final Command.Builder<CommandSender> getAdminActionsAddConditionCommandBuilder() {
+    public final NQCommandBuilder getAdminActionsAddConditionCommandBuilder() {
         return adminActionsAddConditionCommandBuilder;
     }
 
-    public final Command.Builder<CommandSender> getAdminActionsCommandBuilder() {
+    public final NQCommandBuilder getAdminActionsCommandBuilder() {
         return adminActionsCommandBuilder;
     }
 
-    public final Command.Builder<CommandSender> getAdminActionsEdituilder() {
+    public final NQCommandBuilder getAdminActionsEdituilder() {
         return adminActionsEditCommandBuilder;
     }
 
-    public final Command.Builder<CommandSender> getAdminEditObjectiveAddRewardCommandBuilder() {
+    public final NQCommandBuilder getAdminEditObjectiveAddRewardCommandBuilder() {
         return adminEditObjectiveAddRewardCommandBuilder;
     }
 
-    public final Command.Builder<CommandSender> getAdminAddActionCommandBuilder() {
+    public final NQCommandBuilder getAdminAddActionCommandBuilder() {
         return adminAddActionCommandBuilder;
     }
 
-    public final Command.Builder<CommandSender> getAdminExecuteActionCommandBuilder() {
+    public final NQCommandBuilder getAdminExecuteActionCommandBuilder() {
         return adminExecuteActionCommandBuilder;
     }
 
-    public final Command.Builder<CommandSender> getAdminAddConditionCommandBuilder() {
+    public final NQCommandBuilder getAdminAddConditionCommandBuilder() {
         return adminAddConditionCommandBuilder;
     }
 
-    public final Command.Builder<CommandSender> getAdminConditionCheckCommandBuilder() {
+    public final NQCommandBuilder getAdminConditionCheckCommandBuilder() {
         return adminConditionCheckCommandBuilder;
     }
 
-    public final Command.Builder<CommandSender> getAdminEditObjectivesBuilder() {
+    public final NQCommandBuilder getAdminEditObjectivesBuilder() {
         return adminEditObjectivesBuilder;
     }
 
-    public final Command.Builder<CommandSender> getAdminEditAddRewardCommandBuilder() {
+    public final NQCommandBuilder getAdminEditAddRewardCommandBuilder() {
         return adminEditAddRewardCommandBuilder;
     }
 
-    public final Command.Builder<CommandSender> getAdminEditAddTriggerCommandBuilder() {
+    public final NQCommandBuilder getAdminEditAddTriggerCommandBuilder() {
         return adminEditAddTriggerCommandBuilder;
     }
 
@@ -720,31 +510,16 @@ public class CommandManager {
         return userCommands;
     }
 
-    public final Command.Builder<CommandSender> getUserCommandBuilder() {
+    public final NQCommandBuilder getUserCommandBuilder() {
         return userCommandBuilder;
     }
 
-    public final ObjectiveHolder getObjectiveHolderFromContextAndLevel(final CommandContext<CommandSender> context, final int level) {
-        final ObjectiveHolder objectiveHolder;
-        if (level == 0) {
-            objectiveHolder = context.get("quest");
-        } else if (level == 1) {
-            objectiveHolder = context.get("objectiveId");
-        } else {
-            objectiveHolder = context.get("objectiveId" + level);
-        }
-        return objectiveHolder;
+    public final ObjectiveHolder getObjectiveHolderFromContextAndLevel(final NQCommandContext context, final int level) {
+        return rocks.gravili.notquests.paper.commands.arguments.ObjectiveArgument.resolveHolder(context.brigadier(), level);
     }
 
-    public final Objective getObjectiveFromContextAndLevel(final CommandContext<CommandSender> context, final int level) {
-        final Objective objective;
-        main.getLogManager().debug(context.get("objectiveId"));
-        main.getLogManager().debug(context.get("objectiveId" + (level + 1)));
-        if (level == 0) {
-            objective = context.get("objectiveId");
-        } else {
-            objective = context.get("objectiveId" + (level + 1));
-        }
-        return objective;
+    public final Objective getObjectiveFromContextAndLevel(final NQCommandContext context, final int level) {
+        final ObjectiveHolder holder = rocks.gravili.notquests.paper.commands.arguments.ObjectiveArgument.resolveHolder(context.brigadier(), level + 1);
+        return holder instanceof Objective ? (Objective) holder : null;
     }
 }
