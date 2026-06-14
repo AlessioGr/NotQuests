@@ -97,6 +97,8 @@ chat:
         base: 'Blokları kır: <main>%BLOCKTOBREAK%'
       breed:
         base: 'Cins Yaratıklar: <main>%ENTITYTOBREED%'
+      feedMobs:
+        base: 'Feed Mobs: <main>%ENTITYTOFEED%'
       pickupItems:
         base: 'Teslim Alınacak Ürünler: <main>%ITEMTOPICKUPTYPE% %(%%ITEMTOPICKUPNAME%%)%'
       consumeItems:
