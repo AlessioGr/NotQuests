@@ -239,12 +239,11 @@ public class NotQuests extends NotQuestsMainAbstract<Component, CommandSender> {
         //This finally starts loading all Config-, Quest-, and Player Data. Reload = Load
         dataManager.reloadData(true);
 
+        conversationManager = new ConversationManager(this);
+
         //This registers all PlaceholderAPI placeholders, if loading is enabled
         if (getDataManager().isLoadingEnabled()) {
             integrationsManager.enableIntegrationsAfterDataLoad();
-
-
-            conversationManager = new ConversationManager(this);
 
             setupBStats();
 
