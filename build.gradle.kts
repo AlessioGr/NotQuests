@@ -30,7 +30,7 @@ subprojects {
 }
 
 group = "com.notquests"
-version = "7.0.0-beta.1"
+version = "7.0.0-beta.2"
 
 val minecraftTargetVersion = "26.2"
 

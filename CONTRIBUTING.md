@@ -43,7 +43,7 @@ gradle wrapper        # one-time: creates gradle/wrapper/gradle-wrapper.jar
 The final plugin jar is at:
 
 ```
-src/paper/build/libs/notquests-7.0.0-beta.1-26.2-paper.jar
+src/paper/build/libs/notquests-7.0.0-beta.2-26.2-paper.jar
 ```
 
 ## Running a test server
