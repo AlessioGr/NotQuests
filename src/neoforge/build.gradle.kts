@@ -1,19 +1,18 @@
 import org.gradle.api.JavaVersion.VERSION_25
 
 plugins {
-    id("net.neoforged.moddev") version "2.0.141"
+    id("net.neoforged.moddev") version "2.0.144"
 }
 
 group = "com.notquests"
 version = rootProject.version
 
-val minecraftTargetVersion = "26.1.2"
-val neoForgeVersion = "26.1.2.76"
-val adventureVersion = "4.26.1"
-val examinationVersion = "1.3.0"
-val hikariVersion = "7.0.2"
-val sqliteVersion = "3.53.2.0"
-val mysqlVersion = "9.6.0"
+val minecraftTargetVersion = "26.2"
+val neoForgeVersion = "26.2.0.75"
+val adventureVersion = "5.2.0"
+val hikariVersion = "7.1.0"
+val sqliteVersion = "3.53.4.0"
+val mysqlVersion = "26.7.0"
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(25))
@@ -83,16 +82,16 @@ dependencies {
     }
     jarJar("com.mysql:mysql-connector-j:$mysqlVersion") {
         version {
-            strictly("[$mysqlVersion,10.0.0)")
+            strictly("[$mysqlVersion,27.0.0)")
             prefer(mysqlVersion)
         }
     }
 
-    implementation("org.snakeyaml:snakeyaml-engine:3.0.1")
-    jarJar("org.snakeyaml:snakeyaml-engine:3.0.1") {
+    implementation("org.snakeyaml:snakeyaml-engine:3.1.1")
+    jarJar("org.snakeyaml:snakeyaml-engine:3.1.1") {
         version {
-            strictly("[3.0.1,4.0.0)")
-            prefer("3.0.1")
+            strictly("[3.1.1,4.0.0)")
+            prefer("3.1.1")
         }
     }
 
@@ -111,21 +110,14 @@ dependencies {
             "adventure-api",
             "adventure-key",
             "adventure-text-minimessage",
+            "adventure-text-serializer-commons",
             "adventure-text-serializer-gson",
             "adventure-text-serializer-json"
     )) {
         jarJar("net.kyori:$artifact:$adventureVersion") {
             version {
-                strictly("[$adventureVersion,5.0.0)")
+                strictly("[$adventureVersion,6.0.0)")
                 prefer(adventureVersion)
-            }
-        }
-    }
-    for (artifact in listOf("examination-api", "examination-string")) {
-        jarJar("net.kyori:$artifact:$examinationVersion") {
-            version {
-                strictly("[$examinationVersion,2.0.0)")
-                prefer(examinationVersion)
             }
         }
     }
@@ -136,7 +128,7 @@ dependencies {
         }
     }
 
-    testImplementation(platform("org.junit:junit-bom:6.1.0"))
+    testImplementation(platform("org.junit:junit-bom:6.1.3"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation("com.mojang:brigadier:1.3.10")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")

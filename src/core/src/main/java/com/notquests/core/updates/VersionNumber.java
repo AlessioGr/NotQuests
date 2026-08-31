@@ -79,7 +79,7 @@ public record VersionNumber(int major, int minor, int patch, List<String> prerel
     }
     final String[] identifiers = suffix.toLowerCase(Locale.ROOT).split("[.-]");
     if (identifiers.length == 0 || !PRERELEASE_LABELS.contains(identifiers[0])) {
-      // Server-platform versions such as 7.0.0-26.1.2-paper are builds of 7.0.0,
+      // Server-platform versions such as 7.0.0-26.2-paper are builds of 7.0.0,
       // not prereleases of it.
       return List.of();
     }

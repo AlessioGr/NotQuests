@@ -26,16 +26,16 @@ repositories {
 }
 
 dependencies {
-    api("org.snakeyaml:snakeyaml-engine:3.0.1")
-    api("net.kyori:adventure-api:4.26.1")
-    api("net.kyori:adventure-text-minimessage:4.26.1")
-    api("net.kyori:adventure-text-serializer-gson:4.26.1")
+    api("org.snakeyaml:snakeyaml-engine:3.1.1")
+    api("net.kyori:adventure-api:5.2.0")
+    api("net.kyori:adventure-text-minimessage:5.2.0")
+    api("net.kyori:adventure-text-serializer-gson:5.2.0")
     api("com.github.Redempt:Crunch:2.0.3")
-    api("com.zaxxer:HikariCP:7.0.2")
+    api("com.zaxxer:HikariCP:7.1.0")
 
-    testImplementation(platform("org.junit:junit-bom:6.1.0"))
+    testImplementation(platform("org.junit:junit-bom:6.1.3"))
     testImplementation("org.junit.jupiter:junit-jupiter")
-    testRuntimeOnly("org.xerial:sqlite-jdbc:3.53.2.0")
+    testRuntimeOnly("org.xerial:sqlite-jdbc:3.53.4.0")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 

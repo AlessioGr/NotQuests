@@ -5,6 +5,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import net.kyori.adventure.text.serializer.json.JSONOptions;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -446,7 +447,10 @@ public class NotQuests implements NotQuestsPlatform {
         }
 
         final Component downsampled = GsonComponentSerializer.gson().deserializeFromTree(
-                GsonComponentSerializer.builder().downsampleColors().build().serializeToTree(message));
+                GsonComponentSerializer.builder()
+                        .editOptions(options -> options.value(JSONOptions.EMIT_RGB, false))
+                        .build()
+                        .serializeToTree(message));
         Bukkit.getConsoleSender().sendMessage(prefix.append(downsampled));
     }
 

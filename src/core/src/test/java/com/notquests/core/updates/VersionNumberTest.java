@@ -11,7 +11,7 @@ class VersionNumberTest {
   void comparesSemanticVersionsAndIgnoresBuildSuffixes() {
     assertTrue(VersionNumber.parse("6.3.1").isBefore("6.4.0"));
     assertTrue(VersionNumber.parse("6.3.0").isBefore("6.3.1"));
-    assertFalse(VersionNumber.parse("6.3.0-26.1.2-paper").isBefore("6.3.0"));
+    assertFalse(VersionNumber.parse("6.3.0-26.2-paper").isBefore("6.3.0"));
     assertFalse(VersionNumber.parse("not-a-version").isBefore("0.0.0"));
   }
 
@@ -29,10 +29,10 @@ class VersionNumberTest {
   void ignoresPlatformAndBuildSuffixesWithoutIgnoringPrereleases() {
     assertEquals(
         VersionNumber.parse("6.3.0"),
-        VersionNumber.parse("6.3.0-26.1.2-paper"));
+        VersionNumber.parse("6.3.0-26.2-paper"));
     assertEquals(
         VersionNumber.parse("6.3.0"),
-        VersionNumber.parse("6.3.0-26.1.2-neoforge"));
+        VersionNumber.parse("6.3.0-26.2-neoforge"));
     assertEquals(
         VersionNumber.parse("7.0.0"),
         VersionNumber.parse("7.0.0-paper+build.42"));

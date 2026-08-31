@@ -10,10 +10,10 @@ mise install
 
 This provisions everything the project needs:
 
-- **Java 25 (Temurin)** — required by Paper 26.1.2 / Minecraft 1.26
-- **Gradle 9.0.0** — matches `gradle/wrapper/gradle-wrapper.properties`
+- **Java 25 (Temurin)** — required by Paper 26.2 / Minecraft 26.2
+- **Gradle 9.7.1** — matches `gradle/wrapper/gradle-wrapper.properties`
 
-(Without mise: install a JDK 25 and Gradle 9.0.0 manually.)
+(Without mise: install a JDK 25 and Gradle 9.7.1 manually.)
 
 ## Setup
 
@@ -43,7 +43,7 @@ gradle wrapper        # one-time: creates gradle/wrapper/gradle-wrapper.jar
 The final plugin jar is at:
 
 ```
-src/paper/build/libs/notquests-6.3.0-26.1.2.jar
+src/paper/build/libs/notquests-7.0.0-beta.1-26.2-paper.jar
 ```
 
 ## Running a test server
@@ -52,7 +52,7 @@ src/paper/build/libs/notquests-6.3.0-26.1.2.jar
 ./gradlew :paper:runServer
 ```
 
-This starts a Paper 26.1.2 test server with the plugin loaded.
+This starts a Paper 26.2 test server with the plugin loaded.
 
 ## Project structure
 

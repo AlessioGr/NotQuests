@@ -23,7 +23,7 @@ Please note: updates and bug fixes are not guaranteed, and support should not be
 [=> Getting started guide <=](https://www.notquests.com/docs/tutorials/getting-started)
 
 ## Requirements to run NotQuests
-- Minecraft 26.1.2 with Paper 26.1.2 (only the latest Minecraft version is actively developed. Older Minecraft versions only work with older NotQuests versions)
+- Minecraft 26.2 with Paper 26.2 (only the latest Minecraft version is actively developed. Older Minecraft versions only work with older NotQuests versions)
 - Java 25
 
 ## Helpful links

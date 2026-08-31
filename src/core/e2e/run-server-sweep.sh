@@ -34,6 +34,7 @@ case "$PLATFORM" in
       "$RUN/plugins/NotQuests"
       "$RUN/plugins/BetonQuest"
       "$RUN/plugins/BetonQuest-3.0.0.jar"
+      "$RUN/plugins/BetonQuest-3.2.0.jar"
       "$RUN/plugins/BetonQuest.jar"
     )
     ;;

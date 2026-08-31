@@ -39,7 +39,7 @@ class NQMetadataSchemaTest {
                         List.of())));
 
         final String json = new NQMetadataSchema.MetadataIndex(
-                        "6.3.0", "26.1.2", commandIndex, registry)
+                        "6.3.0", "26.2", commandIndex, registry)
                 .toJson();
 
         assertTrue(json.contains("\"commands\""));

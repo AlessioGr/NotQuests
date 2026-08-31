@@ -3,10 +3,10 @@ import org.gradle.api.JavaVersion.VERSION_25
 plugins {
     `java-library`
     `maven-publish`
-    id("com.gradleup.shadow") version "9.4.2"
-    id("io.papermc.paperweight.userdev") version "2.0.0-beta.21"
+    id("com.gradleup.shadow") version "9.6.1"
+    id("io.papermc.paperweight.userdev") version "2.0.0-beta.23"
     // run-paper is applied by :paper, the real server-ready plugin artifact.
-    id("xyz.jpenilla.run-paper") version "3.0.2" apply false
+    id("xyz.jpenilla.run-paper") version "3.1.0" apply false
 }
 
 subprojects {
@@ -32,13 +32,13 @@ subprojects {
 group = "com.notquests"
 version = "7.0.0-beta.1"
 
-val minecraftTargetVersion = "26.1.2"
+val minecraftTargetVersion = "26.2"
 
 repositories {
 }
 
 dependencies {
-    paperweight.paperDevBundle("26.1.2.build.74-stable")
+    paperweight.paperDevBundle("26.2.build.121-stable")
 }
 
 java {
@@ -57,7 +57,7 @@ val path = "com.notquests"
 
 
 tasks {
-    val collectFinalJars by registering(Sync::class) {
+    val collectFinalJars = register<Sync>("collectFinalJars") {
         group = "build"
         description = "Collects final NotQuests platform jars into build/final-jars."
 

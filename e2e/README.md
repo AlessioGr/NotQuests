@@ -38,7 +38,7 @@ In CI it runs as the **E2E command sweep** workflow on every push/PR.
 - `../src/core/e2e/compare-platform-metadata.py` — compares Paper and NeoForge's generated command
   graph and portable registry metadata.
 - `run-sweep.sh` and `run-neoforge-sweep.sh` — thin compatibility wrappers around the core runner.
-- `run-betonquest-sweep.sh` — boots the server with the vendored BetonQuest 3.0.0 jar, loads a
+- `run-betonquest-sweep.sh` — boots the server with the vendored BetonQuest 3.2.0 jar, loads a
   tiny BetonQuest package containing every restored `nq_*` hook, and verifies the NotQuests
   BetonQuest action / reward / objective / variable commands from the console.
 

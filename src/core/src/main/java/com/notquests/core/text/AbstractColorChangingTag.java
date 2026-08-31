@@ -23,7 +23,6 @@
  */
 package com.notquests.core.text;
 
-import net.kyori.adventure.internal.Internals;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.flattener.ComponentFlattener;
@@ -33,17 +32,14 @@ import net.kyori.adventure.text.minimessage.internal.parser.node.ValueNode;
 import net.kyori.adventure.text.minimessage.tag.Inserting;
 import net.kyori.adventure.text.minimessage.tag.Modifying;
 import net.kyori.adventure.text.minimessage.tree.Node;
-import net.kyori.examination.Examinable;
-import net.kyori.examination.ExaminableProperty;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.PrimitiveIterator;
-import java.util.stream.Stream;
 
 /** Code copied from net.kyori.adventure.text.minimessage.tag.standard. */
-abstract class AbstractColorChangingTag implements Modifying, Examinable {
+abstract class AbstractColorChangingTag implements Modifying {
     private static final ComponentFlattener LENGTH_CALCULATOR = ComponentFlattener.builder()
             .mapper(TextComponent.class, TextComponent::content)
             .unknownMapper(x -> "_")
@@ -120,14 +116,6 @@ abstract class AbstractColorChangingTag implements Modifying, Examinable {
     protected abstract void advanceColor();
 
     protected abstract TextColor color();
-
-    @Override
-    public abstract @NotNull Stream<? extends ExaminableProperty> examinableProperties();
-
-    @Override
-    public final @NotNull String toString() {
-        return Internals.toString(this);
-    }
 
     @Override
     public abstract boolean equals(final @Nullable Object other);

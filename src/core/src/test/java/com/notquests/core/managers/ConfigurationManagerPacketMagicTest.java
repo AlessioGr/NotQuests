@@ -14,13 +14,13 @@ class ConfigurationManagerPacketMagicTest {
     void readsDefaultsAndKeepsPacketMagicEnabledOnSupportedVersion() {
         final YamlConfig configuration = YamlConfig.empty();
 
-        final ConfigurationManager.PacketMagic result = ConfigurationManager.packetMagic(configuration, "26.1.2", "Paper");
+        final ConfigurationManager.PacketMagic result = ConfigurationManager.packetMagic(configuration, "26.2", "Paper");
 
         assertTrue(result.packetMagic());
         assertFalse(result.usePacketEvents());
         assertFalse(result.unsafeDisregardVersion());
         assertTrue(result.changed());
-        assertTrue(result.infoMessages().contains("Detected version: 26.1.2 <highlight>(Paper)"));
+        assertTrue(result.infoMessages().contains("Detected version: 26.2 <highlight>(Paper)"));
     }
 
     @Test

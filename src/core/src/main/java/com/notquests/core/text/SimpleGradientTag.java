@@ -4,8 +4,6 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.minimessage.tag.Tag;
 import net.kyori.adventure.util.ShadyPines;
-import net.kyori.examination.ExaminableProperty;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -14,7 +12,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.stream.Stream;
 
 /** MiniMessage gradient tag used by NotQuests' configurable color aliases. */
 public final class SimpleGradientTag extends AbstractColorChangingTag {
@@ -97,11 +94,6 @@ public final class SimpleGradientTag extends AbstractColorChangingTag {
         return negativePhase && colors.length % 2 != 0
                 ? TextColor.lerp(factor, colors[colorIndex + 1], colors[colorIndex])
                 : TextColor.lerp(factor, colors[colorIndex], colors[colorIndex + 1]);
-    }
-
-    @Override
-    public @NotNull Stream<? extends ExaminableProperty> examinableProperties() {
-        return Stream.of(ExaminableProperty.of("phase", phase), ExaminableProperty.of("colors", colors));
     }
 
     @Override

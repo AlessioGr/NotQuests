@@ -63,7 +63,7 @@ public final class NeoForgeClientBeamRenderer {
         final String currentWorld = level.dimension().identifier().toString();
         final String currentWorldPath = level.dimension().identifier().getPath();
         final String currentWorldDisplay = NeoForgeWorldNames.displayName(level.dimension().identifier());
-        final Camera camera = minecraft.gameRenderer.getMainCamera();
+        final Camera camera = minecraft.gameRenderer.mainCamera();
         final Vec3 cameraPosition = camera.position();
         for (final BeamLocation beam : BEAMS.values()) {
             if (!beam.worldName().equalsIgnoreCase(currentWorld)

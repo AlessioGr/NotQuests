@@ -12,7 +12,7 @@ class UpdateManagerTest {
   void detectsNewerLatestVersion() throws Exception {
     final UpdateManager checker = new UpdateManager(() -> "6.3.1");
 
-    final Check check = checker.check("6.3.0-26.1.2-paper");
+    final Check check = checker.check("6.3.0-26.2-paper");
 
     assertTrue(check.updateAvailable());
   }
@@ -21,7 +21,7 @@ class UpdateManagerTest {
   void treatsSameLeadingVersionWithBuildSuffixAsCurrent() throws Exception {
     final UpdateManager checker = new UpdateManager(() -> "6.3.0");
 
-    final Check check = checker.check("6.3.0-26.1.2-paper");
+    final Check check = checker.check("6.3.0-26.2-paper");
 
     assertFalse(check.updateAvailable());
   }

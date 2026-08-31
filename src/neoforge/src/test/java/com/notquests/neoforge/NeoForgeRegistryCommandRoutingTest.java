@@ -31,7 +31,7 @@ class NeoForgeRegistryCommandRoutingTest {
         final var adapter = plugin.createRegistryAdapter(new NotQuestsRegistry.PlatformHooks(null, null, null));
         BuiltInPack.register(adapter);
         final NotQuestsCommands commands = plugin.commandSurface(
-                adapter, () -> "test", () -> "26.1.2", () -> java.nio.file.Path.of("build/test-notquests"));
+                adapter, () -> "test", () -> "26.2", () -> java.nio.file.Path.of("build/test-notquests"));
         final CommandManager runner = commands.commandManager();
         final NQCommandTree<
                         NQArgumentType,
@@ -74,7 +74,7 @@ class NeoForgeRegistryCommandRoutingTest {
         final var adapter = plugin.createRegistryAdapter(new NotQuestsRegistry.PlatformHooks(null, null, null));
         BuiltInPack.register(adapter);
         final NotQuestsCommands commands = plugin.commandSurface(
-                adapter, () -> "test", () -> "26.1.2", () -> java.nio.file.Path.of("build/test-notquests"));
+                adapter, () -> "test", () -> "26.2", () -> java.nio.file.Path.of("build/test-notquests"));
         final CommandManager runner = commands.commandManager();
         assertTrue(plugin.createQuest("TestQuest").success());
         plugin.getOrCreateQuest("TestQuest")
@@ -91,7 +91,7 @@ class NeoForgeRegistryCommandRoutingTest {
         final var adapter = plugin.createRegistryAdapter(new NotQuestsRegistry.PlatformHooks(null, null, null));
         BuiltInPack.register(adapter);
         final NotQuestsCommands commands = plugin.commandSurface(
-                adapter, () -> "test", () -> "26.1.2", () -> java.nio.file.Path.of("build/test-notquests"));
+                adapter, () -> "test", () -> "26.2", () -> java.nio.file.Path.of("build/test-notquests"));
         final CommandManager runner = commands.commandManager();
         assertTrue(plugin.createQuest("TestQuest").success());
         plugin.getOrCreateQuest("TestQuest")
@@ -119,7 +119,7 @@ class NeoForgeRegistryCommandRoutingTest {
         final var adapter = plugin.createRegistryAdapter(new NotQuestsRegistry.PlatformHooks(null, null, null));
         BuiltInPack.register(adapter);
         final NotQuestsCommands commands = plugin.commandSurface(
-                adapter, () -> "test", () -> "26.1.2", () -> java.nio.file.Path.of("build/test-notquests"));
+                adapter, () -> "test", () -> "26.2", () -> java.nio.file.Path.of("build/test-notquests"));
         final CommandManager runner = commands.commandManager();
         assertTrue(plugin.createQuest("TestQuest").success());
         plugin.getOrCreateQuest("TestQuest")
@@ -151,7 +151,7 @@ class NeoForgeRegistryCommandRoutingTest {
         final var adapter = plugin.createRegistryAdapter(new NotQuestsRegistry.PlatformHooks(null, null, null));
         BuiltInPack.register(adapter);
         final NotQuestsCommands commands = plugin.commandSurface(
-                adapter, () -> "test", () -> "26.1.2", () -> java.nio.file.Path.of("build/test-notquests"));
+                adapter, () -> "test", () -> "26.2", () -> java.nio.file.Path.of("build/test-notquests"));
         final CommandManager runner = commands.commandManager();
         assertTrue(plugin.createQuest("TestQuest").success());
         plugin.getOrCreateQuest("TestQuest")

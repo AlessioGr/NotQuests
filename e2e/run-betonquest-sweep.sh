@@ -2,7 +2,7 @@
 #
 # Focused server-side E2E sweep for the BetonQuest 3.x integration.
 #
-# Boots a real Paper server with BetonQuest 3.0.0 installed from src/paper/libs, registers a tiny
+# Boots a real Paper server with BetonQuest 3.2.0 installed from src/paper/libs, registers a tiny
 # BetonQuest package that uses every restored NotQuests hook, then drives the NotQuests admin
 # commands that create BetonQuest-backed actions, rewards, objectives, and variables.
 set -euo pipefail
@@ -15,7 +15,7 @@ LOG="${E2E_BETONQUEST_LOG:-/tmp/nq-betonquest-server.log}"
 STRIPPED_LOG="${E2E_BETONQUEST_STRIPPED_LOG:-/tmp/nq-betonquest-server.clean.log}"
 FIFO="${E2E_BETONQUEST_FIFO:-/tmp/nq-betonquest.fifo}"
 RUN="$REPO/src/paper/run"
-BETONQUEST_JAR="$REPO/src/paper/libs/BetonQuest-3.0.0.jar"
+BETONQUEST_JAR="$REPO/src/paper/libs/BetonQuest-3.2.0.jar"
 BOOT_TIMEOUT_STEPS="${E2E_BOOT_STEPS:-240}" # x2s = 8 min max for first-time Paper setup
 
 cleanup() { kill "${HOLDER:-}" "${GPID:-}" 2>/dev/null || true; rm -f "$FIFO"; }
@@ -30,7 +30,8 @@ rm -f "$LOG" "$STRIPPED_LOG" "$FIFO"
 mkfifo "$FIFO"
 mkdir -p "$RUN/plugins/BetonQuest/QuestPackages/nqtest"
 echo "eula=true" > "$RUN/eula.txt"
-cp "$BETONQUEST_JAR" "$RUN/plugins/BetonQuest-3.0.0.jar"
+rm -f "$RUN/plugins/BetonQuest-3.0.0.jar" "$RUN/plugins/BetonQuest-3.2.0.jar"
+cp "$BETONQUEST_JAR" "$RUN/plugins/BetonQuest-3.2.0.jar"
 
 # Keep BetonQuest's async updater out of deterministic CI logs.
 (

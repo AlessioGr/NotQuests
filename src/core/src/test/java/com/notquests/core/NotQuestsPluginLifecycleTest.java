@@ -167,7 +167,7 @@ class NotQuestsPluginLifecycleTest {
 
     @Override
     public String serverVersion() {
-      return "26.1.2";
+      return "26.2";
     }
 
     @Override
