@@ -18,6 +18,7 @@ import com.notquests.core.platform.NotQuestsAdapter;
 import com.notquests.core.platform.PlatformPlayer;
 import com.notquests.core.registry.NotQuestsRegistry;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.List;
@@ -132,6 +133,27 @@ class NotQuestsPluginLifecycleTest {
     assertTrue(plugin.isShuttingDown());
     assertEquals(0, platform.loadedEventCalls);
     assertEquals(0, platform.platformThreadCalls);
+  }
+
+  @Test
+  void shutdownBeforeDataLoadingDoesNotOverwriteQuestFiles() throws Exception {
+    final Path categoryFolder = tempDir.resolve("default");
+    final Path questsFile = categoryFolder.resolve("quests.yml");
+    final String quests = """
+        quests:
+          test:
+            objectives: {}
+        """;
+    Files.createDirectories(categoryFolder);
+    Files.writeString(questsFile, quests);
+    final NotQuestsPlugin plugin = NotQuestsPlugin.create();
+    final TestPlatform platform = new TestPlatform(plugin, "Paper", tempDir);
+
+    plugin.load(platform);
+    assertFalse(plugin.saveData());
+    plugin.stop(platform);
+
+    assertEquals(quests, Files.readString(questsFile));
   }
 
   @Test

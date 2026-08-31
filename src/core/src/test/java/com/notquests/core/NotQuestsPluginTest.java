@@ -1721,6 +1721,32 @@ class NotQuestsPluginTest {
     }
 
     @Test
+    void restoresQuestHistoryAfterTheQuestConfigurationIsMissing() {
+        final NotQuestsPlugin plugin = NotQuestsPlugin.create();
+        final List<String> warnings = new ArrayList<>();
+        final PlayerDatabase.LoadedPlayer loadedPlayer = new PlayerDatabase.LoadedPlayer(
+                "player-1",
+                "default",
+                "default",
+                0,
+                List.of(new PlayerDatabase.QuestHistoryReadRow("test", 1000L)),
+                List.of(new PlayerDatabase.QuestHistoryReadRow("test", 2000L)),
+                List.of(),
+                Map.of(),
+                Map.of());
+
+        plugin.restorePlayerRuntime(loadedPlayer, null, warnings::add);
+
+        assertEquals(
+                List.of(new QuestPlayer.CompletedQuest("test", "player-1", 1000L)),
+                plugin.questPlayer("player-1", "default").getCompletedQuests());
+        assertEquals(
+                List.of(new QuestPlayer.FailedQuest("test", "player-1", 2000L)),
+                plugin.questPlayer("player-1", "default").getFailedQuests());
+        assertEquals(List.of(), warnings);
+    }
+
+    @Test
     void loadsSqlPlayerRuntimeThroughCore() throws Exception {
         final NotQuestsPlugin plugin = NotQuestsPlugin.create();
         final NotQuestsAdapter adapter =

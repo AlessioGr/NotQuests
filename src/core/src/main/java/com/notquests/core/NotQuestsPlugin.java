@@ -562,6 +562,7 @@ public final class NotQuestsPlugin {
     }
 
     public void stop(final NotQuestsPlatform platform) {
+        final boolean dataLoadedBeforeShutdown = loaded && pluginStatus.isConfiguredDataLoaded();
         beginShutdown();
         info("NotQuests is shutting down...");
         activePlatformPlayers().forEach(player -> {
@@ -569,9 +570,13 @@ public final class NotQuestsPlugin {
             player.hideProgressBossBar();
             player.hideLocationCompass();
         });
-        saveData();
-        if (backupManager != null) {
-            backupManager.backupQuestConfigsOnShutdown();
+        if (dataLoadedBeforeShutdown) {
+            saveData();
+            if (backupManager != null) {
+                backupManager.backupQuestConfigsOnShutdown();
+            }
+        } else {
+            info("Skipping data saving because initial data loading did not finish.");
         }
         closePlayerDatabase();
         integrations.close();
@@ -1361,8 +1366,7 @@ public final class NotQuestsPlugin {
     }
 
     public boolean saveData() {
-        if (!pluginStatus.isSavingEnabled()) {
-            warn("Saving is disabled => no data has been saved.");
+        if (!canSaveLoadedData()) {
             return false;
         }
         final boolean configuredSaved = dataManager.saveConfiguredData();
@@ -1373,11 +1377,22 @@ public final class NotQuestsPlugin {
     }
 
     public boolean saveConfiguredData() {
-        if (!pluginStatus.isSavingEnabled()) {
-            warn("Saving is disabled => no configured data has been saved.");
+        if (!canSaveLoadedData()) {
             return false;
         }
         return dataManager.saveConfiguredData();
+    }
+
+    private boolean canSaveLoadedData() {
+        if (!pluginStatus.isSavingEnabled()) {
+            warn("Saving is disabled => no data has been saved.");
+            return false;
+        }
+        if (dataFolder != null && !pluginStatus.isConfiguredDataLoaded()) {
+            info("Saving has been skipped because configured data loading has not finished.");
+            return false;
+        }
+        return true;
     }
 
     public boolean reloadData(final ReloadTarget target) {
@@ -2644,6 +2659,9 @@ public final class NotQuestsPlugin {
     }
 
     public boolean savePlayerData(final String playerIdentifier) {
+        if (!canSaveLoadedData()) {
+            return false;
+        }
         if (!configuration.savePlayerData()) {
             info("Saving of PlayerData has been skipped...");
             return true;
@@ -2676,6 +2694,9 @@ public final class NotQuestsPlugin {
     }
 
     public boolean saveAllPlayerData() {
+        if (!canSaveLoadedData()) {
+            return false;
+        }
         if (!configuration.savePlayerData()) {
             info("Saving of PlayerData has been skipped...");
             return true;
@@ -3106,6 +3127,7 @@ public final class NotQuestsPlugin {
     }
 
     public void clearStoredData(final boolean clearRuntimeData) {
+        pluginStatus.setConfiguredDataLoaded(false);
         savedActions.clear();
         conversations.clear();
         if (clearRuntimeData) {
@@ -5179,9 +5201,8 @@ public final class NotQuestsPlugin {
 
         for (final PlayerDatabase.QuestHistoryReadRow completedQuest : loadedPlayer.completedQuests()) {
             final String questName = completedQuest.questName();
-            if (quest(questName) == null) {
-                warn(warningSink, "ERROR: Quest with name <highlight>" + questName
-                        + "</highlight> could not be loaded from database (requested for loading completed Quests)");
+            if (questName == null || questName.isBlank()) {
+                warn(warningSink, "ERROR: A completed quest with a blank name could not be loaded from database");
                 continue;
             }
             if (completedQuest.timestamp() <= 0) {
@@ -5195,9 +5216,8 @@ public final class NotQuestsPlugin {
 
         for (final PlayerDatabase.QuestHistoryReadRow failedQuest : loadedPlayer.failedQuests()) {
             final String questName = failedQuest.questName();
-            if (quest(questName) == null) {
-                warn(warningSink, "ERROR: Quest with name <highlight>" + questName
-                        + "</highlight> could not be loaded from database (requested for loading failed Quests)");
+            if (questName == null || questName.isBlank()) {
+                warn(warningSink, "ERROR: A failed quest with a blank name could not be loaded from database");
                 continue;
             }
             if (failedQuest.timestamp() <= 0) {
