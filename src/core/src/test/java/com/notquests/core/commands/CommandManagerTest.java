@@ -12,6 +12,7 @@ import com.notquests.core.commands.framework.*;
 import com.notquests.core.items.ItemSelection;
 import com.notquests.core.managers.CommandManager;
 import com.notquests.core.managers.DataManager;
+import com.notquests.core.npc.NQNPCID;
 import com.notquests.core.platform.NotQuestsAdapter;
 import com.notquests.core.platform.PlatformPlayer;
 import com.notquests.core.registry.NotQuestsRegistry.Actions;
@@ -33,12 +34,52 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 class CommandManagerTest {
     @TempDir
     Path tempDir;
+
+    @Test
+    void rightClickNpcSelectionAddsObjectiveOnlyAfterTheNpcIsSelected() {
+        final NotQuestsPlugin plugin = NotQuestsPlugin.create();
+        final NotQuestsAdapter base = plugin.createRegistryAdapter(
+                new NotQuestsRegistry.PlatformHooks(null, null, null));
+        final AtomicInteger pendingSelectionId = new AtomicInteger(-1);
+        final NotQuestsAdapter adapter = adapterWithDeferredNpcSelection(
+                plugin, base, pendingSelectionId);
+        adapter.objectives()
+                .objective("DeliverItems")
+                .displayName("Deliver Items")
+                .description("Test objective")
+                .field("npc", adapter.fields().npcSelector(), "NPC")
+                .register();
+        plugin.getOrCreateQuest("ya");
+        final TestPlayer player = new TestPlayer("player-1");
+
+        assertTrue(QuestObjectiveCommands.addQuestObjective(
+                plugin,
+                adapter,
+                "ya",
+                "DeliverItems",
+                "rightClickSelect",
+                "",
+                player).success());
+        assertEquals(0, plugin.quest("ya").getObjectives().size());
+        assertTrue(pendingSelectionId.get() >= 0);
+
+        assertTrue(plugin.completeNpcSelection(
+                pendingSelectionId.get(),
+                "citizens",
+                NQNPCID.fromInteger(7),
+                "Guide"));
+        assertEquals(1, plugin.quest("ya").getObjectives().size());
+        assertEquals("citizens:7", plugin.quest("ya").getObjectives().getFirst().text("npc"));
+        assertTrue(player.messages.stream().anyMatch(message -> message.contains(
+                "DeliverItems Objective successfully added")));
+    }
 
     @Test
     void executesRegisteredActionThroughCoreCommandGraph() {
@@ -1189,12 +1230,20 @@ class CommandManagerTest {
     private static NotQuestsAdapter adapterWithNpcSelection(
             final NotQuestsPlugin plugin,
             final NotQuestsAdapter delegate) {
-        return new NpcSelectingAdapter(plugin, delegate);
+        return new NpcSelectingAdapter(plugin, delegate, null);
+    }
+
+    private static NotQuestsAdapter adapterWithDeferredNpcSelection(
+            final NotQuestsPlugin plugin,
+            final NotQuestsAdapter delegate,
+            final AtomicInteger pendingSelectionId) {
+        return new NpcSelectingAdapter(plugin, delegate, pendingSelectionId);
     }
 
     private record NpcSelectingAdapter(
             NotQuestsPlugin plugin,
-            NotQuestsAdapter delegate) implements TestNotQuestsAdapter {
+            NotQuestsAdapter delegate,
+            AtomicInteger pendingSelectionId) implements TestNotQuestsAdapter {
         @Override
         public FieldFactories fields() {
             return delegate.fields();
@@ -1447,6 +1496,10 @@ class CommandManagerTest {
                 final int selectionId,
                 final String displayName,
                 final List<String> lore) {
+            if (pendingSelectionId != null) {
+                pendingSelectionId.set(selectionId);
+                return true;
+            }
             final java.util.UUID uuid = java.util.UUID.fromString("00000000-0000-0000-0000-000000000001");
             plugin.completeNpcSelection(
                     selectionId,

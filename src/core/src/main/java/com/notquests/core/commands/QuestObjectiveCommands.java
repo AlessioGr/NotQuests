@@ -12,6 +12,7 @@ import com.notquests.core.registry.NotQuestsRegistry.Actions;
 import com.notquests.core.registry.NotQuestsRegistry.Conditions;
 import com.notquests.core.registry.NotQuestsRegistry.Objectives;
 import com.notquests.core.registry.NotQuestsRegistry;
+import com.notquests.core.registry.fields.RegistryField;
 import com.notquests.core.structs.Quest;
 
 import java.util.ArrayList;
@@ -88,18 +89,97 @@ final class QuestObjectiveCommands {
         try {
             final Objective data = Objectives.parse(
                     adapter, type, rawArguments, questPlayer);
-            final Objective entry = parent == null
-                    ? quest.addObjective(type.id(), data, taskDescription)
-                    : parent.addChildObjective(type.id(), data, taskDescription);
-            plugin.saveData();
-            return CommandMessage.success("<success>" + type.id() + " Objective successfully added to "
-                    + (parent == null
-                            ? "Quest " + highlight(questName)
-                            : "Quest " + highlight(objectiveDisplayNameOrIdentifier(parent)))
-                    + "!");
+            final String npcField = rightClickNpcField(type, data);
+            if (npcField != null) {
+                if (questPlayer == null || !questPlayer.hasPlayer()) {
+                    return CommandMessage.error(
+                            "<error>rightClickSelect can only be used by a player.");
+                }
+                final int[] selectedParentPath = parentPath == null
+                        ? new int[0]
+                        : parentPath.clone();
+                final boolean started = plugin.startNpcSelection(
+                        adapter,
+                        questPlayer,
+                        "<success>You have been given an item with which you can add the "
+                                + type.id()
+                                + " Objective by right-clicking an NPC. Check your inventory!",
+                        "<LIGHT_PURPLE>Add " + type.id() + " Objective to NPC",
+                        List.of(
+                                "<WHITE>Right-click an NPC to add the following objective to it:",
+                                "<YELLOW>" + type.id() + " <WHITE>Objective of Quest <highlight>"
+                                        + questName + "</highlight>."),
+                        selection -> {
+                            data.setValue(npcField, selection.selector());
+                            final CommandMessage added = addParsedObjective(
+                                    plugin,
+                                    questName,
+                                    selectedParentPath,
+                                    type,
+                                    data,
+                                    taskDescription);
+                            if (added.message() != null && !added.message().isBlank()) {
+                                questPlayer.sendMessage(added.formattedMessage());
+                            }
+                        });
+                return started
+                        ? CommandMessage.none()
+                        : CommandMessage.error("Could not start NPC selection for the "
+                                + highlight(type.id()) + " Objective.");
+            }
+            return addParsedObjective(
+                    plugin,
+                    questName,
+                    parentPath,
+                    type,
+                    data,
+                    taskDescription);
         } catch (final RuntimeException exception) {
             return CommandMessage.error("Cannot add NotQuests objective: " + exception.getMessage());
         }
+    }
+
+    private static CommandMessage addParsedObjective(
+            final NotQuestsPlugin plugin,
+            final String questName,
+            final int[] parentPath,
+            final Objectives.Type type,
+            final Objective data,
+            final String taskDescription) {
+        final Quest quest = plugin.questManager().getQuest(questName);
+        if (quest == null) {
+            return missingQuest(questName);
+        }
+        final Objective parent = objectiveAt(plugin, questName, parentPath);
+        if (parentPath != null && parentPath.length > 0 && parent == null) {
+            return CommandMessage.error("Objective with the path "
+                    + highlight(objectivePath(parentPath)) + " was not found!");
+        }
+        if (parent == null) {
+            quest.addObjective(type.id(), data, taskDescription);
+        } else {
+            parent.addChildObjective(type.id(), data, taskDescription);
+        }
+        plugin.saveConfiguredData();
+        return CommandMessage.success("<success>" + type.id() + " Objective successfully added to "
+                + (parent == null
+                        ? "Quest " + highlight(questName)
+                        : "Quest " + highlight(objectiveDisplayNameOrIdentifier(parent)))
+                + "!");
+    }
+
+    private static String rightClickNpcField(
+            final Objectives.Type type,
+            final Objective data) {
+        final ArrayList<RegistryField.Definition> fields = new ArrayList<>(type.fields());
+        fields.addAll(type.flags());
+        for (final RegistryField.Definition field : fields) {
+            if (field.valueType().equalsIgnoreCase("npcSelector")
+                    && data.text(field.name()).equalsIgnoreCase("rightClickSelect")) {
+                return field.name();
+            }
+        }
+        return null;
     }
 
     static List<CommandMessage> listQuestObjectives(
