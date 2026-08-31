@@ -36,6 +36,15 @@ class NeoForgeArgumentsTest {
     }
 
     @Test
+    void npcSelectorsAcceptCitizensIdsAndFancyNpcsUuids() throws Exception {
+        assertEquals("citizens:0", NeoForgeArguments.commaToken().parse(new StringReader("citizens:0")));
+        assertEquals(
+                "fancynpcs:b7ffc743-0e12-4415-bf43-feb69a73f649",
+                NeoForgeArguments.commaToken().parse(
+                        new StringReader("fancynpcs:b7ffc743-0e12-4415-bf43-feb69a73f649")));
+    }
+
+    @Test
     void adapterArgumentDoesNotOwnPortableSuggestionPolicy() throws Exception {
         final String source = Files.readString(Path.of("src/main/java/com/notquests/neoforge/NeoForgeArguments.java"));
         assertFalse(source.contains("BuiltInRegistries"));
@@ -48,6 +57,7 @@ class NeoForgeArgumentsTest {
 
         assertTrue(source.contains("commands.suggestions("));
         assertTrue(source.contains("commands.flagSuggestions("));
+        assertTrue(source.contains("ITEM_SELECTION, ACTION_LIST, NPC_SELECTOR, NPC_SELECTOR_OR_NONE"));
         assertFalse(source.contains("placeholderSuggestion("));
         assertFalse(source.contains("suggestCommaSeparated("));
     }

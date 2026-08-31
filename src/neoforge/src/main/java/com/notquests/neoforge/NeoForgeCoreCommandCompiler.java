@@ -162,7 +162,8 @@ final class NeoForgeCoreCommandCompiler {
         return switch (argument.kind()) {
             case GREEDY_STRING, LOCATION, NUMBER_EXPRESSION, BOOLEAN_EXPRESSION ->
                     StringArgumentType.greedyString();
-            case ITEM_SELECTION, ACTION_LIST -> NeoForgeArguments.commaToken();
+            case ITEM_SELECTION, ACTION_LIST, NPC_SELECTOR, NPC_SELECTOR_OR_NONE ->
+                    NeoForgeArguments.commaToken();
             case INTEGER -> IntegerArgumentType.integer();
             case DOUBLE -> DoubleArgumentType.doubleArg();
             case BOOLEAN -> StringArgumentType.word();

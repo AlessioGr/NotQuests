@@ -11,21 +11,21 @@ import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-class ItemStackSelectionArgumentTest {
+class WhitespaceStringArgumentTest {
 
     @Test
-    void serverParserStopsBeforeFollowingAmount() throws Exception {
-        final ItemStackSelectionArgument argument = ItemStackSelectionArgument.itemStackSelectionArgument();
+    void stopsBeforeTheFollowingArgument() throws Exception {
+        final WhitespaceStringArgument argument = WhitespaceStringArgument.whitespaceString();
         final StringReader reader = new StringReader("acacia_boat,acacia_boat 4");
 
         argument.parse(reader);
 
-        assertEquals(" 4", reader.getRemaining(), "item selection must not swallow the following amount argument");
+        assertEquals(" 4", reader.getRemaining());
     }
 
     @Test
-    void followingAmountRemainsAvailableToBrigadier() throws Exception {
-        final ItemStackSelectionArgument itemSelection = ItemStackSelectionArgument.itemStackSelectionArgument();
+    void preservesColonsAndCommasWhenUsedByBrigadier() throws Exception {
+        final WhitespaceStringArgument itemSelection = WhitespaceStringArgument.whitespaceString();
         final AtomicInteger amount = new AtomicInteger();
         final CommandDispatcher<Object> dispatcher = new CommandDispatcher<>();
         dispatcher.register(literal("execute")
@@ -37,7 +37,7 @@ class ItemStackSelectionArgumentTest {
                                             return 1;
                                         })))));
 
-        dispatcher.execute("execute GiveItem acacia_boat 4", new Object());
+        dispatcher.execute("execute GiveItem minecraft:acacia_boat,custom:item 4", new Object());
 
         assertEquals(4, amount.get());
     }

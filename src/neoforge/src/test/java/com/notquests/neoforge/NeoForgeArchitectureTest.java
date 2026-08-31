@@ -268,9 +268,9 @@ class NeoForgeArchitectureTest {
                 source.contains("context.getArgument(name, Object.class)"),
                 "Core command handlers should receive values from Brigadier-validated arguments, not string-only parsing.");
         assertTrue(
-                source.contains("case ITEM_SELECTION, ACTION_LIST -> NeoForgeArguments.commaToken()")
+                source.contains("case ITEM_SELECTION, ACTION_LIST, NPC_SELECTOR, NPC_SELECTOR_OR_NONE ->")
                         && source.contains("commands.suggestions("),
-                "NeoForge should only parse comma tokens natively and obtain item-selection suggestions from core.");
+                "NeoForge should preserve punctuation in registry values and obtain suggestions from core.");
         assertTrue(
                 source.contains("builder.getRemaining()") && !source.contains("final String raw = argument(context, FLAG_ARG)"),
                 "NeoForge flag suggestions should use the current suggestion token, not read an unparsed __flags argument.");

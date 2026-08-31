@@ -6,10 +6,10 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.papermc.paper.command.brigadier.argument.CustomArgumentType;
 
-/** Paper's native single-token parser does not accept commas, so item/action lists use this bridge. */
-public final class ItemStackSelectionArgument implements CustomArgumentType.Converted<String, String> {
-    public static ItemStackSelectionArgument itemStackSelectionArgument() {
-        return new ItemStackSelectionArgument();
+/** Reads one command value up to whitespace while preserving characters such as commas and colons. */
+public final class WhitespaceStringArgument implements CustomArgumentType.Converted<String, String> {
+    public static WhitespaceStringArgument whitespaceString() {
+        return new WhitespaceStringArgument();
     }
 
     @Override
@@ -32,5 +32,10 @@ public final class ItemStackSelectionArgument implements CustomArgumentType.Conv
             reader.skip();
         }
         return reader.getString().substring(start, reader.getCursor());
+    }
+
+    @Override
+    public <S> String parse(final StringReader reader, final S source) throws CommandSyntaxException {
+        return parse(reader);
     }
 }

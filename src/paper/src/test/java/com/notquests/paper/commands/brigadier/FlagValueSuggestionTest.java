@@ -77,6 +77,16 @@ class FlagValueSuggestionTest {
                                 NQSuggestionProvider<NQCommandContext>,
                                 NQCommandHandler>
                         root("root", NQDescription.of("root"))
+                .literal("npc", NQDescription.of("npc"))
+                .required("selector", NQArgumentType.npcSelector(), NQDescription.of("NPC selector"))
+                .handler(context -> List.of())
+                .registration());
+        tree.register(NQCommandBuilder.<
+                                NQArgumentType,
+                                NQFlag<NQArgumentType, NQSuggestionProvider<NQCommandContext>>,
+                                NQSuggestionProvider<NQCommandContext>,
+                                NQCommandHandler>
+                        root("root", NQDescription.of("root"))
                 .literal("boolean", NQDescription.of("boolean"))
                 .required("value", NQArgumentType.bool("true or false"), NQDescription.of("value"))
                 .handler(context -> List.of())
@@ -184,5 +194,20 @@ class FlagValueSuggestionTest {
         assertTrue(numbers.contains("1"));
         assertTrue(numbers.contains("10"));
         assertTrue(numbers.contains("100"));
+    }
+
+    @Test
+    void npcSelectorsAcceptCitizensIdsAndFancyNpcsUuids() throws Exception {
+        assertParses("root npc citizens:0");
+        assertParses("root npc fancynpcs:b7ffc743-0e12-4415-bf43-feb69a73f649");
+    }
+
+    private void assertParses(final String input) throws Exception {
+        final CommandDispatcher<CommandSourceStack> dispatcher = new CommandDispatcher<>();
+        dispatcher.getRoot().addChild(compiledRoot());
+        final var parsed = dispatcher.parse(input, null);
+
+        assertTrue(parsed.getExceptions().isEmpty(), () -> "Could not parse " + input + ": " + parsed.getExceptions());
+        assertFalse(parsed.getReader().canRead(), () -> "Parser left trailing data for " + input);
     }
 }

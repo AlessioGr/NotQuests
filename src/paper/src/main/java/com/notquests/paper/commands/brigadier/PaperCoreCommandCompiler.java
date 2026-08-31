@@ -38,7 +38,7 @@ import com.notquests.core.platform.PlatformPlayer;
 import com.notquests.paper.NotQuests;
 import com.notquests.paper.PaperNotQuestsAdapter;
 import com.notquests.paper.PaperPlayer;
-import com.notquests.paper.commands.arguments.ItemStackSelectionArgument;
+import com.notquests.paper.commands.arguments.WhitespaceStringArgument;
 
 import java.util.List;
 
@@ -168,7 +168,8 @@ public final class PaperCoreCommandCompiler {
         return switch (argument.kind()) {
             case GREEDY_STRING, LOCATION, NUMBER_EXPRESSION, BOOLEAN_EXPRESSION ->
                     StringArgumentType.greedyString();
-            case ITEM_SELECTION, ACTION_LIST -> ItemStackSelectionArgument.itemStackSelectionArgument();
+            case ITEM_SELECTION, ACTION_LIST, NPC_SELECTOR, NPC_SELECTOR_OR_NONE ->
+                    WhitespaceStringArgument.whitespaceString();
             case INTEGER -> IntegerArgumentType.integer();
             case DOUBLE -> DoubleArgumentType.doubleArg();
             case BOOLEAN -> StringArgumentType.word();
