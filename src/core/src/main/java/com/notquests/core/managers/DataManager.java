@@ -1585,7 +1585,14 @@ public class DataManager {
 
     private static int integer(final Map<String, Object> map, final String key, final int fallback) {
         final Object value = map.get(key);
-        return value instanceof Number number ? number.intValue() : fallback;
+        if (value instanceof Number number) {
+            return number.intValue();
+        }
+        try {
+            return Integer.parseInt(String.valueOf(value));
+        } catch (final NumberFormatException ignored) {
+            return fallback;
+        }
     }
 
     private static int integerAtPath(final Map<String, Object> map, final String path, final int fallback) {
