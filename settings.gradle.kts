@@ -2,6 +2,7 @@ pluginManagement {
     repositories {
         gradlePluginPortal()
         mavenCentral()
+        maven("https://maven.neoforged.net/releases")
     }
 }
 
@@ -11,6 +12,14 @@ plugins {
 
 rootProject.name = "notquests"
 
-include(":common")
+include(":core")
+project(":core").projectDir = file("src/core")
+
+include(":builtin")
+project(":builtin").projectDir = file("src/builtin")
+
 include(":paper")
-include(":plugin")
+project(":paper").projectDir = file("src/paper")
+
+include(":neoforge")
+project(":neoforge").projectDir = file("src/neoforge")

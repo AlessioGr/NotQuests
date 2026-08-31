@@ -1,7 +1,7 @@
 name: E2E command sweep
 
-# Boots a real Paper server with the freshly built plugin and runs every registered command type
-# through the console, failing the build on any parser/handler error, exception, or a newly added
+# Boots real Paper and NeoForge servers with freshly built artifacts and runs the same core-owned
+# command list through each console. Fails on parser/handler errors, exceptions, or a newly added
 # objective/action/condition/trigger type that ships without a test command. Console-driven only
 # (no Minecraft client) — see e2e/README.md.
 
@@ -30,8 +30,14 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Run server-side command sweep
+      - name: Run Paper server-side command sweep
         run: ./e2e/run-sweep.sh
+
+      - name: Run NeoForge server-side command sweep
+        run: ./e2e/run-neoforge-sweep.sh
+
+      - name: Compare Paper and NeoForge command/registry metadata
+        run: ./src/core/e2e/compare-platform-metadata.py
 
       - name: Run BetonQuest 3 server-side command sweep
         run: ./e2e/run-betonquest-sweep.sh
@@ -42,6 +48,7 @@ jobs:
         with:
           name: e2e-server-logs
           path: |
-            /tmp/nq-e2e-server.log
+            /tmp/nq-e2e-paper-server.log
+            /tmp/nq-e2e-neoforge-server.log
             /tmp/nq-betonquest-server.log
           if-no-files-found: ignore

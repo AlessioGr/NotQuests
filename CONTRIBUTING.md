@@ -43,19 +43,28 @@ gradle wrapper        # one-time: creates gradle/wrapper/gradle-wrapper.jar
 The final plugin jar is at:
 
 ```
-plugin/build/libs/plugin-6.0.1.jar
+src/paper/build/libs/notquests-6.3.0-26.1.2.jar
 ```
 
 ## Running a test server
 
 ```bash
-./gradlew :plugin:runServer
+./gradlew :paper:runServer
 ```
 
 This starts a Paper 26.1.2 test server with the plugin loaded.
 
 ## Project structure
 
-- `common/` - Shared code across platforms
-- `paper/` - Paper-specific implementation (commands, events, GUIs, integrations)
-- `plugin/` - Final plugin assembly (shading, plugin.yml / paper-plugin.yml generation)
+- `src/core/` - NotQuests itself: quests, players, progress, commands, configuration, YAML/SQL persistence, conversations, GUI behavior, migrations, registries, shared messages, and explicit platform contracts. It may use portable libraries such as Adventure/MiniMessage, but must not import Paper, Bukkit, NeoForge, or Minecraft platform classes.
+- `src/builtin/` - Platform-independent built-in actions, conditions, objectives, triggers, and variables. Builtins use the core registry and platform contracts exactly like external type packs would.
+- `src/paper/` - Atomic Paper/Bukkit event translation, native rendering/effects, external-plugin integrations, and final Paper jar packaging.
+- `src/neoforge/` - Atomic NeoForge event translation, native rendering/effects, and mod packaging.
+- `e2e/` - Real-server command sweeps used locally and in CI
+
+## Config format
+
+The canonical NotQuests config format is YAML. Core owns it through `ConfigurationManager`,
+`DataManager`, and `YamlConfig`. Platform modules do not parse or save NotQuests configuration.
+All released 6.3 conversion is isolated in `core/migrations/v6_3_0`, where old data is read once and
+rewritten into the current format.

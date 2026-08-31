@@ -5,9 +5,7 @@ plugins {
     `maven-publish`
     id("com.gradleup.shadow") version "9.4.2"
     id("io.papermc.paperweight.userdev") version "2.0.0-beta.21"
-    // run-paper is only applied to :plugin (the real, server-ready plugin). Declared here so the
-    // subproject can apply it without repeating the version. Booting :paper/:common (intermediate
-    // library jars with no plugin.yml) would just error, so they don't get a runServer task.
+    // run-paper is applied by :paper, the real server-ready plugin artifact.
     id("xyz.jpenilla.run-paper") version "3.0.2" apply false
 }
 
@@ -15,17 +13,32 @@ subprojects {
     plugins.apply("java-library")
     plugins.apply("maven-publish")
     plugins.apply("com.gradleup.shadow")
+
+    repositories {
+        mavenCentral()
+        maven("https://redempt.dev") {
+            content {
+                includeGroup("com.github.Redempt")
+            }
+        }
+        maven("https://jitpack.io") {
+            content {
+                includeGroup("com.github.Redempt")
+            }
+        }
+    }
 }
 
 group = "com.notquests"
-version = "6.3.0"
+version = "7.0.0-beta.1"
 
+val minecraftTargetVersion = "26.1.2"
 
 repositories {
 }
 
 dependencies {
-    paperweight.paperDevBundle("26.1.2.build.69-stable")
+    paperweight.paperDevBundle("26.1.2.build.74-stable")
 }
 
 java {
@@ -44,7 +57,32 @@ val path = "com.notquests"
 
 
 tasks {
+    val collectFinalJars by registering(Sync::class) {
+        group = "build"
+        description = "Collects final NotQuests platform jars into build/final-jars."
+
+        dependsOn(":paper:shadowJar", ":neoforge:jar")
+
+        into(layout.buildDirectory.dir("final-jars"))
+
+        from(project(":paper").tasks.named("shadowJar").map { it.outputs.files.singleFile }) {
+            rename { "notquests-${project.version}-$minecraftTargetVersion-paper.jar" }
+        }
+        from(project(":neoforge").tasks.named("jar").map { it.outputs.files.singleFile }) {
+            rename { "notquests-${project.version}-$minecraftTargetVersion-neoforge.jar" }
+        }
+    }
+
+    build {
+        dependsOn(collectFinalJars)
+    }
+
+    jar {
+        enabled = false
+    }
+
     shadowJar {
+        enabled = false
         archiveClassifier.set("")
     }
 

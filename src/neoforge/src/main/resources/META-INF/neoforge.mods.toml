@@ -1,0 +1,31 @@
+modLoader = "javafml"
+loaderVersion = "[1,)"
+license = "GPL-3.0-or-later"
+issueTrackerURL = "https://github.com/AlessioGr/NotQuests/issues"
+
+[[mixins]]
+config = "notquests.mixins.json"
+
+[[mods]]
+modId = "notquests"
+version = "${version}"
+displayName = "NotQuests"
+displayURL = "https://www.notquests.com"
+authors = "AlessioGr"
+description = '''
+NotQuests server-side questing support for NeoForge.
+'''
+
+[[dependencies.notquests]]
+modId = "minecraft"
+type = "required"
+versionRange = "[${minecraftVersion}]"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.notquests]]
+modId = "neoforge"
+type = "required"
+versionRange = "[${neoForgeVersion},)"
+ordering = "NONE"
+side = "BOTH"

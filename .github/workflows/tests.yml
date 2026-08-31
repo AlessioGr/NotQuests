@@ -25,8 +25,8 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Run tests
-        run: ./gradlew test --stacktrace
+      - name: Run build and tests
+        run: ./gradlew build --stacktrace
 
       - name: Publish test report
         uses: mikepenz/action-junit-report@v5

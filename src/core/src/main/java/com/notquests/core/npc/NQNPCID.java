@@ -1,0 +1,115 @@
+package com.notquests.core.npc;
+
+import org.jetbrains.annotations.Nullable;
+
+import com.notquests.core.config.YamlConfig;
+
+import java.util.UUID;
+
+public class NQNPCID {
+  private final int integerID; /*-1 = null*/
+  private final @Nullable UUID uuidID;
+  private final @Nullable String stringID; // e.g. FancyNPCs uses String ids
+
+  private NQNPCID(final int integerID /*-1 = null*/, final @Nullable UUID uuidID, final @Nullable String stringID) {
+    this.integerID = integerID;
+    this.uuidID = uuidID;
+    this.stringID = stringID;
+  }
+
+  public final int getIntegerID() { /*-1 = null*/
+    return integerID;
+  }
+
+  public final @Nullable UUID getUUIDID() {
+    return uuidID;
+  }
+
+  public final @Nullable String getStringID() {
+    return stringID;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == this) {
+      return true;
+    }
+    if (!(obj instanceof NQNPCID other)) {
+      return false;
+    }
+    if (stringID != null || other.stringID != null) {
+      return stringID != null && stringID.equals(other.stringID);
+    }
+    return
+        (integerID == -1 && other.integerID == -1 && uuidID != null && other.uuidID != null && uuidID.equals(other.uuidID))
+            || (uuidID == null && other.uuidID == null && integerID == other.integerID);
+  }
+
+  @Override
+  public int hashCode() {
+    if (stringID != null) {
+      return stringID.hashCode();
+    }
+    if (uuidID != null) {
+      return uuidID.hashCode();
+    }
+    return Integer.hashCode(integerID);
+  }
+
+  @Override
+  public String toString() {
+    return "NQNPCID{" +
+        "integerID=" + integerID +
+        ", uuidID=" + uuidID +
+        ", stringID=" + stringID +
+        '}';
+  }
+
+  public void saveToConfig(final YamlConfig configuration, final String partialPath){
+    if(stringID != null){
+      configuration.set(partialPath + ".stringID", getStringID());
+    }else if(integerID != -1){
+      configuration.set(partialPath + ".integerID", getIntegerID());
+    }else if(getUUIDID() != null) {
+      configuration.set(partialPath + ".uuidID", getUUIDID().toString());
+    }
+  }
+
+  public static @Nullable NQNPCID loadFromConfig(final YamlConfig configuration, final String partialPath){
+    final Object stringId = configuration.get(partialPath + ".stringID");
+    if (stringId instanceof final String value) {
+      return fromString(value);
+    }
+    final Object integerId = configuration.get(partialPath + ".integerID");
+    if (integerId instanceof final Number value) {
+      return fromInteger(value.intValue());
+    }
+    final Object uuidId = configuration.get(partialPath + ".uuidID");
+    if (uuidId instanceof final String uuidString) {
+      return NQNPCID.fromUUID(UUID.fromString(uuidString));
+    }
+    return null;
+  }
+
+  public static NQNPCID fromInteger(final int integerID) {
+    return new NQNPCID(integerID, null, null);
+  }
+
+  public static NQNPCID fromUUID(final UUID uuidID) {
+    return new NQNPCID(-1, uuidID, null);
+  }
+
+  public static NQNPCID fromString(final String stringID) {
+    return new NQNPCID(-1, null, stringID);
+  }
+
+  public final String getEitherAsString(){
+    if(stringID != null){
+      return stringID;
+    }
+    if(uuidID != null){
+      return uuidID.toString();
+    }
+    return ""+integerID;
+  }
+}

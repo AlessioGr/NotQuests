@@ -23,7 +23,7 @@ out/
 !gradle/wrapper/gradle-wrapper.jar
 # ...and vendored integration API jars are committed on purpose, so the build never needs an
 # external maven repo (if it were relocated/deleted, the project would still compile).
-!paper/libs/*.jar
+!src/paper/libs/*.jar
 *.war
 *.nar
 *.ear
@@ -119,10 +119,10 @@ run/
 /.gradle/
 .gradle
 /build/tmp/
-/plugin/build/
-/plugin/build/
-/spigot/build/
-/paper/build/
-/common/build/
+/src/paper/build/
+/src/core/build/
+/src/builtin/build/
+/src/neoforge/build/
+/src/neoforge/run/
 /build/
 testserver

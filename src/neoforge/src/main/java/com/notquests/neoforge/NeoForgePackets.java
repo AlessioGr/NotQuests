@@ -1,0 +1,61 @@
+package com.notquests.neoforge;
+
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundPlayerChatPacket;
+import net.minecraft.network.protocol.game.ClientboundSystemChatPacket;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
+
+import com.notquests.core.NotQuestsPlatform;
+import com.notquests.core.NotQuestsPlugin;
+
+/** NeoForge's native outgoing-chat observation used by core conversation replay. */
+public final class NeoForgePackets implements NotQuestsPlatform.PacketBridge {
+    private static volatile NeoForgePackets active;
+
+    private final NotQuestsPlugin plugin;
+    private final NeoForgeText text;
+
+    NeoForgePackets(final NotQuestsPlugin plugin, final NeoForgeText text) {
+        this.plugin = plugin;
+        this.text = text;
+    }
+
+    @Override
+    public void start() {
+        active = this;
+    }
+
+    @Override
+    public void close() {
+        if (active == this) {
+            active = null;
+        }
+    }
+
+    public static void outgoing(
+            final ServerGamePacketListenerImpl connection,
+            final Packet<?> packet) {
+        final NeoForgePackets observer = active;
+        if (observer == null || connection == null || connection.player == null || packet == null) {
+            return;
+        }
+        final Component message;
+        if (packet instanceof final ClientboundSystemChatPacket systemChat) {
+            if (systemChat.overlay()) {
+                return;
+            }
+            message = systemChat.content();
+        } else if (packet instanceof final ClientboundPlayerChatPacket playerChat) {
+            final Component content = playerChat.unsignedContent() == null
+                    ? Component.literal(playerChat.body().content())
+                    : playerChat.unsignedContent();
+            message = playerChat.chatType().decorate(content);
+        } else {
+            return;
+        }
+        observer.plugin.rememberNonConversationDisplayMessage(
+                connection.player.getUUID().toString(),
+                observer.text.adventure(message));
+    }
+}

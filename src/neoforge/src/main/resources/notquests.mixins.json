@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "com.notquests.neoforge.mixin",
+  "mixins": [
+    "ContainerMenuMixin",
+    "CreativeInventoryMixin",
+    "ServerChatPacketMixin",
+    "SmithingMenuMixin"
+  ],
+  "client": [],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

@@ -38,5 +38,5 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: NotQuests-dev-build.jar
-          path: plugin/build/libs
+          path: src/paper/build/libs
           

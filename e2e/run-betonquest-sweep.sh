@@ -2,7 +2,7 @@
 #
 # Focused server-side E2E sweep for the BetonQuest 3.x integration.
 #
-# Boots a real Paper server with BetonQuest 3.0.0 installed from paper/libs, registers a tiny
+# Boots a real Paper server with BetonQuest 3.0.0 installed from src/paper/libs, registers a tiny
 # BetonQuest package that uses every restored NotQuests hook, then drives the NotQuests admin
 # commands that create BetonQuest-backed actions, rewards, objectives, and variables.
 set -euo pipefail
@@ -14,8 +14,8 @@ cd "$REPO"
 LOG="${E2E_BETONQUEST_LOG:-/tmp/nq-betonquest-server.log}"
 STRIPPED_LOG="${E2E_BETONQUEST_STRIPPED_LOG:-/tmp/nq-betonquest-server.clean.log}"
 FIFO="${E2E_BETONQUEST_FIFO:-/tmp/nq-betonquest.fifo}"
-RUN="$REPO/plugin/run"
-BETONQUEST_JAR="$REPO/paper/libs/BetonQuest-3.0.0.jar"
+RUN="$REPO/src/paper/run"
+BETONQUEST_JAR="$REPO/src/paper/libs/BetonQuest-3.0.0.jar"
 BOOT_TIMEOUT_STEPS="${E2E_BOOT_STEPS:-240}" # x2s = 8 min max for first-time Paper setup
 
 cleanup() { kill "${HOLDER:-}" "${GPID:-}" 2>/dev/null || true; rm -f "$FIFO"; }
@@ -73,7 +73,7 @@ PROPS
 echo "BETONQUEST_DRIVER_START"
 tail -f /dev/null > "$FIFO" &
 HOLDER=$!
-./gradlew :plugin:runServer --console=plain --no-daemon < "$FIFO" > "$LOG" 2>&1 &
+./gradlew :paper:runServer --console=plain --no-daemon < "$FIFO" > "$LOG" 2>&1 &
 GPID=$!
 
 state=TIMEOUT
@@ -127,7 +127,7 @@ assert_log() {
   fi
 }
 
-assert_log 'BetonQuest found\. Enabled BetonQuest support!' 'NotQuests did not enable BetonQuest support.'
+assert_log 'BetonQuest [^ ]+ found\. Enabled BetonQuest support!' 'NotQuests did not enable BetonQuest support.'
 assert_log 'Registered BetonQuest interceptor: notquests' 'NotQuests did not register the BetonQuest conversation interceptor.'
 assert_log 'There are \[7 Actions, .*2 Conditions, .*1 Objective, .*\] loaded from 1 packages\.' 'BetonQuest did not load the test package with the restored nq_* hooks.'
 assert_log 'BetonQuestFireEvent Action with the name BQFire has been created successfully!' 'BetonQuestFireEvent saved-action command failed.'
@@ -135,7 +135,7 @@ assert_log 'BetonQuestFireInlineEvent Action with the name BQInline has been cre
 assert_log 'BetonQuestFireEvent Reward successfully added to Quest BQQuest!' 'BetonQuestFireEvent reward command failed.'
 assert_log 'BetonQuestFireInlineEvent Reward successfully added to Quest BQQuest!' 'BetonQuestFireInlineEvent reward command failed.'
 assert_log 'BetonQuestObjectiveStateChange Objective successfully added to Quest BQQuest!' 'BetonQuest objective command failed.'
-assert_log 'BetonQuestCondition variable \(BOOLEAN\) result for player unknown: false' 'BetonQuestCondition variable check command failed.'
+assert_log 'BetonQuestCondition variable \(boolean\) result for player .*: false' 'BetonQuestCondition variable check command failed.'
 
 if rg -n 'Incorrect argument|Unknown or incomplete|Exception|ERROR|Could not pass event|NoClassDefFoundError|zip file closed' "$STRIPPED_LOG"; then
   echo "::error:: BetonQuest E2E sweep produced parser/runtime errors."
