@@ -27,13 +27,7 @@ final class PlayerQuestCommands {
         if (plugin.questManager().getQuest(questName) == null) {
             return List.of(missingQuest(questName));
         }
-        final ArrayList<String> warnings = new ArrayList<>();
-        if (!plugin.giveQuest(target, questName, false, warnings::add)) {
-            return warnings.stream()
-                    .filter(message -> message != null && !message.isBlank())
-                    .map(message -> message.startsWith("<") ? CommandMessage.success(message) : CommandMessage.error(message))
-                    .toList();
-        }
+        plugin.giveQuest(target, questName, false, ignored -> {});
         return List.of();
     }
 
