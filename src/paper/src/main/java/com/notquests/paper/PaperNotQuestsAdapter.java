@@ -5,6 +5,7 @@ import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.Keyed;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -108,6 +109,8 @@ import java.util.concurrent.Callable;
 
 public final class PaperNotQuestsAdapter extends NotQuestsAdapter.Platform {
     private final NotQuests main;
+    private volatile List<String> itemMaterialIds;
+    private volatile List<String> blockMaterialIds;
 
     public PaperNotQuestsAdapter(final NotQuests main) {
         super(main.getCorePlugin());
@@ -183,11 +186,10 @@ public final class PaperNotQuestsAdapter extends NotQuestsAdapter.Platform {
 
     @Override
     protected List<String> itemMaterialIds() {
-        final List<String> materials = new ArrayList<>();
-        for (final Material material : Material.values()) {
-            if (material.isItem() && !material.isAir() && !material.isLegacy()) {
-                materials.add(material.name().toLowerCase(Locale.ROOT));
-            }
+        List<String> materials = itemMaterialIds;
+        if (materials == null) {
+            materials = materialIds(RegistryKey.ITEM);
+            itemMaterialIds = materials;
         }
         return materials;
     }
@@ -301,13 +303,24 @@ public final class PaperNotQuestsAdapter extends NotQuestsAdapter.Platform {
 
     @Override
     protected List<String> blockMaterialIds() {
-        final List<String> materials = new ArrayList<>();
-        for (final Material material : Material.values()) {
-            if (material.isBlock() && !material.isAir() && !material.isLegacy()) {
-                materials.add(material.name().toLowerCase(Locale.ROOT));
-            }
+        List<String> materials = blockMaterialIds;
+        if (materials == null) {
+            materials = materialIds(RegistryKey.BLOCK);
+            blockMaterialIds = materials;
         }
         return materials;
+    }
+
+    private static <T extends Keyed> List<String> materialIds(final RegistryKey<T> registryKey) {
+        final var registry = RegistryAccess.registryAccess().getRegistry(registryKey);
+        final ArrayList<String> materials = new ArrayList<>();
+        for (final T material : registry) {
+            final String id = suggestionId(registry.getKeyOrThrow(material));
+            if (!id.equals("air")) {
+                materials.add(id);
+            }
+        }
+        return materials.stream().sorted().toList();
     }
 
     @Override
