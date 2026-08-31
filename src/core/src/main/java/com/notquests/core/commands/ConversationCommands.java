@@ -293,7 +293,7 @@ final class ConversationCommands {
             final PlatformPlayer questPlayer) {
         if (!plugin.conversationManager().exists("__test__")) {
             plugin.conversationManager().save("__test__", List.of("<main>This is a NotQuests test conversation."));
-            plugin.saveData();
+            plugin.saveConfiguredData();
         }
         final ArrayList<CommandMessage> messages = new ArrayList<>();
         messages.add(CommandMessage.success("<main>Playing test conversation..."));
@@ -580,7 +580,7 @@ final class ConversationCommands {
 
     private static CommandMessage saveAndReturn(final NotQuestsPlugin plugin, final CommandMessage message) {
         if (message != null && message.success()) {
-            plugin.saveData();
+            plugin.saveConfiguredData();
         }
         return message;
     }

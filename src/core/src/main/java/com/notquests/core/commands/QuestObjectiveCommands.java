@@ -245,7 +245,7 @@ final class QuestObjectiveCommands {
         } else {
             parent.clearChildObjectives();
         }
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>All objectives of "
                 + (parent == null ? "Quest " + highlight(questName) : "objective " + highlight(objectivePath(parentPath)))
                 + " have been removed!");
@@ -277,7 +277,7 @@ final class QuestObjectiveCommands {
         if (!removed) {
             return CommandMessage.error("Objective with the path " + highlight(objectivePath(objectivePath)) + " was not found!");
         }
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>Objective with the ID "
                 + highlight(objectiveLabel(objectivePath))
                 + " has been successfully removed from Quest " + highlight2(questName) + "!");
@@ -402,7 +402,7 @@ final class QuestObjectiveCommands {
         }
         if ("none".equalsIgnoreCase(completionNpc)) {
             objective.setCompletionNpc("");
-            plugin.saveData();
+            plugin.saveConfiguredData();
             return CommandMessage.success("<success>The completionNPC of the objective with the ID "
                     + highlight(objectivePath(objectivePath)) + " has been removed!");
         }
@@ -420,7 +420,7 @@ final class QuestObjectiveCommands {
                             + objectiveLabel(objectivePath) + "</highlight>."),
                     selection -> {
                         objective.setCompletionNpc(selection.selector());
-                        plugin.saveData();
+                        plugin.saveConfiguredData();
                         actor.sendMessage("<success>The completionArmorStandUUID of the objective with the ID <highlight>"
                                 + objectiveLabel(objectivePath)
                                 + "</highlight> has been set to the NPC with the ID <highlight2>"
@@ -436,7 +436,7 @@ final class QuestObjectiveCommands {
             return CommandMessage.none();
         }
         objective.setCompletionNpc(completionNpc);
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>The completionNPC of the objective with the ID "
                 + highlight(objectivePath(objectivePath)) + " has been set to "
                 + highlight2(blankDefault(completionNpc, "none")) + "!");
@@ -498,7 +498,7 @@ final class QuestObjectiveCommands {
             default -> "<success>Predefined progress order of Quest " + highlight(holderIdentifier)
                     + " have been set to custom with this order: " + blankDefault(order, "none");
         };
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success(message);
     }
 
@@ -524,7 +524,7 @@ final class QuestObjectiveCommands {
         } else {
             holder.clearChildObjectiveProgressOrder();
         }
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>Predefined progress order of Quest "
                 + highlight(holderIdentifier) + " have been removed!");
     }
@@ -569,7 +569,7 @@ final class QuestObjectiveCommands {
         final String sourceText = sourceDescription == null || sourceDescription.isBlank()
                 ? ""
                 : " using " + highlight(sourceDescription);
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>Objective " + highlight(objectiveLabel(objectivePath))
                 + " now points to " + highlight2(formatLocation(world, x, y, z)) + sourceText + ".");
     }
@@ -638,7 +638,7 @@ final class QuestObjectiveCommands {
                     + " has no saved guiding marker location, so there is nothing to show.");
         }
         objective.setLocationEnabled(enabled);
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success(enabled
                 ? "<success>Objective " + highlight(objectiveLabel(objectivePath)) + " now shows its guiding marker at "
                         + highlight2(formatLocation(objective.getLocation())) + "."
@@ -663,7 +663,7 @@ final class QuestObjectiveCommands {
         }
         objective.setLocation(null);
         objective.setLocationEnabled(false);
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>Objective " + highlight(objectiveLabel(objectivePath))
                 + " no longer has a saved guiding marker location.");
     }
@@ -706,7 +706,7 @@ final class QuestObjectiveCommands {
                 return validation;
             }
             objective.addCondition(group, type.id(), data);
-            plugin.saveData();
+            plugin.saveConfiguredData();
             return CommandMessage.success("<success>" + type.id() + " " + objectiveConditionAddLabel(group)
                     + " successfully added to Objective " + highlight(objectiveDisplayNameOrIdentifier(objective)) + "!");
         } catch (final RuntimeException exception) {
@@ -764,7 +764,7 @@ final class QuestObjectiveCommands {
             return missingObjective(objectivePath);
         }
         objective.clearConditions(group);
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>All "
                 + objectiveConditionLabel(group).toLowerCase(Locale.ROOT)
                 + " of " + objectiveContext(objectivePath, questName)
@@ -784,7 +784,7 @@ final class QuestObjectiveCommands {
         if (!objective.removeCondition(group, conditionId)) {
             return CommandMessage.error("Condition with the ID " + highlight(conditionId) + " was not found!");
         }
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<main>The condition with the ID "
                 + highlight(conditionId) + " of " + objectiveContext(objectivePath, questName) + " has been removed!");
     }
@@ -816,7 +816,7 @@ final class QuestObjectiveCommands {
             return CommandMessage.error("Condition with the ID " + highlight(conditionId) + " was not found!");
         }
         entry.setDescription(description);
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>Description successfully added to condition with ID "
                 + highlight(conditionId) + " of " + objectiveContext(objectivePath, questName)
                 + "! New description: " + highlight2(entry.getDescription()));
@@ -833,7 +833,7 @@ final class QuestObjectiveCommands {
             return CommandMessage.error("Condition with the ID " + highlight(conditionId) + " was not found!");
         }
         entry.setDescription("");
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>Description successfully removed from condition with ID "
                 + highlight(conditionId) + " of " + objectiveContext(objectivePath, questName) + "!");
     }
@@ -850,7 +850,7 @@ final class QuestObjectiveCommands {
             return CommandMessage.error("Condition with the ID " + highlight(conditionId) + " was not found!");
         }
         entry.setHiddenExpression(hiddenExpression);
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>Hidden status successfully added to condition with ID "
                 + highlight(conditionId) + " of " + objectiveContext(objectivePath, questName)
                 + "! New hidden status: " + highlight2(entry.getHiddenExpression()));
@@ -886,7 +886,7 @@ final class QuestObjectiveCommands {
         try {
             objective.addReward(type.id(), Actions.parse(
                     adapter, type, rawArguments, questPlayer));
-            plugin.saveData();
+            plugin.saveConfiguredData();
             return CommandMessage.success("<success>" + type.id() + " Reward successfully added to Objective "
                     + highlight(objectiveDisplayNameOrIdentifier(objective)) + "!");
         } catch (final RuntimeException exception) {
@@ -937,7 +937,7 @@ final class QuestObjectiveCommands {
             return missingObjective(objectivePath);
         }
         objective.clearRewards();
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>All rewards of objective with ID "
                 + highlight(objectivePath(objectivePath)) + " have been removed!");
     }
@@ -954,7 +954,7 @@ final class QuestObjectiveCommands {
         if (!objective.removeReward(rewardId)) {
             return CommandMessage.error("Reward with the ID " + highlight(rewardId) + " was not found!");
         }
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<main>The reward with the ID "
                 + highlight(rewardId) + " of " + objectiveContext(objectivePath, questName) + " has been removed!");
     }
@@ -1000,7 +1000,7 @@ final class QuestObjectiveCommands {
             return CommandMessage.error("Reward with the ID " + highlight(rewardId) + " was not found!");
         }
         reward.setDisplayName(displayName);
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>Display name successfully added to reward with ID "
                 + highlight(rewardId) + " of " + objectiveContext(objectivePath, questName)
                 + "! New display name: " + highlight2(reward.getDisplayName()));
@@ -1016,7 +1016,7 @@ final class QuestObjectiveCommands {
             return CommandMessage.error("Reward with the ID " + highlight(rewardId) + " was not found!");
         }
         reward.setDisplayName("");
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>Display name successfully removed from reward with ID "
                 + highlight(rewardId) + " of " + objectiveContext(objectivePath, questName) + "!");
     }
@@ -1082,7 +1082,7 @@ final class QuestObjectiveCommands {
             return missingObjective(objectivePath);
         }
         textField.set(objective, value);
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<main>" + textField.actionLabel()
                 + " successfully added to objective with ID " + highlight(objectiveLabel(objectivePath)) + "! New "
                 + textField.label()
@@ -1099,7 +1099,7 @@ final class QuestObjectiveCommands {
             return missingObjective(objectivePath);
         }
         textField.set(objective, "");
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<main>" + textField.actionLabel()
                 + " successfully removed from objective with ID " + highlight(objectiveLabel(objectivePath))
                 + "! New " + textField.label() + ": "

@@ -662,47 +662,40 @@ public final class Quest {
     private final boolean sendQuestInfo;
     private final boolean triggerAcceptQuestTrigger;
     private final boolean callPlatformAcceptEvent;
-    private final boolean saveData;
 
     private GiveOptions(
         final boolean forceGive,
         final boolean sendQuestInfo,
         final boolean triggerAcceptQuestTrigger,
-        final boolean callPlatformAcceptEvent,
-        final boolean saveData) {
+        final boolean callPlatformAcceptEvent) {
       this.forceGive = forceGive;
       this.sendQuestInfo = sendQuestInfo;
       this.triggerAcceptQuestTrigger = triggerAcceptQuestTrigger;
       this.callPlatformAcceptEvent = callPlatformAcceptEvent;
-      this.saveData = saveData;
     }
 
     public static GiveOptions normal() {
-      return new GiveOptions(false, true, true, true, true);
+      return new GiveOptions(false, true, true, true);
     }
 
     public static GiveOptions forcedSilent() {
-      return new GiveOptions(true, false, true, true, true);
+      return new GiveOptions(true, false, true, true);
     }
 
     public GiveOptions forceGive(final boolean forceGive) {
-      return new GiveOptions(forceGive, sendQuestInfo, triggerAcceptQuestTrigger, callPlatformAcceptEvent, saveData);
+      return new GiveOptions(forceGive, sendQuestInfo, triggerAcceptQuestTrigger, callPlatformAcceptEvent);
     }
 
     public GiveOptions sendQuestInfo(final boolean sendQuestInfo) {
-      return new GiveOptions(forceGive, sendQuestInfo, triggerAcceptQuestTrigger, callPlatformAcceptEvent, saveData);
+      return new GiveOptions(forceGive, sendQuestInfo, triggerAcceptQuestTrigger, callPlatformAcceptEvent);
     }
 
     public GiveOptions triggerAcceptQuestTrigger(final boolean triggerAcceptQuestTrigger) {
-      return new GiveOptions(forceGive, sendQuestInfo, triggerAcceptQuestTrigger, callPlatformAcceptEvent, saveData);
+      return new GiveOptions(forceGive, sendQuestInfo, triggerAcceptQuestTrigger, callPlatformAcceptEvent);
     }
 
     public GiveOptions callPlatformAcceptEvent(final boolean callPlatformAcceptEvent) {
-      return new GiveOptions(forceGive, sendQuestInfo, triggerAcceptQuestTrigger, callPlatformAcceptEvent, saveData);
-    }
-
-    public GiveOptions saveData(final boolean saveData) {
-      return new GiveOptions(forceGive, sendQuestInfo, triggerAcceptQuestTrigger, callPlatformAcceptEvent, saveData);
+      return new GiveOptions(forceGive, sendQuestInfo, triggerAcceptQuestTrigger, callPlatformAcceptEvent);
     }
 
     public boolean forceGive() {
@@ -721,9 +714,6 @@ public final class Quest {
       return callPlatformAcceptEvent;
     }
 
-    public boolean saveData() {
-      return saveData;
-    }
   }
 
   public static final class OrderRequirements {

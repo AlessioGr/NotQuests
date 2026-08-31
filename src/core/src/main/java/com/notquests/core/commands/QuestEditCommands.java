@@ -232,7 +232,7 @@ final class QuestEditCommands {
             return missingQuest(questName);
         }
         quest.setDescription(description);
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>Description successfully added to quest "
                 + highlight(quest.getIdentifier()) + "! New description: " + highlight2(quest.getDescription()));
     }
@@ -246,7 +246,7 @@ final class QuestEditCommands {
             return missingQuest(questName);
         }
         quest.setDisplayName(displayName);
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>Display name successfully added to quest "
                 + highlight(quest.getIdentifier()) + "! New display name: " + highlight2(quest.getDisplayName()));
     }
@@ -268,7 +268,7 @@ final class QuestEditCommands {
                     + " already has the category " + highlight2(oldCategory) + ".");
         }
         quest.setCategory(categoryName);
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>Category for Quest " + highlight(quest.getIdentifier())
                 + " has successfully been changed from " + highlight2(oldCategory)
                 + " to " + highlight2(categoryName) + "!");
@@ -289,7 +289,7 @@ final class QuestEditCommands {
             return CommandMessage.error("Quest " + highlight(questName) + " does not exist.");
         }
         quest.clearDescription();
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>Description successfully removed from quest "
                 + highlight(quest.getIdentifier()) + "!");
     }
@@ -309,7 +309,7 @@ final class QuestEditCommands {
             return CommandMessage.error("Quest " + highlight(questName) + " does not exist.");
         }
         quest.clearDisplayName();
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>Display name successfully removed from quest "
                 + highlight(quest.getIdentifier()) + "!");
     }
@@ -332,7 +332,7 @@ final class QuestEditCommands {
             return missingQuest(questName);
         }
         quest.setMaxCompletions(maxCompletions > 0 ? maxCompletions : -1);
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return questLimitMessage(quest, "completions", quest.getMaxCompletions());
     }
 
@@ -345,7 +345,7 @@ final class QuestEditCommands {
             return missingQuest(questName);
         }
         quest.setMaxAccepts(maxAccepts > 0 ? maxAccepts : -1);
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return questLimitMessage(quest, "accepts", quest.getMaxAccepts());
     }
 
@@ -358,7 +358,7 @@ final class QuestEditCommands {
             return missingQuest(questName);
         }
         quest.setMaxFails(maxFails > 0 ? maxFails : -1);
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return questLimitMessage(quest, "fails", quest.getMaxFails());
     }
 
@@ -371,7 +371,7 @@ final class QuestEditCommands {
             return missingQuest(questName);
         }
         quest.setTakeEnabled(takeEnabled);
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>Quest taking (/notquests take) for the Quest "
                 + highlight(quest.getIdentifier()) + " has been set to "
                 + highlight2(takeEnabled ? "enabled" : "disabled") + "!");
@@ -386,7 +386,7 @@ final class QuestEditCommands {
             return missingQuest(questName);
         }
         quest.setAbortEnabled(abortEnabled);
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>Quest aborting (/notquests abort) for the Quest "
                 + highlight(quest.getIdentifier()) + " has been set to "
                 + highlight2(abortEnabled ? "enabled" : "disabled") + "!");
@@ -402,7 +402,7 @@ final class QuestEditCommands {
         }
         final long minutes = cooldown == null ? -1L : cooldown.toMinutes();
         quest.setAcceptCooldownComplete(minutes);
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>Complete acceptCooldown for Quest "
                 + highlight(quest.getIdentifier()) + " has been set to "
                 + highlight2(minutes < 0 ? "disabled" : formatOldCooldownDuration(cooldown)) + "!");
@@ -434,7 +434,7 @@ final class QuestEditCommands {
         }
         quest.setGuiItem(itemSelection);
         quest.setGuiItemGlow(glow);
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>Take Item Material for Quest " + highlight(questName)
                 + " has been set to " + highlight2(firstListedMaterial(itemSelection)) + "!");
     }

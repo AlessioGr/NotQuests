@@ -43,6 +43,39 @@ class CommandManagerTest {
     Path tempDir;
 
     @Test
+    void objectiveEditSavesConfigurationWithoutSavingPlayers() {
+        final NotQuestsPlugin plugin = NotQuestsPlugin.create();
+        final NotQuestsAdapter adapter = plugin.createRegistryAdapter(
+                new NotQuestsRegistry.PlatformHooks(null, null, null));
+        adapter.objectives()
+                .objective("StaticObjective")
+                .displayName("Static objective")
+                .description("Test objective")
+                .register();
+        plugin.getOrCreateQuest("ya");
+        final AtomicInteger configuredSaves = new AtomicInteger();
+        final AtomicInteger playerSaves = new AtomicInteger();
+        plugin.dataManager(new DataManager() {
+            @Override
+            public boolean saveConfiguredData() {
+                configuredSaves.incrementAndGet();
+                return true;
+            }
+
+            @Override
+            public boolean savePlayerRuntime() {
+                playerSaves.incrementAndGet();
+                return true;
+            }
+        });
+
+        assertTrue(QuestObjectiveCommands.addQuestObjective(
+                plugin, adapter, "ya", "StaticObjective", "", "").success());
+        assertEquals(1, configuredSaves.get());
+        assertEquals(0, playerSaves.get());
+    }
+
+    @Test
     void rightClickNpcSelectionAddsObjectiveOnlyAfterTheNpcIsSelected() {
         final NotQuestsPlugin plugin = NotQuestsPlugin.create();
         final NotQuestsAdapter base = plugin.createRegistryAdapter(

@@ -41,7 +41,7 @@ final class QuestRewardCommands {
         }
         try {
             quest.addReward(type.id(), Actions.parse(adapter, type, rawArguments, questPlayer));
-            plugin.saveData();
+            plugin.saveConfiguredData();
             return CommandMessage.success("<success>" + type.id()
                     + " Reward successfully added to Quest " + highlight(questName) + "!");
         } catch (final RuntimeException exception) {
@@ -72,7 +72,7 @@ final class QuestRewardCommands {
             return missingQuest(questName);
         }
         quest.clearRewards();
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>All rewards of Quest " + highlight(questName)
                 + " have been removed!");
     }
@@ -88,7 +88,7 @@ final class QuestRewardCommands {
         if (!quest.removeReward(rewardId)) {
             return CommandMessage.error("Reward with the ID " + highlight(rewardId) + " was not found!");
         }
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<main>The reward with the ID "
                 + highlight(rewardId) + " of Quest " + highlight2(questName) + " has been removed!");
     }
@@ -131,7 +131,7 @@ final class QuestRewardCommands {
             return CommandMessage.error("Reward with the ID " + highlight(rewardId) + " was not found!");
         }
         reward.setDisplayName(displayName);
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>Display name successfully added to reward with ID "
                 + highlight(rewardId) + "! New display name: " + highlight2(reward.getDisplayName()));
     }
@@ -145,7 +145,7 @@ final class QuestRewardCommands {
             return CommandMessage.error("Reward with the ID " + highlight(rewardId) + " was not found!");
         }
         reward.setDisplayName("");
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>Display name successfully removed from reward with ID "
                 + highlight(rewardId) + "!");
     }

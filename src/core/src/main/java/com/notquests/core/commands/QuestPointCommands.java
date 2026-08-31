@@ -216,7 +216,6 @@ final class QuestPointCommands {
         if (adapter.onlineQuestPlayer(playerName) == null) {
             messages.add(questPoints(plugin, adapter, playerName));
         }
-        plugin.saveData();
         return List.copyOf(messages);
     }
 

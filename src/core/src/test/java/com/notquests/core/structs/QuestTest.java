@@ -81,7 +81,6 @@ class QuestTest {
     assertFalse(options.sendQuestInfo());
     assertTrue(options.triggerAcceptQuestTrigger());
     assertTrue(options.callPlatformAcceptEvent());
-    assertTrue(options.saveData());
   }
 
   @Test

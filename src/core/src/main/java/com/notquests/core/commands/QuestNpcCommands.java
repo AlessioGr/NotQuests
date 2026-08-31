@@ -186,7 +186,7 @@ final class QuestNpcCommands {
         final NpcAttachments.Detachments detachments =
                 plugin.questNpcDetachments(questName);
         plugin.clearQuestNpcAttachments(questName);
-        plugin.saveData();
+        plugin.saveConfiguredData();
         plugin.applyNpcDetachments(detachments);
         return CommandMessage.success("<success>Cleared NPC and armor-stand attachments for quest <highlight>"
                 + questName + "</highlight>.");
@@ -203,7 +203,7 @@ final class QuestNpcCommands {
                 plugin.questNpcDetachments(questName, "armorstand");
         final int removed = plugin.clearQuestNpcAttachments(questName, "armorstand");
         if (removed > 0) {
-            plugin.saveData();
+            plugin.saveConfiguredData();
         }
         plugin.applyNpcDetachments(detachments);
         return CommandMessage.success("<success>Cleared " + removed

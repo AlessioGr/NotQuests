@@ -50,7 +50,7 @@ final class QuestRequirementCommands {
                 return validation;
             }
             quest.addRequirement(type.id(), data);
-            plugin.saveData();
+            plugin.saveConfiguredData();
             return CommandMessage.success("<success>" + type.id()
                     + " Requirement successfully added to Quest " + highlight(questName) + "!");
         } catch (final RuntimeException exception) {
@@ -80,7 +80,7 @@ final class QuestRequirementCommands {
             return missingQuest(questName);
         }
         quest.clearRequirements();
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<main>All requirements of Quest " + highlight(questName)
                 + " have been removed!");
     }
@@ -96,7 +96,7 @@ final class QuestRequirementCommands {
         if (!quest.removeRequirement(requirementId)) {
             return CommandMessage.error("Requirement with the ID " + highlight(requirementId) + " was not found!");
         }
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<main>The requirement with the ID "
                 + highlight(requirementId) + " of Quest " + highlight2(questName) + " has been removed!");
     }
@@ -123,7 +123,7 @@ final class QuestRequirementCommands {
             return CommandMessage.error("Requirement with the ID " + highlight(requirementId) + " was not found!");
         }
         requirement.setDescription(description);
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>Description successfully added to requirement with ID "
                 + highlight(requirementId) + "! New description: " + highlight2(requirement.getDescription()));
     }
@@ -137,7 +137,7 @@ final class QuestRequirementCommands {
             return CommandMessage.error("Requirement with the ID " + highlight(requirementId) + " was not found!");
         }
         requirement.setDescription("");
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>Description successfully removed from requirement with ID "
                 + highlight(requirementId) + "!");
     }
@@ -152,7 +152,7 @@ final class QuestRequirementCommands {
             return CommandMessage.error("Requirement with the ID " + highlight(requirementId) + " was not found!");
         }
         requirement.setHiddenExpression(hiddenExpression);
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>Hidden status successfully added to requirement with ID "
                 + highlight(requirementId) + "! New hidden status: " + highlight2(requirement.getHiddenExpression()));
     }

@@ -3499,7 +3499,7 @@ public final class NotQuestsPlugin {
                 selection.npcId(),
                 selection.npcName(),
                 showQuestInNpc);
-        saveData();
+        saveConfiguredData();
         return true;
     }
 
@@ -3515,7 +3515,7 @@ public final class NotQuestsPlugin {
                 selection.npcType(),
                 selection.npcId(),
                 selection.npcName());
-        saveData();
+        saveConfiguredData();
     }
 
     public void applyNpcDetachments(final NpcAttachments.Detachments detachments) {
@@ -3573,7 +3573,7 @@ public final class NotQuestsPlugin {
         if (quest == null) {
             return CommandMessage.error("<error>Quest <highlight>" + questName + "</highlight> already exists!");
         }
-        saveData();
+        saveConfiguredData();
         return CommandMessage.success("<success>Quest <highlight>" + questName + "</highlight> successfully created!");
     }
 
@@ -3581,7 +3581,7 @@ public final class NotQuestsPlugin {
         if (!removeQuest(questName)) {
             return CommandMessage.error("<error>Quest <highlight>" + questName + "</highlight> doesn't exist!");
         }
-        saveData();
+        saveConfiguredData();
         return CommandMessage.success("<success>Quest <highlight>" + questName + "</highlight> successfully deleted!");
     }
 
@@ -3654,7 +3654,7 @@ public final class NotQuestsPlugin {
             return "<error>Error: Quest <highlight>" + (questName == null ? "" : questName) + "</highlight> does not exist.";
         }
         quest.addNpcAttachment("armorstand", npcId, npcName, questShowing);
-        saveData();
+        saveConfiguredData();
         return ArmorStandAttachments.questAttachedToNpc(
                 quest.getIdentifier(),
                 "armorstand:" + (npcId == null ? "" : npcId.getEitherAsString()));
@@ -3681,7 +3681,7 @@ public final class NotQuestsPlugin {
                     + (npcId == null ? "" : npcId.getEitherAsString())
                     + "</highlight2>.";
         }
-        saveData();
+        saveConfiguredData();
         return ArmorStandAttachments.questRemovedFromNpc(
                 quest.getIdentifier(),
                 "armorstand:" + (npcId == null ? "" : npcId.getEitherAsString()));
@@ -3746,7 +3746,7 @@ public final class NotQuestsPlugin {
                     existingConversation);
         }
         conversations.addNpcAttachment(conversationName, "armorstand", npcId, npcName);
-        saveData();
+        saveConfiguredData();
         return new ArmorStandAttachments.ConversationAddition(
                 ArmorStandAttachments.added(conversationName),
                 true,
@@ -3770,7 +3770,7 @@ public final class NotQuestsPlugin {
                     "");
         }
         conversations.removeNpcAttachment(existingConversation, "armorstand", npcId);
-        saveData();
+        saveConfiguredData();
         return new ArmorStandAttachments.ConversationRemoval(
                 ArmorStandAttachments.removedAll(),
                 true,
@@ -6950,9 +6950,6 @@ public final class NotQuestsPlugin {
             if (giveOptions.sendQuestInfo()) {
                 sendQuestAcceptedDisplay(questPlayer, quest, activatedObjectives);
             }
-            if (giveOptions.saveData()) {
-                saveData();
-            }
             return true;
         }
         return false;
@@ -9944,7 +9941,6 @@ public final class NotQuestsPlugin {
             final Quest quest = quest(questName);
             final String rewardBlock = giveQuestRewards(questPlayer, quest, warningSink);
             sendQuestCompletedDisplay(questPlayer, questName, quest, configuration, rewardBlock);
-            saveData();
             return true;
         } else {
             questPlayer.sendMessage("<error>Cannot complete quest <highlight>" + questName
@@ -10169,7 +10165,6 @@ public final class NotQuestsPlugin {
             removeActiveTriggers(questPlayer.playerIdentifier(), questName);
             final Quest quest = quest(questName);
             sendQuestFailedDisplay(questPlayer, questName, quest, configuration);
-            saveData();
             return true;
         } else {
             questPlayer.sendMessage("<error>Cannot fail quest <highlight>" + questName

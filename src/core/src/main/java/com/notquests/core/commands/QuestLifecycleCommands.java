@@ -364,7 +364,6 @@ final class QuestLifecycleCommands {
                 questName));
         messages.add(CommandMessage.success("<success>Finished resetting/removing Quest "
                 + highlight(questName) + " for player " + highlight2(target.displayName()) + "."));
-        plugin.saveData();
         return List.copyOf(messages);
     }
 
@@ -378,7 +377,6 @@ final class QuestLifecycleCommands {
         }
         messages.add(CommandMessage.success("<success>Finished failing Quest "
                 + highlight(questName) + " for all loaded players."));
-        plugin.saveData();
         return List.copyOf(messages);
     }
 
@@ -392,7 +390,6 @@ final class QuestLifecycleCommands {
         }
         messages.add(CommandMessage.success("<success>Finished resetting/removing Quest "
                 + highlight(questName) + " for all loaded players."));
-        plugin.saveData();
         return List.copyOf(messages);
     }
 
@@ -406,7 +403,6 @@ final class QuestLifecycleCommands {
             return List.of(CommandMessage.error("Player " + highlight(playerName) + " is not online."));
         }
         plugin.triggerCommandObjectiveProgress(target, triggerName);
-        plugin.saveData();
         return List.of();
     }
 

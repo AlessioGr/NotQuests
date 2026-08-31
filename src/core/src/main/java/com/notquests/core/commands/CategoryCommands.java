@@ -202,7 +202,7 @@ final class CategoryCommands {
             }
         }
         plugin.questManager().createCategory(categoryIdentifier);
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>Category "
                 + CommandSupport.highlight(categoryIdentifier) + " has successfully been created!");
     }
@@ -228,7 +228,7 @@ final class CategoryCommands {
             return missingCategory(categoryName);
         }
         plugin.setCategoryDisplayName(categoryName, displayName);
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>Display name successfully added to category "
                 + CommandSupport.highlight(category.getIdentifier())
                 + "! New display name: "
@@ -252,7 +252,7 @@ final class CategoryCommands {
             return CommandMessage.error("Category " + CommandSupport.highlight(categoryName) + " does not exist.");
         }
         plugin.clearCategoryDisplayName(categoryName);
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>Display name successfully removed from Category "
                 + CommandSupport.highlight(category.getIdentifier()) + "!");
     }
@@ -274,7 +274,7 @@ final class CategoryCommands {
             return CommandMessage.error("Category " + CommandSupport.highlight(categoryName) + " does not exist.");
         }
         plugin.clearCategoryProgressOrder(categoryName);
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>Predefined progress order of category "
                 + CommandSupport.highlight(category.getIdentifier()) + " have been removed!");
     }
@@ -292,7 +292,7 @@ final class CategoryCommands {
                 ? (customOrder == null ? "" : customOrder).trim()
                 : orderType;
         plugin.setCategoryProgressOrder(categoryName, ("custom".equalsIgnoreCase(orderType) ? "custom " : "") + order.trim());
-        plugin.saveData();
+        plugin.saveConfiguredData();
         final String message = switch (orderType.toLowerCase(Locale.ROOT)) {
             case "firsttolast" -> "<success>Predefined progress order of category "
                     + CommandSupport.highlight(category.getIdentifier()) + " have been set to first to last!";
@@ -331,7 +331,7 @@ final class CategoryCommands {
             return missingCategory(categoryName);
         }
         plugin.setCategoryGuiItem(categoryName, itemSelection, glow);
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>GUI Item for Category " + CommandSupport.highlight(categoryName)
                 + " has been set to " + CommandSupport.highlight2(firstListedMaterial(itemSelection)) + "!");
     }

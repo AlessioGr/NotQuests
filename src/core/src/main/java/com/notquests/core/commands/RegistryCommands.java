@@ -101,7 +101,7 @@ public final class RegistryCommands {
             if (progress == null) {
                 return CommandMessage.error("Cannot activate NotQuests objective " + highlight(type.id()) + ".");
             }
-            plugin.saveData();
+            plugin.saveConfiguredData();
             return CommandMessage.success("<success>Activated NotQuests objective "
                     + highlight(type.id())
                     + " with required progress "
@@ -232,7 +232,7 @@ public final class RegistryCommands {
             if (!changed) {
                 return CommandMessage.error("NotQuests variable " + highlight(variable.id()) + " cannot be changed.");
             }
-            plugin.saveData();
+            plugin.saveConfiguredData();
             return CommandMessage.success("<success>" + variable.id() + " set to " + highlight(rawValue));
         } catch (final RuntimeException exception) {
             return CommandMessage.error(

@@ -90,7 +90,7 @@ final class TagCommands {
         if (!plugin.createTag(tagType, name, categoryName)) {
             return CommandMessage.error("<error>Error: The tag " + highlight(name) + " already exists!");
         }
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>The "
                 + tagType.name().toLowerCase(Locale.ROOT)
                 + " tag " + highlight(name) + " has been added successfully!");
@@ -115,7 +115,7 @@ final class TagCommands {
         if (!plugin.deleteTag(tagName)) {
             return CommandMessage.error("<error>Error: The tag " + highlight(tagName) + " doesn't exist!");
         }
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>The tag "
                 + highlight(tagName) + " has been deleted successfully!");
     }

@@ -52,7 +52,7 @@ final class TriggerCommands {
         data.setValue("applyOn", applyOn);
         data.setValue("worldName", worldName == null || worldName.isBlank() ? "ALL" : worldName);
         quest.addTrigger(type.id(), data);
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>" + type.id()
                 + " Trigger successfully added to Quest " + highlight(questName) + "!");
     }
@@ -97,7 +97,7 @@ final class TriggerCommands {
             return missingQuest(questName);
         }
         quest.clearTriggers();
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>All Triggers of Quest " + highlight(questName)
                 + " have been removed!");
     }
@@ -110,7 +110,7 @@ final class TriggerCommands {
         if (!quest.removeTrigger(triggerId)) {
             return CommandMessage.error("<error> Error: Trigger with the ID " + highlight(triggerId) + " was not found!");
         }
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<main>The trigger with the ID "
                 + highlight(triggerId) + " of Quest " + highlight2(questName) + " has been removed!");
     }

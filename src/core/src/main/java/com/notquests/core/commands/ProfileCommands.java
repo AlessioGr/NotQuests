@@ -149,7 +149,6 @@ final class ProfileCommands {
                     Map.of(),
                     "<error>That profile does not exist."));
         }
-        plugin.saveData();
         return CommandMessage.success(plugin.translate(questPlayer,
                 "chat.profiles.changed-successfully",
                 Map.of(
@@ -184,7 +183,6 @@ final class ProfileCommands {
                     "<error>A profile with the name <highlight>%NEWPROFILENAME%</highlight> already exists."));
         }
         plugin.createPlayerProfile(questPlayer.playerIdentifier(), newProfile);
-        plugin.saveData();
         return CommandMessage.success(plugin.translate(questPlayer,
                 "chat.profiles.created-successfully",
                 Map.of("%NEWPROFILENAME%", newProfile),

@@ -165,7 +165,7 @@ final class ItemCommands {
             return CommandMessage.error("Could not create NotQuests item "
                     + CommandSupport.highlight(itemName) + ".");
         }
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>The item "
                 + CommandSupport.highlight(itemName) + " has been added successfully!");
     }
@@ -174,7 +174,7 @@ final class ItemCommands {
         if (!plugin.deleteSavedItem(itemName)) {
             return CommandMessage.error("Item " + CommandSupport.highlight(itemName) + " does not exist.");
         }
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>The item "
                 + CommandSupport.highlight(itemName) + " has been deleted successfully!");
     }
@@ -207,7 +207,7 @@ final class ItemCommands {
         if (!plugin.setSavedItemDisplayName(itemName, displayName)) {
             return CommandMessage.error("Item " + CommandSupport.highlight(itemName) + " does not exist.");
         }
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>The display name of item "
                 + CommandSupport.highlight(itemName) + " has been set to: <white><reset>" + displayName);
     }
@@ -216,7 +216,7 @@ final class ItemCommands {
         if (!plugin.setSavedItemDisplayName(itemName, null)) {
             return CommandMessage.error("Item " + CommandSupport.highlight(itemName) + " does not exist.");
         }
-        plugin.saveData();
+        plugin.saveConfiguredData();
         return CommandMessage.success("<success>The display name of item "
                 + CommandSupport.highlight(itemName) + " has been removed!");
     }

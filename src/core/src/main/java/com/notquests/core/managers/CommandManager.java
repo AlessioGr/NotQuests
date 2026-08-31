@@ -90,20 +90,6 @@ public final class CommandManager {
         return plugin.openGui(player, guiName, playerName, context);
     }
 
-    private CommandMessage saveAndReturn(final CommandMessage message) {
-        if (message != null && message.success()) {
-            plugin.saveData();
-        }
-        return message;
-    }
-
-    private List<CommandMessage> saveAndReturn(final List<CommandMessage> messages) {
-        if (messages != null && messages.stream().anyMatch(CommandMessage::success)) {
-            plugin.saveData();
-        }
-        return messages;
-    }
-
     public List<String> actionTypeIds() {
         return plugin.registry().actions().stream().map(Actions.Type::id).sorted().toList();
     }

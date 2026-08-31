@@ -359,7 +359,7 @@ final class SavedConditionCommands {
 
     private static CommandMessage saveAndReturn(final NotQuestsPlugin plugin, final CommandMessage message) {
         if (message != null && message.success()) {
-            plugin.saveData();
+            plugin.saveConfiguredData();
         }
         return message;
     }

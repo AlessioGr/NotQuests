@@ -107,6 +107,36 @@ class NotQuestsPluginTest {
     }
 
     @Test
+    void questChangesDoNotSaveUnrelatedPlayerData() {
+        final NotQuestsPlugin plugin = NotQuestsPlugin.create();
+        final AtomicInteger configuredSaves = new AtomicInteger();
+        final AtomicInteger playerSaves = new AtomicInteger();
+        plugin.dataManager(new DataManager() {
+            @Override
+            public boolean saveConfiguredData() {
+                configuredSaves.incrementAndGet();
+                return true;
+            }
+
+            @Override
+            public boolean savePlayerRuntime() {
+                playerSaves.incrementAndGet();
+                return true;
+            }
+        });
+
+        assertTrue(plugin.createQuest("ScopedQuest", plugin.defaultCategoryName()).success());
+        assertEquals(1, configuredSaves.get());
+        assertEquals(0, playerSaves.get());
+
+        final TestPlayer player = new TestPlayer("player-1");
+        assertTrue(plugin.giveQuest(player, "ScopedQuest", false, player.messages::add));
+        assertTrue(plugin.completeQuest(player, "ScopedQuest", player.messages::add));
+        assertEquals(1, configuredSaves.get());
+        assertEquals(0, playerSaves.get());
+    }
+
+    @Test
     void forcedCompletionMarksRemainingObjectivesAndReportsForcedEvent() {
         final NotQuestsPlugin plugin = NotQuestsPlugin.create();
         final NotQuestsAdapter adapter =
