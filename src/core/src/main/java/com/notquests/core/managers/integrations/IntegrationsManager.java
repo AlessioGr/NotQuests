@@ -52,10 +52,11 @@ public final class IntegrationsManager {
     }
 
     public void registerEvents() {
-        for (final NotQuestsPlatform.IntegrationPlugin integration : List.copyOf(enabled.values())) {
-            available.get(key(integration.name())).registerEvents().ifPresent(registerEvents -> {
+        for (final Map.Entry<String, NotQuestsPlatform.IntegrationPlugin> enabledIntegration
+                : List.copyOf(enabled.entrySet())) {
+            available.get(enabledIntegration.getKey()).registerEvents().ifPresent(registerEvents -> {
                 registerEvents.run();
-                plugin.integrationEventsRegistered(integration.name());
+                plugin.integrationEventsRegistered(enabledIntegration.getValue().name());
             });
         }
     }
@@ -65,8 +66,8 @@ public final class IntegrationsManager {
         for (final String name : NAMES) {
             enable(name, configuration, false);
         }
-        for (final NotQuestsPlatform.IntegrationPlugin integration : List.copyOf(enabled.values())) {
-            available.get(key(integration.name())).dataLoaded().ifPresent(Runnable::run);
+        for (final String integration : List.copyOf(enabled.keySet())) {
+            available.get(integration).dataLoaded().ifPresent(Runnable::run);
         }
     }
 
@@ -88,8 +89,8 @@ public final class IntegrationsManager {
     }
 
     public void close() {
-        for (final NotQuestsPlatform.IntegrationPlugin integration : List.copyOf(enabled.values())) {
-            available.get(key(integration.name())).close().ifPresent(Runnable::run);
+        for (final String integration : List.copyOf(enabled.keySet())) {
+            available.get(integration).close().ifPresent(Runnable::run);
         }
         enabled.clear();
         available.clear();

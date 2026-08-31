@@ -11,6 +11,9 @@ import org.junit.jupiter.api.io.TempDir;
 import com.notquests.core.commands.NotQuestsCommands;
 import com.notquests.core.conversation.ConversationManager;
 import com.notquests.core.managers.LogManager.ConsoleLine;
+import com.notquests.core.NotQuestsPlatform.IntegrationPlugin;
+import com.notquests.core.NotQuestsPlatform.NativeIntegration;
+import com.notquests.core.NotQuestsPlatform.NativeIntegrations;
 import com.notquests.core.platform.NotQuestsAdapter;
 import com.notquests.core.platform.PlatformPlayer;
 import com.notquests.core.registry.NotQuestsRegistry;
@@ -18,6 +21,8 @@ import com.notquests.core.registry.NotQuestsRegistry;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.BooleanSupplier;
@@ -129,6 +134,56 @@ class NotQuestsPluginLifecycleTest {
     assertEquals(0, platform.platformThreadCalls);
   }
 
+  @Test
+  void integrationLifecycleUsesConfiguredNameWhenPluginReportsAnAlias() {
+    final NotQuestsPlugin plugin = NotQuestsPlugin.create();
+    final TestPlatform platform = new TestPlatform(plugin, "Paper", tempDir);
+    final AtomicInteger registeredEvents = new AtomicInteger();
+    final AtomicInteger dataLoaded = new AtomicInteger();
+    final AtomicInteger closed = new AtomicInteger();
+    platform.nativeIntegrations = Optional.of(new NativeIntegrations() {
+      @Override
+      public List<NativeIntegration> integrations() {
+        return List.of(
+            new NativeIntegration(
+                "FancyNpcs",
+                () -> new IntegrationPlugin("FancyNpcs", "2.8.0", true),
+                Optional.of(() -> false),
+                Optional.of(registeredEvents::incrementAndGet),
+                Optional.of(dataLoaded::incrementAndGet),
+                Optional.of(closed::incrementAndGet)),
+            new NativeIntegration(
+                "WorldEdit",
+                () -> new IntegrationPlugin("FastAsyncWorldEdit", "2.15.5", true),
+                Optional.empty(),
+                Optional.of(registeredEvents::incrementAndGet),
+                Optional.of(dataLoaded::incrementAndGet),
+                Optional.of(closed::incrementAndGet)));
+      }
+
+      @Override
+      public boolean spawnMythicMob(final String entityType, final com.notquests.core.platform.NQLocation location) {
+        return false;
+      }
+
+      @Override
+      public boolean spawnEcoMob(final String entityType, final com.notquests.core.platform.NQLocation location) {
+        return false;
+      }
+    });
+
+    plugin.start(platform);
+
+    assertTrue(plugin.integrationEnabled("WorldEdit"));
+    assertFalse(plugin.integrationEnabled("FancyNpcs"));
+    assertEquals(1, registeredEvents.get());
+    assertEquals(1, dataLoaded.get());
+
+    plugin.stop(platform);
+
+    assertEquals(1, closed.get());
+  }
+
   private static final class TestPlatform implements NotQuestsPlatform {
     private final String name;
     private final Path dataFolder;
@@ -139,6 +194,7 @@ class NotQuestsPluginLifecycleTest {
     private int stopCalls;
     private int platformThreadCalls;
     private CompletableFuture<Boolean> dataLoaded = CompletableFuture.completedFuture(true);
+    private Optional<NativeIntegrations> nativeIntegrations = Optional.empty();
 
     private TestPlatform(
         final NotQuestsPlugin plugin,
@@ -212,7 +268,7 @@ class NotQuestsPluginLifecycleTest {
 
     @Override
     public java.util.Optional<NativeIntegrations> nativeIntegrations() {
-      return java.util.Optional.empty();
+      return nativeIntegrations;
     }
 
     @Override
