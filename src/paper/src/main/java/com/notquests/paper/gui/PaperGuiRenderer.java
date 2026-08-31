@@ -50,9 +50,9 @@ public class PaperGuiRenderer {
         return true;
     }
 
-    private Gui buildGui(final ResolvedGui gui, final PaperPlayer questPlayer) {
+    Gui buildGui(final ResolvedGui gui, final PaperPlayer questPlayer) {
         final String[] structure = structure(gui.rows());
-        final var builder = Gui.builder().setStructure(structure).setFrozen(true);
+        final var builder = Gui.builder().setStructure(structure);
         for (int index = 0; index < gui.size(); index++) {
             builder.addIngredient(SLOT_KEYS.charAt(index), item(gui.slot(index), questPlayer));
         }
