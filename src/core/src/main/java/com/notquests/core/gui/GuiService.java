@@ -6,6 +6,7 @@ import com.notquests.core.managers.ConfigurationManager;
 import com.notquests.core.managers.LanguageManager;
 import com.notquests.core.managers.UtilManager;
 import com.notquests.core.npc.NQNPCID;
+import com.notquests.core.npc.NpcAttachments;
 import com.notquests.core.npc.NpcAttachments.NpcAttachment;
 import com.notquests.core.platform.PlatformPlayer;
 import com.notquests.core.structs.Category;
@@ -756,11 +757,6 @@ public final class GuiService {
         if (parts.length == 0) {
             return List.of();
         }
-        final boolean registeredAction = plugin.registry().actions().stream()
-                .anyMatch(type -> type.id().equalsIgnoreCase(parts[0]));
-        if (registeredAction) {
-            return List.of(GuiAction.registryAction(replaced, conditions));
-        }
         return switch (parts[0].toLowerCase(Locale.ROOT)) {
             case "opengui" -> List.of(openGuiAction(parts, context).withConditions(conditions));
             case "givequest" -> List.of(GuiAction.takeQuest(
@@ -777,14 +773,15 @@ public final class GuiService {
         final String category = flagValue(parts, "--category");
         final String rawNpc = flagValue(parts, "--npc");
         final String npcType = flagValue(parts, "--npctype");
+        final String resolvedNpcType = npcType.isBlank() ? currentContext.npcType() : npcType;
         final String targetPlayer = firstPresent(
                 flagValue(parts, "--targetplayer"),
                 flagValue(parts, "--player"));
         final GuiContext actionContext = new GuiContext(
                 quest,
                 category,
-                npcType.isBlank() ? currentContext.npcType() : npcType,
-                rawNpc.isBlank() ? null : npcId(rawNpc),
+                resolvedNpcType,
+                rawNpc.isBlank() ? currentContext.npcId() : npcId(resolvedNpcType, rawNpc),
                 0,
                 -1);
         return GuiAction.openGui(
@@ -796,7 +793,13 @@ public final class GuiService {
         return first == null || first.isBlank() ? clean(second) : first;
     }
 
-    private static NQNPCID npcId(final String value) {
+    private static NQNPCID npcId(final String npcType, final String value) {
+        if (npcType != null && !npcType.isBlank()) {
+            final var parsed = NpcAttachments.Selector.parse(npcType + ":" + value);
+            if (parsed.isPresent()) {
+                return parsed.orElseThrow().id();
+            }
+        }
         try {
             return NQNPCID.fromInteger(Integer.parseInt(value));
         } catch (final NumberFormatException ignored) {

@@ -368,6 +368,52 @@ class GuiServiceTest {
                         || slot.displayName().startsWith("NPC quest "))
                 .map(GuiSlot::displayName)
                 .toList());
+        assertTrue(view.slots().stream().anyMatch(slot -> slot.actions().contains(
+                GuiAction.openGui(
+                                "quest-preview",
+                                new GuiContext("ShownMatching", "", "citizens", currentNpc))
+                        .forPlayer("alessio"))));
+    }
+
+    @Test
+    void fancyNpcQuestLinkKeepsItsStringIdAndNpcType() {
+        final NotQuestsPlugin plugin = NotQuestsPlugin.create();
+        plugin.createRegistryAdapter(new NotQuestsRegistry.PlatformHooks(null, null, null))
+                .actions()
+                .action("OpenGui")
+                .displayName("Open GUI")
+                .description("Opens a GUI.")
+                .execute((action, player, objects) -> {})
+                .register();
+        plugin.languageManager().configuration().set("gui.npc-available-quests.title", "NPC quests");
+        plugin.languageManager()
+                .configuration()
+                .set("gui.npc-available-quests.button.quest.name", "NPC quest %QUESTID%");
+        final NQNPCID currentNpc = NQNPCID.fromString("b7ffc743-0e12-4415-bf43-feb69a73f649");
+        plugin.getOrCreateQuest("FancyQuest")
+                .addNpcAttachment("fancynpcs", currentNpc, "Guide", true);
+        final Player player = new Player("NoeX");
+        plugin.registerQuestPlayer(player, "default", true);
+
+        final ResolvedGui view = new GuiService(plugin).build(
+                "npc-available-quests",
+                player,
+                new GuiContext("", "", "fancynpcs", currentNpc));
+
+        final GuiAction action = view.slots().stream()
+                .filter(slot -> slot.displayName().equals("NPC quest FancyQuest"))
+                .findFirst()
+                .orElseThrow()
+                .actions()
+                .getFirst();
+        assertEquals(GuiAction.Type.OPEN_GUI, action.type());
+        assertEquals("quest-preview", action.target());
+        assertEquals("FancyQuest", action.context().questIdentifier());
+        assertEquals("fancynpcs", action.context().npcType());
+        assertEquals(currentNpc, action.context().npcId());
+        assertTrue(plugin.runGuiActions(player, List.of(action), player.messages::add));
+        assertEquals(List.of("quest-preview"), player.openedGuis);
+        assertTrue(player.messages.isEmpty());
     }
 
     @Test

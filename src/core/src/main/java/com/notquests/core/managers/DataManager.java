@@ -1159,30 +1159,30 @@ public class DataManager {
     private Object decodeRegistryValue(
             final RegistryField.Definition field,
             final Object configured) {
+        final Object decoded = decodeValue(configured);
         return switch (field.valueType()) {
-            case "itemSelection", "itemStack" -> itemSelection(configured);
-            case "location" -> location(configured);
+            case "itemSelection", "itemStack" -> itemSelection(decoded);
+            case "location" -> decoded instanceof NQLocation location ? location : null;
             case "duration" -> {
-                final Object decoded = decodeValue(configured);
                 if (decoded instanceof Duration duration) {
                     yield duration;
                 }
-                if (configured instanceof Number number) {
+                if (decoded instanceof Number number) {
                     yield Duration.ofMillis(number.longValue());
                 }
                 try {
-                    yield Duration.ofMillis(Long.parseLong(String.valueOf(configured)));
+                    yield Duration.ofMillis(Long.parseLong(String.valueOf(decoded)));
                 } catch (final NumberFormatException ignored) {
                     yield null;
                 }
             }
-            case "integer" -> configured instanceof Number number
+            case "integer" -> decoded instanceof Number number
                     ? number.intValue()
-                    : parseInteger(configured);
-            case "number", "optionalNumber" -> configured instanceof Number number
+                    : parseInteger(decoded);
+            case "number", "optionalNumber" -> decoded instanceof Number number
                     ? number.doubleValue()
-                    : parseDouble(configured);
-            default -> decodeValue(configured);
+                    : parseDouble(decoded);
+            default -> decoded;
         };
     }
 
@@ -1300,7 +1300,21 @@ public class DataManager {
     }
 
     private ItemSelection itemSelection(final Object yamlValue) {
-        return ItemStackSelection.fromYamlValue(yamlValue, itemName -> plugin.savedItem(itemName) != null);
+        if (yamlValue instanceof ItemSelection item) {
+            return item;
+        }
+        if (yamlValue instanceof Map<?, ?> map && map.get("$type") != null) {
+            final Object decoded = decodeValue(yamlValue);
+            if (decoded instanceof ItemSelection item) {
+                return item;
+            }
+            return ItemStackSelection.fromYamlValue(
+                    decoded,
+                    itemName -> plugin.savedItem(itemName) != null);
+        }
+        return ItemStackSelection.fromYamlValue(
+                yamlValue,
+                itemName -> plugin.savedItem(itemName) != null);
     }
 
     private Map<String, Object> encodeMap(final Map<String, Object> source) {

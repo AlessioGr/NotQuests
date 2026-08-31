@@ -11,15 +11,18 @@ import org.junit.jupiter.api.io.TempDir;
 
 import com.notquests.core.NotQuestsPlugin;
 import com.notquests.core.config.YamlConfig;
+import com.notquests.core.items.ItemSelection;
 import com.notquests.core.items.ItemStackSelection;
 import com.notquests.core.managers.DataManager.ReloadTarget;
 import com.notquests.core.managers.tags.TagType;
 import com.notquests.core.npc.NQNPCID;
+import com.notquests.core.platform.NQLocation;
 import com.notquests.core.registry.NotQuestsRegistry;
 import com.notquests.core.structs.Category;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -449,6 +452,102 @@ class DataManagerTest {
     }
 
     @Test
+    void reloadDecodesPersistedItemSelectionTypeInsteadOfTreatingItAsMaterialText() throws Exception {
+        writeCategoryData(Category.DEFAULT_NAME, "category.yml", "id: default\n");
+        writeCategoryData(Category.DEFAULT_NAME, "quests.yml", """
+                quests:
+                  TestQuest:
+                    objectives:
+                      1:
+                        objectiveType: BreakBlocks
+                        specifics:
+                          itemStackSelection:
+                            $type: itemSelection
+                            value: grass_block
+                  NestedQuest:
+                    objectives:
+                      1:
+                        objectiveType: BreakBlocks
+                        specifics:
+                          itemStackSelection:
+                            $type: itemSelection
+                            value:
+                              $type: itemSelection
+                              value: dirt
+                """);
+        final NotQuestsPlugin plugin = NotQuestsPlugin.create();
+        final var adapter = plugin.createRegistryAdapter(
+                new NotQuestsRegistry.PlatformHooks(null, null, null));
+        adapter.objectives().objective("BreakBlocks")
+                .displayName("Break Blocks")
+                .description("Break configured blocks.")
+                .field(
+                        "materials",
+                        adapter.fields().itemSelection().config("specifics.itemStackSelection"),
+                        "Blocks to break.")
+                .register();
+
+        assertTrue(new DataManager(plugin, adapter, tempDir).reload(ReloadTarget.ALL));
+
+        final var selection = plugin.quest("TestQuest")
+                .getObjectiveFromID(1)
+                .data()
+                .itemSelection("materials");
+        assertEquals("grass_block", selection.listedMaterials(""));
+        final var repeatedlyWrappedSelection = plugin.quest("NestedQuest")
+                .getObjectiveFromID(1)
+                .data()
+                .itemSelection("materials");
+        assertEquals("dirt", repeatedlyWrappedSelection.listedMaterials(""));
+    }
+
+    @Test
+    void everyRegistryOwnerRoundTripsTypedValuesWithoutLeakingYamlWrappers() throws Exception {
+        final NotQuestsPlugin plugin = NotQuestsPlugin.create();
+        final var adapter = plugin.createRegistryAdapter(
+                new NotQuestsRegistry.PlatformHooks(null, null, null));
+        registerTypedValueEntries(adapter);
+        final DataManager persistence = new DataManager(plugin, adapter, tempDir);
+        final var quest = plugin.getOrCreateQuest("TypedQuest");
+        quest.addObjective(1, "TypedObjective", typedValues(), "");
+        quest.addRequirement(1, "TypedCondition", typedValues());
+        quest.addReward(1, "TypedAction", typedValues());
+        quest.addTrigger(1, "TypedTrigger", typedValues());
+        final var typedAction = plugin.registry().actions().stream()
+                .filter(type -> type.id().equals("TypedAction"))
+                .findFirst()
+                .orElseThrow();
+        final var typedCondition = plugin.registry().conditions().stream()
+                .filter(type -> type.id().equals("TypedCondition"))
+                .findFirst()
+                .orElseThrow();
+        plugin.savedActions().save("TypedSavedAction", typedAction, typedValues());
+        plugin.savedActions().action("TypedSavedAction").addCondition(typedCondition, typedValues());
+        plugin.putSavedCondition(NotQuestsPlugin.StoredCondition.restore(
+                "TypedSavedCondition",
+                typedCondition,
+                typedValues()));
+
+        assertTrue(persistence.saveConfiguredData());
+
+        final NotQuestsPlugin reloaded = NotQuestsPlugin.create();
+        final var reloadedAdapter = reloaded.createRegistryAdapter(
+                new NotQuestsRegistry.PlatformHooks(null, null, null));
+        registerTypedValueEntries(reloadedAdapter);
+        assertTrue(new DataManager(reloaded, reloadedAdapter, tempDir).reload(ReloadTarget.ALL));
+
+        final var reloadedQuest = reloaded.quest("TypedQuest");
+        assertTypedValues(reloadedQuest.getObjectiveFromID(1).values());
+        assertTypedValues(reloadedQuest.getRequirementFromID(1).values());
+        assertTypedValues(reloadedQuest.getRewardFromID(1).values());
+        assertTypedValues(reloadedQuest.getTriggerFromID(1).values());
+        final var reloadedSavedAction = reloaded.savedActions().action("TypedSavedAction");
+        assertTypedValues(reloadedSavedAction.getData().values());
+        assertTypedValues(reloadedSavedAction.getConditionFromID(1).getData().values());
+        assertTypedValues(reloaded.savedCondition("TypedSavedCondition").getData().values());
+    }
+
+    @Test
     void registryConfigPathsAreTheOnlyPersistedEntryShape() throws Exception {
         writeCategoryData(Category.DEFAULT_NAME, "category.yml", "id: default\n");
         writeCategoryData(Category.DEFAULT_NAME, "quests.yml", """
@@ -555,6 +654,79 @@ class DataManagerTest {
         final LinkedHashMap<String, Object> values = new LinkedHashMap<>();
         values.put(key, value);
         return new com.notquests.core.TestData(values);
+    }
+
+    private static void registerTypedValueEntries(final com.notquests.core.platform.NotQuestsAdapter adapter) {
+        adapter.objectives().objective("TypedObjective")
+                .displayName("Typed objective")
+                .description("Tests typed persistence.")
+                .field("item", adapter.fields().itemSelection().config("specifics.item"), "Item.")
+                .field("stack", adapter.fields().storedItemStack().config("specifics.stack"), "Stack.")
+                .field("delay", adapter.fields().duration(Duration.ZERO).config("specifics.delay"), "Delay.")
+                .field("location", adapter.fields().storedLocation().config("specifics.location"), "Location.")
+                .field("directItem", adapter.fields().itemSelection(), "Direct item.")
+                .register();
+        adapter.conditions().condition("TypedCondition")
+                .displayName("Typed condition")
+                .description("Tests typed persistence.")
+                .field("item", adapter.fields().itemSelection().config("specifics.item"), "Item.")
+                .field("stack", adapter.fields().storedItemStack().config("specifics.stack"), "Stack.")
+                .field("delay", adapter.fields().duration(Duration.ZERO).config("specifics.delay"), "Delay.")
+                .field("location", adapter.fields().storedLocation().config("specifics.location"), "Location.")
+                .field("directItem", adapter.fields().itemSelection(), "Direct item.")
+                .check((condition, player) -> "")
+                .register();
+        adapter.actions().action("TypedAction")
+                .displayName("Typed action")
+                .description("Tests typed persistence.")
+                .field("item", adapter.fields().itemSelection().config("specifics.item"), "Item.")
+                .field("stack", adapter.fields().storedItemStack().config("specifics.stack"), "Stack.")
+                .field("delay", adapter.fields().duration(Duration.ZERO).config("specifics.delay"), "Delay.")
+                .field("location", adapter.fields().storedLocation().config("specifics.location"), "Location.")
+                .field("directItem", adapter.fields().itemSelection(), "Direct item.")
+                .execute((action, player, objects) -> {})
+                .register();
+        adapter.triggers().trigger("TypedTrigger")
+                .displayName("Typed trigger")
+                .description("Tests typed persistence.")
+                .field("item", adapter.fields().itemSelection().config("specifics.item"), "Item.")
+                .field("stack", adapter.fields().storedItemStack().config("specifics.stack"), "Stack.")
+                .field("delay", adapter.fields().duration(Duration.ZERO).config("specifics.delay"), "Delay.")
+                .field("location", adapter.fields().storedLocation().config("specifics.location"), "Location.")
+                .field("directItem", adapter.fields().itemSelection(), "Direct item.")
+                .register();
+    }
+
+    private static com.notquests.core.TestData typedValues() {
+        final ItemSelection item = ItemStackSelection.parse("grass_block");
+        final ItemSelection stack = ItemStackSelection.parse("diamond");
+        final Duration delay = Duration.ofMillis(1250);
+        final NQLocation location = NQLocation.at("world", 1.5, 64, -2.5, 90, 15);
+        return new com.notquests.core.TestData(Map.of(
+                "item", item,
+                "stack", stack,
+                "delay", delay,
+                "location", location,
+                "directItem", item,
+                "nested", Map.of("item", item, "delay", delay, "location", location)));
+    }
+
+    private static void assertTypedValues(final Map<String, Object> values) {
+        assertEquals("grass_block", assertInstanceOf(ItemSelection.class, values.get("item")).listedMaterials(""));
+        assertEquals("diamond", assertInstanceOf(ItemSelection.class, values.get("stack")).listedMaterials(""));
+        assertEquals("grass_block", assertInstanceOf(ItemSelection.class, values.get("directItem")).listedMaterials(""));
+        assertEquals(Duration.ofMillis(1250), assertInstanceOf(Duration.class, values.get("delay")));
+        final NQLocation location = assertInstanceOf(NQLocation.class, values.get("location"));
+        assertEquals("world", location.worldName());
+        assertEquals(1.5, location.x());
+        assertEquals(64, location.y());
+        assertEquals(-2.5, location.z());
+        assertEquals(90, location.yaw());
+        assertEquals(15, location.pitch());
+        final Map<?, ?> nested = assertInstanceOf(Map.class, values.get("nested"));
+        assertInstanceOf(ItemSelection.class, nested.get("item"));
+        assertInstanceOf(Duration.class, nested.get("delay"));
+        assertInstanceOf(NQLocation.class, nested.get("location"));
     }
 
     private void writeCategoryData(final String categoryName, final String fileName, final String yaml) throws Exception {
