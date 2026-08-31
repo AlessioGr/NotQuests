@@ -3,18 +3,13 @@ package com.notquests.neoforge;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.mojang.brigadier.suggestion.Suggestion;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 
 class NeoForgeArgumentsTest {
     @Test
@@ -55,27 +50,5 @@ class NeoForgeArgumentsTest {
         assertTrue(source.contains("commands.flagSuggestions("));
         assertFalse(source.contains("placeholderSuggestion("));
         assertFalse(source.contains("suggestCommaSeparated("));
-    }
-
-    @Test
-    void nestedAliasesAreAcceptedWithoutBeingSuggested() throws Exception {
-        final var alias = LiteralArgumentBuilder.<Object>literal("view")
-                .executes(context -> 1)
-                .build();
-        final var hiddenAlias = NeoForgeArguments.hiddenLiteralAlias(alias);
-        final CommandDispatcher<Object> dispatcher = new CommandDispatcher<>();
-        dispatcher.getRoot().addChild(hiddenAlias);
-
-        final List<String> suggestions = dispatcher
-                .getCompletionSuggestions(dispatcher.parse("", new Object()))
-                .get()
-                .getList()
-                .stream()
-                .map(Suggestion::getText)
-                .toList();
-
-        assertEquals(List.of(), suggestions);
-        assertEquals("", dispatcher.parse("view", new Object()).getReader().getRemaining());
-        assertNotNull(hiddenAlias.getCommand());
     }
 }

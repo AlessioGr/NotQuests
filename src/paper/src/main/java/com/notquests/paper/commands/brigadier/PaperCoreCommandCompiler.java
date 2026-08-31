@@ -10,7 +10,6 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
@@ -42,7 +41,6 @@ import com.notquests.paper.PaperPlayer;
 import com.notquests.paper.commands.arguments.ItemStackSelectionArgument;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 public final class PaperCoreCommandCompiler {
     private static final String FLAG_ARG = "__flags";
@@ -85,16 +83,7 @@ public final class PaperCoreCommandCompiler {
                             NQSuggestionProvider<NQCommandContext>, NQCommandHandler> node,
             final List<Node<NQArgumentType, NQFlag<NQArgumentType, NQSuggestionProvider<NQCommandContext>>,
                             NQSuggestionProvider<NQCommandContext>, NQCommandHandler>> path) {
-        return literal(node, path, node.name());
-    }
-
-    private LiteralArgumentBuilder<CommandSourceStack> literal(
-            final Node<NQArgumentType, NQFlag<NQArgumentType, NQSuggestionProvider<NQCommandContext>>,
-                            NQSuggestionProvider<NQCommandContext>, NQCommandHandler> node,
-            final List<Node<NQArgumentType, NQFlag<NQArgumentType, NQSuggestionProvider<NQCommandContext>>,
-                            NQSuggestionProvider<NQCommandContext>, NQCommandHandler>> path,
-            final String literalName) {
-        final LiteralArgumentBuilder<CommandSourceStack> builder = Commands.literal(literalName);
+        final LiteralArgumentBuilder<CommandSourceStack> builder = Commands.literal(node.name());
         populate(builder, node, path);
         return builder;
     }
@@ -124,15 +113,7 @@ public final class PaperCoreCommandCompiler {
         for (final var child : node.childNodes()) {
             final var childPath = child.appendTo(path);
             if (child.kind() == NQCommandKind.LITERAL) {
-                if (child.aliases().contains("")) {
-                    attachEmptyLiteralAlias(builder, child, childPath);
-                }
                 builder.then(literal(child, childPath).build());
-                for (final String alias : child.aliases()) {
-                    if (alias != null && !alias.isBlank()) {
-                        builder.then(hiddenAlias(literal(child, childPath, alias).build()));
-                    }
-                }
             } else if (child.kind() == NQCommandKind.OPTIONAL) {
                 optionalHandlerAttached |= attachOptionalOmitted(builder, child, childPath);
                 builder.then(argument(child, childPath).build());
@@ -153,48 +134,6 @@ public final class PaperCoreCommandCompiler {
                 builder.then(flags.build());
             }
         } else if (!optionalHandlerAttached && !node.childNodes().isEmpty()) {
-            builder.executes(context -> showHelp(node, path, context));
-        }
-    }
-
-    private static <S> LiteralCommandNode<S> hiddenAlias(final LiteralCommandNode<S> alias) {
-        final LiteralCommandNode<S> hidden = new LiteralCommandNode<>(
-                alias.getLiteral(),
-                alias.getCommand(),
-                alias.getRequirement(),
-                alias.getRedirect(),
-                alias.getRedirectModifier(),
-                alias.isFork()) {
-            @Override
-            public CompletableFuture<Suggestions> listSuggestions(
-                    final CommandContext<S> context,
-                    final SuggestionsBuilder builder) {
-                return Suggestions.empty();
-            }
-        };
-        alias.getChildren().forEach(hidden::addChild);
-        return hidden;
-    }
-
-    private void attachEmptyLiteralAlias(
-            final ArgumentBuilder<CommandSourceStack, ?> builder,
-            final Node<NQArgumentType, NQFlag<NQArgumentType, NQSuggestionProvider<NQCommandContext>>,
-                            NQSuggestionProvider<NQCommandContext>, NQCommandHandler> node,
-            final List<Node<NQArgumentType, NQFlag<NQArgumentType, NQSuggestionProvider<NQCommandContext>>,
-                            NQSuggestionProvider<NQCommandContext>, NQCommandHandler>> path) {
-        if (node.handler() != null) {
-            builder.executes(context -> execute(node, context, ""));
-            if (!node.commandFlags().isEmpty()) {
-                final RequiredArgumentBuilder<CommandSourceStack, String> flags =
-                        Commands.argument(FLAG_ARG, StringArgumentType.greedyString());
-                flags.suggests(flagSuggestions(node));
-                flags.executes(context -> execute(
-                        node,
-                        context,
-                        StringArgumentType.getString(context, FLAG_ARG)));
-                builder.then(flags.build());
-            }
-        } else if (!node.childNodes().isEmpty()) {
             builder.executes(context -> showHelp(node, path, context));
         }
     }

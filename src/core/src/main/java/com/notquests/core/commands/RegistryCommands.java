@@ -261,7 +261,7 @@ public final class RegistryCommands {
                         NQCommandHandler>
                 editQuest = root.literal(
                                 "edit",
-                                NQDescription.of("Opens subcommands for editing a specific quest."), "e")
+                                NQDescription.of("Opens subcommands for editing a specific quest."))
                         .required(
                                 "quest",
                                 NQArgumentType.quest(),
@@ -275,7 +275,7 @@ public final class RegistryCommands {
                         NQCommandHandler>
                 level1 = editQuest.literal(
                                 "objectives",
-                                NQDescription.of("Manages objectives on the selected quest."), "o")
+                                NQDescription.of("Manages objectives on the selected quest."))
                         .literal(
                                 "edit",
                                 NQDescription.of("Opens subcommands for editing a specific objective on the selected quest."))
@@ -285,7 +285,7 @@ public final class RegistryCommands {
                                 NQDescription.of("Objective ID shown by this quest's objectives list."))
                         .literal(
                                 "objectives",
-                                NQDescription.of("Manages child objectives inside the selected objective."), "o");
+                                NQDescription.of("Manages child objectives inside the selected objective."));
         addObjectiveLevel(commands, level1, commandManager, 1);
 
         final NQCommandBuilder<
@@ -302,7 +302,7 @@ public final class RegistryCommands {
                                 NQDescription.of("Child objective ID shown inside the selected parent objective."))
                         .literal(
                                 "objectives",
-                                NQDescription.of("Manages child objectives inside the selected nested objective."), "o");
+                                NQDescription.of("Manages child objectives inside the selected nested objective."));
         addObjectiveLevel(commands, level2, commandManager, 2);
     }
 
@@ -334,7 +334,7 @@ public final class RegistryCommands {
                 addBase = level == 0
                         ? objectivesBase.literal(
                                 "objectives",
-                                NQDescription.of("Manages objectives on the selected quest."), "o")
+                                NQDescription.of("Manages objectives on the selected quest."))
                         : objectivesBase;
         final NQCommandBuilder<
                         NQArgumentType,
@@ -1196,7 +1196,7 @@ public final class RegistryCommands {
                         NQCommandHandler>
                 editQuest = root.literal(
                                 "edit",
-                                NQDescription.of("Opens subcommands for editing a specific quest."), "e")
+                                NQDescription.of("Opens subcommands for editing a specific quest."))
                         .required(
                                 "quest",
                                 NQArgumentType.quest(),
@@ -1206,7 +1206,7 @@ public final class RegistryCommands {
                         NQFlag<NQArgumentType, NQSuggestionProvider<NQCommandContext>>,
                         NQSuggestionProvider<NQCommandContext>,
                         NQCommandHandler>
-                questRewards = editQuest.literal("rewards", NQDescription.of("Manages rewards granted by the selected quest."), "rew")
+                questRewards = editQuest.literal("rewards", NQDescription.of("Manages rewards granted by the selected quest."))
                         .literal("add", NQDescription.of("Adds a reward granted by the selected quest."));
         addRewardActionCommand(
                 commands,
@@ -1229,7 +1229,7 @@ public final class RegistryCommands {
                             NQSuggestionProvider<NQCommandContext>,
                             NQCommandHandler>
                     objectiveRewards = objectiveEditBase(root, objectiveLevel)
-                            .literal("rewards", NQDescription.of("Manages rewards granted by the selected objective."), "rew")
+                            .literal("rewards", NQDescription.of("Manages rewards granted by the selected objective."))
                             .literal("add", NQDescription.of("Adds a reward granted when the selected objective completes."));
             addRewardActionCommand(
                     commands,
@@ -1727,9 +1727,9 @@ public final class RegistryCommands {
                         NQFlag<NQArgumentType, NQSuggestionProvider<NQCommandContext>>,
                         NQSuggestionProvider<NQCommandContext>,
                         NQCommandHandler>
-                base = root.literal("edit", NQDescription.of("Opens subcommands for editing a specific quest."), "e")
+                base = root.literal("edit", NQDescription.of("Opens subcommands for editing a specific quest."))
                         .required("quest", NQArgumentType.quest(), NQDescription.of("Identifier of the quest to edit; use /qa list to see available quests."))
-                        .literal("triggers", NQDescription.of("Manages triggers attached to this quest."), "t")
+                        .literal("triggers", NQDescription.of("Manages triggers attached to this quest."))
                         .literal("add", NQDescription.of("Adds a trigger that runs an action when the selected quest changes state."))
                         .required("action", NQArgumentType.action(), NQDescription.of("Action which will be executed when the trigger runs."));
         for (final Triggers.Type triggerType : commandManager.triggerTypes()) {
@@ -1788,7 +1788,7 @@ public final class RegistryCommands {
                         NQCommandHandler>
                 base = root.literal(
                                 "variables",
-                                NQDescription.of("Evaluates NotQuests variables for a player or the command sender."), "variable")
+                                NQDescription.of("Evaluates NotQuests variables for a player or the command sender."))
                         .literal(
                                 "check",
                                 NQDescription.of("Displays a NotQuests variable's value for a player or the command sender."));
@@ -1830,9 +1830,9 @@ public final class RegistryCommands {
                             NQSuggestionProvider<NQCommandContext>,
                             NQCommandHandler>
                     root) {
-        return root.literal("edit", NQDescription.of("Opens subcommands for editing a specific quest."), "e")
+        return root.literal("edit", NQDescription.of("Opens subcommands for editing a specific quest."))
                 .required("quest", NQArgumentType.quest(), NQDescription.of("Identifier of the quest to edit; use /qa list to see available quests."))
-                .literal("requirements", NQDescription.of("Manages requirements that must pass before the selected quest can be taken."), "req")
+                .literal("requirements", NQDescription.of("Manages requirements that must pass before the selected quest can be taken."))
                 .literal("add", NQDescription.of("Adds a requirement that must pass before players can take the selected quest."));
     }
 
@@ -1884,13 +1884,13 @@ public final class RegistryCommands {
                         NQFlag<NQArgumentType, NQSuggestionProvider<NQCommandContext>>,
                         NQSuggestionProvider<NQCommandContext>,
                         NQCommandHandler>
-                command = root.literal("edit", NQDescription.of("Opens subcommands for editing a specific quest."), "e")
+                command = root.literal("edit", NQDescription.of("Opens subcommands for editing a specific quest."))
                         .required("quest", NQArgumentType.quest(), NQDescription.of("Identifier of the quest to edit; use /qa list to see available quests."))
-                        .literal("objectives", NQDescription.of("Manages objectives on the selected quest."), "o")
+                        .literal("objectives", NQDescription.of("Manages objectives on the selected quest."))
                         .literal("edit", NQDescription.of("Opens subcommands for editing a specific objective on the selected quest."))
                         .required("objectiveId", NQArgumentType.integer("objective id"), NQDescription.of("Objective ID shown by this quest's objectives list."));
         for (int i = 1; i <= level; i++) {
-            command = command.literal("objectives", NQDescription.of("Manages child objectives inside the selected objective."), "o")
+            command = command.literal("objectives", NQDescription.of("Manages child objectives inside the selected objective."))
                     .literal("edit", NQDescription.of("Opens subcommands for editing a child objective inside the selected objective."))
                     .required(
                             "objectiveId" + (i + 1),

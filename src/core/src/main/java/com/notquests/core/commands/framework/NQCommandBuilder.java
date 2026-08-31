@@ -67,11 +67,11 @@ public final class NQCommandBuilder<A extends NQCommandSchema.Argument, F extend
     }
 
     public NQCommandBuilder<A, F, S, H> literal(
-            final String name, final NQDescription description, final String... aliases) {
+            final String name, final NQDescription description) {
         return withStep(new NQCommandStep<>(
                 NQCommandKind.LITERAL,
                 name,
-                List.of(aliases),
+                List.of(),
                 null,
                 Objects.requireNonNull(description, "description"),
                 null));

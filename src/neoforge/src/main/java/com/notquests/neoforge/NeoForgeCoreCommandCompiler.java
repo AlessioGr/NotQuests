@@ -83,16 +83,7 @@ final class NeoForgeCoreCommandCompiler {
                             NQSuggestionProvider<NQCommandContext>, NQCommandHandler> node,
             final List<Node<NQArgumentType, NQFlag<NQArgumentType, NQSuggestionProvider<NQCommandContext>>,
                             NQSuggestionProvider<NQCommandContext>, NQCommandHandler>> path) {
-        return literal(node, path, node.name());
-    }
-
-    private LiteralArgumentBuilder<CommandSourceStack> literal(
-            final Node<NQArgumentType, NQFlag<NQArgumentType, NQSuggestionProvider<NQCommandContext>>,
-                            NQSuggestionProvider<NQCommandContext>, NQCommandHandler> node,
-            final List<Node<NQArgumentType, NQFlag<NQArgumentType, NQSuggestionProvider<NQCommandContext>>,
-                            NQSuggestionProvider<NQCommandContext>, NQCommandHandler>> path,
-            final String literalName) {
-        final LiteralArgumentBuilder<CommandSourceStack> builder = Commands.literal(literalName);
+        final LiteralArgumentBuilder<CommandSourceStack> builder = Commands.literal(node.name());
         populate(builder, node, path);
         return builder;
     }
@@ -122,16 +113,7 @@ final class NeoForgeCoreCommandCompiler {
         for (final var child : node.childNodes()) {
             final var childPath = child.appendTo(path);
             if (child.kind() == NQCommandKind.LITERAL) {
-                if (child.aliases().contains("")) {
-                    attachEmptyLiteralAlias(builder, child, childPath);
-                }
                 builder.then(literal(child, childPath));
-                for (final String alias : child.aliases()) {
-                    if (alias != null && !alias.isBlank()) {
-                        builder.then(NeoForgeArguments.hiddenLiteralAlias(
-                                literal(child, childPath, alias).build()));
-                    }
-                }
             } else if (child.kind() == NQCommandKind.OPTIONAL) {
                 optionalHandlerAttached |= attachOptionalOmitted(builder, child, childPath);
                 builder.then(argument(child, childPath));
@@ -149,26 +131,6 @@ final class NeoForgeCoreCommandCompiler {
                 builder.then(flags);
             }
         } else if (!optionalHandlerAttached && !node.childNodes().isEmpty()) {
-            builder.executes(context -> showHelp(node, path, context));
-        }
-    }
-
-    private void attachEmptyLiteralAlias(
-            final ArgumentBuilder<CommandSourceStack, ?> builder,
-            final Node<NQArgumentType, NQFlag<NQArgumentType, NQSuggestionProvider<NQCommandContext>>,
-                            NQSuggestionProvider<NQCommandContext>, NQCommandHandler> node,
-            final List<Node<NQArgumentType, NQFlag<NQArgumentType, NQSuggestionProvider<NQCommandContext>>,
-                            NQSuggestionProvider<NQCommandContext>, NQCommandHandler>> path) {
-        if (node.handler() != null) {
-            builder.executes(context -> execute(node, context, ""));
-            if (!node.commandFlags().isEmpty()) {
-                final RequiredArgumentBuilder<CommandSourceStack, String> flags =
-                        Commands.argument(FLAG_ARG, StringArgumentType.greedyString());
-                flags.suggests(flagSuggestions(node));
-                flags.executes(context -> execute(node, context, argument(context, FLAG_ARG)));
-                builder.then(flags);
-            }
-        } else if (!node.childNodes().isEmpty()) {
             builder.executes(context -> showHelp(node, path, context));
         }
     }

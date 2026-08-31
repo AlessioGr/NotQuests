@@ -36,7 +36,6 @@ public final class NQCommandTree<A extends NQCommandSchema.Argument, F extends N
             final NQCommandStep<A, S> step = steps.get(i);
             final Node<A, F, S, H> child =
                     current.children.computeIfAbsent(step.name(), n -> new Node<>(step.kind(), step.name()));
-            addAliases(child, step.aliases());
             if (step.argument() != null) {
                 child.argument = step.argument();
             }
@@ -174,17 +173,6 @@ public final class NQCommandTree<A extends NQCommandSchema.Argument, F extends N
 
         public List<F> commandFlags() {
             return flags;
-        }
-
-        public List<String> literalNames() {
-            final ArrayList<String> names = new ArrayList<>(aliases.size() + 1);
-            names.add(name);
-            for (final String alias : aliases) {
-                if (alias != null && !alias.isBlank() && !names.contains(alias)) {
-                    names.add(alias);
-                }
-            }
-            return List.copyOf(names);
         }
 
         public List<Node<A, F, S, H>> appendTo(final List<Node<A, F, S, H>> path) {

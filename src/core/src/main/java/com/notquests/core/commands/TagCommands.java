@@ -40,7 +40,7 @@ final class TagCommands {
                         NQCommandHandler>
                 tags = root.literal(
                         "tags",
-                        NQDescription.of("Manages player tags."), "t");
+                        NQDescription.of("Manages player tags."));
         commands.add(tags.literal("create", NQDescription.of("Creates a new player tag with the selected value type."))
                 .required("type", NQArgumentType.tagType(), NQDescription.of("Value type for the new tag: BOOLEAN, INTEGER, FLOAT, DOUBLE, or STRING."))
                 .required("name", NQArgumentType.word("tag name"), NQDescription.of("Unique name for the tag to create."))
@@ -55,7 +55,7 @@ final class TagCommands {
                 .commandDescription(NQDescription.of("Lists all configured tags."))
                 .handler(ignored -> listTags(plugin))
                 .registration());
-        commands.add(tags.literal("delete", NQDescription.of("Deletes the selected player tag."), "remove")
+        commands.add(tags.literal("delete", NQDescription.of("Deletes the selected player tag."))
                 .required("tag-name", NQArgumentType.tagName(), NQDescription.of("Name of the tag."))
                 .commandDescription(NQDescription.of("Deletes an existing tag."))
                 .handler(context -> List.of(deleteTag(plugin, context.argument("tag-name"))))

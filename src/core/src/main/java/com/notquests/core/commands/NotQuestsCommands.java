@@ -649,7 +649,7 @@ public final class NotQuestsCommands {
                 .commandDescription(NQDescription.of("Opens the help menu"))
                 .handler(context -> success(commandManager.rootSummary(rootName)))
                 .registration());
-        commands.add(root.literal("version", NQDescription.of("Shows the installed NotQuests version and server environment."), "ver", "v", "info")
+        commands.add(root.literal("version", NQDescription.of("Shows the installed NotQuests version and server environment."))
                 .commandDescription(NQDescription.of("Displays the NotQuests version and platform details."))
                 .handler(ignored -> List.of(CommandMessage.success(
                         commandManager.versionMessage(version.get(), minecraftVersion.get()))))
@@ -667,12 +667,12 @@ public final class NotQuestsCommands {
                         NQCommandHandler>
                 items = root.literal(
                         "items",
-                        NQDescription.of("Manages custom NotQuests items."), "item", "i");
+                        NQDescription.of("Manages custom NotQuests items."));
         addItemCommands(
                 commands,
                 items.literal(
                         "items",
-                        NQDescription.of("Manages custom NotQuests items."), "item", "i"),
+                        NQDescription.of("Manages custom NotQuests items.")),
                 commandManager);
         commands.addAll(DebugCommands.debugCommands(
                 root,
@@ -697,7 +697,7 @@ public final class NotQuestsCommands {
                         NQCommandHandler>
                 editQuest = root.literal(
                                 "edit",
-                                NQDescription.of("Opens subcommands for editing a specific quest."), "e")
+                                NQDescription.of("Opens subcommands for editing a specific quest."))
                         .required(
                                 "quest",
                                 NQArgumentType.quest(),

@@ -63,11 +63,11 @@ final class SavedActionCommands {
                 .commandDescription(NQDescription.of("Lists all saved actions."))
                 .handler(ignored -> listSavedActions(plugin))
                 .registration());
-        commands.add(actionsEdit.literal("delete", NQDescription.of("Deletes the selected saved action."), "remove")
+        commands.add(actionsEdit.literal("delete", NQDescription.of("Deletes the selected saved action."))
                 .commandDescription(NQDescription.of("Deletes a saved action."))
                 .handler(context -> List.of(deleteSavedAction(plugin, context.argument("action"))))
                 .registration());
-        commands.add(actionsEdit.literal("execute", NQDescription.of("Executes the selected action or command."), "run")
+        commands.add(actionsEdit.literal("execute", NQDescription.of("Executes the selected action or command."))
                 .optional(
                         "player",
                         NQArgumentType.player(),
@@ -97,7 +97,7 @@ final class SavedActionCommands {
                 .commandDescription(NQDescription.of("Removes all conditions from the selected saved action."))
                 .handler(context -> List.of(clearSavedActionConditions(plugin, context.argument("action"))))
                 .registration());
-        commands.add(actionConditions.literal("list", NQDescription.of("Lists every condition on the selected saved action."), "show")
+        commands.add(actionConditions.literal("list", NQDescription.of("Lists every condition on the selected saved action."))
                 .commandDescription(NQDescription.of("Lists all conditions attached to the selected saved action."))
                 .handler(context -> savedActionConditions(plugin, context.argument("action")))
                 .registration());
@@ -114,7 +114,7 @@ final class SavedActionCommands {
                                 NQArgumentType.integer("condition id"),
                                 NQDescription.of("Condition ID shown by this saved action's condition list."),
                                 (context, input) -> savedActionConditionIds(plugin, context.argument("action")));
-        commands.add(editActionCondition.literal("delete", NQDescription.of("Removes the selected condition from the saved action."), "remove")
+        commands.add(editActionCondition.literal("delete", NQDescription.of("Removes the selected condition from the saved action."))
                 .commandDescription(NQDescription.of("Removes a condition from the selected saved action."))
                 .handler(context -> List.of(deleteSavedActionCondition(
                         plugin,
@@ -141,14 +141,14 @@ final class SavedActionCommands {
                         integer(context.argument("condition-id")),
                         context.argument("description"))))
                 .registration());
-        commands.add(actionConditionDescription.literal("remove", NQDescription.of("Removes the selected action condition's custom description text."), "delete")
+        commands.add(actionConditionDescription.literal("remove", NQDescription.of("Removes the selected action condition's custom description text."))
                 .commandDescription(NQDescription.of("Removes the selected action condition's description."))
                 .handler(context -> List.of(removeSavedActionConditionDescription(
                         plugin,
                         context.argument("action"),
                         integer(context.argument("condition-id")))))
                 .registration());
-        commands.add(actionConditionDescription.literal("show", NQDescription.of("Shows the selected action condition's description text."), "check")
+        commands.add(actionConditionDescription.literal("show", NQDescription.of("Shows the selected action condition's description text."))
                 .commandDescription(NQDescription.of("Shows the selected action condition's description."))
                 .handler(context -> List.of(savedActionConditionDescription(
                         plugin,

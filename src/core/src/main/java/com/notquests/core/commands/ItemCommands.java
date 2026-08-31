@@ -66,7 +66,7 @@ final class ItemCommands {
                         NQCommandHandler>
                 itemEdit = items.literal(
                                 "edit",
-                                NQDescription.of("Opens subcommands for editing a saved NotQuests item."), "e")
+                                NQDescription.of("Opens subcommands for editing a saved NotQuests item."))
                         .required(
                                 "item",
                                 NQArgumentType.itemName(),
@@ -90,7 +90,7 @@ final class ItemCommands {
                 .registration());
         commands.add(itemEdit.literal(
                         "remove",
-                        NQDescription.of("Deletes the selected saved NotQuests item."), "delete")
+                        NQDescription.of("Deletes the selected saved NotQuests item."))
                 .commandDescription(NQDescription.of("Deletes the selected saved NotQuests item."))
                 .handler(context -> List.of(deleteSavedItem(plugin, context.argument("item"))))
                 .registration());

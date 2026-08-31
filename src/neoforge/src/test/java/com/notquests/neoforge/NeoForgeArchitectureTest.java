@@ -274,6 +274,11 @@ class NeoForgeArchitectureTest {
         assertTrue(
                 source.contains("builder.getRemaining()") && !source.contains("final String raw = argument(context, FLAG_ARG)"),
                 "NeoForge flag suggestions should use the current suggestion token, not read an unparsed __flags argument.");
+        assertTrue(
+                !source.contains("child.aliases()")
+                        && !source.contains("hiddenLiteralAlias")
+                        && !source.contains("attachEmptyLiteralAlias"),
+                "NeoForge must compile only canonical nested literals; aliases are allowed only at command roots.");
     }
 
     @Test

@@ -42,15 +42,13 @@ final class ProfileCommands {
                         .permission("notquests.user.profiles");
         commands.add(profiles.literal(
                         "show",
-                        NQDescription.of("Shows your current quest profile and the other profiles you can switch to."),
-                        "view", "list", "")
+                        NQDescription.of("Shows your current quest profile and the other profiles you can switch to."))
                 .commandDescription(NQDescription.of("Shows current profile and lists other profiles."))
                 .handler(context -> profileMessages(plugin, context.questPlayer()))
                 .registration());
         commands.add(profiles.literal(
                         "change",
-                        NQDescription.of("Switches the active player profile."),
-                        "set", "switch")
+                        NQDescription.of("Switches the active player profile."))
                 .required(
                         "profile-name",
                         NQArgumentType.profileName(),
@@ -63,8 +61,7 @@ final class ProfileCommands {
                 .registration());
         commands.add(profiles.literal(
                         "create",
-                        NQDescription.of("Creates a new quest profile for the current player."),
-                        "new", "add")
+                        NQDescription.of("Creates a new quest profile for the current player."))
                 .required(
                         "profile-name",
                         NQArgumentType.word("profile name"),

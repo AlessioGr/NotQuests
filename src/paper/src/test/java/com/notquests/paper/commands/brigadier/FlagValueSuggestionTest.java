@@ -3,6 +3,7 @@ package com.notquests.paper.commands.brigadier;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
@@ -97,7 +98,7 @@ class FlagValueSuggestionTest {
                                 NQCommandHandler>
                         root("root", NQDescription.of("root"))
                 .literal("profiles", NQDescription.of("profiles"))
-                .literal("show", NQDescription.of("show"), "view", "list", "")
+                .literal("show", NQDescription.of("show"))
                 .handler(context -> List.of())
                 .registration());
         tree.register(NQCommandBuilder.<
@@ -151,17 +152,16 @@ class FlagValueSuggestionTest {
     }
 
     @Test
-    void nestedLiteralAliasesAndEmptyAliasesAreCompiled() throws Exception {
+    void nestedLiteralsHaveNoAliasNodes() throws Exception {
         final var profiles = compiledRoot().getChild("profiles");
 
         assertNotNull(profiles.getChild("show"), "primary child literal should be registered");
-        assertNotNull(profiles.getChild("view"), "child literal alias should be registered");
-        assertNotNull(profiles.getChild("list"), "second child literal alias should be registered");
-        assertNotNull(profiles.getCommand(), "empty child alias should execute from the parent path");
+        assertNull(profiles.getChild("view"), "child literal aliases must not be registered");
+        assertNull(profiles.getChild("list"), "child literal aliases must not be registered");
     }
 
     @Test
-    void nestedLiteralAliasesAreAcceptedWithoutBeingSuggested() throws Exception {
+    void onlyCanonicalNestedLiteralsAreSuggested() throws Exception {
         assertEquals(List.of("show"), completionsFor("root profiles "));
     }
 

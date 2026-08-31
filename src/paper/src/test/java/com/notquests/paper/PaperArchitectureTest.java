@@ -426,6 +426,9 @@ class PaperArchitectureTest {
         !containsAny(compiler, List.of("CommandHintRenderer", "showCommandHints", "pushHint(")),
         "Paper's compiler must not decide command hint policy or text");
     assertTrue(
+        !containsAny(compiler, List.of("child.aliases()", "hiddenAlias", "attachEmptyLiteralAlias")),
+        "Paper must compile only canonical nested literals; aliases are allowed only at command roots");
+    assertTrue(
         commands.contains("showHint("),
         "The core command surface must own command hint decisions");
   }

@@ -115,7 +115,7 @@ final class ConversationCommands {
                         NQCommandHandler>
                 conversations = root.literal(
                         "conversations",
-                        NQDescription.of("Manages conversations and their NPC attachments."), "c");
+                        NQDescription.of("Manages conversations and their NPC attachments."));
         commands.add(conversations.literal("create", NQDescription.of("Creates a new conversation file."))
                 .required(
                         "conversation-name",
@@ -203,7 +203,7 @@ final class ConversationCommands {
         }
         if (adapter.supportsArmorStandAttachmentTools()) {
             commands.add(conversationEdit.literal("armorstand", NQDescription.of("Uses an armor stand selector/removal tool."))
-                    .literal("remove", NQDescription.of("Gives a player the tool used to remove conversations from an armor stand."), "delete")
+                    .literal("remove", NQDescription.of("Gives a player the tool used to remove conversations from an armor stand."))
                     .commandDescription(NQDescription.of("Gives a player an item to remove all conversations from an armor stand."))
                     .handler(context -> List.of(conversationArmorStandRemoveToolMessage(adapter, context.questPlayer())))
                     .registration());
@@ -216,7 +216,7 @@ final class ConversationCommands {
                 conversationSpeakers = conversationEdit.literal(
                         "speakers",
                         NQDescription.of("Manages speakers used by conversation lines."));
-        commands.add(conversationSpeakers.literal("add", NQDescription.of("Creates a new speaker for the selected conversation."), "create")
+        commands.add(conversationSpeakers.literal("add", NQDescription.of("Creates a new speaker for the selected conversation."))
                 .required(
                         "speaker-name",
                         NQArgumentType.word("speaker name"),
@@ -234,11 +234,11 @@ final class ConversationCommands {
                         context.argument("speaker-name"),
                         context.flag(NQFlags.SPEAKER_COLOR.name()))))
                 .registration());
-        commands.add(conversationSpeakers.literal("list", NQDescription.of("Lists every speaker in the selected conversation."), "show")
+        commands.add(conversationSpeakers.literal("list", NQDescription.of("Lists every speaker in the selected conversation."))
                 .commandDescription(NQDescription.of("Lists every speaker in the selected conversation."))
                 .handler(context -> conversationSpeakers(plugin, context.argument("conversation")))
                 .registration());
-        commands.add(conversationSpeakers.literal("remove", NQDescription.of("Removes a speaker from the selected conversation."), "delete")
+        commands.add(conversationSpeakers.literal("remove", NQDescription.of("Removes a speaker from the selected conversation."))
                 .required(
                         "speaker",
                         NQArgumentType.speaker(),

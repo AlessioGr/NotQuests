@@ -58,21 +58,21 @@ final class DebugCommands {
                         NQSuggestionProvider<NQCommandContext>,
                         NQCommandHandler>>
                 commands = new ArrayList<>();
-        commands.add(root.literal("reload", NQDescription.of("Reloads selected NotQuests files without restarting the server."), "load")
+        commands.add(root.literal("reload", NQDescription.of("Reloads selected NotQuests files without restarting the server."))
                 .commandDescription(NQDescription.of("Reloads general configuration, language files, and conversations."))
                 .handler(ignored -> List.of(reloadData(plugin, ReloadTarget.ALL)))
                 .registration());
-        commands.add(root.literal("reload", NQDescription.of("Reloads selected NotQuests files without restarting the server."), "load")
+        commands.add(root.literal("reload", NQDescription.of("Reloads selected NotQuests files without restarting the server."))
                 .literal("general.yml", NQDescription.of("Reloads the main general.yml configuration file."))
                 .commandDescription(NQDescription.of("Reloads general.yml."))
                 .handler(ignored -> List.of(reloadData(plugin, ReloadTarget.CONFIG)))
                 .registration());
-        commands.add(root.literal("reload", NQDescription.of("Reloads selected NotQuests files without restarting the server."), "load")
+        commands.add(root.literal("reload", NQDescription.of("Reloads selected NotQuests files without restarting the server."))
                 .literal("languages", NQDescription.of("Reloads NotQuests translation and language files."))
                 .commandDescription(NQDescription.of("Reloads language files."))
                 .handler(ignored -> List.of(reloadData(plugin, ReloadTarget.LANGUAGES)))
                 .registration());
-        commands.add(root.literal("reload", NQDescription.of("Reloads selected NotQuests files without restarting the server."), "load")
+        commands.add(root.literal("reload", NQDescription.of("Reloads selected NotQuests files without restarting the server."))
                 .literal("conversations", NQDescription.of("Reloads saved NotQuests conversations from disk."))
                 .commandDescription(NQDescription.of("Reloads conversation files."))
                 .handler(ignored -> List.of(reloadData(plugin, ReloadTarget.CONVERSATIONS)))

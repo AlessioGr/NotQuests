@@ -61,7 +61,7 @@ final class SavedConditionCommands {
                 .commandDescription(NQDescription.of("Lists all saved conditions."))
                 .handler(ignored -> listSavedConditions(plugin))
                 .registration());
-        commands.add(conditionsEdit.literal("delete", NQDescription.of("Deletes the selected saved condition."), "remove")
+        commands.add(conditionsEdit.literal("delete", NQDescription.of("Deletes the selected saved condition."))
                 .commandDescription(NQDescription.of("Deletes a saved condition."))
                 .handler(context -> List.of(deleteSavedCondition(plugin, context.argument("condition"))))
                 .registration());
@@ -118,11 +118,11 @@ final class SavedConditionCommands {
                         context.argument("condition"),
                         context.argument("description"))))
                 .registration());
-        commands.add(conditionDescription.literal("remove", NQDescription.of("Removes the selected condition's custom description text."), "delete")
+        commands.add(conditionDescription.literal("remove", NQDescription.of("Removes the selected condition's custom description text."))
                 .commandDescription(NQDescription.of("Removes the selected condition's description."))
                 .handler(context -> List.of(removeSavedConditionDescription(plugin, context.argument("condition"))))
                 .registration());
-        commands.add(conditionDescription.literal("show", NQDescription.of("Shows the selected condition's description text."), "check")
+        commands.add(conditionDescription.literal("show", NQDescription.of("Shows the selected condition's description text."))
                 .commandDescription(NQDescription.of("Shows the selected condition's description."))
                 .handler(context -> List.of(savedConditionDescription(plugin, context.argument("condition"))))
                 .registration());

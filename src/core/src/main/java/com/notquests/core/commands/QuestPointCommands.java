@@ -65,7 +65,7 @@ final class QuestPointCommands {
                                 NQDescription.of("Player whose quest points should be shown or changed."));
         commands.add(questPoints.literal(
                         "show",
-                        NQDescription.of("Shows the selected player's current quest points."), "view")
+                        NQDescription.of("Shows the selected player's current quest points."))
                 .commandDescription(NQDescription.of("Shows a player's quest points."))
                 .handler(context -> List.of(questPoints(plugin, adapter, context.argument("player"))))
                 .registration());
@@ -85,7 +85,7 @@ final class QuestPointCommands {
                 .registration());
         commands.add(questPoints.literal(
                         "remove",
-                        NQDescription.of("Removes quest points from the selected player."), "deduct")
+                        NQDescription.of("Removes quest points from the selected player."))
                 .required(
                         "amount",
                         NQArgumentType.integer("quest point amount"),

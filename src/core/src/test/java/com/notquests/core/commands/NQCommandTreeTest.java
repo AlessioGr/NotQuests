@@ -52,7 +52,8 @@ final class NQCommandTreeTest {
 
         final var root = tree.root("qa");
         final var edit = root.childNodes().stream().filter(node -> node.name().equals("edit")).findFirst().orElseThrow();
-        assertEquals(List.of("qa", "notquestsadmin"), root.literalNames());
+        assertEquals(List.of("notquestsadmin"), root.aliases());
+        assertEquals(List.of(), edit.aliases());
         assertEquals(List.of(root, edit), edit.appendTo(List.of(root)));
     }
 

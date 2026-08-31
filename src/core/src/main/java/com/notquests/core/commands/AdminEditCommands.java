@@ -55,7 +55,7 @@ public final class AdminEditCommands {
         final Builder builder = new Builder(commandManager);
         builder.objectiveLevel(editQuest.literal(
                 "objectives",
-                NQDescription.of("Manages objectives on this quest or parent objective."), "o"), 0);
+                NQDescription.of("Manages objectives on this quest or parent objective.")), 0);
 
         final NQCommandBuilder<
                         NQArgumentType,
@@ -64,7 +64,7 @@ public final class AdminEditCommands {
                         NQCommandHandler>
                 level1Objectives = editQuest.literal(
                                 "objectives",
-                                NQDescription.of("Manages objectives on this quest or parent objective."), "o")
+                                NQDescription.of("Manages objectives on this quest or parent objective."))
                         .literal(
                                 "edit",
                                 NQDescription.of("Opens subcommands for editing a specific objective on the selected quest."))
@@ -75,7 +75,7 @@ public final class AdminEditCommands {
                                 (context, input) -> builder.objectiveIds(context, 0))
                         .literal(
                                 "objectives",
-                                NQDescription.of("Manages child objectives inside the selected objective."), "o");
+                                NQDescription.of("Manages child objectives inside the selected objective."));
         builder.objectiveLevel(level1Objectives, 1);
 
         final NQCommandBuilder<
@@ -94,18 +94,18 @@ public final class AdminEditCommands {
                                 (context, input) -> builder.objectiveIds(context, 1))
                         .literal(
                                 "objectives",
-                                NQDescription.of("Manages child objectives inside the selected nested objective."), "o");
+                                NQDescription.of("Manages child objectives inside the selected nested objective."));
         builder.objectiveLevel(level2Objectives, 2);
 
         builder.requirements(editQuest.literal(
                 "requirements",
-                NQDescription.of("Manages requirements that must pass before the selected quest can be taken."), "req"));
+                NQDescription.of("Manages requirements that must pass before the selected quest can be taken.")));
         builder.questRewards(editQuest.literal(
                 "rewards",
-                NQDescription.of("Manages rewards granted by the selected quest."), "rew"));
+                NQDescription.of("Manages rewards granted by the selected quest.")));
         builder.triggers(editQuest.literal(
                 "triggers",
-                NQDescription.of("Manages triggers attached to this quest."), "t"));
+                NQDescription.of("Manages triggers attached to this quest.")));
         return List.copyOf(builder.commands);
     }
 
@@ -174,7 +174,7 @@ public final class AdminEditCommands {
                     NQDescription.of("Removes all objectives in this branch."));
             add(base.literal("list", NQDescription.of(level == 0
                             ? "Lists every objective on the selected quest."
-                            : "Lists every child objective inside the selected objective."), "show"),
+                            : "Lists every child objective inside the selected objective.")),
                     context -> QuestObjectiveCommands.listQuestObjectives(
                             commandManager.plugin(), questName(context), objectiveParentPath(context, level)),
                     NQDescription.of("Lists objectives in this branch."));
@@ -267,7 +267,7 @@ public final class AdminEditCommands {
                             NQSuggestionProvider<NQCommandContext>,
                             NQCommandHandler>
                     completionNpc = objective.literal("completionNPC", NQDescription.of("Manages the NPC used to complete this objective."));
-            add(completionNpc.literal("show", NQDescription.of("Shows the NPC players must click to complete this objective."), "view"),
+            add(completionNpc.literal("show", NQDescription.of("Shows the NPC players must click to complete this objective.")),
                     context -> messages(QuestObjectiveCommands.objectiveCompletionNpc(
                             commandManager.plugin(), questName(context), objectivePath(context, level))),
                     NQDescription.of("Shows the selected objective's completion NPC."));
@@ -311,7 +311,7 @@ public final class AdminEditCommands {
                     context -> messages(QuestObjectiveCommands.questObjectiveInfo(
                             commandManager.plugin(), questName(context), objectivePath(context, level))),
                     NQDescription.of("Shows detailed information about this objective."));
-            add(objective.literal("remove", NQDescription.of("Removes the selected objective from its quest or parent objective."), "delete"),
+            add(objective.literal("remove", NQDescription.of("Removes the selected objective from its quest or parent objective.")),
                     context -> messages(QuestObjectiveCommands.removeQuestObjective(
                             commandManager.plugin(), questName(context), objectivePath(context, level))),
                     NQDescription.of("Removes the selected objective."));
@@ -349,7 +349,7 @@ public final class AdminEditCommands {
                     context -> messages(QuestObjectiveCommands.clearObjectiveConditions(
                             commandManager.plugin(), questName(context), objectivePath(context, level), conditionGroup(group))),
                     NQDescription.of("Removes all conditions in this group."));
-            add(base.literal("list", NQDescription.of("Lists every condition in this condition group."), "show"),
+            add(base.literal("list", NQDescription.of("Lists every condition in this condition group.")),
                     context -> QuestObjectiveCommands.listObjectiveConditions(
                             commandManager.plugin(), questName(context), objectivePath(context, level), conditionGroup(group)),
                     NQDescription.of("Lists conditions in this group."));
@@ -362,7 +362,7 @@ public final class AdminEditCommands {
                             .required(CONDITION_ID, NQArgumentType.integer("condition id"),
                                     NQDescription.of("Condition ID shown by this condition group's list."),
                                     (context, input) -> objectiveConditionIds(context, group, level));
-            add(edit.literal("delete", NQDescription.of("Removes the selected condition from this objective."), "remove"),
+            add(edit.literal("delete", NQDescription.of("Removes the selected condition from this objective.")),
                     context -> messages(QuestObjectiveCommands.removeObjectiveCondition(
                             commandManager.plugin(), questName(context), objectivePath(context, level), conditionGroup(group), conditionId(context))),
                     NQDescription.of("Removes the selected condition."));
@@ -392,7 +392,7 @@ public final class AdminEditCommands {
                                 NQSuggestionProvider<NQCommandContext>,
                                 NQCommandHandler>
                         base) {
-            add(base.literal("list", NQDescription.of("Lists every requirement on the selected quest."), "show"),
+            add(base.literal("list", NQDescription.of("Lists every requirement on the selected quest.")),
                     context -> QuestRequirementCommands.listQuestRequirements(commandManager.plugin(), questName(context)),
                     NQDescription.of("Lists all requirements on this quest."));
             add(base.literal("clear", NQDescription.of("Removes every requirement from the selected quest.")),
@@ -408,7 +408,7 @@ public final class AdminEditCommands {
                             .required(REQUIREMENT_ID, NQArgumentType.integer("requirement id"),
                                     NQDescription.of("Requirement ID shown by this quest's requirements list."),
                                     (context, input) -> requirementIds(context));
-            add(edit.literal("delete", NQDescription.of("Removes the selected requirement from the quest."), "remove"),
+            add(edit.literal("delete", NQDescription.of("Removes the selected requirement from the quest.")),
                     context -> messages(QuestRequirementCommands.removeQuestRequirement(
                             commandManager.plugin(), questName(context), requirementId(context))),
                     NQDescription.of("Removes the selected requirement."));
@@ -437,7 +437,7 @@ public final class AdminEditCommands {
                                 NQSuggestionProvider<NQCommandContext>,
                                 NQCommandHandler>
                         base) {
-            add(base.literal("list", NQDescription.of("Lists every reward granted by the selected quest."), "show"),
+            add(base.literal("list", NQDescription.of("Lists every reward granted by the selected quest.")),
                     context -> QuestRewardCommands.listQuestRewards(commandManager.plugin(), questName(context)),
                     NQDescription.of("Lists all rewards granted by this quest."));
             add(base.literal("clear", NQDescription.of("Removes every reward from the selected quest.")),
@@ -454,7 +454,7 @@ public final class AdminEditCommands {
                                 NQCommandHandler>
                         base,
                 final int level) {
-            add(base.literal("list", NQDescription.of("Lists every reward granted by the selected objective."), "show"),
+            add(base.literal("list", NQDescription.of("Lists every reward granted by the selected objective.")),
                     context -> QuestObjectiveCommands.listObjectiveRewards(
                             commandManager.plugin(), questName(context), objectivePath(context, level)),
                     NQDescription.of("Lists all rewards granted by this objective."));
@@ -486,7 +486,7 @@ public final class AdminEditCommands {
             add(edit.literal("info", NQDescription.of("Shows detailed information about the selected reward.")),
                     context -> blankThen(rewardInfoMessage(context, target, level)),
                     NQDescription.of("Shows detailed information about this reward."));
-            add(edit.literal("remove", NQDescription.of("Removes the selected reward."), "delete"),
+            add(edit.literal("remove", NQDescription.of("Removes the selected reward.")),
                     context -> blankThen(removeRewardMessage(context, target, level)),
                     NQDescription.of("Removes the selected reward."));
             textProperty(edit, "displayName", "Reward display name shown in reward previews and reward lists.",
@@ -565,10 +565,10 @@ public final class AdminEditCommands {
             add(base.literal("clear", NQDescription.of("Removes every trigger from the selected quest.")),
                     context -> messages(TriggerCommands.clearQuestTriggers(commandManager.plugin(), questName(context))),
                     NQDescription.of("Clears all triggers on this quest."));
-            add(base.literal("list", NQDescription.of("Lists every trigger attached to the selected quest."), "show"),
+            add(base.literal("list", NQDescription.of("Lists every trigger attached to the selected quest.")),
                     context -> TriggerCommands.listQuestTriggers(commandManager.plugin(), questName(context)),
                     NQDescription.of("Lists all triggers attached to this quest."));
-            add(base.literal("remove", NQDescription.of("Removes the selected trigger from the quest."), "delete")
+            add(base.literal("remove", NQDescription.of("Removes the selected trigger from the quest."))
                             .required(TRIGGER_ID, NQArgumentType.integer("trigger id"),
                                     NQDescription.of("Trigger ID shown by this quest's trigger list."),
                                     (context, input) -> triggerIds(context)),
@@ -597,9 +597,9 @@ public final class AdminEditCommands {
                             NQSuggestionProvider<NQCommandContext>,
                             NQCommandHandler>
                     property = base.literal(branch, NQDescription.of(branchDescription + " Supports MiniMessage formatting."));
-            add(property.literal("show", NQDescription.of("Shows the current text."), "check"), show,
+            add(property.literal("show", NQDescription.of("Shows the current text.")), show,
                     NQDescription.of("Shows the current text."));
-            add(property.literal("remove", NQDescription.of("Removes the custom text."), "delete"), remove,
+            add(property.literal("remove", NQDescription.of("Removes the custom text.")), remove,
                     NQDescription.of("Removes the custom text."));
             add(property.literal("set", NQDescription.of("Sets the text."))
                             .required(argumentName, NQArgumentType.greedyString(argumentName), NQDescription.of(argumentDescription)),
