@@ -9476,12 +9476,15 @@ public final class NotQuestsPlugin {
             final PlatformPlayer questPlayer,
             final Quest quest,
             final List<ObjectiveActivation> activatedObjectives) {
-        if (!activatedObjectives.isEmpty()) {
+        final List<ObjectiveActivation> unlockedObjectives = activatedObjectives.stream()
+                .filter(objective -> objective.progress() != null && objective.progress().isUnlocked())
+                .toList();
+        if (!unlockedObjectives.isEmpty()) {
             questPlayer.sendMessage(translate(questPlayer,
                     "chat.objectives-label-after-quest-accepting",
                     Map.of(),
                     "<highlight>Objectives:"));
-            for (final ObjectiveActivation objective : activatedObjectives) {
+            for (final ObjectiveActivation objective : unlockedObjectives) {
                 questPlayer.sendMessage(translate(questPlayer,
                         "chat.objectives.counter",
                         Map.of(
