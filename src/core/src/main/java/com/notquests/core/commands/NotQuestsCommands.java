@@ -668,12 +668,7 @@ public final class NotQuestsCommands {
                 items = root.literal(
                         "items",
                         NQDescription.of("Manages custom NotQuests items."));
-        addItemCommands(
-                commands,
-                items.literal(
-                        "items",
-                        NQDescription.of("Manages custom NotQuests items.")),
-                commandManager);
+        commands.addAll(ItemCommands.adminCommands(items, commandManager.plugin(), commandManager.adapter()));
         commands.addAll(DebugCommands.debugCommands(
                 root,
                 commandManager.plugin(),
@@ -743,23 +738,6 @@ public final class NotQuestsCommands {
                 .handler(ignored -> success(commandManager.placeholderMessages()))
                 .registration());
         return List.copyOf(commands);
-    }
-
-    private static void addItemCommands(
-            final List<NQCommandRegistration<
-                            NQArgumentType,
-                            NQFlag<NQArgumentType, NQSuggestionProvider<NQCommandContext>>,
-                            NQSuggestionProvider<NQCommandContext>,
-                            NQCommandHandler>>
-                    commands,
-            final NQCommandBuilder<
-                            NQArgumentType,
-                            NQFlag<NQArgumentType, NQSuggestionProvider<NQCommandContext>>,
-                            NQSuggestionProvider<NQCommandContext>,
-                            NQCommandHandler>
-                    items,
-            final CommandManager commandManager) {
-        commands.addAll(ItemCommands.adminCommands(items, commandManager.plugin(), commandManager.adapter()));
     }
 
     private static List<CommandMessage> success(final List<String> messages) {

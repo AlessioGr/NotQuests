@@ -208,6 +208,11 @@ class NotQuestsCommandsTest {
                         .map(NQCommandTree.Node::name)
                         .toList());
         assertEquals(
+                List.of("create", "list", "edit"),
+                child(tree.root("notquestsadmin"), "items").childNodes().stream()
+                        .map(NQCommandTree.Node::name)
+                        .toList());
+        assertEquals(
                 List.of("ObjectiveTypes", "RequirementTypes", "ActionTypes", "TriggerTypes", "AllQuests", "Placeholders"),
                 tree.root("notquestsadmin").childNodes().stream()
                         .filter(node -> node.name().equals("list"))
