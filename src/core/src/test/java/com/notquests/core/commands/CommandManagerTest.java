@@ -525,9 +525,10 @@ class CommandManagerTest {
         final NotQuestsAdapter onlineAdapter = new OnlinePlayerAdapter(adapter, player);
 
         assertTrue(ItemCommands.createSavedItem(plugin, onlineAdapter, "DailyBook", "book", "default").success());
+        assertTrue(ItemCommands.setSavedItemDisplayName(plugin, "DailyBook", "<gold>Daily Book").success());
         assertTrue(ItemCommands.giveSavedItem(plugin, onlineAdapter, "DailyBook", player.playerName(), 4).success());
 
-        assertEquals(List.of("book:4"), player.receivedItems);
+        assertEquals(List.of("book:4:<gold>Daily Book"), player.receivedItems);
     }
 
     @Test
@@ -1255,7 +1256,9 @@ class CommandManagerTest {
         public boolean giveItems(
                 final List<com.notquests.core.items.SavedItems.ItemChoice> items) {
             final ItemSelection selection = items.getFirst().selection();
-            receivedItems.add(selection.listedMaterials("") + ":" + selection.amount());
+            receivedItems.add(selection.listedMaterials("")
+                    + ":" + selection.amount()
+                    + ":" + items.getFirst().displayName());
             return true;
         }
     }

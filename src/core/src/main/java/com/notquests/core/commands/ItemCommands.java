@@ -3,6 +3,7 @@ package com.notquests.core.commands;
 import com.notquests.core.NotQuestsPlugin;
 import com.notquests.core.commands.framework.*;
 import com.notquests.core.items.ItemSelection;
+import com.notquests.core.items.ItemStackSelection;
 import com.notquests.core.items.SavedItem;
 import com.notquests.core.platform.NotQuestsAdapter;
 import com.notquests.core.platform.PlatformPlayer;
@@ -193,7 +194,9 @@ final class ItemCommands {
         if (item == null) {
             return CommandMessage.error("Item " + CommandSupport.highlight(itemName) + " does not exist.");
         }
-        return target.giveItems(plugin.resolveItems(item.getItemSelection().withAmount(amount)))
+        final ItemSelection selection = ItemStackSelection.of(
+                List.of(), List.of(item.getName()), false, amount);
+        return target.giveItems(plugin.resolveItems(selection))
                 ? CommandMessage.success("<success>The item " + CommandSupport.highlight(itemName)
                         + " has been given to player " + CommandSupport.highlight2(target.playerName()) + "!")
                 : CommandMessage.error("Could not give NotQuests item " + CommandSupport.highlight(itemName)
