@@ -236,6 +236,63 @@ class CommandManagerTest {
     }
 
     @Test
+    void cloningValidatesNamesWithoutOverwritingQuestsOrSavingFailures() {
+        final NotQuestsPlugin plugin = NotQuestsPlugin.create();
+        final AtomicInteger saves = new AtomicInteger();
+        plugin.dataManager(new DataManager() {
+            @Override
+            public boolean saveConfiguredData() {
+                saves.incrementAndGet();
+                return false;
+            }
+        });
+        plugin.getOrCreateQuest("Tutorial").setDescription("Original");
+        plugin.getOrCreateQuest("Other").setDescription("Do not overwrite");
+
+        assertFalse(QuestLifecycleCommands.cloneQuest(plugin, "Missing", "New").success());
+        assertFalse(QuestLifecycleCommands.cloneQuest(plugin, "Tutorial", "").success());
+        assertFalse(QuestLifecycleCommands.cloneQuest(plugin, "Tutorial", "Bad°Name").success());
+        assertFalse(QuestLifecycleCommands.cloneQuest(plugin, "Tutorial", "tutorial").success());
+        assertFalse(QuestLifecycleCommands.cloneQuest(plugin, "Tutorial", "other").success());
+        assertEquals(0, saves.get());
+        assertFalse(QuestLifecycleCommands.cloneQuest(plugin, "tutorial", "New").success());
+        assertEquals(1, saves.get());
+        assertEquals(List.of("Other", "Tutorial"), plugin.questNames());
+        assertEquals("Original", plugin.quest("Tutorial").getDescription());
+        assertEquals("Do not overwrite", plugin.quest("Other").getDescription());
+    }
+
+    @Test
+    void clonedQuestIsSavedAndReloadsIndependentlyWithoutPlayerProgress() {
+        final NotQuestsPlugin plugin = NotQuestsPlugin.create();
+        final NotQuestsAdapter adapter = plugin.createRegistryAdapter(new NotQuestsRegistry.PlatformHooks(null, null, null));
+        plugin.dataManager(new DataManager(plugin, adapter, tempDir));
+        final var source = plugin.getOrCreateQuest("Tutorial");
+        source.setCategory("Story");
+        source.setObjectiveProgressOrder("firstToLast");
+        source.addObjective(3, "Objective", null, "Steps")
+                .addChildObjective(7, "BreakBlocks", null, "Break stone").setValue("amount", 4);
+        plugin.activeQuestPlayer("player-one").addActiveQuest("Tutorial");
+
+        assertTrue(QuestLifecycleCommands.cloneQuest(plugin, "tutorial", "TutorialHard").success());
+        assertEquals(List.of("Tutorial"), plugin.activeQuestPlayer("player-one").getActiveQuestIdentifiers().stream().toList());
+        plugin.quest("TutorialHard").getObjectiveFromID(3).getObjectiveFromID(7).setTaskDescription("Break more stone");
+        assertTrue(plugin.saveConfiguredData());
+
+        final NotQuestsPlugin reloaded = NotQuestsPlugin.create();
+        final NotQuestsAdapter reloadedAdapter = reloaded.createRegistryAdapter(new NotQuestsRegistry.PlatformHooks(null, null, null));
+        reloadedAdapter.objectives().objective("Objective").displayName("Objective").description("Group of objectives.").register();
+        reloadedAdapter.objectives().objective("BreakBlocks").displayName("Break Blocks").description("Break blocks.").register();
+        final DataManager persistence = new DataManager(reloaded, reloadedAdapter, tempDir);
+        assertTrue(persistence.reload(DataManager.ReloadTarget.ALL));
+        assertEquals("Story", reloaded.quest("TutorialHard").getCategory());
+        assertEquals("firstToLast", reloaded.quest("TutorialHard").getObjectiveProgressOrder());
+        assertEquals("Break more stone", reloaded.quest("TutorialHard").getObjectiveFromID(3).getObjectiveFromID(7).getTaskDescription());
+        assertEquals("Break stone", reloaded.quest("Tutorial").getObjectiveFromID(3).getObjectiveFromID(7).getTaskDescription());
+        assertEquals(4, reloaded.quest("TutorialHard").getObjectiveFromID(3).getObjectiveFromID(7).integer("amount", 0));
+    }
+
+    @Test
     void giveQuestCanUseRealQuestPlayerForImmediatePlayerMessages() {
         final NotQuestsPlugin plugin = NotQuestsPlugin.create();
         final NotQuestsAdapter adapter = plugin.createRegistryAdapter(new NotQuestsRegistry.PlatformHooks(null, null, null));

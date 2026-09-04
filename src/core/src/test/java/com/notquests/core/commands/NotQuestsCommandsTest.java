@@ -184,6 +184,7 @@ class NotQuestsCommandsTest {
                         "edit",
                         "create",
                         "delete",
+                        "clone",
                         "give",
                         "completeQuest",
                         "failQuest",
@@ -197,6 +198,14 @@ class NotQuestsCommandsTest {
                         "reload",
                         "list"),
                 tree.root("notquestsadmin").childNodes().stream().map(NQCommandTree.Node::name).toList());
+        plugin.getOrCreateQuest("Tutorial");
+        final var cloneSource = child(child(tree.root("notquestsadmin"), "clone"), "sourceQuest");
+        assertEquals(NQArgumentType.quest(), cloneSource.argument());
+        final var cloneTarget = child(cloneSource, "newQuestName");
+        final var cloned = cloneTarget.handler().execute(new TestCommandContext(null, Map.of(
+                "sourceQuest", "Tutorial", "newQuestName", "TutorialHard")));
+        assertTrue(cloned.getFirst().success());
+        assertEquals(List.of("Tutorial", "TutorialHard"), plugin.questNames());
         assertEquals(
                 List.of("general.yml", "languages", "conversations"),
                 tree.root("notquestsadmin").childNodes().stream()

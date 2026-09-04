@@ -71,6 +71,15 @@ public final class QuestManager {
         return created;
     }
 
+    public Quest cloneQuest(final String sourceQuestName, final String newQuestName) {
+        final Quest source = getQuest(sourceQuestName);
+        if (source == null || newQuestName == null || newQuestName.isBlank()) {
+            return null;
+        }
+        final Quest copy = source.copy(newQuestName);
+        return quests.putIfAbsent(questKey(newQuestName), copy) == null ? copy : null;
+    }
+
     public Quest removeQuest(final String questName) {
         if (questName == null || questName.isBlank()) {
             return null;

@@ -60,6 +60,19 @@ final class QuestLifecycleCommands {
                 .commandDescription(NQDescription.of("Deletes an existing quest."))
                 .handler(context -> List.of(deleteQuest(plugin, context.argument("questName"))))
                 .registration());
+        commands.add(root.literal("clone", NQDescription.of("Creates an independent copy of an existing quest."))
+                .required(
+                        "sourceQuest",
+                        NQArgumentType.quest(),
+                        NQDescription.of("Existing quest to copy. Its configuration and category are preserved."))
+                .required(
+                        "newQuestName",
+                        NQArgumentType.word("quest name"),
+                        NQDescription.of("Unique name for the new quest."))
+                .commandDescription(NQDescription.of("Copies a quest's configuration under a new name, without player progress."))
+                .handler(context -> List.of(cloneQuest(
+                        plugin, context.argument("sourceQuest"), context.argument("newQuestName"))))
+                .registration());
         commands.add(root.literal("give", NQDescription.of("Gives a quest to a player."))
                 .required(
                         "player",
@@ -223,6 +236,31 @@ final class QuestLifecycleCommands {
 
     static CommandMessage deleteQuest(final NotQuestsPlugin plugin, final String questName) {
         return plugin.deleteQuest(questName);
+    }
+
+    static CommandMessage cloneQuest(
+            final NotQuestsPlugin plugin,
+            final String sourceQuestName,
+            final String newQuestName) {
+        if (plugin.quest(sourceQuestName) == null) {
+            return CommandMessage.error("<error>Quest <highlight>" + sourceQuestName + "</highlight> doesn't exist!");
+        }
+        if (newQuestName == null || newQuestName.isBlank()) {
+            return CommandMessage.error("<error>Quest name cannot be blank.");
+        }
+        if (newQuestName.contains("°")) {
+            return CommandMessage.error("<error>The symbol <highlight>°</highlight>"
+                    + " cannot be used, because it's used for some important, plugin-internal stuff.");
+        }
+        if (plugin.questManager().cloneQuest(sourceQuestName, newQuestName) == null) {
+            return CommandMessage.error("<error>Quest <highlight>" + newQuestName + "</highlight> already exists!");
+        }
+        if (!plugin.saveConfiguredData()) {
+            plugin.questManager().removeQuest(newQuestName);
+            return CommandMessage.error("<error>Could not save the cloned quest <highlight>" + newQuestName + "</highlight>.");
+        }
+        return CommandMessage.success("<success>Quest <highlight>" + sourceQuestName
+                + "</highlight> successfully cloned as <highlight>" + newQuestName + "</highlight>!");
     }
 
     static CommandMessage giveQuest(

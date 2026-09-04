@@ -17,8 +17,10 @@ import com.notquests.core.triggers.Trigger;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 
@@ -47,6 +49,90 @@ public final class Quest {
       throw new IllegalArgumentException("Quest identifier cannot be blank.");
     }
     this.identifier = identifier;
+  }
+
+  public synchronized Quest copy(final String newIdentifier) {
+    final Quest copy = new Quest(newIdentifier);
+    copy.maxCompletions = maxCompletions;
+    copy.maxAccepts = maxAccepts;
+    copy.maxFails = maxFails;
+    copy.acceptCooldownComplete = acceptCooldownComplete;
+    copy.takeEnabled = takeEnabled;
+    copy.abortEnabled = abortEnabled;
+    copy.displayName = displayName;
+    copy.description = description;
+    copy.category = category;
+    copy.guiItemSelection = (ItemSelection) copyValue(guiItemSelection);
+    copy.guiItemGlow = guiItemGlow;
+    copy.objectiveProgressOrder = objectiveProgressOrder;
+    copy.npcAttachments.addAll(npcAttachments);
+    for (final Objective objective : objectives) {
+      copyObjective(objective, copy.addObjective(objective.id(), objective.typeId(), null, ""));
+    }
+    for (final Condition requirement : requirements) {
+      copyCondition(requirement, copy.addRequirement(requirement.id(), requirement.typeId(), null));
+    }
+    for (final Action reward : rewards) {
+      copyAction(reward, copy.addReward(reward.id(), reward.typeId(), null));
+    }
+    for (final Trigger trigger : triggers) {
+      final Trigger copiedTrigger = copy.addTrigger(trigger.id(), trigger.typeId(), null);
+      trigger.values().forEach((name, value) -> copiedTrigger.setValue(name, copyValue(value)));
+    }
+    return copy;
+  }
+
+  private static void copyObjective(final Objective source, final Objective target) {
+    source.values().forEach((name, value) -> target.setValue(name, copyValue(value)));
+    target.apply(ObjectiveSettings.from(source));
+    target.setLocation((NQLocation) copyValue(source.getLocation()));
+    for (final Objective child : source.getObjectives()) {
+      copyObjective(child, target.addChildObjective(child.id(), child.typeId(), null, ""));
+    }
+    for (final String group : List.of("unlock", "progress", "complete")) {
+      for (final Condition condition : source.getConditions(group)) {
+        copyCondition(condition, target.addCondition(group, condition.id(), condition.typeId(), null));
+      }
+    }
+    for (final Action reward : source.getRewards()) {
+      copyAction(reward, target.addReward(reward.id(), reward.typeId(), null));
+    }
+  }
+
+  private static void copyCondition(final Condition source, final Condition target) {
+    target.apply(ConditionSettings.from(source));
+    source.values().forEach((name, value) -> target.setValue(name, copyValue(value)));
+  }
+
+  private static void copyAction(final Action source, final Action target) {
+    source.values().forEach((name, value) -> target.setValue(name, copyValue(value)));
+    target.setDisplayName(source.getDisplayName());
+    target.setDescription(source.getDescription());
+    for (final Condition condition : source.getConditions()) {
+      copyCondition(condition, target.addCondition(condition.id(), condition.typeId(), null));
+    }
+  }
+
+  private static Object copyValue(final Object value) {
+    if (value instanceof ItemSelection selection) {
+      return ItemStackSelection.of(selection.materialIds(), selection.savedItemNames(),
+          selection.exactItems(), selection.any(), selection.amount());
+    }
+    if (value instanceof NQLocation location) {
+      return NQLocation.at(location.worldName(), location.x(), location.y(), location.z(),
+          location.yaw(), location.pitch());
+    }
+    if (value instanceof Map<?, ?> map) {
+      final Map<Object, Object> copy = new LinkedHashMap<>();
+      map.forEach((key, entry) -> copy.put(key, copyValue(entry)));
+      return copy;
+    }
+    if (value instanceof List<?> list) {
+      final List<Object> copy = new ArrayList<>();
+      list.forEach(entry -> copy.add(copyValue(entry)));
+      return copy;
+    }
+    return value;
   }
 
   public String getIdentifier() {

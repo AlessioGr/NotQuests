@@ -141,6 +141,12 @@ qa edit TestQuest triggers add ActMsg WORLDENTER world 1
 qa edit TestQuest triggers add ActMsg WORLDLEAVE world 1                 # UNSURE
 qa edit TestQuest triggers add ActMsg NPCDEATH 0 1                       # UNSURE
 
+# ---- clone a configured quest and edit the copy ----
+qa clone TestQuest ClonedQuest
+qa edit ClonedQuest description set A separate copy
+qa edit ClonedQuest objectives list
+qa delete ClonedQuest
+
 # ---- read-only checks ----
 qa variables check TagInteger testint
 qa variables check RandomNumberBetweenRange 1 10
