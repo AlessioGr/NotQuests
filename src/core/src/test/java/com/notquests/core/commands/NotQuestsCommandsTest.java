@@ -1,8 +1,13 @@
 package com.notquests.core.commands;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import net.kyori.adventure.text.ComponentIteratorType;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.ClickEvent;
 import org.junit.jupiter.api.Test;
 
 import com.notquests.core.NotQuestsPlugin;
@@ -22,14 +27,71 @@ import com.notquests.core.registry.fields.RegistryField;
 import com.notquests.core.structs.ActiveObjective;
 import com.notquests.core.test.TestNotQuestsAdapter;
 import com.notquests.core.test.TestPlatformPlayer;
+import com.notquests.core.text.NotQuestsMiniMessage;
 import com.notquests.core.variables.VariableDataType;
 
+import java.lang.reflect.Proxy;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
 class NotQuestsCommandsTest {
+    @Test
+    void creatingAQuestOffersApplicableSetupCommandsOnlyAfterSuccess() {
+        for (final boolean npcAttachments : List.of(true, false)) {
+            final NotQuestsPlugin plugin = NotQuestsPlugin.create();
+            final NotQuestsAdapter coreAdapter = plugin.createRegistryAdapter(new NotQuestsRegistry.PlatformHooks(null, null, null));
+            final NotQuestsAdapter adapter = (NotQuestsAdapter) Proxy.newProxyInstance(
+                    NotQuestsAdapter.class.getClassLoader(), new Class<?>[] {NotQuestsAdapter.class},
+                    (proxy, method, arguments) -> method.getName().equals("supportsNpcAttachments")
+                            ? npcAttachments : method.invoke(coreAdapter, arguments));
+            final var root = NQCommandBuilder.<NQArgumentType,
+                    NQFlag<NQArgumentType, NQSuggestionProvider<NQCommandContext>>,
+                    NQSuggestionProvider<NQCommandContext>, NQCommandHandler>root("qa", NQDescription.of("Admin commands."));
+            final var create = QuestLifecycleCommands.adminCommandsBeforeProgress(root, plugin, adapter).getFirst();
+            final var context = new TestCommandContext(new GuiUnavailablePlayer(), Map.of("questName", "Tutorial"));
+            final var messages = create.handler().execute(context);
+            final var parser = NotQuestsMiniMessage.create(null);
+            final var clicks = new LinkedHashSet<ClickEvent>();
+            final StringBuilder text = new StringBuilder();
+            for (final var message : messages) {
+                assertTrue(message.success());
+                final var component = parser.deserialize(message.formattedMessage());
+                for (final var part : component.iterable(ComponentIteratorType.DEPTH_FIRST)) {
+                    if (part.clickEvent() != null) {
+                        clicks.add(part.clickEvent());
+                    }
+                    if (part instanceof TextComponent content) {
+                        text.append(content.content());
+                    }
+                }
+            }
+            final var expected = new LinkedHashSet<>(List.of(
+                    ClickEvent.suggestCommand("/qa edit Tutorial displayName set "),
+                    ClickEvent.suggestCommand("/qa edit Tutorial guiItem hand"),
+                    ClickEvent.suggestCommand("/qa edit Tutorial objectives add ")));
+            if (npcAttachments) {
+                expected.add(ClickEvent.suggestCommand("/qa edit Tutorial npcs add "));
+            }
+            expected.add(ClickEvent.suggestCommand("/nq take Tutorial"));
+            assertEquals(expected, clicks);
+            assertTrue(text.toString().contains("What would you like to configure next?"));
+            for (final String label : List.of("Set display name", "Set icon from hand", "Add objective", "Test quest")) {
+                assertTrue(text.toString().contains("[" + label + "]"));
+            }
+            assertEquals(npcAttachments, text.toString().contains("[Attach NPC]"));
+            assertTrue(plugin.quest("Tutorial").getObjectives().isEmpty());
+            assertTrue(plugin.quest("Tutorial").getNpcAttachments().isEmpty());
+            assertNull(plugin.quest("Tutorial").getGuiItemSelection());
+            assertTrue(plugin.activeQuestPlayer("test-player").getActiveQuestIdentifiers().isEmpty());
+            final var duplicate = create.handler().execute(context);
+            assertEquals(1, duplicate.size());
+            assertFalse(duplicate.getFirst().success());
+        }
+    }
+
     @Test
     void ownsPortableUserCommandShape() {
         final NotQuestsPlugin plugin = NotQuestsPlugin.create();

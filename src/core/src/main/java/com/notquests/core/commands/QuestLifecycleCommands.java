@@ -47,10 +47,30 @@ final class QuestLifecycleCommands {
                         .withArgument(NQArgumentType.category())
                         .build())
                 .commandDescription(NQDescription.of("Creates a new quest."))
-                .handler(context -> List.of(createQuest(
-                        plugin,
-                        context.argument("questName"),
-                        context.flag(NQFlags.CATEGORY.name()))))
+                .handler(context -> {
+                    final String questName = context.argument("questName");
+                    final CommandMessage created = createQuest(plugin, questName, context.flag(NQFlags.CATEGORY.name()));
+                    if (!created.success()) {
+                        return List.of(created);
+                    }
+                    final String edit = "/qa edit " + questName + " ";
+                    final ArrayList<String> shortcuts = new ArrayList<>(List.of(
+                            setupShortcut("Set display name", edit + "displayName set ",
+                                    "Enter a display name. MiniMessage colors and spaces are supported."),
+                            setupShortcut("Set icon from hand", edit + "guiItem hand",
+                                    "Hold the item you want as the quest icon, then press Enter."),
+                            setupShortcut("Add objective", edit + "objectives add ",
+                                    "Choose an objective type with Tab, then fill in its arguments.")));
+                    if (adapter.supportsNpcAttachments()) {
+                        shortcuts.add(setupShortcut("Attach NPC", edit + "npcs add ",
+                                "Choose an NPC or the right-click selector with Tab."));
+                    }
+                    shortcuts.add(setupShortcut("Test quest", "/nq take " + questName,
+                            "Accept this quest to test it. Configure its objectives first."));
+                    return List.of(created,
+                            CommandMessage.success("<main>What would you like to configure next?"),
+                            CommandMessage.success(String.join(" ", shortcuts)));
+                })
                 .registration());
         commands.add(root.literal("delete", NQDescription.of("Deletes an existing quest."))
                 .required(
@@ -223,6 +243,13 @@ final class QuestLifecycleCommands {
                 .handler(context -> removeQuestForAllPlayers(plugin, adapter, context.argument("quest")))
                 .registration());
         return List.copyOf(commands);
+    }
+
+    private static String setupShortcut(final String label, final String command, final String hint) {
+        final String suggestion = command.replace("\\", "\\\\").replace("'", "\\'");
+        return "<click:suggest_command:'" + suggestion + "'><hover:show_text:'<main>" + hint
+                + "<newline><unimportant>Click to insert the command.'><highlight2>[" + label
+                + "]</highlight2></hover></click>";
     }
 
     static CommandMessage createQuest(
