@@ -149,6 +149,16 @@ public final class ConversationManager {
         clearNpcSessions();
     }
 
+    public void playerLeft(final String playerId) {
+        if (playerId == null || playerId.isBlank()) {
+            return;
+        }
+        activeConversationByPlayer.remove(playerId);
+        conversationEnded(playerId);
+        chatReplayHistory.remove(playerId);
+        conversationReplayHistory.remove(playerId);
+    }
+
     public void startNpcSession(final int npcId, final UUID playerId) {
         startNpcSession(npcId, playerId, null);
     }

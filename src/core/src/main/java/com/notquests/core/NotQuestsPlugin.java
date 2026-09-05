@@ -2782,6 +2782,7 @@ public final class NotQuestsPlugin {
             final String worldName,
             final Runnable platformCleanup,
             final Consumer<Runnable> runAsync) {
+        conversations.playerLeft(playerIdentifier);
         if (questPlayer != null) {
             playerDisconnected(questPlayer, worldName);
             questPlayerManager.getActiveObjectives().removePlayerObservations(playerIdentifier);
