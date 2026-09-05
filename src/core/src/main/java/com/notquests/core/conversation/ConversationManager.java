@@ -631,19 +631,20 @@ public final class ConversationManager {
                 questPlayer,
                 activeConversation,
                 currentLine.getDelayInMS(),
-                () -> sendLine(questPlayer, activeConversation, currentLine, deletePrevious));
-        if (!isCurrentConversation(playerId, activeConversation)) {
-            return true;
-        }
-        final ArrayList<StoredConversationLine> next = playable(currentLine.getNext(), questPlayer);
-        if (next == null || next.isEmpty()) {
-            finishWhenScheduledWorkCompletes(playerId, activeConversation);
-            return true;
-        }
-        if (next.size() == 1 && !next.getFirst().getSpeaker().isPlayer()) {
-            return continueLine(questPlayer, activeConversation, next.getFirst(), currentLine.getSpeaker().isPlayer(), visited);
-        }
-        sendPlayerOptions(questPlayer, activeConversation, next);
+                () -> {
+                    sendLine(questPlayer, activeConversation, currentLine, deletePrevious);
+                    if (!isCurrentConversation(playerId, activeConversation)) {
+                        return;
+                    }
+                    final ArrayList<StoredConversationLine> next = playable(currentLine.getNext(), questPlayer);
+                    if (next == null || next.isEmpty()) {
+                        finishWhenScheduledWorkCompletes(playerId, activeConversation);
+                    } else if (next.size() == 1 && !next.getFirst().getSpeaker().isPlayer()) {
+                        continueLine(questPlayer, activeConversation, next.getFirst(), currentLine.getSpeaker().isPlayer(), visited);
+                    } else {
+                        sendPlayerOptions(questPlayer, activeConversation, next);
+                    }
+                });
         return true;
     }
 

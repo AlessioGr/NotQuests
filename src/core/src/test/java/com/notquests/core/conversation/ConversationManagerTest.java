@@ -19,9 +19,11 @@ import com.notquests.core.test.TestPlatformPlayer;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -143,6 +145,54 @@ class ConversationManagerTest {
         assertEquals(List.of("Welcome", "Yes", "No", "Done"), player.messages);
         assertEquals(List.of(), conversations.optionIds(player));
         assertNull(conversations.activeConversation("player"));
+    }
+
+    @Test
+    void delayedLinesAndAnswersWaitForThePreviousLineToFinish() {
+        final ConversationManager conversations = new ConversationManager();
+        final RecordingPlayer player = new RecordingPlayer();
+        final QueuedRuntime runtime = new QueuedRuntime();
+        conversations.runtime(runtime);
+        conversations.save("Intro", map(
+                "start", "Guide.first",
+                "Lines", map(
+                        "Guide", map(
+                                "first", map("text", "Welcome", "delay", 3000,
+                                        "actions", List.of("QuestPoints add 1"), "next", "Guide.second"),
+                                "second", map("text", "Can you help?", "delay", 1000, "next", "Player.yes"),
+                                "end", map("text", "Thank you", "delay", 200)),
+                        "Player", map(
+                                "yes", map("text", "Yes", "delay", 500, "next", "Guide.end")))));
+
+        assertTrue(conversations.start(player, "Intro", false));
+        runtime.advanceBy(2999);
+        assertEquals(List.of(), player.messages);
+        assertEquals(List.of(), runtime.actions);
+        assertEquals(List.of(), conversations.optionIds(player));
+        assertFalse(conversations.chooseOption(player, 1));
+
+        runtime.advanceBy(1);
+        assertEquals(List.of("Welcome"), player.messages);
+        assertEquals(List.of("QuestPoints add 1"), runtime.actions);
+        runtime.advanceBy(999);
+        assertEquals(List.of("Welcome"), player.messages);
+        runtime.advanceBy(1);
+        assertEquals(List.of("Welcome", "Can you help?"), player.messages);
+        runtime.advanceBy(499);
+        assertEquals(List.of(), conversations.optionIds(player));
+        runtime.advanceBy(1);
+        assertEquals(List.of("Welcome", "Can you help?", "Yes"), player.messages);
+        assertEquals(List.of("1"), conversations.optionIds(player));
+
+        assertTrue(conversations.chooseOption(player, 1));
+        assertEquals(List.of(), conversations.optionIds(player));
+        runtime.advanceBy(199);
+        assertEquals(List.of("Welcome", "Can you help?", "Yes"), player.messages);
+        assertEquals("Intro", conversations.activeConversation(player.playerIdentifier()));
+        runtime.advanceBy(1);
+        assertEquals(List.of("Welcome", "Can you help?", "Yes", "Thank you"), player.messages);
+        assertNull(conversations.activeConversation(player.playerIdentifier()));
+        assertTrue(runtime.scheduled.isEmpty());
     }
 
     @Test
@@ -463,10 +513,23 @@ class ConversationManagerTest {
     }
 
     private static final class QueuedRuntime implements ConversationManager.ConversationRuntime {
-        private final List<Runnable> scheduled = new ArrayList<>();
+        private final PriorityQueue<ScheduledWork> scheduled = new PriorityQueue<>(
+                Comparator.comparingLong(ScheduledWork::timeMillis));
+        private final List<String> actions = new ArrayList<>();
+        private long currentTimeMillis;
 
         private void runNext() {
-            scheduled.removeFirst().run();
+            advanceBy(scheduled.element().timeMillis() - currentTimeMillis);
+        }
+
+        private void advanceBy(final long millis) {
+            final long targetTime = currentTimeMillis + millis;
+            while (!scheduled.isEmpty() && scheduled.element().timeMillis() <= targetTime) {
+                final ScheduledWork next = scheduled.remove();
+                currentTimeMillis = next.timeMillis();
+                next.action().run();
+            }
+            currentTimeMillis = targetTime;
         }
 
         @Override
@@ -477,11 +540,13 @@ class ConversationManagerTest {
         }
 
         @Override
-        public void executeAction(final String rawAction, final PlatformPlayer questPlayer) {}
+        public void executeAction(final String rawAction, final PlatformPlayer questPlayer) {
+            actions.add(rawAction);
+        }
 
         @Override
         public void schedule(final Duration delay, final Runnable action) {
-            scheduled.add(action);
+            scheduled.add(new ScheduledWork(currentTimeMillis + delay.toMillis(), action));
         }
 
         @Override
@@ -520,6 +585,8 @@ class ConversationManagerTest {
         public boolean deletePreviousMessages() {
             return false;
         }
+
+        private record ScheduledWork(long timeMillis, Runnable action) {}
     }
 
     private static final class RecordingFocus implements ConversationManager.Focus.Native {
