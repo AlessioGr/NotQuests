@@ -1,6 +1,5 @@
 package com.notquests.neoforge;
 
-import net.kyori.adventure.text.Component;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -612,16 +611,7 @@ public final class NeoForgeObjectiveEvents {
         if (event.isCanceled()) {
             return;
         }
-        final MinecraftServer currentServer = server.get();
-        if (currentServer == null) {
-            return;
-        }
-        final Component message = text.adventure(event.getMessage());
-        final Map<String, Component> renderedMessages = new LinkedHashMap<>();
-        for (final ServerPlayer viewer : currentServer.getPlayerList().getPlayers()) {
-            renderedMessages.put(viewer.getUUID().toString(), message);
-        }
-        if (plugin.playerChatted(platformPlayer(event.getPlayer()), event.getMessage().getString(), renderedMessages)) {
+        if (plugin.playerChatted(platformPlayer(event.getPlayer()), event.getMessage().getString())) {
             event.setCanceled(true);
         }
     }

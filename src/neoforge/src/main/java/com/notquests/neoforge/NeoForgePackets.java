@@ -2,6 +2,7 @@ package com.notquests.neoforge;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundDisguisedChatPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerChatPacket;
 import net.minecraft.network.protocol.game.ClientboundSystemChatPacket;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
@@ -47,10 +48,17 @@ public final class NeoForgePackets implements NotQuestsPlatform.PacketBridge {
             }
             message = systemChat.content();
         } else if (packet instanceof final ClientboundPlayerChatPacket playerChat) {
-            final Component content = playerChat.unsignedContent() == null
-                    ? Component.literal(playerChat.body().content())
-                    : playerChat.unsignedContent();
+            if (playerChat.filterMask().isFullyFiltered()) {
+                return;
+            }
+            final Component content = playerChat.filterMask().isEmpty()
+                    ? (playerChat.unsignedContent() == null
+                        ? Component.literal(playerChat.body().content())
+                        : playerChat.unsignedContent())
+                    : playerChat.filterMask().applyWithFormatting(playerChat.body().content());
             message = playerChat.chatType().decorate(content);
+        } else if (packet instanceof final ClientboundDisguisedChatPacket disguisedChat) {
+            message = disguisedChat.chatType().decorate(disguisedChat.message());
         } else {
             return;
         }

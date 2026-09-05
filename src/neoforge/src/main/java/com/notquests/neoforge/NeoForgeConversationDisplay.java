@@ -1,6 +1,5 @@
 package com.notquests.neoforge;
 
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -30,7 +29,7 @@ final class NeoForgeConversationDisplay implements ConversationManager.Display {
             return;
         }
         if (message.replay() != null) {
-            player.sendSystemMessage(Component.literal("\n".repeat(100)).append(text.component(message.replay())));
+            player.sendSystemMessage(text.component(message.replay()));
         }
         player.sendSystemMessage(text.component(message.component()));
     }

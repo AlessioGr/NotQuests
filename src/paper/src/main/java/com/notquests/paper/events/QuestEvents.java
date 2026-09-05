@@ -3,8 +3,6 @@ package com.notquests.paper.events;
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import io.papermc.paper.event.player.AsyncChatEvent;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -755,26 +753,13 @@ public class QuestEvents implements Listener {
                 this::runOnPlatformThread);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void asyncChatEvent(AsyncChatEvent e) {
         final Player playerWhoChatted = e.getPlayer();
-        final Map<String, Component> renderedMessages = new LinkedHashMap<>();
-        for(final Audience audience : e.viewers()){
-            if(audience instanceof final Player playerViewer){
-                renderedMessages.put(
-                        playerViewer.getUniqueId().toString(),
-                        e.renderer().render(
-                                playerWhoChatted,
-                                playerWhoChatted.displayName(),
-                                e.message(),
-                                audience));
-            }
-        }
         final PaperPlayer questPlayer = main.getRegistryAdapter().activePaperPlayer(playerWhoChatted.getUniqueId());
         if (main.getCorePlugin().playerChatted(
                 questPlayer,
-                PlainTextComponentSerializer.plainText().serialize(e.message()),
-                renderedMessages)) {
+                PlainTextComponentSerializer.plainText().serialize(e.message()))) {
             e.setCancelled(true);
         }
     }

@@ -1,6 +1,5 @@
 package com.notquests.paper.conversation;
 
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -19,7 +18,7 @@ public final class PaperConversationDisplay implements ConversationManager.Displ
       return;
     }
     if (message.replay() != null) {
-      player.sendMessage(Component.text("\n".repeat(100)).append(message.replay()));
+      player.sendMessage(message.replay());
     }
     player.sendMessage(message.component());
   }

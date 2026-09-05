@@ -13,6 +13,9 @@ import com.notquests.core.structs.ActiveObjectives;
 import com.notquests.paper.NotQuests;
 import com.notquests.paper.PaperNotQuestsAdapter;
 import com.notquests.paper.PaperPlayer;
+import io.papermc.paper.chat.ChatRenderer;
+import io.papermc.paper.event.player.AsyncChatEvent;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -25,10 +28,32 @@ import org.mockbukkit.mockbukkit.MockBukkit;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 class QuestEventsRegistrationTest {
+  @Test
+  void chatHistoryDoesNotRenderMessagesBeforeOtherPluginsFinishFormatting() {
+    final NotQuests main = mock(NotQuests.class);
+    final NotQuestsPlugin core = mock(NotQuestsPlugin.class);
+    final PaperNotQuestsAdapter adapter = mock(PaperNotQuestsAdapter.class);
+    final Player player = mock(Player.class);
+    final ChatRenderer renderer = mock(ChatRenderer.class);
+    final AsyncChatEvent event = mock(AsyncChatEvent.class);
+    when(main.getCorePlugin()).thenReturn(core);
+    when(main.getRegistryAdapter()).thenReturn(adapter);
+    when(player.getUniqueId()).thenReturn(UUID.randomUUID());
+    when(event.getPlayer()).thenReturn(player);
+    when(event.message()).thenReturn(Component.text("&ctest"));
+    when(event.viewers()).thenReturn(Set.of(player));
+    when(event.renderer()).thenReturn(renderer);
+
+    new QuestEvents(main).asyncChatEvent(event);
+
+    verifyNoInteractions(renderer);
+  }
+
   @Test
   void protectedBlockBreaksDoNotProgressQuestsAndAllowedBreaksCleanUpAfterProgress() {
     final var server = MockBukkit.mock();

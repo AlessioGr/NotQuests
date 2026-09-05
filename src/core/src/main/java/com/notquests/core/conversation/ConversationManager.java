@@ -225,7 +225,7 @@ public final class ConversationManager {
         final ArrayList<Component> activeConvHistory = conversationReplayHistory.get(playerId);
         if (activeConvHistory != null) {
             synchronized (activeConvHistory) {
-                if (activeConvHistory.contains(component)) {
+                if (activeConvHistory.remove(component)) {
                     return;
                 }
             }
@@ -259,16 +259,11 @@ public final class ConversationManager {
                 }
             }
         }
-        synchronized (allChat) {
-            synchronized (allConv) {
-                allChat.removeAll(allConv);
-                allConv.clear();
-            }
-        }
+        final Component replay = Component.text("\n".repeat(100)).append(collective);
         synchronized (allConv) {
-            allConv.add(collective);
+            allConv.add(replay);
         }
-        return collective;
+        return replay;
     }
 
     public int lineCount(final String name) {

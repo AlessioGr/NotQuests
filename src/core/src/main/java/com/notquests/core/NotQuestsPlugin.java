@@ -518,7 +518,7 @@ public final class NotQuestsPlugin {
 
             @Override
             public boolean deletePreviousMessages() {
-                return configuration.deletePreviousConversationMessages();
+                return configuration.packetMagicEnabled() && configuration.deletePreviousConversationMessages();
             }
         });
     }
@@ -3163,13 +3163,13 @@ public final class NotQuestsPlugin {
     }
 
     public void conversationDisplayMessage(final String playerIdentifier, final Component component) {
-        if (configuration.deletePreviousConversationMessages()) {
+        if (configuration.packetMagicEnabled() && configuration.deletePreviousConversationMessages()) {
             conversations.rememberConversationMessage(playerIdentifier, component);
         }
     }
 
     public Component conversationOptionReplay(final String playerIdentifier) {
-        if (!configuration.deletePreviousConversationMessages()) {
+        if (!configuration.packetMagicEnabled() || !configuration.deletePreviousConversationMessages()) {
             return null;
         }
         return conversations.removeConversationMessages(playerIdentifier);
@@ -3190,8 +3190,7 @@ public final class NotQuestsPlugin {
 
     public boolean playerChatted(
             final PlatformPlayer questPlayer,
-            final String plainMessage,
-            final Map<String, Component> renderedMessageByRecipient) {
+            final String plainMessage) {
         if (questPlayer != null
                 && configuration.conversationAnswerNumberInChatEnabled()
                 && hasActiveConversation(questPlayer)
@@ -3203,9 +3202,6 @@ public final class NotQuestsPlugin {
                 }
             } catch (final NumberFormatException ignored) {
             }
-        }
-        if (renderedMessageByRecipient != null) {
-            renderedMessageByRecipient.forEach(this::rememberNonConversationDisplayMessage);
         }
         return false;
     }

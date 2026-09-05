@@ -7,7 +7,12 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 
+import com.notquests.core.NotQuestsPlugin;
 import com.notquests.core.conditions.ConditionCheck;
 import com.notquests.core.platform.PlatformPlayer;
 import com.notquests.core.test.TestPlatformPlayer;
@@ -21,6 +26,46 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 class ConversationManagerTest {
+    @ParameterizedTest
+    @ValueSource(booleans = {false, true})
+    void conversationsReplayFormattedChatWithoutRecordingTheReplayAgain(final boolean delayedPackets) {
+        final NotQuestsPlugin plugin = NotQuestsPlugin.create();
+        final RecordingPlayer player = new RecordingPlayer();
+        final String playerId = player.playerIdentifier();
+        final Component prefix = Component.text("NoeX", NamedTextColor.WHITE)
+                .append(Component.text("[Player]", NamedTextColor.RED))
+                .append(Component.text(": ", NamedTextColor.WHITE));
+        final Component first = prefix.append(Component.text("wfew", NamedTextColor.WHITE));
+        final Component second = prefix.append(Component.text("test", NamedTextColor.RED));
+        plugin.rememberNonConversationDisplayMessage(playerId, first);
+        plugin.rememberNonConversationDisplayMessage(playerId, second);
+        final List<Component> replays = new ArrayList<>();
+        final List<Component> pendingPackets = new ArrayList<>();
+        final ConversationManager conversations = plugin.conversationManager();
+        conversations.display((recipient, message) -> {
+            if (message.replay() != null) {
+                replays.add(message.replay());
+                pendingPackets.add(message.replay());
+            }
+            pendingPackets.add(message.component());
+            if (!delayedPackets) {
+                pendingPackets.forEach(component -> plugin.rememberNonConversationDisplayMessage(playerId, component));
+                pendingPackets.clear();
+            }
+        });
+        conversations.save("greeting", List.of("Hello", "Choose an answer", "Next line", "Goodbye"));
+
+        assertTrue(conversations.start(player, "greeting", false));
+        pendingPackets.forEach(component -> plugin.rememberNonConversationDisplayMessage(playerId, component));
+        pendingPackets.clear();
+        assertTrue(conversations.start(player, "greeting", true));
+
+        final Component expected = Component.text("\n".repeat(100)).append(Component.text("")
+                .append(first).append(Component.newline())
+                .append(second).append(Component.newline()));
+        assertEquals(java.util.Collections.nCopies(7, expected), replays);
+    }
+
     @Test
     void startsSavedConversationAndSendsLinesToPlayer() {
         final ConversationManager conversations = new ConversationManager();

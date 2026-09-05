@@ -38,9 +38,9 @@ class ConversationHistoryTest {
 
         store.rememberConversationMessage(playerId, Component.text("trigger"));
         final Component replay = store.removeConversationMessages(playerId);
-        assertEquals(Component.text("")
+        assertEquals(Component.text("\n".repeat(100)).append(Component.text("")
                 .append(second).append(Component.newline())
-                .append(third).append(Component.newline()), replay);
+                .append(third).append(Component.newline())), replay);
     }
 
     @Test
