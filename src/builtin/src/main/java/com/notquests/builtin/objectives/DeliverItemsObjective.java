@@ -66,7 +66,10 @@ public final class DeliverItemsObjective {
                     if (questPlayer == null) {
                         return;
                     }
-                    final int amountLeft = Math.max(1, (int) Math.ceil(objective.progressNeeded() - objective.currentProgress()));
+                    final int amountLeft = (int) Math.ceil(objective.progressNeeded() - objective.currentProgress());
+                    if (amountLeft <= 0) {
+                        return;
+                    }
                     final int delivered = questPlayer.removeItems(
                             plugin.resolveItems(selection), amountLeft);
                     if (delivered <= 0) {

@@ -2,6 +2,7 @@ package com.notquests.builtin.objectives;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import com.notquests.builtin.TestPlatformPlayer;
 import com.notquests.core.NotQuestsPlugin;
 import com.notquests.core.conditions.Condition;
 import com.notquests.core.items.ItemSelection;
+import com.notquests.core.items.SavedItems;
 import com.notquests.core.managers.QuestPlayerManager;
 import com.notquests.core.objectives.Objective;
 import com.notquests.core.platform.NQLocation;
@@ -39,6 +41,44 @@ import java.util.concurrent.atomic.AtomicInteger;
 class PortableObjectiveProgressTest {
     private static final String PLAYER = "player";
     private static final AtomicInteger QUEST_NUMBER = new AtomicInteger();
+
+    @Test
+    void deliveryStopsTakingItemsWhileWaitingForTheCompletionNpc() {
+        final NotQuestsPlugin plugin = NotQuestsPlugin.create();
+        final NotQuestsAdapter adapter = plugin.createRegistryAdapter(new NotQuestsRegistry.PlatformHooks(null, null, null));
+        BuiltInPack.register(plugin, adapter);
+        final AtomicInteger apples = new AtomicInteger(3);
+        final PlatformPlayer player = new TestPlayer(PLAYER, apples);
+        assertTrue(plugin.createQuest("Delivery").success());
+        plugin.quest("Delivery").addObjective("DeliverItems",
+                Objectives.parse(adapter, type(plugin.registry(), "DeliverItems"), "apple 5 citizens:1"), "")
+                .setCompletionNpc("citizens:2");
+        assertTrue(plugin.giveQuest(player, "Delivery", false, ignored -> {}));
+        final ActiveObjective objective = plugin.activeObjectives(PLAYER).getFirst();
+        final NpcEvent recipient = new NpcEvent(player, "citizens:1", "Merchant");
+        final NpcEvent completionNpc = new NpcEvent(player, "citizens:2", "Quest giver");
+
+        assertFalse(plugin.playerInteractedWithNpc(player, completionNpc));
+        assertEquals(3, apples.get());
+        assertTrue(plugin.playerInteractedWithNpc(player, recipient));
+        assertEquals(0, apples.get());
+        assertEquals(3, objective.currentProgress());
+
+        apples.set(8);
+        assertTrue(plugin.playerInteractedWithNpc(player, recipient));
+        assertEquals(6, apples.get());
+        assertEquals(5, objective.currentProgress());
+        assertFalse(objective.hasBeenCompleted());
+        for (int click = 0; click < 3; click++) {
+            assertFalse(plugin.playerInteractedWithNpc(player, recipient));
+            assertEquals(6, apples.get());
+            assertEquals(5, objective.currentProgress());
+        }
+
+        assertTrue(plugin.playerInteractedWithNpc(player, completionNpc));
+        assertEquals(6, apples.get());
+        assertTrue(plugin.activeQuestPlayer(PLAYER).hasCompletedQuest("Delivery"));
+    }
 
     @Test
     void eatingTenApplesRequiresTenConsumptionsRegardlessOfStackSize() {
@@ -275,7 +315,21 @@ class PortableObjectiveProgressTest {
                 .orElseThrow();
     }
 
-    private record TestPlayer(String playerIdentifier) implements TestPlatformPlayer {
+    private record TestPlayer(String playerIdentifier, AtomicInteger apples) implements TestPlatformPlayer {
+        private TestPlayer(final String playerIdentifier) {
+            this(playerIdentifier, new AtomicInteger());
+        }
+
+        @Override
+        public int removeItems(final List<SavedItems.ItemChoice> items, final int maxAmount) {
+            if (items.stream().noneMatch(item -> item.selection().includesMaterial("apple"))) {
+                return 0;
+            }
+            final int removed = Math.min(apples.get(), maxAmount);
+            apples.addAndGet(-removed);
+            return removed;
+        }
+
         @Override
         public boolean hasPlayer() {
             return true;
@@ -323,6 +377,9 @@ class PortableObjectiveProgressTest {
         return false;
     }
     }
+
+    private record NpcEvent(PlatformPlayer questPlayer, String npcSelector, String npcName)
+            implements Objectives.NpcInteractionEvent {}
 
     private record HarvestEvent(String materialId, boolean fullyGrownHarvestable, boolean playerPlaced)
             implements Objectives.HarvestBlockEvent {
