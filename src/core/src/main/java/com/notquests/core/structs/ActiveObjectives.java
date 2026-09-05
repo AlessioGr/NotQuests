@@ -1114,7 +1114,7 @@ public final class ActiveObjectives {
             final PlatformPlayer questPlayer,
             final Objectives.ItemEvent event) {
         dispatch(questPlayer, Objectives.Type::consumeItemHandler, (handler, objective) ->
-                handler.handle(event, objective));
+                handler.handle(new ItemAmount(event, 1), objective));
     }
 
     public void onPlayerFishItem(

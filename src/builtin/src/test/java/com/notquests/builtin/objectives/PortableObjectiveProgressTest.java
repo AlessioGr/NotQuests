@@ -41,6 +41,27 @@ class PortableObjectiveProgressTest {
     private static final AtomicInteger QUEST_NUMBER = new AtomicInteger();
 
     @Test
+    void eatingTenApplesRequiresTenConsumptionsRegardlessOfStackSize() {
+        final NotQuestsPlugin plugin = NotQuestsPlugin.create();
+        final NotQuestsAdapter adapter = plugin.createRegistryAdapter(new NotQuestsRegistry.PlatformHooks(null, null, null));
+        BuiltInPack.register(plugin, adapter);
+        final PlatformPlayer player = new TestPlayer(PLAYER);
+        final Objectives.Type type = type(plugin.registry(), "ConsumeItems");
+        assertTrue(plugin.createQuest("EatApples").success());
+        plugin.quest("EatApples").addObjective("ConsumeItems", Objectives.parse(adapter, type, "apple 10"), "");
+        assertTrue(plugin.giveQuest(player, "EatApples", false, ignored -> {}));
+        final ActiveObjective objective = plugin.activeObjectives(PLAYER).getFirst();
+
+        plugin.playerConsumedItem(player, new ItemEvent("bread", 16));
+        assertEquals(0, objective.getCurrentProgress());
+        for (int consumed = 1; consumed <= 10; consumed++) {
+            plugin.playerConsumedItem(player, new ItemEvent("apple", 17 - consumed));
+            assertEquals(consumed, objective.getCurrentProgress());
+            assertEquals(consumed == 10, plugin.activeQuestPlayer(PLAYER).hasCompletedQuest("EatApples"));
+        }
+    }
+
+    @Test
     void requestedNeoForgeObjectivesProgressThroughPortableHandlers() {
         final NotQuestsRegistry registry = new NotQuestsRegistry();
         final NotQuestsAdapter adapter = registry.createAdapter(new NotQuestsRegistry.PlatformHooks(null, null, null));
