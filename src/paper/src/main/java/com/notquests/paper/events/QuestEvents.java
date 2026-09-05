@@ -114,25 +114,21 @@ public class QuestEvents implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     private void onBlockBreak(BlockBreakEvent e) {
-        main.getCorePlugin().blockBreakFinished(
-                blockKey(e.getBlock()),
-                e.getBlock().getType() == Material.BREWING_STAND);
-    }
-
-    @EventHandler(priority = EventPriority.LOWEST)
-    private void onBlockBreakObjective(BlockBreakEvent e) {
+        final Block block = e.getBlock();
+        final String blockKey = blockKey(block);
+        final Material material = block.getType();
         final PaperPlayer questPlayer = activePaperPlayer(e.getPlayer());
-        if (questPlayer == null) {
-            return;
+        if (questPlayer != null) {
+            main.getCorePlugin().playerBrokeBlock(
+                    questPlayer,
+                    blockKey,
+                    material.name(),
+                    block.getRelative(BlockFace.DOWN).getType() == material,
+                    block.getBlockData() instanceof final Ageable ageable
+                            && ageable.getAge() >= ageable.getMaximumAge(),
+                    false);
         }
-        main.getCorePlugin().playerBrokeBlock(
-                questPlayer,
-                blockKey(e.getBlock()),
-                e.getBlock().getType().name(),
-                e.getBlock().getRelative(BlockFace.DOWN).getType() == e.getBlock().getType(),
-                e.getBlock().getBlockData() instanceof final Ageable ageable
-                        && ageable.getAge() >= ageable.getMaximumAge(),
-                false);
+        main.getCorePlugin().blockBreakFinished(blockKey, material == Material.BREWING_STAND);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
