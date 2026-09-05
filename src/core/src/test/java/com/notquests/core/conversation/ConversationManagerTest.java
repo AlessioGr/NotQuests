@@ -29,6 +29,50 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 class ConversationManagerTest {
     @ParameterizedTest
+    @ValueSource(strings = {
+            "chat.disabled.missingProfileKey",
+            "chat.disabled.expiredProfileKey",
+            "chat.disabled.chain_broken",
+            "chat.disabled.invalid_signature",
+            "chat.disabled.out_of_order_chat",
+            "chat.disabled.invalid_command_signature",
+            "chat.disabled.options"
+    })
+    void conversationsDoNotReplayChatStatusWarnings(final String warningKey) {
+        final NotQuestsPlugin plugin = NotQuestsPlugin.create();
+        final RecordingPlayer player = new RecordingPlayer();
+        final String playerId = player.playerIdentifier();
+        final Component joined = Component.translatable("multiplayer.player.joined", Component.text("NoeX"))
+                .color(NamedTextColor.YELLOW);
+        final Component chat = Component.text("NoeX[Player]: ", NamedTextColor.RED)
+                .append(Component.text("I saw: Chat disabled due to missing profile public key."));
+        final Component warning = Component.translatable(warningKey).color(NamedTextColor.RED);
+        final Component wrappedWarning = Component.text("").append(warning);
+        plugin.rememberNonConversationDisplayMessage(playerId, joined);
+        plugin.rememberNonConversationDisplayMessage(playerId, warning);
+        plugin.rememberNonConversationDisplayMessage(playerId, chat);
+        final List<Component> replays = new ArrayList<>();
+        final ConversationManager conversations = plugin.conversationManager();
+        conversations.display((recipient, message) -> {
+            if (message.replay() != null) {
+                replays.add(message.replay());
+                plugin.rememberNonConversationDisplayMessage(playerId, message.replay());
+            }
+            plugin.rememberNonConversationDisplayMessage(playerId, message.component());
+        });
+        conversations.save("greeting", List.of("Hello", "Goodbye"));
+
+        assertTrue(conversations.start(player, "greeting", false));
+        plugin.rememberNonConversationDisplayMessage(playerId, wrappedWarning);
+        assertTrue(conversations.start(player, "greeting", true));
+
+        final Component expected = Component.text("\n".repeat(100)).append(Component.text("")
+                .append(joined).append(Component.newline())
+                .append(chat).append(Component.newline()));
+        assertEquals(java.util.Collections.nCopies(3, expected), replays);
+    }
+
+    @ParameterizedTest
     @ValueSource(booleans = {false, true})
     void conversationsReplayFormattedChatWithoutRecordingTheReplayAgain(final boolean delayedPackets) {
         final NotQuestsPlugin plugin = NotQuestsPlugin.create();

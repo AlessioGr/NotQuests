@@ -1,6 +1,7 @@
 package com.notquests.core.conversation;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 
@@ -240,6 +241,9 @@ public final class ConversationManager {
                 }
             }
         }
+        if (containsChatStatusWarning(component)) {
+            return;
+        }
         chatReplayHistory.compute(playerId, (id, history) -> {
             final ArrayList<Component> list = history == null ? new ArrayList<>() : history;
             synchronized (list) {
@@ -251,6 +255,14 @@ public final class ConversationManager {
             }
             return list;
         });
+    }
+
+    private static boolean containsChatStatusWarning(final Component component) {
+        if (component instanceof final TranslatableComponent translated
+                && translated.key().startsWith("chat.disabled.")) {
+            return true;
+        }
+        return component.children().stream().anyMatch(ConversationManager::containsChatStatusWarning);
     }
 
     public Component removeConversationMessages(final String playerId) {
