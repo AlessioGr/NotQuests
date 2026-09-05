@@ -57,19 +57,17 @@ final class QuestLifecycleCommands {
                     final ArrayList<String> shortcuts = new ArrayList<>(List.of(
                             setupShortcut("Set display name", edit + "displayName set ",
                                     "Enter a display name. MiniMessage colors and spaces are supported."),
-                            setupShortcut("Set icon from hand", edit + "guiItem hand",
+                            setupShortcut("Use held item as icon", edit + "guiItem hand",
                                     "Hold the item you want as the quest icon, then press Enter."),
-                            setupShortcut("Add objective", edit + "objectives add ",
+                            setupShortcut("Add an objective", edit + "objectives add ",
                                     "Choose an objective type with Tab, then fill in its arguments.")));
                     if (adapter.supportsNpcAttachments()) {
-                        shortcuts.add(setupShortcut("Attach NPC", edit + "npcs add ",
+                        shortcuts.add(setupShortcut("Attach an NPC", edit + "npcs add ",
                                 "Choose an NPC or the right-click selector with Tab."));
                     }
-                    shortcuts.add(setupShortcut("Test quest", "/nq take " + questName,
-                            "Accept this quest to test it. Configure its objectives first."));
                     return List.of(created,
-                            CommandMessage.success("<main>What would you like to configure next?"),
-                            CommandMessage.success(String.join(" ", shortcuts)));
+                            CommandMessage.emptyLine(),
+                            CommandMessage.success(String.join("\n", shortcuts)));
                 })
                 .registration());
         commands.add(root.literal("delete", NQDescription.of("Deletes an existing quest."))
@@ -248,8 +246,8 @@ final class QuestLifecycleCommands {
     private static String setupShortcut(final String label, final String command, final String hint) {
         final String suggestion = command.replace("\\", "\\\\").replace("'", "\\'");
         return "<click:suggest_command:'" + suggestion + "'><hover:show_text:'<main>" + hint
-                + "<newline><unimportant>Click to insert the command.'><highlight2>[" + label
-                + "]</highlight2></hover></click>";
+                + "<newline><unimportant>Click to insert the command.'><aqua>›</aqua> <gray>" + label
+                + "</gray></hover></click>";
     }
 
     static CommandMessage createQuest(

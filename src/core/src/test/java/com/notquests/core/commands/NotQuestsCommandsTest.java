@@ -75,13 +75,12 @@ class NotQuestsCommandsTest {
             if (npcAttachments) {
                 expected.add(ClickEvent.suggestCommand("/qa edit Tutorial npcs add "));
             }
-            expected.add(ClickEvent.suggestCommand("/nq take Tutorial"));
             assertEquals(expected, clicks);
-            assertTrue(text.toString().contains("What would you like to configure next?"));
-            for (final String label : List.of("Set display name", "Set icon from hand", "Add objective", "Test quest")) {
-                assertTrue(text.toString().contains("[" + label + "]"));
-            }
-            assertEquals(npcAttachments, text.toString().contains("[Attach NPC]"));
+            assertTrue(messages.get(1).renderEmptyLine());
+            assertTrue(text.toString().contains("› Set display name\n› Use held item as icon\n› Add an objective"));
+            assertEquals(npcAttachments, text.toString().contains("\n› Attach an NPC"));
+            assertFalse(text.toString().contains("What would you like to configure next?"));
+            assertFalse(text.toString().contains("Test quest"));
             assertTrue(plugin.quest("Tutorial").getObjectives().isEmpty());
             assertTrue(plugin.quest("Tutorial").getNpcAttachments().isEmpty());
             assertNull(plugin.quest("Tutorial").getGuiItemSelection());
