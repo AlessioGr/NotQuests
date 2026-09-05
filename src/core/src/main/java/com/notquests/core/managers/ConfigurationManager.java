@@ -74,7 +74,6 @@ public final class ConfigurationManager implements Palette {
     private volatile boolean deletePreviousConversationMessages = true;
     private volatile int previousConversationHistorySize = 20;
     private volatile boolean packetMagicEnabled = true;
-    private volatile boolean packetMagicUsePacketEvents = false;
     private volatile boolean packetMagicUnsafeDisregardVersion = false;
     private volatile boolean conversationAnswerNumberInChatEnabled = true;
     private volatile boolean supportPlaceholderApiInTranslationStrings = false;
@@ -185,7 +184,6 @@ public final class ConfigurationManager implements Palette {
         final PacketMagic settings = packetMagic(yaml, serverVersion, platformName);
         applyPacketMagic(
                 settings.packetMagic(),
-                settings.usePacketEvents(),
                 settings.unsafeDisregardVersion());
         return settings;
     }
@@ -266,8 +264,6 @@ public final class ConfigurationManager implements Palette {
         previousConversationHistorySize =
                 configuration.getInt("general.packet-magic.conversations.history-size", 20);
         packetMagicEnabled = configuration.getBoolean("general.packet-magic.enabled", true);
-        packetMagicUsePacketEvents = "packetevents".equalsIgnoreCase(
-                configuration.getString("general.packet-magic.mode", "internal"));
         packetMagicUnsafeDisregardVersion =
                 configuration.getBoolean("general.packet-magic.unsafe-disregard-version", false);
         conversationAnswerNumberInChatEnabled = configuration.getBoolean(
@@ -558,20 +554,14 @@ public final class ConfigurationManager implements Palette {
         return packetMagicEnabled;
     }
 
-    public boolean packetMagicUsePacketEvents() {
-        return packetMagicUsePacketEvents;
-    }
-
     public boolean packetMagicUnsafeDisregardVersion() {
         return packetMagicUnsafeDisregardVersion;
     }
 
     public void applyPacketMagic(
             final boolean enabled,
-            final boolean usePacketEvents,
             final boolean unsafeDisregardVersion) {
         packetMagicEnabled = enabled;
-        packetMagicUsePacketEvents = usePacketEvents;
         packetMagicUnsafeDisregardVersion = unsafeDisregardVersion;
     }
 
@@ -1093,7 +1083,6 @@ public final class ConfigurationManager implements Palette {
         integer(configuration, defaults, "general.objectives.unlock-conditions-checks.regular-interval", -1);
         bool(configuration, defaults, "logging.verbose-startup-messages", true);
         bool(configuration, defaults, "general.packet-magic.enabled", true);
-        string(configuration, defaults, "general.packet-magic.mode", "internal");
         bool(configuration, defaults, "general.packet-magic.unsafe-disregard-version", false);
         bool(configuration, defaults, "general.packet-magic.conversations.delete-previous", true);
         integer(configuration, defaults, "general.packet-magic.conversations.history-size", 20);
@@ -1441,13 +1430,6 @@ public final class ConfigurationManager implements Palette {
         final Value<Boolean> enabledValue = bool(configuration, "general.packet-magic.enabled", true);
         changed |= enabledValue.changed();
 
-        final Value<String> modeValue = string(
-                configuration,
-                "general.packet-magic.mode",
-                "internal",
-                "Possible modes: 'internal' and 'packetevents'");
-        changed |= modeValue.changed();
-
         final Value<Boolean> unsafeValue = bool(
                 configuration,
                 "general.packet-magic.unsafe-disregard-version",
@@ -1456,7 +1438,6 @@ public final class ConfigurationManager implements Palette {
         changed |= unsafeValue.changed();
 
         boolean packetMagic = enabledValue.value();
-        final boolean usePacketEvents = "packetevents".equalsIgnoreCase(modeValue.value());
         final boolean unsafeDisregardVersion = unsafeValue.value();
         final List<String> info = new ArrayList<>();
         info.add("Detected version: " + safe(serverVersion) + " <highlight>(" + safe(platformName) + ")");
@@ -1470,7 +1451,7 @@ public final class ConfigurationManager implements Palette {
             }
         }
 
-        return new PacketMagic(packetMagic, usePacketEvents, unsafeDisregardVersion, changed, List.copyOf(info));
+        return new PacketMagic(packetMagic, unsafeDisregardVersion, changed, List.copyOf(info));
     }
 
     public static String invalidValue(
@@ -1547,7 +1528,6 @@ public final class ConfigurationManager implements Palette {
 
     public record PacketMagic(
             boolean packetMagic,
-            boolean usePacketEvents,
             boolean unsafeDisregardVersion,
             boolean changed,
             List<String> infoMessages) {}

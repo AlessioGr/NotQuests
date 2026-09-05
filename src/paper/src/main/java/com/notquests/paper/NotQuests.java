@@ -62,7 +62,6 @@ public class NotQuests implements NotQuestsPlatform {
     private final PaperNotQuestsAdapter registryAdapter = new PaperNotQuestsAdapter(this);
     // Paper runtime leaves
     private PaperArmorStands armorStands;
-    private PaperPackets packets;
     private Messages messages;
     private ItemStack journalItem;
 
@@ -102,10 +101,8 @@ public class NotQuests implements NotQuestsPlatform {
     }
 
     @Override
-    public Optional<PacketBridge> packetBridge(final boolean enabled, final boolean usePacketEvents) {
-        packets = new PaperPackets(this, enabled, usePacketEvents);
-        packets.load();
-        return Optional.of(packets);
+    public Optional<PacketBridge> packetBridge(final boolean enabled) {
+        return Optional.of(new PaperPackets(this, enabled));
     }
 
     @Override

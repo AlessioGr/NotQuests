@@ -31,8 +31,6 @@ general:
         - <gray>A book containing all your quest information
   packet-magic:
     enabled: true
-    #Possible modes: "internal" and "packetevents"
-    mode: "internal"
     unsafe-disregard-version: false
     conversations:
       delete-previous: true

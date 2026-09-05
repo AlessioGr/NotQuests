@@ -46,7 +46,7 @@ public interface NotQuestsPlatform {
 
     boolean materializeJournalItem(ConfigurationManager.JournalItem journalItem);
 
-    Optional<PacketBridge> packetBridge(boolean enabled, boolean usePacketEvents);
+    Optional<PacketBridge> packetBridge(boolean enabled);
 
     Optional<NativeIntegrations> nativeIntegrations();
 

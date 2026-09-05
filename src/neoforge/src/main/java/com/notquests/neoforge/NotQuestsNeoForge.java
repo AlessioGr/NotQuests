@@ -245,7 +245,7 @@ public final class NotQuestsNeoForge implements NotQuestsPlatform {
     }
 
     @Override
-    public Optional<PacketBridge> packetBridge(final boolean enabled, final boolean usePacketEvents) {
+    public Optional<PacketBridge> packetBridge(final boolean enabled) {
         return enabled
                 ? Optional.of(new NeoForgePackets(plugin, text))
                 : Optional.empty();

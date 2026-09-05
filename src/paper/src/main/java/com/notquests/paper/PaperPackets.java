@@ -1,16 +1,5 @@
 package com.notquests.paper;
 
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.event.PacketListener;
-import com.github.retrooper.packetevents.event.PacketListenerPriority;
-import com.github.retrooper.packetevents.event.PacketSendEvent;
-import com.github.retrooper.packetevents.protocol.chat.filter.FilterMaskType;
-import com.github.retrooper.packetevents.protocol.chat.message.ChatMessage_v1_19_3;
-import com.github.retrooper.packetevents.protocol.packettype.PacketType;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerChatMessage;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerDisguisedChat;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerSystemChatMessage;
-import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -18,7 +7,6 @@ import io.netty.channel.ChannelPromise;
 import io.papermc.paper.adventure.PaperAdventure;
 import net.kyori.adventure.text.Component;
 import net.minecraft.network.Connection;
-import net.minecraft.network.chat.FilterMask;
 import net.minecraft.network.protocol.game.ClientboundDisguisedChatPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerChatPacket;
 import net.minecraft.network.protocol.game.ClientboundSystemChatPacket;
@@ -42,43 +30,18 @@ public final class PaperPackets implements Listener, PacketBridge {
   private static final String CHANNEL_HANDLER = "notquests-packets";
 
   private final NotQuests main;
-  private final boolean usePacketEvents;
   private volatile boolean enabled;
 
   public PaperPackets(
       final NotQuests main,
-      final boolean enabled,
-      final boolean usePacketEvents) {
+      final boolean enabled) {
     this.main = main;
-    this.usePacketEvents = usePacketEvents;
     this.enabled = enabled;
-  }
-
-  public void load() {
-    if (enabled && usePacketEvents) {
-      try {
-        PacketEvents.setAPI(SpigotPacketEventsBuilder.build(main.getMain()));
-        PacketEvents.getAPI().load();
-      } catch (final Throwable exception) {
-        fail(exception);
-      }
-    }
   }
 
   @Override
   public void start() {
     if (!enabled) {
-      return;
-    }
-    if (usePacketEvents) {
-      try {
-        PacketEvents.getAPI().getEventManager().registerListener(
-            new PacketEventsChatListener(main, this), PacketListenerPriority.MONITOR);
-        PacketEvents.getAPI().getSettings().bStats(false).checkForUpdates(false).debug(false);
-        PacketEvents.getAPI().init();
-      } catch (final Throwable exception) {
-        fail(exception);
-      }
       return;
     }
     Bukkit.getPluginManager().registerEvents(this, main.getMain());
@@ -87,15 +50,7 @@ public final class PaperPackets implements Listener, PacketBridge {
 
   @Override
   public void close() {
-    if (usePacketEvents && enabled) {
-      try {
-        PacketEvents.getAPI().terminate();
-      } catch (final Throwable exception) {
-        fail(exception);
-      }
-    } else {
-      Bukkit.getOnlinePlayers().forEach(this::stopObservingChat);
-    }
+    Bukkit.getOnlinePlayers().forEach(this::stopObservingChat);
     enabled = false;
   }
 
@@ -110,7 +65,7 @@ public final class PaperPackets implements Listener, PacketBridge {
   }
 
   private void observeChat(final Player player) {
-    if (!enabled || usePacketEvents) {
+    if (!enabled) {
       return;
     }
     try {
@@ -127,9 +82,6 @@ public final class PaperPackets implements Listener, PacketBridge {
   }
 
   private void stopObservingChat(final Player player) {
-    if (usePacketEvents) {
-      return;
-    }
     try {
       final Channel channel = channel(connection(serverPlayer(player).connection));
       if (channel.pipeline().get(CHANNEL_HANDLER) != null) {
@@ -222,57 +174,4 @@ public final class PaperPackets implements Listener, PacketBridge {
     }
   }
 
-  private static final class PacketEventsChatListener implements PacketListener {
-    private final NotQuests main;
-    private final PaperPackets packets;
-
-    private PacketEventsChatListener(final NotQuests main, final PaperPackets packets) {
-      this.main = main;
-      this.packets = packets;
-    }
-
-    @Override
-    public void onPacketSend(final PacketSendEvent event) {
-      if (!packets.enabled || event.isCancelled() || !(event.getPlayer() instanceof final Player player)) {
-        return;
-      }
-      try {
-        final Component component;
-        if (event.getPacketType() == PacketType.Play.Server.SYSTEM_CHAT_MESSAGE) {
-          final var chat = new WrapperPlayServerSystemChatMessage(event);
-          if (chat.isOverlay()) {
-            return;
-          }
-          component = chat.getMessage();
-        } else if (event.getPacketType() == PacketType.Play.Server.CHAT_MESSAGE) {
-          final var chat = (ChatMessage_v1_19_3) new WrapperPlayServerChatMessage(event).getMessage();
-          if (chat.getFilterMask().getType() == FilterMaskType.FULLY_FILTERED) {
-            return;
-          }
-          Component content = chat.getUnsignedChatContent().orElseGet(chat::getChatContent);
-          if (chat.getFilterMask().getType() == FilterMaskType.PARTIALLY_FILTERED) {
-            final FilterMask filter = new FilterMask(chat.getPlainContent().length());
-            chat.getFilterMask().getMask().stream().forEach(filter::setFiltered);
-            content = PaperAdventure.asAdventure(filter.applyWithFormatting(chat.getPlainContent()));
-          }
-          final var formatting = chat.getChatType();
-          component = formatting.getType().getChatDecoration().decorate(content, formatting);
-        } else if (event.getPacketType() == PacketType.Play.Server.DISGUISED_CHAT) {
-          final var chat = new WrapperPlayServerDisguisedChat(event);
-          final var formatting = chat.getChatType();
-          component = formatting.getType().getChatDecoration().decorate(chat.getMessage(), formatting);
-        } else {
-          return;
-        }
-        event.getTasksAfterSend().add(() -> {
-          if (packets.enabled && !event.isCancelled()) {
-            main.getCorePlugin().rememberNonConversationDisplayMessage(
-                player.getUniqueId().toString(), component);
-          }
-        });
-      } catch (final Throwable exception) {
-        packets.fail(exception);
-      }
-    }
-  }
 }

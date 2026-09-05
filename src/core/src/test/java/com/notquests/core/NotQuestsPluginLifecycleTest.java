@@ -284,7 +284,7 @@ class NotQuestsPluginLifecycleTest {
     }
 
     @Override
-    public java.util.Optional<PacketBridge> packetBridge(final boolean enabled, final boolean usePacketEvents) {
+    public java.util.Optional<PacketBridge> packetBridge(final boolean enabled) {
       return java.util.Optional.empty();
     }
 

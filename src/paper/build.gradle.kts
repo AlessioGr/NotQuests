@@ -33,13 +33,6 @@ repositories {
         }
     }
 
-    // packetevents — shaded library
-    maven("https://repo.codemc.io/repository/maven-releases/") {
-        content {
-            includeGroup("com.github.retrooper")
-        }
-    }
-
     // Mojang libraries (brigadier / authlib / datafixerupper transitives)
     maven("https://libraries.minecraft.net/") {
         content {
@@ -117,9 +110,6 @@ dependencies {
     //InvUI
     implementation("xyz.xenondevs.invui:invui:2.3.1")
 
-    implementation("com.github.retrooper:packetevents-spigot:2.13.0")
-
-
     implementation("commons-io:commons-io:2.22.0")
 
 
@@ -180,9 +170,6 @@ tasks {
 
         relocate("org.apache.commons.io", "$shadowPath.commons.io")
 
-        relocate("io.github.retrooper.packetevents", "$shadowPath.packetevents.bukkit")
-        relocate("com.github.retrooper.packetevents", "$shadowPath.packetevents.api")
-
         relocate("net.kyori.adventure.text.serializer.bungeecord", "$shadowPath.kyori.bungeecord")
 
         relocate("xyz.xenondevs.invui", "$shadowPath.invui")
@@ -208,9 +195,6 @@ tasks {
 
             include(dependency("me.lucko:.*:.*"))
 
-            include(dependency("com.github.retrooper:.*:.*"))
-            include(dependency("io.github.retrooper:.*:.*"))
-
             include(dependency("net.kyori:adventure-text-serializer-bungeecord:.*"))
 
             include(dependency("com.github.Redempt:.*:.*"))
@@ -228,8 +212,6 @@ tasks {
 
         }
 
-        // Keep this module's generated plugin.yml/paper-plugin.yml if shaded dependencies also carry
-        // plugin metadata (PacketEvents can run standalone and ships its own plugin.yml).
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
         archiveFileName.set("notquests-${project.version}-$minecraftTargetVersion-paper.jar")

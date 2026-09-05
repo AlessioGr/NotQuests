@@ -12,7 +12,7 @@ import com.notquests.neoforge.NeoForgePackets;
 
 @Mixin(ServerCommonPacketListenerImpl.class)
 abstract class ServerChatPacketMixin {
-    @Inject(method = "send(Lnet/minecraft/network/protocol/Packet;)V", at = @At("HEAD"))
+    @Inject(method = "send(Lnet/minecraft/network/protocol/Packet;)V", at = @At("RETURN"))
     private void notQuests$observeOutgoingChat(final Packet<?> packet, final CallbackInfo callback) {
         if ((Object) this instanceof final ServerGamePacketListenerImpl connection) {
             NeoForgePackets.outgoing(connection, packet);

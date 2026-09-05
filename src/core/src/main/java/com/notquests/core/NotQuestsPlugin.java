@@ -547,9 +547,7 @@ public final class NotQuestsPlugin {
                 severe("The default journal item could not be created on this platform.");
             }
         }
-        packetBridge = platform.packetBridge(
-                configuration.packetMagicEnabled(),
-                configuration.packetMagicUsePacketEvents());
+        packetBridge = platform.packetBridge(configuration.packetMagicEnabled());
     }
 
     public void enable(final NotQuestsPlatform platform) {

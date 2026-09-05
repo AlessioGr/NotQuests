@@ -17,7 +17,6 @@ class ConfigurationManagerPacketMagicTest {
         final ConfigurationManager.PacketMagic result = ConfigurationManager.packetMagic(configuration, "26.2", "Paper");
 
         assertTrue(result.packetMagic());
-        assertFalse(result.usePacketEvents());
         assertFalse(result.unsafeDisregardVersion());
         assertTrue(result.changed());
         assertTrue(result.infoMessages().contains("Detected version: 26.2 <highlight>(Paper)"));
@@ -37,19 +36,17 @@ class ConfigurationManagerPacketMagicTest {
     }
 
     @Test
-    void unsafeOverrideKeepsConfiguredPacketMagicMode() {
+    void unsafeOverrideKeepsPacketMagicEnabled() {
         final ConfigurationManager.PacketMagic result = ConfigurationManager.packetMagic(
                 YamlConfig.fromMap(Map.of(
                         "general",
                         Map.of("packet-magic", Map.of(
                                 "enabled", true,
-                                "mode", "packetevents",
                                 "unsafe-disregard-version", true)))),
                 "25.0.0",
                 "Paper");
 
         assertTrue(result.packetMagic());
-        assertTrue(result.usePacketEvents());
         assertTrue(result.unsafeDisregardVersion());
         assertTrue(result.infoMessages().stream().anyMatch(message -> message.contains("unsafe-disregard-version")));
     }
