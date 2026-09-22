@@ -10,7 +10,7 @@ mise install
 
 This provisions everything the project needs:
 
-- **Java 25 (Temurin)** — required by Paper 26.2 / Minecraft 26.2
+- **Java 25 (Temurin)** — required by Paper 26.3 / Minecraft 26.3
 - **Gradle 9.7.1** — matches `gradle/wrapper/gradle-wrapper.properties`
 
 (Without mise: install a JDK 25 and Gradle 9.7.1 manually.)
@@ -43,7 +43,7 @@ gradle wrapper        # one-time: creates gradle/wrapper/gradle-wrapper.jar
 The final plugin jar is at:
 
 ```
-src/paper/build/libs/notquests-7.0.0-beta.3-26.2-paper.jar
+src/paper/build/libs/notquests-7.0.0-26.3-paper.jar
 ```
 
 ## Running a test server
@@ -52,7 +52,13 @@ src/paper/build/libs/notquests-7.0.0-beta.3-26.2-paper.jar
 ./gradlew :paper:runServer
 ```
 
-This starts a Paper 26.2 test server with the plugin loaded.
+This starts a Paper 26.3 test server with the plugin loaded.
+
+For NeoForge 26.3, use `./gradlew :neoforge:runServer`.
+
+MockBukkit currently only publishes a 26.2 build, so the in-JVM Paper tests use a separate 26.2
+test API. The production plugin compiles against 26.3. Run the [real-server sweeps](e2e/README.md)
+to check both platforms on 26.3; passing the mock tests alone does not verify the server upgrade.
 
 ## Project structure
 

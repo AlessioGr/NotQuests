@@ -33,8 +33,8 @@ class Version630MigrationTest {
         assertTrue(ConfigurationMigrations.prepareDataVersion(configuration, "6.3.0"));
         assertEquals("6.3.0", ConfigurationMigrations.dataVersion(configuration));
 
-        ConfigurationMigrations.saveDataVersion(configuration, "7.0.0-beta.1");
-        assertEquals("7.0.0-beta.1", ConfigurationMigrations.dataVersion(configuration));
+        ConfigurationMigrations.saveDataVersion(configuration, "7.0.0");
+        assertEquals("7.0.0", ConfigurationMigrations.dataVersion(configuration));
     }
 
     @Test
@@ -47,7 +47,7 @@ class Version630MigrationTest {
 
         migrations.run(new ConfigurationMigrations.MigrationRun<>(
                 "6.3.0",
-                "7.0.0-beta.1",
+                "7.0.0",
                 context,
                 ignored -> {},
                 ignored -> backups.incrementAndGet(),
@@ -58,11 +58,11 @@ class Version630MigrationTest {
 
         assertEquals(1, backups.get());
         assertEquals(1, saves.get());
-        assertEquals("7.0.0-beta.1", savedVersion.get());
+        assertEquals("7.0.0", savedVersion.get());
 
         migrations.run(new ConfigurationMigrations.MigrationRun<>(
                 savedVersion.get(),
-                "7.0.0-beta.1",
+                "7.0.0",
                 context,
                 ignored -> {},
                 ignored -> backups.incrementAndGet(),
@@ -85,7 +85,7 @@ class Version630MigrationTest {
                 IllegalStateException.class,
                 () -> new ConfigurationMigrations().run(new ConfigurationMigrations.MigrationRun<>(
                         "6.3.0",
-                        "7.0.0-beta.1",
+                        "7.0.0",
                         new Context(dataFolder, YamlConfig.empty(), (message, exception) -> {}),
                         ignored -> {},
                         ignored -> {},

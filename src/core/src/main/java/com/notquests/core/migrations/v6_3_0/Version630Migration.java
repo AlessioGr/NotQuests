@@ -79,7 +79,7 @@ public final class Version630Migration implements Migration<Context> {
 
   @Override
   public String targetVersion() {
-    return "7.0.0-beta.1";
+    return "7.0.0";
   }
 
   @Override

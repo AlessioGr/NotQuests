@@ -5,7 +5,7 @@ group = "com.notquests"
 version = rootProject.version
 
 java {
-    // Configure the java toolchain. This allows gradle to auto-provision JDK 21 on systems that only have JDK 11 installed for example.
+    // Gradle can provision the Java 25 toolchain when it is not installed locally.
     toolchain.languageVersion = JavaLanguageVersion.of(25)
     sourceCompatibility = VERSION_25
     targetCompatibility = VERSION_25

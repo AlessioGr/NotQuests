@@ -20,6 +20,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Prediction;
 import net.minecraft.server.players.NameAndId;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -856,7 +857,7 @@ final class NeoForgePlayer implements PlatformPlayer {
         boolean gaveAny = false;
         for (final ItemStack stack : itemStacks(text, server.registryAccess(), items)) {
             if (!player.addItem(stack)) {
-                player.drop(stack, false);
+                player.drop(stack, false, Prediction.SERVER_ONLY);
             }
             gaveAny = true;
         }
@@ -900,7 +901,7 @@ final class NeoForgePlayer implements PlatformPlayer {
         final List<ItemStack> leftovers = addToPlayerInventory(stacks);
         final int remaining = leftovers.stream().mapToInt(ItemStack::getCount).sum();
         if (dropOverflow) {
-            leftovers.forEach(stack -> player.drop(stack, false));
+            leftovers.forEach(stack -> player.drop(stack, false, Prediction.SERVER_ONLY));
         }
         final boolean changed = requested > remaining || dropOverflow && remaining > 0;
         if (changed) {
@@ -967,7 +968,7 @@ final class NeoForgePlayer implements PlatformPlayer {
         }
         final int remaining = leftovers.stream().mapToInt(ItemStack::getCount).sum();
         if (dropOverflow) {
-            leftovers.forEach(stack -> player.drop(stack, false));
+            leftovers.forEach(stack -> player.drop(stack, false, Prediction.SERVER_ONLY));
         }
         player.inventoryMenu.broadcastChanges();
         return requested > remaining || dropOverflow && remaining > 0;

@@ -30,19 +30,19 @@ subprojects {
 }
 
 group = "com.notquests"
-version = "7.0.0-beta.3"
+version = "7.0.0"
 
-val minecraftTargetVersion = "26.2"
+val minecraftTargetVersion = "26.3"
 
 repositories {
 }
 
 dependencies {
-    paperweight.paperDevBundle("26.2.build.121-stable")
+    paperweight.paperDevBundle("26.3.build.35-alpha")
 }
 
 java {
-    // Configure the java toolchain. This allows gradle to auto-provision JDK 21 on systems that only have JDK 11 installed for example.
+    // Gradle can provision the Java 25 toolchain when it is not installed locally.
     toolchain.languageVersion = JavaLanguageVersion.of(25)
     sourceCompatibility = VERSION_25
     targetCompatibility = VERSION_25

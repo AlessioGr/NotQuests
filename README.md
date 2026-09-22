@@ -18,12 +18,12 @@ Please note: updates and bug fixes are not guaranteed, and support should not be
 
 ![Front image](https://github.com/AlessioGr/NotQuests/blob/main/Logo/spigotbg.jpg?raw=true)
 
-**Attention: Please use [Paper](https://papermc.io/downloads/paper) or a fork of Paper, like [Purpur](https://purpurmc.org/download/purpur) or [Pufferfish](https://pufferfish.host/downloads). Spigot/Bukkit is not supported.**
+**Use [Paper](https://papermc.io/downloads/paper), a compatible Paper fork, or [NeoForge](https://neoforged.net/). Spigot/Bukkit is not supported.**
 
 [=> Getting started guide <=](https://www.notquests.com/docs/tutorials/getting-started)
 
 ## Requirements to run NotQuests
-- Minecraft 26.2 with Paper 26.2 (only the latest Minecraft version is actively developed. Older Minecraft versions only work with older NotQuests versions)
+- Minecraft 26.3 with Paper 26.3 or NeoForge 26.3 (only the latest Minecraft version is actively developed. Older Minecraft versions only work with older NotQuests versions)
 - Java 25
 
 ## Helpful links

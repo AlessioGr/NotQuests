@@ -1,4 +1,4 @@
-# NotQuests (main) — targets Paper 26.2, which requires Java 25.
+# NotQuests (main) — targets Paper 26.3, which requires Java 25.
 # Gradle pinned to match gradle/wrapper/gradle-wrapper.properties (9.7.1).
 
 [tools]

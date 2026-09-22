@@ -1,14 +1,14 @@
 import org.gradle.api.JavaVersion.VERSION_25
 
 plugins {
-    id("net.neoforged.moddev") version "2.0.144"
+    id("net.neoforged.moddev") version "2.0.147"
 }
 
 group = "com.notquests"
 version = rootProject.version
 
-val minecraftTargetVersion = "26.2"
-val neoForgeVersion = "26.2.0.75"
+val minecraftTargetVersion = "26.3"
+val neoForgeVersion = "26.3.0.10-beta"
 val adventureVersion = "5.2.0"
 val hikariVersion = "7.1.0"
 val sqliteVersion = "3.53.4.0"
@@ -130,7 +130,7 @@ dependencies {
 
     testImplementation(platform("org.junit:junit-bom:6.1.3"))
     testImplementation("org.junit.jupiter:junit-jupiter")
-    testImplementation("com.mojang:brigadier:1.3.10")
+    testImplementation("com.mojang:brigadier:1.3.11")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 

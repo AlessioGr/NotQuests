@@ -53,9 +53,8 @@ public final class NeoForgePackets implements NotQuestsPlatform.PacketBridge {
                     return;
                 }
                 final Component content = playerChat.filterMask().isEmpty()
-                        ? (playerChat.unsignedContent() == null
-                            ? Component.literal(playerChat.body().content())
-                            : playerChat.unsignedContent())
+                        ? playerChat.unsignedContent().orElseGet(
+                            () -> Component.literal(playerChat.body().content()))
                         : playerChat.filterMask().applyWithFormatting(playerChat.body().content());
                 message = playerChat.chatType().decorate(content);
             } else if (packet instanceof final ClientboundDisguisedChatPacket disguisedChat) {

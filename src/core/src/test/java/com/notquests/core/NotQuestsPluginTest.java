@@ -1962,10 +1962,10 @@ class NotQuestsPluginTest {
         final NotQuestsAdapter adapter =
                 plugin.createRegistryAdapter(new NotQuestsRegistry.PlatformHooks(null, null, null));
 
-        plugin.configureData(dataFolder, "7.0.0-beta.2", "1.21.11", adapter, false);
+        plugin.configureData(dataFolder, "7.0.0", "1.21.11", adapter, false);
 
         assertEquals(
-                "7.0.0-beta.2",
+                "7.0.0",
                 ConfigurationMigrations.dataVersion(plugin.generalConfig()));
         final Path backups = dataFolder.resolve("backups");
         if (Files.isDirectory(backups)) {
@@ -2004,7 +2004,7 @@ class NotQuestsPluginTest {
         final NotQuestsPlugin plugin = NotQuestsPlugin.create();
         final NotQuestsAdapter adapter =
                 plugin.createRegistryAdapter(new NotQuestsRegistry.PlatformHooks(null, null, null));
-        plugin.configureData(dataFolder, "7.0.0-beta.2", "1.21.11", adapter, false);
+        plugin.configureData(dataFolder, "7.0.0", "1.21.11", adapter, false);
 
         assertTrue(plugin.configuration().databaseEnabled());
         assertEquals(
@@ -2012,7 +2012,7 @@ class NotQuestsPluginTest {
                 plugin.configuration().consoleInfoColor(
                         com.notquests.core.managers.LogManager.LogCategory.DEFAULT));
         assertEquals(
-                "7.0.0-beta.2",
+                "7.0.0",
                 ConfigurationMigrations.dataVersion(plugin.generalConfig()));
     }
 
@@ -2107,11 +2107,11 @@ class NotQuestsPluginTest {
                 "storage",
                 Map.of("database", Map.of("enabled", false))));
 
-        final var result = plugin.configuration().load(configuration, "7.0.0-beta.2");
+        final var result = plugin.configuration().load(configuration, "7.0.0");
 
         assertTrue(result.changed());
         assertFalse(result.shouldDisableSaving());
-        assertEquals("7.0.0-beta.2", configuration.getString("config-version-do-not-edit"));
+        assertEquals("7.0.0", configuration.getString("config-version-do-not-edit"));
         assertFalse(configuration.contains("data-migration-version-do-not-edit"));
 
         assertEquals(3, plugin.configuration().maxActiveQuestsPerPlayer());

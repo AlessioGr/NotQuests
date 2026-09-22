@@ -151,9 +151,8 @@ public final class PaperPackets implements Listener, PacketBridge {
             return;
           }
           final net.minecraft.network.chat.Component content = chat.filterMask().isEmpty()
-              ? (chat.unsignedContent() == null
-                  ? net.minecraft.network.chat.Component.literal(chat.body().content())
-                  : chat.unsignedContent())
+              ? chat.unsignedContent().orElseGet(
+                  () -> net.minecraft.network.chat.Component.literal(chat.body().content()))
               : chat.filterMask().applyWithFormatting(chat.body().content());
           message = chat.chatType().decorate(content);
         } else if (packet instanceof final ClientboundDisguisedChatPacket chat) {

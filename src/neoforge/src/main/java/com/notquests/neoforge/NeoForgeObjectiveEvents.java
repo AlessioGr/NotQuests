@@ -6,6 +6,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Prediction;
 import net.minecraft.util.TriState;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -279,7 +280,7 @@ public final class NeoForgeObjectiveEvents {
                                 if (player.containerMenu.getCarried().isEmpty()) {
                                     player.containerMenu.setCarried(restored);
                                 } else {
-                                    player.getInventory().placeItemBackInInventory(restored);
+                                    player.getInventory().placeItemBackInInventory(restored, Prediction.SERVER_ONLY);
                                 }
                                 player.containerMenu.broadcastChanges();
                             });
